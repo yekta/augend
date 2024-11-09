@@ -8,3 +8,8 @@ export function linearInterpolation(
   const ratio = (value - inputMin) / (inputMax - inputMin);
   return ratio * (outputMax - outputMin) + outputMin;
 }
+
+export function cleanEnvVar(envVar: string | undefined) {
+  if (envVar === undefined) return envVar;
+  return envVar.replace(/\s+/g, "");
+}

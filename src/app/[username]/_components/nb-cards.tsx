@@ -2,11 +2,12 @@
 
 import NanoBananoCard from "@/components/cards/nano-banano-cards";
 import { defaultQueryOptions } from "@/lib/constants";
+import { cleanEnvVar } from "@/lib/helpers";
 import { TNanoBananoAccount } from "@/server/api/routers/nano-ban/types";
 import { api } from "@/trpc/react";
 
 export const items: TNanoBananoAccount[] = (
-  process.env.NEXT_PUBLIC_ADMIN_NANO_BANANO_CARDS || ""
+  cleanEnvVar(process.env.NEXT_PUBLIC_ADMIN_NANO_BANANO_CARDS) || ""
 )
   .split(",")
   .map((i) => {

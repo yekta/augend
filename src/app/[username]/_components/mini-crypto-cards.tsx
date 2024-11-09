@@ -2,9 +2,10 @@
 
 import MiniCryptoCard from "@/components/cards/mini-crypto-card";
 import { useCmcCryptoInfos } from "@/components/providers/cmc/cmc-crypto-infos-provider";
+import { cleanEnvVar } from "@/lib/helpers";
 
 export const items = (
-  process.env.NEXT_PUBLIC_ADMIN_MINI_CRYPTO_CARDS || ""
+  cleanEnvVar(process.env.NEXT_PUBLIC_ADMIN_MINI_CRYPTO_CARDS) || ""
 ).split(",");
 
 export default function MiniCryptoCards() {

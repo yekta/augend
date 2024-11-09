@@ -2,6 +2,7 @@
 
 import ThreeLineCard from "@/components/cards/three-line-card";
 import { defaultQueryOptions } from "@/lib/constants";
+import { cleanEnvVar } from "@/lib/helpers";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import {
   currenciesForLira,
@@ -12,7 +13,7 @@ import {
 import { api } from "@/trpc/react";
 
 export const items: TCurrencyForLira[] = (
-  process.env.NEXT_PUBLIC_ADMIN_TURKISH_LIRA_CARDS || ""
+  cleanEnvVar(process.env.NEXT_PUBLIC_ADMIN_TURKISH_LIRA_CARDS) || ""
 )
   .split(",")
   .filter((i) => {

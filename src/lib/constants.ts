@@ -1,3 +1,5 @@
+import { cleanEnvVar } from "@/lib/helpers";
+
 const refetchInterval = {
   slow: 30_000,
   normal: 20_000,
@@ -16,7 +18,7 @@ export const defaultQueryOptions = {
   },
 };
 
-const adminUsernameRaw = process.env.NEXT_PUBLIC_ADMIN_USERNAME;
+const adminUsernameRaw = cleanEnvVar(process.env.NEXT_PUBLIC_ADMIN_USERNAME);
 if (!adminUsernameRaw) {
   throw new Error("NEXT_PUBLIC_ADMIN_USERNAME is required");
 }

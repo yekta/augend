@@ -3,6 +3,7 @@
 import OrderBookCard, {
   TOrderBookConfig,
 } from "@/components/cards/order-book-card";
+import { cleanEnvVar } from "@/lib/helpers";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import {
   ExchangeSchema,
@@ -24,7 +25,7 @@ const getUrlFunctions: Partial<
 const defaultFormatter = (i: number) => formatNumberTBMK(i, 4, true);
 
 const items: TOrderBookConfig[] = (
-  process.env.NEXT_PUBLIC_ADMIN_ORDER_BOOK_CARDS || ""
+  cleanEnvVar(process.env.NEXT_PUBLIC_ADMIN_ORDER_BOOK_CARDS) || ""
 )
   .split(",")
   .map((i) => {

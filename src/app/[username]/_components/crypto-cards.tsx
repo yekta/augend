@@ -1,9 +1,10 @@
 "use client";
 
 import CryptoCard, { TCrypto } from "@/components/cards/crypto-card";
+import { cleanEnvVar } from "@/lib/helpers";
 
 export const items: TCrypto[] = (
-  process.env.NEXT_PUBLIC_ADMIN_CRYPTO_CARDS || ""
+  cleanEnvVar(process.env.NEXT_PUBLIC_ADMIN_CRYPTO_CARDS) || ""
 )
   .split(",")
   .map((i) => ({

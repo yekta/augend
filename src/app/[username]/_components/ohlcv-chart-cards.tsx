@@ -3,6 +3,7 @@
 import OhlcvChartCard, {
   TOhlcvChartConfig,
 } from "@/components/cards/ohlcv-chart-card";
+import { cleanEnvVar } from "@/lib/helpers";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { ExchangeSchema } from "@/server/api/routers/exchange/types";
 
@@ -12,7 +13,7 @@ const priceFormatters: Record<string, (i: number) => string> = {
 const defaultFormatter = (i: number) => formatNumberTBMK(i, 4, true);
 
 const items: TOhlcvChartConfig[] = (
-  process.env.NEXT_PUBLIC_ADMIN_OHLCV_CHART_CARDS || ""
+  cleanEnvVar(process.env.NEXT_PUBLIC_ADMIN_OHLCV_CHART_CARDS) || ""
 )
   .split(",")
   .map((i) => {
