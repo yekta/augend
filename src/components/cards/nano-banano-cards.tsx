@@ -18,7 +18,7 @@ export default function NanoBananoCard({
   isError,
   isLoadingError,
 }: {
-  data: AppRouterOutputs["nanoBan"]["getBalances"][number] | undefined;
+  data: AppRouterOutputs["nanoBanano"]["getBalances"][number] | undefined;
   config: TNanoBananoAccount;
   isPending: boolean;
   isRefetching: boolean;
