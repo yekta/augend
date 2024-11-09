@@ -9,19 +9,9 @@ import { AppRouterOutputs, AppRouterQueryResult } from "@/server/api/root";
 import { api } from "@/trpc/react";
 import React, { createContext, ReactNode, useContext } from "react";
 
-const cryptos = [
+const cryptos = process.env.NEXT_PUBLIC_CMC_CRYPTOS?.split(",") ?? [
   "BTC",
   "ETH",
-  "XNO",
-  "BAN",
-  "SOL",
-  "BNB",
-  "DOGE",
-  "UNI",
-  "ARB",
-  "OP",
-  "MATIC",
-  "XMR",
 ];
 
 const CmcCryptoInfosContext = createContext<TCmcCryptoInfosContext | null>(

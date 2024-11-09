@@ -22,10 +22,11 @@ export const metadata: Metadata = {
 };
 
 export default async function Page({
-  params: { username },
+  params,
 }: {
-  params: { username: string };
+  params: Promise<{ username: string }>;
 }) {
+  const { username } = await params;
   if (username !== adminUsername) {
     return (
       <div className="w-full flex-1 flex flex-col items-center justify-center p-5 pb-16">
