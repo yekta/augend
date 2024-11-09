@@ -117,7 +117,7 @@ function Gauge({
   const adjustedValue =
     value !== undefined ? Math.min(Math.max(0, value), 100) : 50;
   return (
-    <div className="w-24 max-w-full flex items-center justify-center relative z-0">
+    <div className="w-22 max-w-full flex items-center justify-center relative z-0">
       <div className="w-full h-full absolute left-0 top-0 z-0">
         <div className="w-full h-full absolute left-0 top-0 overflow-hidden">
           <div
@@ -181,7 +181,7 @@ function Gauge({
       </div>
       {/* Value */}
       <div className="max-w-full z-10 pt-3.75 flex items-center justify-center flex-col gap-0.5 overflow-hidden">
-        <div className="max-w-full px-6 flex items-center justify-center">
+        <div className="max-w-full px-4 flex items-center justify-center">
           <p
             className="shrink min-w-0 text-center font-bold text-2xl group-data-[is-pending]:bg-foreground leading-none whitespace-nowrap overflow-hidden overflow-ellipsis 
             group-data-[is-loading-error]:text-destructive group-data-[is-pending]:text-transparent group-data-[is-pending]:rounded-md group-data-[is-pending]:animate-skeleton"
