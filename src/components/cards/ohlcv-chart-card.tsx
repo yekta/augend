@@ -41,7 +41,7 @@ const chartContainerConfig: TChartContainerConfig = {
 };
 const dataKey: TDataKey = {
   x: "timestamp",
-  y: "open",
+  y: "high",
 };
 
 const fallbackData: TOHLCVResult = {
@@ -154,9 +154,9 @@ export default function OhlcvChartCard({
 
   const onActivateIndexChanged = (index: number | undefined) => {
     if (index === undefined) return;
-    const changeRate = dataOrFallback.data[index].open / currentPrice - 1;
+    const changeRate = dataOrFallback.data[index][dataKey.y] / currentPrice - 1;
     setPriceInfo({
-      price: dataOrFallback.data[index].open,
+      price: dataOrFallback.data[index][dataKey.y],
       changeRate,
       dateStr: timestampFormatter(
         dataOrFallback.data[index].timestamp.toString(),
@@ -233,9 +233,9 @@ export default function OhlcvChartCard({
                 animationDuration={300}
                 dataKey={dataKey.y}
                 type="natural"
-                fill={chartContainerConfig.open.color}
+                fill={chartContainerConfig[dataKey.y].color}
                 fillOpacity={0.08}
-                stroke={chartContainerConfig.open.color}
+                stroke={chartContainerConfig[dataKey.y].color}
                 className="rounded-lg"
               />
             </AreaChart>
@@ -456,7 +456,7 @@ function ChartTooltipContent({
       </p>
       <div className="flex items-end justify-between gap-5">
         <p className="font-semibold leading-none text-muted-foreground">
-          {chartContainerConfig.open.label}
+          {chartContainerConfig[dataKey.y].label}
         </p>
         <p className="font-bold text-base text-right leading-none">
           {priceFormatter &&
