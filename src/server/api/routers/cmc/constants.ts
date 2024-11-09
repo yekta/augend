@@ -1,5 +1,7 @@
-export const cmcApiKey = process.env.CMC_API_KEY!;
-if (!cmcApiKey) throw new Error("Missing CMC_API_KEY");
+const cmcApiKeyRaw = process.env.CMC_API_KEY;
+if (!cmcApiKeyRaw) throw new Error("Missing CMC_API_KEY");
+
+export const cmcApiKey = cmcApiKeyRaw;
 
 export const cmcFetchOptions = {
   headers: {
