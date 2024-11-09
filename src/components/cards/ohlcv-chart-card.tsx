@@ -56,7 +56,6 @@ const fallbackData: TOHLCVResult = {
   metadata: {
     exchange: "Binance",
     ticker: "BTC/USDT",
-    changeRateDuringInterval: 100,
     currentPrice: 1000,
   },
   isFallback: true,
@@ -134,10 +133,12 @@ export default function OhlcvChartCard({
   const priceFormatter =
     config.priceFormatter || ((i) => formatNumberTBMK(i, 4, true));
   const currentPrice = dataOrFallback.metadata.currentPrice;
+  const firstPrice = dataOrFallback.data[0][dataKey.y];
+  const changeRate = ((firstPrice - currentPrice) / firstPrice) * -1;
 
   const [priceInfo, setPriceInfo] = useState<TPriceInfo>({
     price: currentPrice,
-    changeRate: dataOrFallback.metadata.changeRateDuringInterval,
+    changeRate,
     dateStr: undefined,
     isFallback: dataOrFallback.isFallback,
   });
@@ -146,7 +147,7 @@ export default function OhlcvChartCard({
     if (dataOrFallback.isFallback) return;
     setPriceInfo({
       price: currentPrice,
-      changeRate: dataOrFallback.metadata.changeRateDuringInterval,
+      changeRate,
       dateStr: undefined,
       isFallback: dataOrFallback.isFallback,
     });
@@ -154,7 +155,8 @@ export default function OhlcvChartCard({
 
   const onActivateIndexChanged = (index: number | undefined) => {
     if (index === undefined) return;
-    const changeRate = dataOrFallback.data[index][dataKey.y] / currentPrice - 1;
+    const selectedPrice = dataOrFallback.data[index][dataKey.y];
+    const changeRate = ((firstPrice - selectedPrice) / firstPrice) * -1;
     setPriceInfo({
       price: dataOrFallback.data[index][dataKey.y],
       changeRate,
@@ -169,7 +171,7 @@ export default function OhlcvChartCard({
   const onMouseLeave = () => {
     setPriceInfo({
       price: currentPrice,
-      changeRate: dataOrFallback.metadata.changeRateDuringInterval,
+      changeRate,
       dateStr: undefined,
     });
   };

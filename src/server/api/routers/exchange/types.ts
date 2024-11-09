@@ -42,7 +42,6 @@ export type TOHLCVResult = {
   metadata: {
     exchange: TAvailableExchange;
     ticker: string;
-    changeRateDuringInterval: number;
     currentPrice: number;
   };
   isFallback?: boolean;

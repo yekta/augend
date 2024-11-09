@@ -154,11 +154,6 @@ function parseOHLCVResult(
   tickerInfo: Ticker,
   input: z.infer<typeof OHLCVInputSchema>
 ): TOHLCVResult {
-  const currentPrice = tickerInfo.last;
-  const firstPrice = data[0][1];
-  const changeRateDuringInterval =
-    (Number(currentPrice) - Number(firstPrice)) / Number(firstPrice);
-
   return {
     data: data.map((item) => ({
       open: Number(item[1]),
@@ -171,8 +166,7 @@ function parseOHLCVResult(
     metadata: {
       exchange: input.exchange,
       ticker: input.ticker,
-      changeRateDuringInterval,
-      currentPrice: Number(currentPrice),
+      currentPrice: Number(tickerInfo.last),
     },
   };
 }
