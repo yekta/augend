@@ -36,9 +36,6 @@ export default function FearGreedIndexCard({
         ? ArrowDownIcon
         : ArrowRightIcon;
 
-  const gaugeRingWidth = 2;
-  const circleWidth = 10;
-
   return (
     <Link
       target="_blank"
@@ -53,38 +50,8 @@ export default function FearGreedIndexCard({
         data-is-pending={isPending ? true : undefined}
         className="flex flex-1 flex-col justify-center items-center border rounded-xl px-3 py-1 text-center gap-3 group not-touch:group-hover/card:bg-background-secondary relative overflow-hidden"
       >
-        <div className="max-w-full items-center justify-center flex flex-col gap-3">
-          {/* Index info */}
-          <div className="w-24 max-w-full flex items-center justify-center gap-2 relative z-0">
-            <Gauge value={data?.fear_greed_index.value} />
-            {/* Index value and description */}
-            <div className="max-w-full z-10 pt-3.5 flex items-center justify-center flex-col gap-0.5 overflow-hidden">
-              <div className="max-w-full px-6 flex items-center justify-center">
-                <p
-                  className="shrink min-w-0 text-center font-bold text-2xl group-data-[is-pending]:bg-foreground leading-none whitespace-nowrap overflow-hidden overflow-ellipsis 
-                  group-data-[is-loading-error]:text-destructive group-data-[is-pending]:text-transparent group-data-[is-pending]:rounded-md group-data-[is-pending]:animate-skeleton"
-                >
-                  {isPending
-                    ? "50"
-                    : data
-                      ? formatNumberTBMK(data.fear_greed_index.value, 3)
-                      : "00"}
-                </p>
-              </div>
-              <div className="w-full px-3 flex items-center justify-center">
-                <p
-                  className="max-w-full text-xs shrink min-w-0 text-center leading-none whitespace-nowrap overflow-hidden overflow-ellipsis text-foreground 
-                    group-data-[is-pending]:bg-foreground group-data-[is-loading-error]:text-destructive group-data-[is-pending]:text-transparent group-data-[is-pending]:rounded-sm group-data-[is-pending]:animate-skeleton"
-                >
-                  {isPending
-                    ? "Loading"
-                    : data
-                      ? data.fear_greed_index.value_classification
-                      : "Error"}
-                </p>
-              </div>
-            </div>
-          </div>
+        <div className="max-w-full items-center justify-center flex flex-col gap-2.5">
+          <Gauge isPending={isPending} data={data} />
           {/* Market cap */}
           <div className="w-full flex items-center justify-center gap-1 text-sm">
             <p className="shrink font-bold min-w-0 overflow-hidden overflow-ellipsis text-center leading-none group-data-[is-pending]:font-normal group-data-[is-pending]:bg-foreground group-data-[is-loading-error]:text-destructive group-data-[is-pending]:text-transparent group-data-[is-pending]:rounded-sm group-data-[is-pending]:animate-skeleton">
@@ -132,79 +99,111 @@ export default function FearGreedIndexCard({
 }
 
 function Gauge({
-  value,
   lineCount = 8,
   lineWidth = 4,
   gaugeRingWidth = 2,
   circleWidth = 8,
+  data,
+  isPending,
 }: {
-  value?: number;
   lineWidth?: number;
   lineCount?: number;
   gaugeRingWidth?: number;
   circleWidth?: number;
+  data: ReturnType<typeof useCmcGlobalMetrics>["data"];
+  isPending: boolean;
 }) {
+  const value = data ? data.fear_greed_index.value : undefined;
   const adjustedValue =
     value !== undefined ? Math.min(Math.max(0, value), 100) : 50;
   return (
-    <div className="w-full h-full absolute left-0 top-0 z-0">
-      <div className="w-full h-full absolute left-0 top-0 overflow-hidden">
-        <div
-          className="w-full aspect-square absolute left-0 top-0 rounded-full
-          bg-gradient-to-r from-index-fear via-index-neutral to-index-greed
-          group-data-[is-pending]:from-foreground group-data-[is-pending]:via-foreground group-data-[is-pending]:to-foreground group-data-[is-pending]:animate-skeleton
-          group-data-[is-loading-error]:from-destructive group-data-[is-loading-error]:via-destructive group-data-[is-loading-error]:to-destructive"
-        >
+    <div className="w-24 max-w-full flex items-center justify-center relative z-0">
+      <div className="w-full h-full absolute left-0 top-0 z-0">
+        <div className="w-full h-full absolute left-0 top-0 overflow-hidden">
           <div
-            style={{
-              padding: gaugeRingWidth,
-            }}
-            className="w-full h-full"
+            className="w-full aspect-square absolute left-0 top-0 rounded-full
+            bg-gradient-to-r from-index-fear via-index-neutral to-index-greed
+            group-data-[is-pending]:from-foreground group-data-[is-pending]:via-foreground group-data-[is-pending]:to-foreground group-data-[is-pending]:animate-skeleton
+            group-data-[is-loading-error]:from-destructive group-data-[is-loading-error]:via-destructive group-data-[is-loading-error]:to-destructive"
           >
-            <div className="w-full h-full rounded-full bg-background not-touch:group-hover:bg-background-secondary" />
-          </div>
-        </div>
-      </div>
-      <div className="w-full h-full absolute overflow-hidden">
-        <div className="w-full aspect-square left-0 top-0 absolute flex items-center justify-center">
-          {Array.from({ length: lineCount }).map((_, i) => {
-            const slice = 180 / lineCount;
-            const rotation = slice / 2 + (180 / lineCount) * i;
-            return (
-              <div
-                key={i}
-                style={{
-                  transform: `rotate(${rotation}deg)`,
-                  width: `calc(100% + ${lineWidth}px)`,
-                  height: lineWidth,
-                }}
-                className="flex justify-start not-touch:group-hover:bg-background-secondary bg-background items-center z-20 absolute"
-              />
-            );
-          })}
-        </div>
-      </div>
-      <div className="w-full aspect-square left-0 top-0 absolute flex items-center justify-center">
-        <div
-          style={{
-            transform: `rotate(${linearInterpolation(
-              adjustedValue,
-              [0, 100],
-              [0, 180]
-            )}deg)`,
-            width: `calc(100% - ${gaugeRingWidth}px + ${circleWidth}px)`,
-          }}
-          className="flex justify-start items-center z-20 absolute rounded-full transition-transform"
-        >
-          <div className="bg-background ring-4 ring-background not-touch:group-hover:ring-background-secondary not-touch:group-hover:bg-background-secondary rounded-full">
             <div
               style={{
-                width: circleWidth,
-                height: circleWidth,
+                padding: gaugeRingWidth,
               }}
-              className="bg-foreground group-data-[is-loading-error]:bg-destructive rounded-full group-data-[is-pending]:animate-skeleton"
-            />
+              className="w-full h-full"
+            >
+              <div className="w-full h-full rounded-full bg-background not-touch:group-hover:bg-background-secondary" />
+            </div>
           </div>
+        </div>
+        <div className="w-full h-full absolute overflow-hidden">
+          <div className="w-full aspect-square left-0 top-0 absolute flex items-center justify-center">
+            {Array.from({ length: lineCount }).map((_, i) => {
+              const slice = 180 / lineCount;
+              const rotation = slice / 2 + (180 / lineCount) * i;
+              return (
+                <div
+                  key={i}
+                  style={{
+                    transform: `rotate(${rotation}deg)`,
+                    width: `calc(100% + ${lineWidth}px)`,
+                    height: lineWidth,
+                  }}
+                  className="flex justify-start not-touch:group-hover:bg-background-secondary bg-background items-center z-20 absolute"
+                />
+              );
+            })}
+          </div>
+        </div>
+        <div className="w-full aspect-square left-0 top-0 absolute flex items-center justify-center">
+          <div
+            style={{
+              transform: `rotate(${linearInterpolation(
+                adjustedValue,
+                [0, 100],
+                [0, 180]
+              )}deg)`,
+              width: `calc(100% - ${gaugeRingWidth}px + ${circleWidth}px)`,
+            }}
+            className="flex justify-start items-center z-20 absolute rounded-full transition-transform"
+          >
+            <div className="bg-background ring-4 ring-background not-touch:group-hover:ring-background-secondary not-touch:group-hover:bg-background-secondary rounded-full">
+              <div
+                style={{
+                  width: circleWidth,
+                  height: circleWidth,
+                }}
+                className="bg-foreground group-data-[is-loading-error]:bg-destructive rounded-full group-data-[is-pending]:animate-skeleton"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* Value */}
+      <div className="max-w-full z-10 pt-3.75 flex items-center justify-center flex-col gap-0.5 overflow-hidden">
+        <div className="max-w-full px-6 flex items-center justify-center">
+          <p
+            className="shrink min-w-0 text-center font-bold text-2xl group-data-[is-pending]:bg-foreground leading-none whitespace-nowrap overflow-hidden overflow-ellipsis 
+            group-data-[is-loading-error]:text-destructive group-data-[is-pending]:text-transparent group-data-[is-pending]:rounded-md group-data-[is-pending]:animate-skeleton"
+          >
+            {isPending
+              ? "50"
+              : adjustedValue
+                ? formatNumberTBMK(adjustedValue, 3)
+                : "00"}
+          </p>
+        </div>
+        <div className="w-full px-3 flex items-center justify-center">
+          <p
+            className="max-w-full text-xs shrink min-w-0 text-center leading-none whitespace-nowrap overflow-hidden overflow-ellipsis text-foreground 
+            group-data-[is-pending]:bg-foreground group-data-[is-loading-error]:text-destructive group-data-[is-pending]:text-transparent group-data-[is-pending]:rounded-sm group-data-[is-pending]:animate-skeleton"
+          >
+            {isPending
+              ? "Loading"
+              : data
+                ? data.fear_greed_index.value_classification
+                : "Error"}
+          </p>
         </div>
       </div>
     </div>
