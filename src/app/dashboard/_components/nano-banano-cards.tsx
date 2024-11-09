@@ -24,7 +24,7 @@ export const nbQueryInput = {
 
 export default function NanoBananoCards() {
   const { data, isPending, isRefetching, isError, isLoadingError } =
-    api.nanoBan.getBalances.useQuery(nbQueryInput, defaultQueryOptions.fast);
+    api.nanoBanano.getBalances.useQuery(nbQueryInput, defaultQueryOptions.fast);
 
   return (
     <>

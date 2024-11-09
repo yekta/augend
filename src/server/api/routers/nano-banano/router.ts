@@ -1,11 +1,12 @@
 import { z } from "zod";
 
-import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import {
-  banAPI,
+  bananoApiUrl,
+  nanoApiUrl,
+} from "@/server/api/routers/nano-banano/constants";
+import {
   isBan,
   isNano,
-  nanoAPI,
   rawToBanOrNano,
 } from "@/server/api/routers/nano-banano/helpers";
 import {
@@ -13,6 +14,7 @@ import {
   TNanoBananoBalanceResponse,
   TNanoBananoResult,
 } from "@/server/api/routers/nano-banano/types";
+import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 
 export const nanoBananoRouter = createTRPCRouter({
   getBalances: publicProcedure
@@ -72,6 +74,50 @@ export const nanoBananoRouter = createTRPCRouter({
       }
       return results;
     }),
+  /* getAllHistory: publicProcedure
+    .input(
+      z.object({
+        account: AccountSchema,
+        minAmount: z.number().optional(),
+        minTimestamp: z.number().optional(),
+      })
+    )
+    .query(async ({ input: { account, minAmount, minTimestamp } }) => {
+      let head: string | undefined = undefined;
+      let fullHistory: TNanoBananoHistoryResultEdited["history"] = [];
+
+      const initialRes = await getHistoryPage({
+        address: account.address,
+      });
+
+      fullHistory = fullHistory.concat(initialRes.history);
+
+      if (initialRes.previous) {
+        head = initialRes.previous;
+        while (head) {
+          const res = await getHistoryPage({
+            address: account.address,
+            head,
+          });
+          console.log("History res length:", res.history.length, head);
+          fullHistory = fullHistory.concat(res.history);
+          head = res.previous;
+        }
+      }
+
+      if (minAmount) {
+        fullHistory = fullHistory.filter((h) => h.amount_decimal >= minAmount);
+      }
+
+      if (minTimestamp) {
+        fullHistory = fullHistory.filter((h) => h.timestamp >= minTimestamp);
+      }
+
+      return {
+        account,
+        history: fullHistory,
+      };
+    }), */
 });
 
 async function getBalances({
@@ -81,7 +127,7 @@ async function getBalances({
   addresses: string[];
   isNano?: boolean;
 }) {
-  const res = await fetch(isNano ? nanoAPI : banAPI, {
+  const res = await fetch(isNano ? nanoApiUrl : bananoApiUrl, {
     method: "POST",
     body: JSON.stringify({
       action: "accounts_balances",
@@ -97,3 +143,39 @@ async function getBalances({
   }
   return json;
 }
+
+/* async function getHistoryPage({
+  address,
+  head,
+}: {
+  address: string;
+  head?: string;
+}) {
+  const isNanoAddress = isNano(address);
+  const res = await fetch(isNanoAddress ? nanoApiUrl : bananoApiUrl, {
+    method: "POST",
+    body: JSON.stringify({
+      action: "account_history",
+      account: address,
+      count: 10000,
+      head,
+    }),
+    headers: isNanoAddress ? undefined : bananoHeaders,
+  });
+  if (!res.ok) {
+    throw new Error("Failed to fetch NANO/BAN history");
+  }
+  const json: TNanoBananoHistoryResult = await res.json();
+  const result = json.history.map((h) => {
+    return {
+      type: h.type,
+      address: h.account,
+      timestamp: Number(h.local_timestamp) * 1000,
+      amount_decimal: rawToBanOrNano(h.amount, isNano(address)),
+    };
+  });
+  return {
+    ...json,
+    history: result,
+  };
+} */

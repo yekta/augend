@@ -19,7 +19,7 @@ import { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
  */
 export const appRouter = createTRPCRouter({
   exchange: exchangeRouter,
-  nanoBan: nanoBananoRouter,
+  nanoBanano: nanoBananoRouter,
   cmc: cmcRouter,
   turkishLira: turkishLiraRouter,
   wban: wbanRouter,

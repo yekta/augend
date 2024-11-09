@@ -27,3 +27,27 @@ export type TNanoBananoResult = {
   receivable: number;
   isMine: boolean;
 };
+
+export type TNanoBananoHistoryResult = {
+  account: string;
+  history: {
+    type: "send" | "receive" | "change";
+    account: string;
+    amount: string;
+    hash: string;
+    height: string;
+    local_timestamp: string;
+  }[];
+  previous?: string;
+};
+
+export type TNanoBananoHistoryResultEdited = {
+  account: string;
+  history: {
+    type: "send" | "receive" | "change";
+    address: string;
+    amount_decimal: number;
+    timestamp: number;
+  }[];
+  previous?: string;
+};

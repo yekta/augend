@@ -33,7 +33,7 @@ export default function WBanCard({ className }: { className?: string }) {
     isLoadingError: isBanBalanceLoadingError,
     isPending: isBanBalancePending,
     isRefetching: isBanBalanceRefetching,
-  } = api.nanoBan.getBalances.useQuery(
+  } = api.nanoBanano.getBalances.useQuery(
     wbanBalanceQueryInput,
     defaultQueryOptions.fast
   );

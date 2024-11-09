@@ -22,7 +22,7 @@ export default function BanTotalCard() {
     isError: nbError,
     isLoadingError: nbLoadingError,
     isRefetching: nbRefetching,
-  } = api.nanoBan.getBalances.useQuery(nbQueryInput, {
+  } = api.nanoBanano.getBalances.useQuery(nbQueryInput, {
     enabled: false,
   });
 
