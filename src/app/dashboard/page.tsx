@@ -1,39 +1,24 @@
-import BanTotalCard from "@/app/[username]/_components/ban-total-card";
-import CryptoCards from "@/app/[username]/_components/crypto-cards";
-import MiniCryptoCards from "@/app/[username]/_components/mini-crypto-cards";
-import NanoBananoCards from "@/app/[username]/_components/nano-banano-cards";
-import OhlcvChartCards from "@/app/[username]/_components/ohlcv-chart-cards";
-import OrderBookCards from "@/app/[username]/_components/order-book-cards";
-import TurkishLiraCards from "@/app/[username]/_components/turkish-lira-cards";
+import BanTotalCard from "@/app/dashboard/_components/ban-total-card";
+import CryptoCards from "@/app/dashboard/_components/crypto-cards";
+import MiniCryptoCards from "@/app/dashboard/_components/mini-crypto-cards";
+import NanoBananoCards from "@/app/dashboard/_components/nano-banano-cards";
+import OhlcvChartCards from "@/app/dashboard/_components/ohlcv-chart-cards";
+import OrderBookCards from "@/app/dashboard/_components/order-book-cards";
+import TurkishLiraCards from "@/app/dashboard/_components/turkish-lira-cards";
 import CoinListCard from "@/components/cards/coin-list-card";
 import FearGreedIndexCard from "@/components/cards/fear-greed-index-card";
 import WBanCard from "@/components/cards/wban-card";
 import DashboardWrapper from "@/components/dashboard-wrapper";
 import CmcCryptoInfosProvider from "@/components/providers/cmc/cmc-crypto-infos-provider";
 import CmcGlobalMetricsProvider from "@/components/providers/cmc/cmc-global-metrics-provider";
-import { adminUsername } from "@/lib/constants";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: `${
-    adminUsername.charAt(0).toUpperCase() + adminUsername.slice(1)
-  } | Dashboard`,
+  title: `Dashboard | YDashboard`,
   description: "Dashboard",
 };
 
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ username: string }>;
-}) {
-  const { username } = await params;
-  if (username !== adminUsername) {
-    return (
-      <div className="w-full flex-1 flex flex-col items-center justify-center p-5 pb-16">
-        Not found
-      </div>
-    );
-  }
+export default async function Page() {
   return (
     <>
       <CmcCryptoInfosProvider>

@@ -11,7 +11,7 @@ import FearGreedIndexCard from "@/components/cards/fear-greed-index-card";
 import CmcGlobalMetricsProvider from "@/components/providers/cmc/cmc-global-metrics-provider";
 
 export const metadata: Metadata = {
-  title: "wBAN | Dashboard",
+  title: "wBAN | YDashboard",
   description: "Dashboard",
 };
 

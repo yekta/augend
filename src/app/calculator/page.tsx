@@ -2,7 +2,7 @@ import Calculator from "@/components/calculator";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Calculator | Dashboard",
+  title: "Calculator | YDashboard",
   description: "Dashboard",
 };
 

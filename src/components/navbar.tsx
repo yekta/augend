@@ -1,6 +1,5 @@
 "use client";
 
-import { adminUsername } from "@/lib/constants";
 import {
   BananaIcon,
   CalculatorIcon,
@@ -22,7 +21,7 @@ type TRoute = {
 
 const routes: TRoute[] = [
   {
-    href: `/${adminUsername}`,
+    href: `/dashboard`,
     label: "Dashboard",
     Icon: LucideLayoutDashboard,
   },

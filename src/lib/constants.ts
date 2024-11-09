@@ -17,9 +17,3 @@ export const defaultQueryOptions = {
     refetchInterval: refetchInterval.fast,
   },
 };
-
-const adminUsernameRaw = cleanEnvVar(process.env.NEXT_PUBLIC_ADMIN_USERNAME);
-if (!adminUsernameRaw) {
-  throw new Error("NEXT_PUBLIC_ADMIN_USERNAME is required");
-}
-export const adminUsername = adminUsernameRaw;
