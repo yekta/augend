@@ -7,14 +7,14 @@ import {
   isNano,
   nanoAPI,
   rawToBanOrNano,
-} from "@/server/api/routers/nano-ban/helpers";
+} from "@/server/api/routers/nano-banano/helpers";
 import {
   AccountSchema,
   TNanoBananoBalanceResponse,
   TNanoBananoResult,
-} from "@/server/api/routers/nano-ban/types";
+} from "@/server/api/routers/nano-banano/types";
 
-export const nanoBanRouter = createTRPCRouter({
+export const nanoBananoRouter = createTRPCRouter({
   getBalances: publicProcedure
     .input(
       z.object({

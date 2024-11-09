@@ -4,7 +4,7 @@ import Indicator from "@/components/cards/indicator";
 import { defaultQueryOptions } from "@/lib/constants";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
-import { getExplorerUrl } from "@/server/api/routers/nano-ban/helpers";
+import { getExplorerUrl } from "@/server/api/routers/nano-banano/helpers";
 import {
   TWbanIcon,
   wbanNetworkObjects,

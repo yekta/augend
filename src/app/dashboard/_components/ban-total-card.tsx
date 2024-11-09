@@ -4,7 +4,7 @@ import { nbQueryInput } from "@/app/dashboard/_components/nano-banano-cards";
 import ThreeLineCard from "@/components/cards/three-line-card";
 import { useCmcCryptoInfos } from "@/components/providers/cmc/cmc-crypto-infos-provider";
 import { formatNumberTBMK } from "@/lib/number-formatters";
-import { isNano } from "@/server/api/routers/nano-ban/helpers";
+import { isNano } from "@/server/api/routers/nano-banano/helpers";
 import { api } from "@/trpc/react";
 
 export default function BanTotalCard() {
