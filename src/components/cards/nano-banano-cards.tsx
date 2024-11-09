@@ -8,9 +8,9 @@ import {
   getExplorerUrl,
   isNano,
 } from "@/server/api/routers/nano-ban/helpers";
-import { TNBAccount } from "@/server/api/routers/nano-ban/types";
+import { TNanoBananoAccount } from "@/server/api/routers/nano-ban/types";
 
-export default function NBCard({
+export default function NanoBananoCard({
   data,
   config,
   isPending,
@@ -19,7 +19,7 @@ export default function NBCard({
   isLoadingError,
 }: {
   data: AppRouterOutputs["nanoBan"]["getBalances"][number] | undefined;
-  config: TNBAccount;
+  config: TNanoBananoAccount;
   isPending: boolean;
   isRefetching: boolean;
   isError: boolean;

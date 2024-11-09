@@ -10,8 +10,8 @@ import {
 } from "@/server/api/routers/nano-ban/helpers";
 import {
   AccountSchema,
-  TNBBalanceResponse,
-  TNBResult,
+  TNanoBananoBalanceResponse,
+  TNanoBananoResult,
 } from "@/server/api/routers/nano-ban/types";
 
 export const nanoBanRouter = createTRPCRouter({
@@ -22,7 +22,7 @@ export const nanoBanRouter = createTRPCRouter({
       })
     )
     .query(async ({ input: { accounts } }) => {
-      const results: TNBResult[] = [];
+      const results: TNanoBananoResult[] = [];
       const nanoAddresses = accounts
         .map((a) => a.address)
         .filter((a) => isNano(a));
@@ -48,8 +48,9 @@ export const nanoBanRouter = createTRPCRouter({
         const address = account.address;
         const isMine = account.isMine;
         const isNanoAddress = isNano(address);
-        let balanceObj: TNBBalanceResponse["balances"][string] | undefined =
-          undefined;
+        let balanceObj:
+          | TNanoBananoBalanceResponse["balances"][string]
+          | undefined = undefined;
 
         if (isNanoAddress && address in nanoBalances.balances) {
           balanceObj = nanoBalances.balances[address];
@@ -90,7 +91,7 @@ async function getBalances({
   if (!res.ok) {
     throw new Error("Failed to fetch NANO/BAN balances");
   }
-  const json: TNBBalanceResponse = await res.json();
+  const json: TNanoBananoBalanceResponse = await res.json();
   if (json.errors) {
     throw new Error(JSON.stringify(json.errors));
   }

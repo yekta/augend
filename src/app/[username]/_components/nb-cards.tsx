@@ -1,12 +1,12 @@
 "use client";
 
-import NBCard from "@/components/cards/nb-card";
+import NanoBananoCard from "@/components/cards/nano-banano-cards";
 import { defaultQueryOptions } from "@/lib/constants";
-import { TNBAccount } from "@/server/api/routers/nano-ban/types";
+import { TNanoBananoAccount } from "@/server/api/routers/nano-ban/types";
 import { api } from "@/trpc/react";
 
-export const items: TNBAccount[] = (
-  process.env.NEXT_PUBLIC_ADMIN_NB_CARDS || ""
+export const items: TNanoBananoAccount[] = (
+  process.env.NEXT_PUBLIC_ADMIN_NANO_BANANO_CARDS || ""
 )
   .split(",")
   .map((i) => {
@@ -21,14 +21,14 @@ export const nbQueryInput = {
   accounts: items,
 };
 
-export default function NBCards() {
+export default function NanoBananoCards() {
   const { data, isPending, isRefetching, isError, isLoadingError } =
     api.nanoBan.getBalances.useQuery(nbQueryInput, defaultQueryOptions.fast);
 
   return (
     <>
       {items.map((item, index) => (
-        <NBCard
+        <NanoBananoCard
           key={item.address + index}
           config={item}
           data={data?.[index]}

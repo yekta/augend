@@ -1,6 +1,6 @@
 "use client";
 
-import { nbQueryInput } from "@/app/[username]/_components/nb-cards";
+import { nbQueryInput } from "@/app/[username]/_components/nano-banano-cards";
 import ThreeLineCard from "@/components/cards/three-line-card";
 import { useCmcCryptoInfos } from "@/components/providers/cmc/cmc-crypto-infos-provider";
 import { formatNumberTBMK } from "@/lib/number-formatters";

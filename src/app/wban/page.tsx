@@ -1,6 +1,6 @@
 import CryptoCards from "@/app/wban/_components/crypto-cards";
 import OrderBookCards from "@/app/wban/_components/order-book-cards";
-import NBCards from "@/app/wban/_components/nb-cards";
+import NanoBananoCards from "@/app/wban/_components/nano-banano-cards";
 import WBanCard from "@/components/cards/wban-card";
 import DashboardWrapper from "@/components/dashboard-wrapper";
 import { Metadata } from "next";
@@ -21,7 +21,7 @@ export default async function Page() {
       <CmcCryptoInfosProvider>
         <CmcGlobalMetricsProvider>
           <DashboardWrapper>
-            <NBCards />
+            <NanoBananoCards />
             <CryptoCards />
             <FearGreedIndexCard />
             <MiniCryptoCards />

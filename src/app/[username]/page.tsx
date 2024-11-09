@@ -1,7 +1,7 @@
 import BanTotalCard from "@/app/[username]/_components/ban-total-card";
 import CryptoCards from "@/app/[username]/_components/crypto-cards";
 import MiniCryptoCards from "@/app/[username]/_components/mini-crypto-cards";
-import NBCards from "@/app/[username]/_components/nb-cards";
+import NanoBananoCards from "@/app/[username]/_components/nano-banano-cards";
 import OhlcvChartCards from "@/app/[username]/_components/ohlcv-chart-cards";
 import OrderBookCards from "@/app/[username]/_components/order-book-cards";
 import TurkishLiraCards from "@/app/[username]/_components/turkish-lira-cards";
@@ -45,7 +45,7 @@ export default async function Page({
             <TurkishLiraCards />
             <MiniCryptoCards />
             <WBanCard />
-            <NBCards />
+            <NanoBananoCards />
             <OrderBookCards />
             <OhlcvChartCards />
             <CoinListCard />

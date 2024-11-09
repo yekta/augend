@@ -5,9 +5,9 @@ export const AccountSchema = z.object({
   isMine: z.boolean(),
 });
 
-export type TNBAccount = z.infer<typeof AccountSchema>;
+export type TNanoBananoAccount = z.infer<typeof AccountSchema>;
 
-export type TNBBalanceResponse = {
+export type TNanoBananoBalanceResponse = {
   balances: {
     [key: string]: {
       balance: string;
@@ -20,7 +20,7 @@ export type TNBBalanceResponse = {
   };
 };
 
-export type TNBResult = {
+export type TNanoBananoResult = {
   address: string;
   balance: number;
   pending: number;
