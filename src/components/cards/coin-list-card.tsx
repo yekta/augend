@@ -171,7 +171,7 @@ export default function CoinListCard({ className }: { className?: string }) {
               >
                 <div className="max-w-full flex items-center justify-start gap-1 md:gap-1.5">
                   <p
-                    className={`${pendingClasses} max-w-full font-semibold text-xs md:text-sm md:leading-none leading-none whitespace-nowrap overflow-hidden overflow-ellipsis group-data-[is-loading-error]/table:text-destructive`}
+                    className={`${pendingClasses} shrink min-w-0 font-semibold text-xs md:text-sm md:leading-none leading-none whitespace-nowrap overflow-hidden overflow-ellipsis group-data-[is-loading-error]/table:text-destructive`}
                   >
                     {isPending
                       ? "Loading"
@@ -180,7 +180,7 @@ export default function CoinListCard({ className }: { className?: string }) {
                         : "Error"}
                   </p>
                   <ExternalLinkIcon
-                    className="opacity-0 -translate-x-1 pointer-events-none size-3 md:size-4 -my-1 transition duration-100
+                    className="opacity-0 shrink-0 -translate-x-1 pointer-events-none size-3 md:size-4 -my-1 transition duration-100
                     not-touch:group-data-[has-data]/table:group-hover/link:opacity-100 not-touch:group-data-[has-data]/table:group-hover/link:translate-x-0"
                   />
                 </div>
