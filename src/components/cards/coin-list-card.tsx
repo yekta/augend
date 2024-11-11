@@ -36,11 +36,8 @@ import { CSSProperties, useMemo, useState } from "react";
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
 } from "@/components/ui/pagination";
 
 const convertCurrency = {
@@ -91,7 +88,7 @@ declare module "@tanstack/react-table" {
 
 export default function CoinListCard({ className }: { className?: string }) {
   const [page, setPage] = useState(1);
-  const pageMin = 1;
+  /* const pageMin = 1; */
   const pageMax = 5;
   const { data, isLoadingError, isPending, isError, isRefetching } =
     api.cmc.getCoinList.useQuery({ convert: convertCurrency.ticker, page });
@@ -432,7 +429,7 @@ export default function CoinListCard({ className }: { className?: string }) {
                 {Array.from({ length: pageMax }, (_, i) => (
                   <PaginationItem key={i}>
                     <PaginationLink
-                      className={`py-5 px-5 rounded-none border-none text-xs md:text-sm ${
+                      className={`py-5 px-6 rounded-none border-none text-xs md:text-sm ${
                         !(page === i + 1)
                           ? "text-foreground/50 not-touch:hover:bg-background-secondary hover:text-foreground"
                           : "bg-background-secondary not-touch:hover:bg-background-secondary"
