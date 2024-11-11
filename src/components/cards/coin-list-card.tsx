@@ -349,10 +349,12 @@ export default function CoinListCard({ className }: { className?: string }) {
                         header.column.getIsPinned() && "bg-background"
                       )}
                     >
-                      {flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
+                      <div className="border-b">
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                      </div>
                     </TableHead>
                   ))}
                 </TableRow>
