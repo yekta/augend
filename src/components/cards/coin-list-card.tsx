@@ -42,8 +42,8 @@ const pendingClassesMuted =
   "group-data-[is-pending]/table:text-transparent group-data-[is-pending]/table:bg-muted-foreground group-data-[is-pending]/table:rounded-sm group-data-[is-pending]/table:animate-skeleton";
 const pendingClasses =
   "group-data-[is-pending]/table:text-transparent group-data-[is-pending]/table:bg-foreground group-data-[is-pending]/table:rounded-sm group-data-[is-pending]/table:animate-skeleton";
-const paddingLeft = "pl-2";
-const paddingRight = "pr-2";
+const paddingLeft = "pl-2 md:pr-4";
+const paddingRight = "pr-2 md:pr-4";
 const paddingY = "py-3.5";
 const defaultColumnClasses = "w-22 md:w-32 ml-auto";
 
