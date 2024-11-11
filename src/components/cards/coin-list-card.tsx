@@ -94,6 +94,7 @@ export default function CoinListCard({ className }: { className?: string }) {
     return [
       {
         accessorKey: "name",
+        sortDescFirst: false,
         header: ({ header }) => (
           <HeaderColumn
             isSorted={header.column.getIsSorted()}
@@ -102,6 +103,7 @@ export default function CoinListCard({ className }: { className?: string }) {
             indicatorPosition="end"
             className={`justify-start pl-4 md:pl-5 ${nameWidth}`}
             innerClassName="justify-start text-left"
+            sortDescFirst={false}
           >
             Name
           </HeaderColumn>
@@ -184,6 +186,7 @@ export default function CoinListCard({ className }: { className?: string }) {
       },
       {
         accessorKey: "price",
+        sortDescFirst: true,
         header: ({ header }) => (
           <HeaderColumn
             isSorted={header.column.getIsSorted()}
@@ -202,6 +205,7 @@ export default function CoinListCard({ className }: { className?: string }) {
       },
       {
         accessorKey: "percentChange24h",
+        sortDescFirst: true,
         header: ({ header }) => (
           <HeaderColumn
             isSorted={header.column.getIsSorted()}
@@ -226,6 +230,7 @@ export default function CoinListCard({ className }: { className?: string }) {
       },
       {
         accessorKey: "percentChange7d",
+        sortDescFirst: true,
         header: ({ header }) => (
           <HeaderColumn
             isSorted={header.column.getIsSorted()}
@@ -250,6 +255,7 @@ export default function CoinListCard({ className }: { className?: string }) {
       },
       {
         accessorKey: "marketCap",
+        sortDescFirst: true,
         header: ({ header }) => (
           <HeaderColumn
             isSorted={header.column.getIsSorted()}
@@ -268,6 +274,7 @@ export default function CoinListCard({ className }: { className?: string }) {
       },
       {
         accessorKey: "volume",
+        sortDescFirst: true,
         header: ({ header }) => (
           <HeaderColumn
             isSorted={header.column.getIsSorted()}
@@ -379,6 +386,7 @@ function HeaderColumn({
   canSort,
   indicatorPosition = "start",
   isPinned,
+  sortDescFirst = true,
 }: {
   className?: string;
   innerClassName?: string;
@@ -387,13 +395,8 @@ function HeaderColumn({
   canSort?: boolean;
   indicatorPosition?: "start" | "end";
   isPinned?: boolean;
+  sortDescFirst?: boolean;
 }) {
-  const SortIcon =
-    isSorted === "asc"
-      ? ArrowUpIcon
-      : isSorted === "desc"
-        ? ArrowDownIcon
-        : "div";
   return (
     <div
       className={cn(
@@ -403,9 +406,15 @@ function HeaderColumn({
         className
       )}
     >
-      <SortIcon
+      <ArrowDownIcon
+        data-sort={
+          isSorted === "asc" ? "asc" : isSorted === "desc" ? "desc" : false
+        }
         data-indicator-position={indicatorPosition}
-        className="size-3.5 -my-1 data-[indicator-position=end]:order-last"
+        className={cn(
+          "size-3.5 -my-1 data-[indicator-position=end]:order-last data-[sort=false]:opacity-0 data-[sort=asc]:rotate-180 data-[sort=desc]:rotate-0 duration-100 transition",
+          sortDescFirst === false ? "rotate-180" : undefined
+        )}
       />
       <div
         className={cn(
