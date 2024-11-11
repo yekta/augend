@@ -15,7 +15,12 @@ import {
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
-import { ArrowDownIcon, ArrowRightIcon, ArrowUpIcon } from "lucide-react";
+import {
+  ArrowDownIcon,
+  ArrowRightIcon,
+  ArrowUpIcon,
+  ExternalLinkIcon,
+} from "lucide-react";
 import Link from "next/link";
 
 import {
@@ -40,7 +45,7 @@ const pendingClasses =
 const paddingLeft = "pl-2";
 const paddingRight = "pr-2";
 const paddingY = "py-3.5";
-const defaultColumnClasses = "w-24 md:w-32 ml-auto";
+const defaultColumnClasses = "w-22 md:w-32 ml-auto";
 
 type TData = {
   id: number;
@@ -131,7 +136,7 @@ export default function CoinListCard({ className }: { className?: string }) {
               }
               data-has-data={data && true}
               className={cn(
-                `pl-4 md:pl-5 ${paddingRight} py-3.5 flex flex-row items-center gap-3.5 not-touch:group-data-[has-data]/table:hover:bg-foreground/2 overflow-hidden`
+                `pl-4 md:pl-5 ${paddingRight} group/link py-3.5 flex flex-row items-center gap-3.5 overflow-hidden`
               )}
             >
               <div className="flex flex-col items-center justify-center gap-1.5">
@@ -162,17 +167,23 @@ export default function CoinListCard({ className }: { className?: string }) {
                 </div>
               </div>
               <div
-                className={`flex-1 w-16 md:w-40 min-w-0 flex flex-col justify-center items-start gap-1.5 overflow-hidden`}
+                className={`flex-1 w-20 md:w-40 min-w-0 flex flex-col justify-center items-start gap-1.5 overflow-hidden`}
               >
-                <p
-                  className={`${pendingClasses} max-w-full font-semibold text-xs md:text-sm md:leading-none leading-none whitespace-nowrap overflow-hidden overflow-ellipsis group-data-[is-loading-error]/table:text-destructive`}
-                >
-                  {isPending
-                    ? "Loading"
-                    : data
-                      ? row.getValue("name")
-                      : "Error"}
-                </p>
+                <div className="max-w-full flex items-center justify-start gap-1 md:gap-1.5">
+                  <p
+                    className={`${pendingClasses} max-w-full font-semibold text-xs md:text-sm md:leading-none leading-none whitespace-nowrap overflow-hidden overflow-ellipsis group-data-[is-loading-error]/table:text-destructive`}
+                  >
+                    {isPending
+                      ? "Loading"
+                      : data
+                        ? row.getValue("name")
+                        : "Error"}
+                  </p>
+                  <ExternalLinkIcon
+                    className="opacity-0 -translate-x-1 pointer-events-none size-3 md:size-4 -my-1 transition duration-100
+                    not-touch:group-data-[has-data]/table:group-hover/link:opacity-100 not-touch:group-data-[has-data]/table:group-hover/link:translate-x-0"
+                  />
+                </div>
                 <p
                   className={`${pendingClassesMuted} max-w-full whitespace-nowrap overflow-hidden overflow-ellipsis text-muted-foreground leading-none text-xs group-data-[is-loading-error]/table:text-destructive`}
                 >
