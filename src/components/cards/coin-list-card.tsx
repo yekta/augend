@@ -10,6 +10,7 @@ import {
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
+  RowData,
   SortDirection,
   SortingState,
   useReactTable,
@@ -39,8 +40,6 @@ const pendingClasses =
 const paddingLeft = "pl-2";
 const paddingRight = "pr-2";
 const paddingY = "py-3.5";
-const width = "w-22 md:w-auto";
-const nameWidth = "w-32 md:w-56";
 
 type TData = {
   id: number;
@@ -67,6 +66,12 @@ const fallbackData: TData[] = Array.from({ length: 100 }, (_, i) => ({
   marketCap: 123456,
   volume: 123456,
 }));
+
+declare module "@tanstack/react-table" {
+  interface ColumnMeta<TData extends RowData, TValue> {
+    width: string;
+  }
+}
 
 export default function CoinListCard({ className }: { className?: string }) {
   const { data, isLoadingError, isPending, isError, isRefetching } =
@@ -95,13 +100,14 @@ export default function CoinListCard({ className }: { className?: string }) {
       {
         accessorKey: "name",
         sortDescFirst: false,
+        meta: {
+          width: "16.66666%",
+        },
         header: ({ header }) => (
           <HeaderColumn
             isSorted={header.column.getIsSorted()}
-            canSort={header.column.getCanSort()}
-            isPinned={header.column.getIsPinned() !== false}
             indicatorPosition="end"
-            className={`justify-start pl-4 md:pl-5 ${nameWidth}`}
+            className={`justify-start pl-4 md:pl-5`}
             innerClassName="justify-start text-left"
             sortDescFirst={false}
           >
@@ -124,7 +130,7 @@ export default function CoinListCard({ className }: { className?: string }) {
               }
               data-has-data={data && true}
               className={cn(
-                `pl-4 md:pl-5 ${paddingRight} ${nameWidth} bg-background py-3.5 data-[has-data]:group-hover/row:bg-background-secondary data-[has-data]:hover:bg-background-secondary flex flex-row items-center gap-3.5 overflow-hidden`
+                `pl-4 md:pl-5 ${paddingRight} py-3.5 flex flex-row items-center gap-3.5 group-data-[has-data]/table:hover:bg-foreground/2 overflow-hidden`
               )}
             >
               <div className="flex flex-col items-center justify-center gap-1.5">
@@ -154,7 +160,9 @@ export default function CoinListCard({ className }: { className?: string }) {
                   </p>
                 </div>
               </div>
-              <div className="flex-1 min-w-0 flex flex-col justify-center items-start gap-1.5 overflow-hidden">
+              <div
+                className={`flex-1 w-16 md:w-40 min-w-0 flex flex-col justify-center items-start gap-1.5 overflow-hidden`}
+              >
                 <p
                   className={`${pendingClasses} max-w-full font-semibold text-xs md:text-sm md:leading-none leading-none whitespace-nowrap overflow-hidden overflow-ellipsis group-data-[is-loading-error]/table:text-destructive`}
                 >
@@ -186,12 +194,12 @@ export default function CoinListCard({ className }: { className?: string }) {
       },
       {
         accessorKey: "price",
+        meta: {
+          width: "16.66666%",
+        },
         sortDescFirst: true,
         header: ({ header }) => (
-          <HeaderColumn
-            isSorted={header.column.getIsSorted()}
-            canSort={header.column.getCanSort()}
-          >
+          <HeaderColumn isSorted={header.column.getIsSorted()}>
             Price
           </HeaderColumn>
         ),
@@ -205,12 +213,12 @@ export default function CoinListCard({ className }: { className?: string }) {
       },
       {
         accessorKey: "percentChange24h",
+        meta: {
+          width: "16.66666%",
+        },
         sortDescFirst: true,
         header: ({ header }) => (
-          <HeaderColumn
-            isSorted={header.column.getIsSorted()}
-            canSort={header.column.getCanSort()}
-          >
+          <HeaderColumn isSorted={header.column.getIsSorted()}>
             24H
           </HeaderColumn>
         ),
@@ -230,14 +238,12 @@ export default function CoinListCard({ className }: { className?: string }) {
       },
       {
         accessorKey: "percentChange7d",
+        meta: {
+          width: "16.66666%",
+        },
         sortDescFirst: true,
         header: ({ header }) => (
-          <HeaderColumn
-            isSorted={header.column.getIsSorted()}
-            canSort={header.column.getCanSort()}
-          >
-            7D
-          </HeaderColumn>
+          <HeaderColumn isSorted={header.column.getIsSorted()}>7D</HeaderColumn>
         ),
         sortingFn: (rowA, rowB, _columnId) => {
           const a = rowA.original.percentChange7d;
@@ -255,14 +261,12 @@ export default function CoinListCard({ className }: { className?: string }) {
       },
       {
         accessorKey: "marketCap",
+        meta: {
+          width: "16.66666%",
+        },
         sortDescFirst: true,
         header: ({ header }) => (
-          <HeaderColumn
-            isSorted={header.column.getIsSorted()}
-            canSort={header.column.getCanSort()}
-          >
-            MC
-          </HeaderColumn>
+          <HeaderColumn isSorted={header.column.getIsSorted()}>MC</HeaderColumn>
         ),
         cell: ({ row }) => (
           <RegularColumn isPending={isPending} isLoadingError={isLoadingError}>
@@ -274,13 +278,12 @@ export default function CoinListCard({ className }: { className?: string }) {
       },
       {
         accessorKey: "volume",
+        meta: {
+          width: "16.66666%",
+        },
         sortDescFirst: true,
         header: ({ header }) => (
-          <HeaderColumn
-            isSorted={header.column.getIsSorted()}
-            canSort={header.column.getCanSort()}
-            className="pr-5"
-          >
+          <HeaderColumn isSorted={header.column.getIsSorted()} className="pr-5">
             Volume
           </HeaderColumn>
         ),
@@ -330,8 +333,21 @@ export default function CoinListCard({ className }: { className?: string }) {
                   {headerGroup.headers.map((header, i) => (
                     <TableHead
                       key={header.id}
-                      onClick={header.column.getToggleSortingHandler()}
-                      style={{ ...getCommonPinningStyles(header.column) }}
+                      onClick={
+                        data
+                          ? header.column.getToggleSortingHandler()
+                          : undefined
+                      }
+                      style={{
+                        ...getCommonPinningStyles(header.column),
+                        width: header.column.columnDef.meta?.width,
+                      }}
+                      className={cn(
+                        "overflow-hidden",
+                        header.column.getCanSort() &&
+                          "group-data-[has-data]/table:cursor-pointer group-data-[has-data]/table:hover:bg-background-secondary",
+                        header.column.getIsPinned() && "bg-background"
+                      )}
                     >
                       {flexRender(
                         header.column.columnDef.header,
@@ -352,9 +368,16 @@ export default function CoinListCard({ className }: { className?: string }) {
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
-                      className="p-0"
                       key={cell.id}
-                      style={{ ...getCommonPinningStyles(cell.column) }}
+                      style={{
+                        ...getCommonPinningStyles(cell.column),
+                        width: cell.column.columnDef.meta?.width,
+                      }}
+                      className={cn(
+                        "p-0 overflow-hidden",
+                        cell.column.getIsPinned() &&
+                          "bg-background group-data-[has-data]/table:group-hover/row:bg-background-secondary"
+                      )}
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
@@ -383,26 +406,20 @@ function HeaderColumn({
   innerClassName,
   children,
   isSorted,
-  canSort,
   indicatorPosition = "start",
-  isPinned,
   sortDescFirst = true,
 }: {
   className?: string;
   innerClassName?: string;
   children: React.ReactNode;
   isSorted?: false | SortDirection;
-  canSort?: boolean;
   indicatorPosition?: "start" | "end";
-  isPinned?: boolean;
   sortDescFirst?: boolean;
 }) {
   return (
     <div
       className={cn(
-        `${paddingLeft} ${paddingRight} ${width} py-3.5 flex items-center justify-end select-none gap-1`,
-        isPinned ? "bg-background" : undefined,
-        canSort && "cursor-pointer hover:bg-background-secondary",
+        `${paddingLeft} ${paddingRight} w-full py-3.5 flex items-center justify-end select-none gap-1`,
         className
       )}
     >
@@ -412,18 +429,18 @@ function HeaderColumn({
         }
         data-indicator-position={indicatorPosition}
         className={cn(
-          "size-3.5 -my-1 data-[indicator-position=end]:order-last data-[sort=false]:opacity-0 data-[sort=asc]:rotate-180 data-[sort=desc]:rotate-0 duration-100 transition",
+          "size-3.5 -my-1 shrink-0 data-[indicator-position=end]:order-last data-[sort=false]:opacity-0 data-[sort=asc]:rotate-180 data-[sort=desc]:rotate-0 duration-100 transition",
           sortDescFirst === false ? "rotate-180" : undefined
         )}
       />
-      <div
+      <p
         className={cn(
-          `${pendingClassesMuted} text-right text-xs md:text-sm leading-none md:leading-none flex items-center justify-end`,
+          `${pendingClassesMuted} shrink min-w-0 overflow-hidden overflow-ellipsis text-right text-xs md:text-sm leading-none md:leading-none flex items-center justify-end`,
           innerClassName
         )}
       >
         {children}
-      </div>
+      </p>
     </div>
   );
 }
@@ -446,7 +463,7 @@ function ChangeColumn({
       data-is-negative={isNegative ? true : undefined}
       data-is-positive={isPositive ? true : undefined}
       className={cn(
-        `${paddingLeft} ${paddingRight} ${paddingY} ${width} text-xs md:text-sm md:leading-none break-words leading-none font-medium md:w-auto md:flex-1 flex text-right overflow-hidden overflow-ellipsis items-center justify-end text-muted-foreground data-[is-loading-error]:text-destructive data-[is-negative]:text-destructive data-[is-positive]:text-success`,
+        `${paddingLeft} ${paddingRight} ${paddingY} text-xs md:text-sm md:leading-none break-words leading-none font-medium flex text-right overflow-hidden overflow-ellipsis items-center justify-end text-muted-foreground data-[is-loading-error]:text-destructive data-[is-negative]:text-destructive data-[is-positive]:text-success`,
         className
       )}
     >
@@ -482,7 +499,7 @@ function RegularColumn({
   return (
     <div
       className={cn(
-        `${paddingLeft} ${paddingRight} ${paddingY} ${width} text-xs md:text-sm md:leading-none font-medium md:w-auto md:flex-1 flex items-center justify-end`,
+        `${paddingLeft} ${paddingRight} ${paddingY} text-xs md:text-sm md:leading-none font-medium flex items-center justify-end overflow-hidden`,
         className
       )}
     >

@@ -67,6 +67,10 @@ const config: Config = {
           greed: "hsl(var(--index-greed))",
         },
       },
+      opacity: {
+        2: "0.02",
+        3: "0.03",
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
