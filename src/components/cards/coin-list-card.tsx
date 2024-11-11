@@ -40,6 +40,7 @@ const pendingClasses =
 const paddingLeft = "pl-2";
 const paddingRight = "pr-2";
 const paddingY = "py-3.5";
+const defaultColumnClasses = "w-24 md:w-32 ml-auto";
 
 type TData = {
   id: number;
@@ -107,7 +108,7 @@ export default function CoinListCard({ className }: { className?: string }) {
           <HeaderColumn
             isSorted={header.column.getIsSorted()}
             indicatorPosition="end"
-            className={`justify-start pl-4 md:pl-5`}
+            className={`justify-start pl-4 md:pl-5 ml-0`}
             innerClassName="justify-start text-left"
             sortDescFirst={false}
           >
@@ -284,7 +285,7 @@ export default function CoinListCard({ className }: { className?: string }) {
         sortDescFirst: true,
         header: ({ header }) => (
           <HeaderColumn isSorted={header.column.getIsSorted()} className="pr-5">
-            Volume
+            Vol
           </HeaderColumn>
         ),
         cell: ({ row }) => (
@@ -421,7 +422,7 @@ function HeaderColumn({
   return (
     <div
       className={cn(
-        `${paddingLeft} ${paddingRight} w-full py-3.5 flex items-center justify-end select-none gap-1`,
+        `${paddingLeft} ${paddingRight} ${defaultColumnClasses} py-3.5 flex items-center justify-end select-none gap-1`,
         className
       )}
     >
@@ -437,8 +438,9 @@ function HeaderColumn({
       />
       <p
         className={cn(
-          `${pendingClassesMuted} shrink min-w-0 overflow-hidden overflow-ellipsis text-right text-xs md:text-sm leading-none md:leading-none flex items-center justify-end`,
-          innerClassName
+          `${pendingClassesMuted} overflow-hidden overflow-ellipsis text-right text-xs md:text-sm leading-none md:leading-none`,
+          innerClassName,
+          "overflow-ellipsis"
         )}
       >
         {children}
@@ -465,7 +467,7 @@ function ChangeColumn({
       data-is-negative={isNegative ? true : undefined}
       data-is-positive={isPositive ? true : undefined}
       className={cn(
-        `${paddingLeft} ${paddingRight} ${paddingY} text-xs md:text-sm md:leading-none break-words leading-none font-medium flex text-right overflow-hidden overflow-ellipsis items-center justify-end text-muted-foreground data-[is-loading-error]:text-destructive data-[is-negative]:text-destructive data-[is-positive]:text-success`,
+        `${paddingLeft} ${paddingRight} ${paddingY} ${defaultColumnClasses} text-xs md:text-sm md:leading-none break-words leading-none font-medium flex text-right overflow-hidden overflow-ellipsis items-center justify-end text-muted-foreground data-[is-loading-error]:text-destructive data-[is-negative]:text-destructive data-[is-positive]:text-success`,
         className
       )}
     >
@@ -501,7 +503,7 @@ function RegularColumn({
   return (
     <div
       className={cn(
-        `${paddingLeft} ${paddingRight} ${paddingY} text-xs md:text-sm md:leading-none font-medium flex items-center justify-end overflow-hidden`,
+        `${paddingLeft} ${paddingRight} ${paddingY} ${defaultColumnClasses} text-xs md:text-sm md:leading-none font-medium flex items-center justify-end overflow-hidden`,
         className
       )}
     >
