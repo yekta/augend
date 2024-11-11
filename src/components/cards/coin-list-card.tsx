@@ -295,7 +295,10 @@ export default function CoinListCard({ className }: { className?: string }) {
         },
         sortDescFirst: true,
         header: ({ header }) => (
-          <HeaderColumn isSorted={header.column.getIsSorted()} className="pr-5">
+          <HeaderColumn
+            isSorted={header.column.getIsSorted()}
+            className="pr-4 md:pr-5"
+          >
             Vol
           </HeaderColumn>
         ),
@@ -303,7 +306,7 @@ export default function CoinListCard({ className }: { className?: string }) {
           <RegularColumn
             isPending={isPending}
             isLoadingError={isLoadingError}
-            className="pr-5"
+            className="pr-4 md:pr-5"
           >
             {`${convertCurrency.symbol}${formatNumberTBMK(
               row.getValue("volume")
