@@ -349,7 +349,7 @@ export default function CoinListCard({ className }: { className?: string }) {
                         header.column.getIsPinned() && "bg-background"
                       )}
                     >
-                      <div className="border-b">
+                      <div className="border-b overflow-hidden max-w-full">
                         {flexRender(
                           header.column.columnDef.header,
                           header.getContext()
