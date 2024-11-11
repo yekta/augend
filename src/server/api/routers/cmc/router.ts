@@ -75,10 +75,13 @@ export const cmcRouter = createTRPCRouter({
     .input(
       z.object({
         convert: z.string().default("usd"),
+        page: z.number().default(0),
       })
     )
-    .query(async ({ input: { convert } }) => {
-      const coinListUrl = `${cmcApiUrl}/v1/cryptocurrency/listings/latest?convert=${convert}&limit=100`;
+    .query(async ({ input: { convert, page } }) => {
+      const limit = 100;
+      const start = ((page || 1) - 1) * limit + 1;
+      const coinListUrl = `${cmcApiUrl}/v1/cryptocurrency/listings/latest?convert=${convert}&limit=100&start=${start}`;
       const coinListPromise = fetch(coinListUrl, cmcFetchOptions);
       const [coinListResponse] = await Promise.all([coinListPromise]);
 

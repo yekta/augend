@@ -33,6 +33,16 @@ import {
 } from "@/components/ui/table";
 import { CSSProperties, useMemo, useState } from "react";
 
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+
 const convertCurrency = {
   ticker: "USD",
   symbol: "$",
@@ -80,8 +90,11 @@ declare module "@tanstack/react-table" {
 }
 
 export default function CoinListCard({ className }: { className?: string }) {
+  const [page, setPage] = useState(1);
+  const pageMin = 1;
+  const pageMax = 5;
   const { data, isLoadingError, isPending, isError, isRefetching } =
-    api.cmc.getCoinList.useQuery({ convert: convertCurrency.ticker });
+    api.cmc.getCoinList.useQuery({ convert: convertCurrency.ticker, page });
 
   const dataOrFallback: TData[] = useMemo(() => {
     if (!data) return fallbackData;
@@ -153,7 +166,7 @@ export default function CoinListCard({ className }: { className?: string }) {
                   <div className="size-4.5 rounded-full shrink-0 bg-destructive" />
                 )}
                 <div
-                  className={`w-5.5 overflow-hidden flex items-center justify-center`}
+                  className={`w-6 overflow-hidden flex items-center justify-center`}
                 >
                   <p
                     className={`${pendingClassesMuted} max-w-full overflow-hidden overflow-ellipsis text-xs leading-none font-medium text-muted-foreground text-center group-data-[is-loading-error]/table:text-destructive`}
@@ -406,6 +419,42 @@ export default function CoinListCard({ className }: { className?: string }) {
               ))}
             </TableBody>
           </Table>
+          <div className="w-full px-4 border-t">
+            <Pagination>
+              <PaginationContent>
+                {/* <PaginationItem>
+                  <PaginationPrevious
+                    isButton={true}
+                    disabled={page === pageMin}
+                    onClick={() => setPage(Math.max(page - 1, pageMin))}
+                  />
+                </PaginationItem> */}
+                {Array.from({ length: pageMax }, (_, i) => (
+                  <PaginationItem key={i}>
+                    <PaginationLink
+                      className={`py-5 px-5 rounded-none border-none text-xs md:text-sm ${
+                        !(page === i + 1)
+                          ? "text-foreground/50 not-touch:hover:bg-background-secondary hover:text-foreground"
+                          : "bg-background-secondary not-touch:hover:bg-background-secondary"
+                      }`}
+                      isActive={page === i + 1}
+                      isButton={true}
+                      onClick={() => setPage(i + 1)}
+                    >
+                      {i + 1}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))}
+                {/* <PaginationItem>
+                  <PaginationNext
+                    isButton={true}
+                    disabled={page === pageMax}
+                    onClick={() => setPage(Math.min(page + 1, pageMax))}
+                  />
+                </PaginationItem> */}
+              </PaginationContent>
+            </Pagination>
+          </div>
         </div>
       </div>
       <Indicator
