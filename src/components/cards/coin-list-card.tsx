@@ -130,7 +130,7 @@ export default function CoinListCard({ className }: { className?: string }) {
               }
               data-has-data={data && true}
               className={cn(
-                `pl-4 md:pl-5 ${paddingRight} py-3.5 flex flex-row items-center gap-3.5 group-data-[has-data]/table:hover:bg-foreground/2 overflow-hidden`
+                `pl-4 md:pl-5 ${paddingRight} py-3.5 flex flex-row items-center gap-3.5 not-touch:group-data-[has-data]/table:hover:bg-foreground/2 overflow-hidden`
               )}
             >
               <div className="flex flex-col items-center justify-center gap-1.5">
@@ -345,7 +345,7 @@ export default function CoinListCard({ className }: { className?: string }) {
                       className={cn(
                         "overflow-hidden",
                         header.column.getCanSort() &&
-                          "group-data-[has-data]/table:cursor-pointer group-data-[has-data]/table:hover:bg-background-secondary",
+                          "group-data-[has-data]/table:cursor-pointer not-touch:group-data-[has-data]/table:hover:bg-background-secondary",
                         header.column.getIsPinned() && "bg-background"
                       )}
                     >
@@ -366,7 +366,7 @@ export default function CoinListCard({ className }: { className?: string }) {
                   borderless
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  className="group/row group-data-[has-data]/table:hover:bg-background-secondary"
+                  className="group/row not-touch:group-data-[has-data]/table:hover:bg-background-secondary"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
