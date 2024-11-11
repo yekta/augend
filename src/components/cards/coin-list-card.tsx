@@ -378,7 +378,7 @@ export default function CoinListCard({ className }: { className?: string }) {
                       className={cn(
                         "p-0 overflow-hidden",
                         cell.column.getIsPinned() &&
-                          "bg-background group-data-[has-data]/table:group-hover/row:bg-background-secondary"
+                          "bg-background not-touch:group-data-[has-data]/table:group-hover/row:bg-background-secondary"
                       )}
                     >
                       {flexRender(
