@@ -63,8 +63,8 @@ export default function OrderBookCard({
       )}
     >
       <div
-        data-is-loading-error={isLoadingError ? true : undefined}
-        data-is-pending={isPending ? true : undefined}
+        data-is-loading-error={(isLoadingError && true) || undefined}
+        data-is-pending={(isPending && true) || undefined}
         className="flex flex-col items-center border rounded-xl px-4 py-4.5 text-center gap-4 group not-touch:group-hover/card:bg-background-secondary transition text-sm relative"
       >
         {/* Top */}

@@ -56,8 +56,8 @@ export default function ThreeLineCard({
       )}
     >
       <div
-        data-is-loading-error={isLoadingError ? true : undefined}
-        data-is-pending={isPending ? true : undefined}
+        data-is-loading-error={(isLoadingError && true) || undefined}
+        data-is-pending={(isPending && true) || undefined}
         data-has-href={href ? true : undefined}
         className="flex flex-1 flex-col justify-center items-center border rounded-xl px-4 py-3 text-center gap-3 group not-touch:data-[has-href]:group-hover/card:bg-background-secondary relative overflow-hidden"
       >

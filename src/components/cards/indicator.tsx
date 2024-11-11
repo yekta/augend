@@ -29,7 +29,7 @@ export default function Indicator({
       data-has-data={hasData ? true : undefined}
       data-is-error={isError && !isPending && !isRefetching ? true : undefined}
       data-is-refetching={isRefetching ? true : undefined}
-      data-is-pending={isPending ? true : undefined}
+      data-is-pending={(isPending && true) || undefined}
       className={cn(
         "p-1.75 absolute z-10 group/indicator left-0 top-0",
         className

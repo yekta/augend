@@ -178,7 +178,7 @@ export default function OhlcvChartCard({
 
   return (
     <div
-      data-is-pending={isPending ? true : undefined}
+      data-is-pending={(isPending && true) || undefined}
       data-is-loading-error={
         isLoadingError && !isPending && !isRefetching ? true : undefined
       }
@@ -369,8 +369,8 @@ function Header({
 
   return (
     <div
-      data-is-pending={isPending ? true : undefined}
-      data-is-loading-error={isLoadingError ? true : undefined}
+      data-is-pending={(isPending && true) || undefined}
+      data-is-loading-error={(isLoadingError && true) || undefined}
       data-is-placeholder-data={isPlaceholderData ? true : undefined}
       data-is-hard-error={!isPending && priceInfo.isFallback ? true : undefined}
       className="w-full flex flex-col items-start justify-start gap-2.5 pr-14 group/header"

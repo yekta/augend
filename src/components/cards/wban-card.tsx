@@ -75,7 +75,7 @@ export default function WBanCard({ className }: { className?: string }) {
     <div className={cn("w-full flex flex-col p-1 group/card", className)}>
       <div
         data-loading-error={isLoadingError ? true : undefined}
-        data-is-pending={isPending ? true : undefined}
+        data-is-pending={(isPending && true) || undefined}
         className="flex flex-col items-center border rounded-xl group transition relative overflow-hidden"
       >
         {wbanNetworkObjects.map((network) => {

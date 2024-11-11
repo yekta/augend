@@ -46,8 +46,8 @@ export default function FearGreedIndexCard({
       )}
     >
       <div
-        data-is-loading-error={isLoadingError ? true : undefined}
-        data-is-pending={isPending ? true : undefined}
+        data-is-loading-error={(isLoadingError && true) || undefined}
+        data-is-pending={(isPending && true) || undefined}
         className="flex flex-1 flex-col justify-center items-center border rounded-xl px-3 py-1 text-center gap-3 group not-touch:group-hover/card:bg-background-secondary relative overflow-hidden"
       >
         <div className="max-w-full items-center justify-center flex flex-col gap-2.5">
