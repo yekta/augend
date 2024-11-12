@@ -418,7 +418,7 @@ export default function CoinListCard({ className }: { className?: string }) {
           </Table>
           <div className="w-full border-t">
             <Pagination className="">
-              <PaginationContent className="overflow-x-auto">
+              <PaginationContent className="overflow-x-auto relative">
                 {/* <PaginationItem>
                   <PaginationPrevious
                     isButton={true}
@@ -426,22 +426,33 @@ export default function CoinListCard({ className }: { className?: string }) {
                     onClick={() => setPage(Math.max(page - 1, pageMin))}
                   />
                 </PaginationItem> */}
-                {Array.from({ length: pageMax }, (_, i) => (
-                  <PaginationItem key={i}>
-                    <PaginationLink
-                      className={`py-5 font-medium px-6 rounded-none border-none text-xs md:text-sm ${
-                        !(page === i + 1)
-                          ? "text-muted-foreground not-touch:hover:bg-background-secondary hover:text-foreground"
-                          : "bg-background-secondary not-touch:hover:bg-background-secondary"
-                      }`}
-                      isActive={page === i + 1}
-                      isButton={true}
-                      onClick={() => setPage(i + 1)}
-                    >
-                      {i + 1}
-                    </PaginationLink>
-                  </PaginationItem>
-                ))}
+                <div className="flex items-center justify-center relative">
+                  {Array.from({ length: pageMax }, (_, i) => (
+                    <PaginationItem key={i}>
+                      <PaginationLink
+                        data-active={page === i + 1}
+                        className="p-1 flex items-center justify-center font-medium group/link transition-none rounded-none border-none text-xs md:text-sm 
+                          text-foreground/50 data-[active=true]:text-foreground not-touch:hover:bg-transparent hover:text-foreground"
+                        isActive={page === i + 1}
+                        isButton={true}
+                        onClick={() => setPage(i + 1)}
+                      >
+                        <div className="flex rounded-md w-10 px-2 py-2 items-center justify-center not-touch:group-hover/link:bg-background-secondary">
+                          {i + 1}
+                        </div>
+                      </PaginationLink>
+                    </PaginationItem>
+                  ))}
+                  <div
+                    style={{
+                      transform: `translateX(${100 * (page - 1)}%)`,
+                      width: `${100 / pageMax}%`,
+                    }}
+                    className="h-full absolute p-1 left-0 top-0 transition flex items-center justify-center pointer-events-none"
+                  >
+                    <div className="w-full border h-full rounded-md" />
+                  </div>
+                </div>
                 {/* <PaginationItem>
                   <PaginationNext
                     isButton={true}

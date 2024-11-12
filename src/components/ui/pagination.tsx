@@ -50,7 +50,7 @@ const PaginationLink = ({
   className,
   isActive,
   isButton,
-  size = "icon",
+  size = "sm",
   ...props
 }: PaginationLinkProps) => {
   const Component = isButton ? "button" : Link;
