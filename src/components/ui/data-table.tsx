@@ -21,6 +21,12 @@ import { cn } from "@/lib/utils";
 import { CSSProperties, Dispatch, SetStateAction } from "react";
 import Indicator from "@/components/cards/indicator";
 
+type TPage = {
+  min: number;
+  max: number;
+  current: number;
+};
+
 export default function DataTable<T, Z>({
   data,
   table,
@@ -29,8 +35,6 @@ export default function DataTable<T, Z>({
   isError,
   isLoadingError,
   page,
-  pageMin,
-  pageMax,
   setPage,
   className,
 }: {
@@ -40,10 +44,8 @@ export default function DataTable<T, Z>({
   isRefetching: boolean;
   isError: boolean;
   isLoadingError: boolean;
-  page: number;
-  pageMin: number;
-  pageMax: number;
-  setPage: Dispatch<SetStateAction<number>>;
+  page: TPage;
+  setPage: Dispatch<SetStateAction<TPage>>;
   className?: string;
 }) {
   return (
@@ -119,17 +121,22 @@ export default function DataTable<T, Z>({
           <Pagination>
             <PaginationContent className="overflow-x-auto relative">
               <div className="flex items-center justify-center relative">
-                {Array.from({ length: pageMax - pageMin + 1 }, (_, i) => {
-                  const adjustedPage = i + pageMin;
+                {Array.from({ length: page.max - page.min + 1 }, (_, i) => {
+                  const adjustedPage = i + page.min;
                   return (
                     <PaginationItem key={i}>
                       <PaginationLink
-                        data-active={page === adjustedPage}
+                        data-active={page.current === adjustedPage}
                         className="p-1 flex w-14 h-10.5 md:h-11 items-center justify-center font-medium group/link transition-none rounded-none border-none text-xs md:text-sm 
                         text-foreground/50 data-[active=true]:text-foreground not-touch:hover:bg-transparent hover:text-foreground"
-                        isActive={page === adjustedPage}
+                        isActive={page.current === adjustedPage}
                         isButton={true}
-                        onClick={() => setPage(adjustedPage)}
+                        onClick={() =>
+                          setPage((p) => ({
+                            ...p,
+                            current: adjustedPage,
+                          }))
+                        }
                       >
                         <p className="min-w-0 w-full overflow-hidden overflow-ellipsis rounded-md p-2 items-center justify-center not-touch:group-hover/link:bg-background-secondary">
                           {adjustedPage}
@@ -140,8 +147,10 @@ export default function DataTable<T, Z>({
                 })}
                 <div
                   style={{
-                    transform: `translateX(${100 * (page - 1)}%)`,
-                    width: `${100 / pageMax}%`,
+                    transform: `translateX(${
+                      100 * (page.current - page.min)
+                    }%)`,
+                    width: `${100 / (page.max - page.min + 1)}%`,
                   }}
                   className="h-full absolute p-1 left-0 top-0 transition flex items-center justify-center pointer-events-none"
                 >

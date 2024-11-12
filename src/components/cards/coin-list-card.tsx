@@ -87,12 +87,18 @@ declare module "@tanstack/react-table" {
 }
 
 export default function CoinListCard({ className }: { className?: string }) {
-  const [page, setPage] = useState(1);
-  const pageMin = 1;
-  const pageMax = 5;
+  const [page, setPage] = useState<{
+    min: number;
+    max: number;
+    current: number;
+  }>({
+    min: 1,
+    max: 5,
+    current: 1,
+  });
   const { data, isLoadingError, isPending, isError, isRefetching } =
     api.cmc.getCoinList.useQuery(
-      { convert: convertCurrency.ticker, page },
+      { convert: convertCurrency.ticker, page: page.current },
       defaultQueryOptions.slow
     );
 
@@ -347,8 +353,6 @@ export default function CoinListCard({ className }: { className?: string }) {
         isLoadingError={isLoadingError}
         isRefetching={isRefetching}
         page={page}
-        pageMin={pageMin}
-        pageMax={pageMax}
         setPage={setPage}
       />
     </div>
