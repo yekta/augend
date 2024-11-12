@@ -32,6 +32,11 @@ export type TUniswapPoolsResultRaw = {
       ethPriceUSD: string;
     }[];
   };
+  errors?: [
+    {
+      message: string;
+    },
+  ];
 };
 
 export type TUniswapPoolsResult = {

@@ -48,6 +48,8 @@ export type TAsyncDataTableColumnDef<T> = ColumnDef<T> & {
   headerType?: "regular" | "custom";
   headerAlignment?: "start" | "end";
   cellType?: "regular" | "change" | "custom";
+  cellClassName?: string;
+  headerClassName?: string;
 };
 
 export default function AsyncDataTable<T>({
@@ -264,9 +266,12 @@ function getHeader<T>({
 
   return (props: HeaderContext<T, unknown>) => (
     <HeaderColumn
-      className={`${
-        headerAlignment === "start" ? "justify-start mr-auto ml-0" : ""
-      } ${firstColumnClasses} ${lastColumnClasses}`}
+      className={cn(
+        `${
+          headerAlignment === "start" ? "justify-start mr-auto ml-0" : ""
+        } ${firstColumnClasses} ${lastColumnClasses}`,
+        columnDef.headerClassName
+      )}
       innerClassName={
         headerAlignment === "start" ? "justify-start text-left" : undefined
       }
@@ -307,9 +312,12 @@ function getCell<T>({
           change={cell(props)}
           isPending={isPending}
           isLoadingError={isLoadingError}
-          className={`${firstColumnClasses} ${lastColumnClasses} ${
-            alignment === "start" ? "justify-start mr-auto ml-0" : ""
-          }`}
+          className={cn(
+            `${firstColumnClasses} ${lastColumnClasses} ${
+              alignment === "start" ? "justify-start mr-auto ml-0" : ""
+            }`,
+            columnDef.cellClassName
+          )}
         />
       );
     };
@@ -320,9 +328,12 @@ function getCell<T>({
       <RegularColumn
         isPending={isPending}
         isLoadingError={isLoadingError}
-        className={`${firstColumnClasses} ${lastColumnClasses} ${
-          alignment === "start" ? "justify-start mr-auto ml-0 text-left" : ""
-        }`}
+        className={cn(
+          `${firstColumnClasses} ${lastColumnClasses} ${
+            alignment === "start" ? "justify-start mr-auto ml-0 text-left" : ""
+          }`,
+          columnDef.cellClassName
+        )}
         classNameParagraph={alignment === "start" ? "text-left" : undefined}
       >
         {cell(props)}

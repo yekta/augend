@@ -113,7 +113,18 @@ export default function UniswapPoolsTableCard({
       {
         accessorKey: "fee-tier",
         header: "Fee Tier",
-        cell: ({ row }) => `${formatNumberTBMK(row.original.feeTier * 100)}`,
+        cell: ({ row }) => {
+          let className = "text-foreground bg-foreground/8";
+          const feeTierP = row.original.feeTier * 100;
+          if (feeTierP >= 1) className = "text-chart-4 bg-chart-4/8";
+          else if (feeTierP >= 0.3) className = "text-chart-1 bg-chart-1/8";
+          else if (feeTierP >= 0.05) className = "text-chart-3 bg-chart-3/8";
+          return (
+            <div className={`${className} px-1.5 py-1 rounded`}>
+              {feeTierP}%
+            </div>
+          );
+        },
         sortingFn: (a, b) => a.original.feeTier - b.original.feeTier,
       },
       {

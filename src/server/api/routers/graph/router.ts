@@ -69,6 +69,9 @@ export const graphRouter = createTRPCRouter({
         throw new Error(`${res.status}: Failed to fetch Uniswap pools`);
       }
       const resJson: TUniswapPoolsResultRaw = await res.json();
+      if (resJson.errors) {
+        throw new Error(resJson.errors[0].message);
+      }
       const editedRes: TUniswapPoolsResult = {
         bundles: resJson.data.bundles.map((bundle) => ({
           id: bundle.id,
