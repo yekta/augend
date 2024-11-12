@@ -111,14 +111,11 @@ export default function CoinListCard({ className }: { className?: string }) {
 
   const [sorting, setSorting] = useState<SortingState>([]);
 
-  const columnDefs = useMemo<ColumnDef<TData>[]>(() => {
+  const columnDefsRaw = useMemo<ColumnDef<TData>[]>(() => {
     return [
       {
         accessorKey: "name",
         sortDescFirst: false,
-        meta: {
-          width: "16.66666%",
-        },
         header: ({ header }) => (
           <HeaderColumn
             isSorted={header.column.getIsSorted()}
@@ -216,9 +213,6 @@ export default function CoinListCard({ className }: { className?: string }) {
       },
       {
         accessorKey: "price",
-        meta: {
-          width: "16.66666%",
-        },
         sortDescFirst: true,
         header: ({ header }) => (
           <HeaderColumn isSorted={header.column.getIsSorted()}>
@@ -235,9 +229,6 @@ export default function CoinListCard({ className }: { className?: string }) {
       },
       {
         accessorKey: "percentChange24h",
-        meta: {
-          width: "16.66666%",
-        },
         sortDescFirst: true,
         header: ({ header }) => (
           <HeaderColumn isSorted={header.column.getIsSorted()}>
@@ -260,9 +251,6 @@ export default function CoinListCard({ className }: { className?: string }) {
       },
       {
         accessorKey: "percentChange7d",
-        meta: {
-          width: "16.66666%",
-        },
         sortDescFirst: true,
         header: ({ header }) => (
           <HeaderColumn isSorted={header.column.getIsSorted()}>7D</HeaderColumn>
@@ -283,9 +271,6 @@ export default function CoinListCard({ className }: { className?: string }) {
       },
       {
         accessorKey: "marketCap",
-        meta: {
-          width: "16.66666%",
-        },
         sortDescFirst: true,
         header: ({ header }) => (
           <HeaderColumn isSorted={header.column.getIsSorted()}>MC</HeaderColumn>
@@ -300,9 +285,6 @@ export default function CoinListCard({ className }: { className?: string }) {
       },
       {
         accessorKey: "volume",
-        meta: {
-          width: "16.66666%",
-        },
         sortDescFirst: true,
         header: ({ header }) => (
           <HeaderColumn
@@ -326,6 +308,15 @@ export default function CoinListCard({ className }: { className?: string }) {
       },
     ];
   }, [data, isPending, isError, isLoadingError]);
+
+  const columnDefs = useMemo(() => {
+    return columnDefsRaw.map((columnDef) => ({
+      ...columnDef,
+      meta: {
+        width: `${100 / columnDefsRaw.length}%`,
+      },
+    }));
+  }, [columnDefsRaw]);
 
   const table = useReactTable({
     data: dataOrFallback,
