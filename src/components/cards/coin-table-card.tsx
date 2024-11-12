@@ -1,27 +1,15 @@
 "use client";
 
 import AsyncDataTable, {
+  TAsyncDataTableColumnDef,
   TAsyncDataTablePage,
 } from "@/components/ui/async-data-table";
 import { defaultQueryOptions } from "@/lib/constants";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
 import { api } from "@/trpc/react";
-import {
-  ColumnDef,
-  getCoreRowModel,
-  getSortedRowModel,
-  RowData,
-  SortDirection,
-  SortingState,
-  useReactTable,
-} from "@tanstack/react-table";
-import {
-  ArrowDownIcon,
-  ArrowRightIcon,
-  ArrowUpIcon,
-  ExternalLinkIcon,
-} from "lucide-react";
+import { RowData } from "@tanstack/react-table";
+import { ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
@@ -29,15 +17,6 @@ const convertCurrency = {
   ticker: "USD",
   symbol: "$",
 };
-
-const pendingClassesMuted =
-  "group-data-[is-pending]/table:text-transparent group-data-[is-pending]/table:bg-muted-foreground group-data-[is-pending]/table:rounded-sm group-data-[is-pending]/table:animate-skeleton";
-const pendingClasses =
-  "group-data-[is-pending]/table:text-transparent group-data-[is-pending]/table:bg-foreground group-data-[is-pending]/table:rounded-sm group-data-[is-pending]/table:animate-skeleton";
-const paddingLeft = "pl-2 md:pr-4";
-const paddingRight = "pr-2 md:pr-4";
-const paddingY = "py-3.5";
-const defaultColumnClasses = "w-22 md:w-32 ml-auto";
 
 type TData = {
   id: number;
@@ -52,7 +31,7 @@ type TData = {
   volume: number;
 };
 
-const fallbackData: TData[] = Array.from({ length: 100 }, (_, i) => ({
+const dataFallback: TData[] = Array.from({ length: 100 }, (_, i) => ({
   id: i,
   rank: i + 1,
   name: "Bitcoin",
@@ -77,6 +56,7 @@ export default function CoinTableCard({ className }: { className?: string }) {
     max: 5,
     current: 1,
   });
+
   const { data, isLoadingError, isPending, isError, isRefetching } =
     api.cmc.getCoinList.useQuery(
       { convert: convertCurrency.ticker, page: page.current },
@@ -84,7 +64,7 @@ export default function CoinTableCard({ className }: { className?: string }) {
     );
 
   const dataOrFallback: TData[] = useMemo(() => {
-    if (!data) return fallbackData;
+    if (!data) return dataFallback;
     return data.coin_list.map((item) => ({
       id: item.id,
       rank: item.cmc_rank,
@@ -99,24 +79,16 @@ export default function CoinTableCard({ className }: { className?: string }) {
     }));
   }, [data]);
 
-  const [sorting, setSorting] = useState<SortingState>([]);
-
-  const columnDefsRaw = useMemo<ColumnDef<TData>[]>(() => {
+  const columnDefs = useMemo<TAsyncDataTableColumnDef<TData>[]>(() => {
     return [
       {
         accessorKey: "name",
+        isPinnedLeft: true,
         sortDescFirst: false,
-        header: ({ header }) => (
-          <HeaderColumn
-            isSorted={header.column.getIsSorted()}
-            indicatorPosition="end"
-            className={`justify-start pl-4 md:pl-5 ml-0`}
-            innerClassName="justify-start text-left"
-            sortDescFirst={false}
-          >
-            Name
-          </HeaderColumn>
-        ),
+        headerVariant: "regular",
+        header: ({ header }) => "Name",
+        headerAlignment: "start",
+        cellVariant: "custom",
         cell: ({ row }) => (
           <NameColumn
             id={dataOrFallback[row.index].id}
@@ -125,7 +97,7 @@ export default function CoinTableCard({ className }: { className?: string }) {
             rank={dataOrFallback[row.index].rank}
             slug={dataOrFallback[row.index].slug}
             isPending={isPending}
-            hasData={data !== undefined}
+            hasData={!isLoadingError && data !== undefined}
           />
         ),
         sortingFn: (rowA, rowB, _columnId) => {
@@ -138,34 +110,16 @@ export default function CoinTableCard({ className }: { className?: string }) {
       {
         accessorKey: "price",
         sortDescFirst: true,
-        header: ({ header }) => (
-          <HeaderColumn isSorted={header.column.getIsSorted()}>
-            Price
-          </HeaderColumn>
-        ),
-        cell: ({ row }) => (
-          <RegularColumn isPending={isPending} isLoadingError={isLoadingError}>
-            {`${convertCurrency.symbol}${formatNumberTBMK(
-              row.getValue("price")
-            )}`}
-          </RegularColumn>
-        ),
+        header: ({ header }) => "Price",
+        cell: ({ row }) =>
+          `${convertCurrency.symbol}${formatNumberTBMK(row.getValue("price"))}`,
       },
       {
         accessorKey: "percentChange24h",
         sortDescFirst: true,
-        header: ({ header }) => (
-          <HeaderColumn isSorted={header.column.getIsSorted()}>
-            24H
-          </HeaderColumn>
-        ),
-        cell: ({ row }) => (
-          <ChangeColumn
-            isPending={isPending}
-            isLoadingError={isLoadingError}
-            change={row.getValue("percentChange24h")}
-          />
-        ),
+        header: ({ header }) => "24H",
+        cellVariant: "change",
+        cell: ({ row }) => row.getValue("percentChange24h"),
         sortingFn: (rowA, rowB, _columnId) => {
           const a = rowA.original.percentChange24h;
           const b = rowB.original.percentChange24h;
@@ -176,92 +130,42 @@ export default function CoinTableCard({ className }: { className?: string }) {
       {
         accessorKey: "percentChange7d",
         sortDescFirst: true,
-        header: ({ header }) => (
-          <HeaderColumn isSorted={header.column.getIsSorted()}>7D</HeaderColumn>
-        ),
+        header: ({ header }) => "7D",
         sortingFn: (rowA, rowB, _columnId) => {
           const a = rowA.original.percentChange7d;
           const b = rowB.original.percentChange7d;
           if (a === undefined || b === undefined) return 0;
           return a - b;
         },
-        cell: ({ row }) => (
-          <ChangeColumn
-            isPending={isPending}
-            isLoadingError={isLoadingError}
-            change={row.getValue("percentChange7d")}
-          />
-        ),
+        cellVariant: "change",
+        cell: ({ row }) => row.getValue("percentChange7d"),
       },
       {
         accessorKey: "marketCap",
         sortDescFirst: true,
-        header: ({ header }) => (
-          <HeaderColumn isSorted={header.column.getIsSorted()}>MC</HeaderColumn>
-        ),
-        cell: ({ row }) => (
-          <RegularColumn isPending={isPending} isLoadingError={isLoadingError}>
-            {`${convertCurrency.symbol}${formatNumberTBMK(
-              row.getValue("marketCap")
-            )}`}
-          </RegularColumn>
-        ),
+        header: ({ header }) => "MC",
+        cell: ({ row }) =>
+          `${convertCurrency.symbol}${formatNumberTBMK(
+            row.getValue("marketCap")
+          )}`,
       },
       {
         accessorKey: "volume",
         sortDescFirst: true,
-        header: ({ header }) => (
-          <HeaderColumn
-            isSorted={header.column.getIsSorted()}
-            className="pr-4 md:pr-5"
-          >
-            Vol
-          </HeaderColumn>
-        ),
-        cell: ({ row }) => (
-          <RegularColumn
-            isPending={isPending}
-            isLoadingError={isLoadingError}
-            className="pr-4 md:pr-5"
-          >
-            {`${convertCurrency.symbol}${formatNumberTBMK(
-              row.getValue("volume")
-            )}`}
-          </RegularColumn>
-        ),
+        header: ({ header }) => "Vol",
+        cell: ({ row }) =>
+          `${convertCurrency.symbol}${formatNumberTBMK(
+            row.getValue("volume")
+          )}`,
       },
     ];
   }, [data, isPending, isError, isLoadingError]);
-
-  const columnDefs = useMemo(() => {
-    return columnDefsRaw.map((columnDef) => ({
-      ...columnDef,
-      meta: {
-        width: `${100 / columnDefsRaw.length}%`,
-      },
-    }));
-  }, [columnDefsRaw]);
-
-  const table = useReactTable({
-    data: dataOrFallback,
-    columns: columnDefs,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    onSortingChange: setSorting,
-    state: {
-      sorting,
-      columnPinning: {
-        left: ["name"],
-      },
-    },
-    enableColumnPinning: true,
-  });
 
   return (
     <div className={cn("flex flex-col p-1 group/card w-full", className)}>
       <AsyncDataTable
         className="h-167 max-h-[calc((100svh-3rem)*0.75)]"
-        table={table}
+        columnDefs={columnDefs}
         data={dataOrFallback}
         isError={isError}
         isPending={isPending}
@@ -270,121 +174,6 @@ export default function CoinTableCard({ className }: { className?: string }) {
         page={page}
         setPage={setPage}
       />
-    </div>
-  );
-}
-
-function HeaderColumn({
-  className,
-  innerClassName,
-  children,
-  isSorted,
-  indicatorPosition = "start",
-  sortDescFirst = true,
-}: {
-  className?: string;
-  innerClassName?: string;
-  children: React.ReactNode;
-  isSorted?: false | SortDirection;
-  indicatorPosition?: "start" | "end";
-  sortDescFirst?: boolean;
-}) {
-  return (
-    <div
-      className={cn(
-        `${paddingLeft} ${paddingRight} ${defaultColumnClasses} py-3.5 flex items-center justify-end select-none gap-1`,
-        className
-      )}
-    >
-      <ArrowDownIcon
-        data-sort={
-          isSorted === "asc" ? "asc" : isSorted === "desc" ? "desc" : false
-        }
-        data-indicator-position={indicatorPosition}
-        className={cn(
-          "size-3.5 -my-1 shrink-0 data-[indicator-position=end]:order-last data-[sort=false]:opacity-0 data-[sort=asc]:rotate-180 data-[sort=desc]:rotate-0 duration-100 transition",
-          sortDescFirst === false ? "rotate-180" : undefined
-        )}
-      />
-      <p
-        className={cn(
-          `overflow-hidden overflow-ellipsis text-right text-xs md:text-sm leading-none md:leading-none`,
-          innerClassName,
-          "overflow-ellipsis"
-        )}
-      >
-        {children}
-      </p>
-    </div>
-  );
-}
-
-function ChangeColumn({
-  change,
-  isPending,
-  isLoadingError,
-  className,
-}: {
-  change: number;
-  isPending: boolean;
-  isLoadingError: boolean;
-  className?: string;
-}) {
-  const { isPositive, isNegative, Icon } = getChangeInfo(change);
-
-  return (
-    <div
-      data-is-negative={isNegative ? true : undefined}
-      data-is-positive={isPositive ? true : undefined}
-      className={cn(
-        `${paddingLeft} ${paddingRight} ${paddingY} ${defaultColumnClasses} text-xs md:text-sm md:leading-none break-words leading-none font-medium flex text-right overflow-hidden overflow-ellipsis items-center justify-end text-muted-foreground data-[is-loading-error]:text-destructive data-[is-negative]:text-destructive data-[is-positive]:text-success`,
-        className
-      )}
-    >
-      {!isPending && !isLoadingError && (
-        <Icon className="size-3.5 md:size-4 shrink-0 -my-0.5" />
-      )}
-      <p
-        className={`${pendingClasses} shrink min-w-0 overflow-hidden overflow-ellipsis group-data-[is-loading-error]/table:text-destructive`}
-      >
-        {isPending
-          ? "Loading"
-          : !isLoadingError
-            ? formatNumberTBMK(change, 3)
-            : "Error"}
-      </p>
-    </div>
-  );
-}
-
-function RegularColumn({
-  children,
-  className,
-  classNameParagraph,
-  isPending,
-  isLoadingError,
-}: {
-  children: string;
-  className?: string;
-  classNameParagraph?: string;
-  isPending: boolean;
-  isLoadingError: boolean;
-}) {
-  return (
-    <div
-      className={cn(
-        `${paddingLeft} ${paddingRight} ${paddingY} ${defaultColumnClasses} text-xs md:text-sm md:leading-none font-medium flex items-center justify-end overflow-hidden`,
-        className
-      )}
-    >
-      <p
-        className={cn(
-          `${pendingClasses} max-w-full break-words leading-none text-right overflow-hidden overflow-ellipsis group-data-[is-loading-error]/table:text-destructive`,
-          classNameParagraph
-        )}
-      >
-        {isPending ? "Loading" : !isLoadingError ? children : "Error"}
-      </p>
     </div>
   );
 }
@@ -407,6 +196,10 @@ function NameColumn({
   ticker: string;
 }) {
   const Comp = hasData ? Link : "div";
+  const pendingClassesMuted = "";
+  const pendingClasses =
+    "group-data-[is-pending]/table:text-transparent group-data-[is-pending]/table:bg-foreground group-data-[is-pending]/table:rounded-sm group-data-[is-pending]/table:animate-skeleton";
+  const paddingRight = "pr-2 md:pr-4";
 
   return (
     <Comp
@@ -418,7 +211,6 @@ function NameColumn({
             ? `https://coinmarketcap.com/currencies/${slug}`
             : "#"
       }
-      data-has-data={hasData}
       className={cn(
         `pl-4 md:pl-5 ${paddingRight} group/link py-3.5 flex flex-row items-center gap-3.5 overflow-hidden`
       )}
@@ -464,21 +256,4 @@ function NameColumn({
       </div>
     </Comp>
   );
-}
-
-function getChangeInfo(change: number | undefined) {
-  const isPositive = change ? change > 0 : undefined;
-  const isNegative = change ? change < 0 : undefined;
-
-  const Icon =
-    isNegative === true
-      ? ArrowDownIcon
-      : isPositive === true
-        ? ArrowUpIcon
-        : ArrowRightIcon;
-  return {
-    isPositive,
-    isNegative,
-    Icon,
-  };
 }
