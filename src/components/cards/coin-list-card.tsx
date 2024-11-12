@@ -408,7 +408,7 @@ export default function CoinListCard({ className }: { className?: string }) {
             </TableBody>
           </Table>
           <div className="w-full border-t">
-            <Pagination className="">
+            <Pagination>
               <PaginationContent className="overflow-x-auto relative">
                 {/* <PaginationItem>
                   <PaginationPrevious
