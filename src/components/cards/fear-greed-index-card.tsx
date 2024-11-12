@@ -179,8 +179,9 @@ function Gauge({
           </div>
         </div>
       </div>
-      {/* Value */}
+      {/* Value and description */}
       <div className="max-w-full z-10 pt-3.75 flex items-center justify-center flex-col gap-0.5 overflow-hidden">
+        {/* Value */}
         <div className="max-w-full px-4 flex items-center justify-center">
           <p
             className="shrink min-w-0 text-center font-bold text-2xl group-data-[is-pending]:bg-foreground leading-none whitespace-nowrap overflow-hidden overflow-ellipsis 
@@ -193,7 +194,8 @@ function Gauge({
                 : "00"}
           </p>
         </div>
-        <div className="w-full px-3 flex items-center justify-center">
+        {/* Description */}
+        <div className="w-full px-3.5 flex items-center justify-center">
           <p
             className="max-w-full text-xs shrink min-w-0 text-center leading-none whitespace-nowrap overflow-hidden overflow-ellipsis text-foreground 
             group-data-[is-pending]:bg-foreground group-data-[is-loading-error]:text-destructive group-data-[is-pending]:text-transparent group-data-[is-pending]:rounded-sm group-data-[is-pending]:animate-skeleton"
