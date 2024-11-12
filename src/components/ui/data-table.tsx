@@ -50,7 +50,7 @@ export default function DataTable<T, Z>({
     <div
       data-is-loading-error={(isLoadingError && true) || undefined}
       data-is-pending={(isPending && true) || undefined}
-      data-has-data={data !== undefined || undefined}
+      data-has-data={(!isPending && data !== undefined) || undefined}
       className={cn(
         "w-full h-128 flex flex-1 text-sm flex-col justify-center items-center border rounded-xl gap-3 group/table relative overflow-hidden",
         className
@@ -64,9 +64,7 @@ export default function DataTable<T, Z>({
                 {headerGroup.headers.map((header, i) => (
                   <TableHead
                     key={header.id}
-                    onClick={
-                      data ? header.column.getToggleSortingHandler() : undefined
-                    }
+                    onClick={header.column.getToggleSortingHandler()}
                     style={{
                       ...getCommonPinningStyles(header.column),
                       width: header.column.columnDef.meta?.width,
@@ -74,7 +72,7 @@ export default function DataTable<T, Z>({
                     className={cn(
                       "overflow-hidden",
                       header.column.getCanSort() &&
-                        "group-data-[has-data]/table:cursor-pointer not-touch:group-data-[has-data]/table:hover:bg-background-secondary",
+                        "cursor-pointer not-touch:hover:bg-background-secondary",
                       header.column.getIsPinned() && "bg-background"
                     )}
                   >

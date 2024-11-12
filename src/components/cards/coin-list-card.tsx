@@ -38,6 +38,7 @@ import {
 } from "@/components/ui/pagination";
 import { CSSProperties, useMemo, useState } from "react";
 import DataTable from "@/components/ui/data-table";
+import { defaultQueryOptions } from "@/lib/constants";
 
 const convertCurrency = {
   ticker: "USD",
@@ -90,7 +91,10 @@ export default function CoinListCard({ className }: { className?: string }) {
   const pageMin = 1;
   const pageMax = 5;
   const { data, isLoadingError, isPending, isError, isRefetching } =
-    api.cmc.getCoinList.useQuery({ convert: convertCurrency.ticker, page });
+    api.cmc.getCoinList.useQuery(
+      { convert: convertCurrency.ticker, page },
+      defaultQueryOptions.slow
+    );
 
   const dataOrFallback: TData[] = useMemo(() => {
     if (!data) return fallbackData;
