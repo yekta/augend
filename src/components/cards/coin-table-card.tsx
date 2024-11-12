@@ -71,7 +71,7 @@ declare module "@tanstack/react-table" {
   }
 }
 
-export default function CoinListCard({ className }: { className?: string }) {
+export default function CoinTableCard({ className }: { className?: string }) {
   const [page, setPage] = useState<TAsyncDataTablePage>({
     min: 1,
     max: 5,

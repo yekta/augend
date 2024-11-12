@@ -5,7 +5,7 @@ import NanoBananoCards from "@/app/dashboard/_components/nano-banano-cards";
 import OhlcvChartCards from "@/app/dashboard/_components/ohlcv-chart-cards";
 import OrderBookCards from "@/app/dashboard/_components/order-book-cards";
 import TurkishLiraCards from "@/app/dashboard/_components/turkish-lira-cards";
-import CoinListCard from "@/components/cards/coin-list-card";
+import CoinTableCard from "@/components/cards/coin-table-card";
 import FearGreedIndexCard from "@/components/cards/fear-greed-index-card";
 import WBanCard from "@/components/cards/wban-card";
 import DashboardWrapper from "@/components/dashboard-wrapper";
@@ -33,7 +33,7 @@ export default async function Page() {
             <NanoBananoCards />
             <OrderBookCards />
             <OhlcvChartCards />
-            <CoinListCard />
+            <CoinTableCard />
           </DashboardWrapper>
         </CmcGlobalMetricsProvider>
       </CmcCryptoInfosProvider>
