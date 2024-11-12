@@ -75,7 +75,7 @@ export const cmcRouter = createTRPCRouter({
     .input(
       z.object({
         convert: z.string().default("usd"),
-        page: z.number().default(0),
+        page: z.number().int().positive().default(0),
       })
     )
     .query(async ({ input: { convert, page } }) => {

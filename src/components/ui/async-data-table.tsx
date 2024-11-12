@@ -294,6 +294,7 @@ function getCell<T>({
 }) {
   const cell = columnDef.cell;
   const cellType = columnDef.cellType || "regular";
+  const alignment = columnDef.headerAlignment || "end";
 
   if (cellType === "custom" || cell === undefined || typeof cell === "string") {
     return cell;
@@ -306,7 +307,9 @@ function getCell<T>({
           change={cell(props)}
           isPending={isPending}
           isLoadingError={isLoadingError}
-          className={`${firstColumnClasses} ${lastColumnClasses}`}
+          className={`${firstColumnClasses} ${lastColumnClasses} ${
+            alignment === "start" ? "justify-start mr-auto ml-0" : ""
+          }`}
         />
       );
     };
@@ -317,7 +320,10 @@ function getCell<T>({
       <RegularColumn
         isPending={isPending}
         isLoadingError={isLoadingError}
-        className={`${firstColumnClasses} ${lastColumnClasses}`}
+        className={`${firstColumnClasses} ${lastColumnClasses} ${
+          alignment === "start" ? "justify-start mr-auto ml-0 text-left" : ""
+        }`}
+        classNameParagraph={alignment === "start" ? "text-left" : undefined}
       >
         {cell(props)}
       </RegularColumn>

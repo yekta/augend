@@ -7,6 +7,7 @@ import AsyncDataTable, {
 import { defaultQueryOptions } from "@/lib/constants";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
+import { TUniswapPoolsResult } from "@/server/api/routers/graph/types";
 import { api } from "@/trpc/react";
 import { RowData } from "@tanstack/react-table";
 import { ExternalLinkIcon } from "lucide-react";
@@ -18,31 +19,43 @@ const convertCurrency = {
   symbol: "$",
 };
 
-type TData = {
-  id: number;
-  rank: number;
-  name: string;
-  slug: string;
-  ticker: string;
-  price: number;
-  percentChange24h: number;
-  percentChange7d: number;
-  marketCap: number;
-  volume: number;
-};
+type TData = TUniswapPoolsResult["pools"][number];
 
-const dataFallback: TData[] = Array.from({ length: 100 }, (_, i) => ({
-  id: i,
-  rank: i + 1,
-  name: "Bitcoin",
-  slug: "bitcoin",
-  ticker: "BTC",
-  price: 1234,
-  percentChange24h: 12,
-  percentChange7d: 12,
-  marketCap: 123456,
-  volume: 123456,
-}));
+const dataFallback: TUniswapPoolsResult = {
+  bundles: Array.from({ length: 1 }, (_, i) => ({
+    id: "1",
+    ethPriceUSD: 1234,
+  })),
+  pools: Array.from({ length: 100 }, (_, i) => ({
+    feesUSD: 1234,
+    feeTier: 500,
+    price: 1234,
+    feesUSD24h: 1234,
+    volumeUSD24h: 1234,
+    feesUSD7d: 2134,
+    tvlUSD: 123412,
+    apr24h: 1234,
+    poolDayData: Array.from({ length: 7 }, (_, i) => ({
+      date: 123456,
+      feesUSD: 1234,
+      tvlUSD: 123456,
+      volumeUSD: 123456,
+    })),
+    token0: {
+      derivedETH: 1234,
+      id: "1",
+      symbol: "BTC",
+      totalValueLocked: 123456,
+    },
+    token1: {
+      derivedETH: 1234,
+      id: "2",
+      symbol: "ETH",
+      totalValueLocked: 123456,
+    },
+    totalValueLockedETH: 123456,
+  })),
+};
 
 declare module "@tanstack/react-table" {
   interface ColumnMeta<TData extends RowData, TValue> {
@@ -50,7 +63,11 @@ declare module "@tanstack/react-table" {
   }
 }
 
-export default function CoinTableCard({ className }: { className?: string }) {
+export default function UniswapPoolsTableCard({
+  className,
+}: {
+  className?: string;
+}) {
   const [page, setPage] = useState<TAsyncDataTablePage>({
     min: 1,
     max: 5,
@@ -58,25 +75,14 @@ export default function CoinTableCard({ className }: { className?: string }) {
   });
 
   const { data, isLoadingError, isPending, isError, isRefetching } =
-    api.cmc.getCoinList.useQuery(
-      { convert: convertCurrency.ticker, page: page.current },
+    api.graph.getUniswapPools.useQuery(
+      { page: page.current },
       defaultQueryOptions.slow
     );
 
-  const dataOrFallback: TData[] = useMemo(() => {
+  const dataOrFallback = useMemo(() => {
     if (!data) return dataFallback;
-    return data.coin_list.map((item) => ({
-      id: item.id,
-      rank: item.cmc_rank,
-      name: item.name,
-      slug: item.slug,
-      ticker: item.symbol,
-      price: item.quote[convertCurrency.ticker].price,
-      percentChange24h: item.quote[convertCurrency.ticker].percent_change_24h,
-      percentChange7d: item.quote[convertCurrency.ticker].percent_change_7d,
-      marketCap: item.quote[convertCurrency.ticker].market_cap,
-      volume: item.quote[convertCurrency.ticker].volume_24h,
-    }));
+    return data;
   }, [data]);
 
   const columnDefs = useMemo<TAsyncDataTableColumnDef<TData>[]>(() => {
@@ -87,68 +93,44 @@ export default function CoinTableCard({ className }: { className?: string }) {
         headerAlignment: "start",
         isPinnedLeft: true,
         sortDescFirst: false,
-        cellType: "custom",
-        cell: ({ row }) => (
-          <NameColumn
-            id={dataOrFallback[row.index].id}
-            value={row.original.name}
-            ticker={dataOrFallback[row.index].ticker}
-            rank={dataOrFallback[row.index].rank}
-            slug={dataOrFallback[row.index].slug}
-            isPending={isPending}
-            hasData={!isLoadingError && data !== undefined}
-          />
-        ),
-        sortingFn: (rowA, rowB, _columnId) => {
-          const a = rowA.original.name;
-          const b = rowB.original.name;
-          if (a === undefined || b === undefined) return 0;
-          return a.localeCompare(b);
-        },
+        cell: ({ row }) =>
+          row.original.token0.symbol + "/" + row.original.token1.symbol,
+        sortingFn: (a, b) =>
+          a.original.token0.symbol.localeCompare(b.original.token0.symbol),
       },
       {
         accessorKey: "price",
         header: "Price",
+        cell: ({ row }) => `${formatNumberTBMK(row.original.price)}`,
+        sortingFn: (a, b) => a.original.price - b.original.price,
+      },
+      {
+        accessorKey: "fees-tvl",
+        header: "APR 24h",
+        cell: ({ row }) => `${formatNumberTBMK(row.original.apr24h * 100)}`,
+        sortingFn: (a, b) => a.original.apr24h - b.original.apr24h,
+      },
+      {
+        accessorKey: "fee-tier",
+        header: "Fee Tier",
+        cell: ({ row }) => `${formatNumberTBMK(row.original.feeTier * 100)}`,
+        sortingFn: (a, b) => a.original.feeTier - b.original.feeTier,
+      },
+      {
+        accessorKey: "tvl",
+        header: "TVL",
         cell: ({ row }) =>
-          `${convertCurrency.symbol}${formatNumberTBMK(row.original.price)}`,
-      },
-      {
-        accessorKey: "percentChange24h",
-        header: "24H",
-        cellType: "change",
-        cell: ({ row }) => row.original.percentChange24h,
-        sortingFn: (rowA, rowB, _columnId) => {
-          const a = rowA.original.percentChange24h;
-          const b = rowB.original.percentChange24h;
-          if (a === undefined || b === undefined) return 0;
-          return a - b;
-        },
-      },
-      {
-        accessorKey: "percentChange7d",
-        header: "7D",
-        cellType: "change",
-        cell: ({ row }) => row.original.percentChange7d,
-        sortingFn: (rowA, rowB, _columnId) => {
-          const a = rowA.original.percentChange7d;
-          const b = rowB.original.percentChange7d;
-          if (a === undefined || b === undefined) return 0;
-          return a - b;
-        },
-      },
-      {
-        accessorKey: "marketCap",
-        header: "MC",
-        cell: ({ row }) =>
-          `${convertCurrency.symbol}${formatNumberTBMK(
-            row.original.marketCap
-          )}`,
+          `${convertCurrency.symbol}${formatNumberTBMK(row.original.tvlUSD)}`,
+        sortingFn: (a, b) => a.original.tvlUSD - b.original.tvlUSD,
       },
       {
         accessorKey: "volume",
-        header: "Vol",
+        header: "Vol 24h",
         cell: ({ row }) =>
-          `${convertCurrency.symbol}${formatNumberTBMK(row.original.volume)}`,
+          `${convertCurrency.symbol}${formatNumberTBMK(
+            row.original.volumeUSD24h
+          )}`,
+        sortingFn: (a, b) => a.original.volumeUSD24h - b.original.volumeUSD24h,
       },
     ];
   }, [data, isPending, isError, isLoadingError]);
@@ -158,7 +140,7 @@ export default function CoinTableCard({ className }: { className?: string }) {
       <AsyncDataTable
         className="h-167 max-h-[calc((100svh-3rem)*0.75)]"
         columnDefs={columnDefs}
-        data={dataOrFallback}
+        data={dataOrFallback.pools}
         isError={isError}
         isPending={isPending}
         isLoadingError={isLoadingError}
