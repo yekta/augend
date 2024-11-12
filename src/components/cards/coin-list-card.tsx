@@ -1,13 +1,14 @@
 "use client";
 
-import Indicator from "@/components/cards/indicator";
+import AsyncDataTable, {
+  TAsyncDataTablePage,
+} from "@/components/ui/async-data-table";
+import { defaultQueryOptions } from "@/lib/constants";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
 import { api } from "@/trpc/react";
 import {
-  Column,
   ColumnDef,
-  flexRender,
   getCoreRowModel,
   getSortedRowModel,
   RowData,
@@ -22,23 +23,7 @@ import {
   ExternalLinkIcon,
 } from "lucide-react";
 import Link from "next/link";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-} from "@/components/ui/pagination";
-import { CSSProperties, useMemo, useState } from "react";
-import DataTable, { TDataTablePage } from "@/components/ui/data-table";
-import { defaultQueryOptions } from "@/lib/constants";
+import { useMemo, useState } from "react";
 
 const convertCurrency = {
   ticker: "USD",
@@ -87,7 +72,7 @@ declare module "@tanstack/react-table" {
 }
 
 export default function CoinListCard({ className }: { className?: string }) {
-  const [page, setPage] = useState<TDataTablePage>({
+  const [page, setPage] = useState<TAsyncDataTablePage>({
     min: 1,
     max: 5,
     current: 1,
@@ -132,83 +117,17 @@ export default function CoinListCard({ className }: { className?: string }) {
             Name
           </HeaderColumn>
         ),
-        cell: ({ row }) => {
-          const Comp = data ? Link : "div";
-          return (
-            <Comp
-              target="_blank"
-              href={
-                isPending
-                  ? "#"
-                  : data
-                    ? `https://coinmarketcap.com/currencies/${
-                        dataOrFallback[row.index].slug
-                      }`
-                    : "#"
-              }
-              data-has-data={data && true}
-              className={cn(
-                `pl-4 md:pl-5 ${paddingRight} group/link py-3.5 flex flex-row items-center gap-3.5 overflow-hidden`
-              )}
-            >
-              <div className="flex flex-col items-center justify-center gap-1.5">
-                {isPending ? (
-                  <div className="size-4.5 rounded-full shrink-0 bg-foreground animate-skeleton" />
-                ) : data ? (
-                  <img
-                    src={`https://s2.coinmarketcap.com/static/img/coins/64x64/${
-                      dataOrFallback[row.index].id
-                    }.png`}
-                    className="size-4.5 shrink-0 rounded-full bg-foreground p-px"
-                  />
-                ) : (
-                  <div className="size-4.5 rounded-full shrink-0 bg-destructive" />
-                )}
-                <div
-                  className={`w-6 overflow-hidden flex items-center justify-center`}
-                >
-                  <p
-                    className={`${pendingClassesMuted} max-w-full overflow-hidden overflow-ellipsis text-xs leading-none font-medium text-muted-foreground text-center group-data-[is-loading-error]/table:text-destructive`}
-                  >
-                    {isPending
-                      ? "#"
-                      : data
-                        ? dataOrFallback[row.index].rank
-                        : "E"}
-                  </p>
-                </div>
-              </div>
-              <div
-                className={`flex-1 w-20 md:w-40 min-w-0 flex flex-col justify-center items-start gap-1.5 overflow-hidden`}
-              >
-                <div className="max-w-full flex items-center justify-start gap-1 md:gap-1.5">
-                  <p
-                    className={`${pendingClasses} shrink min-w-0 font-semibold text-xs md:text-sm md:leading-none leading-none whitespace-nowrap overflow-hidden overflow-ellipsis group-data-[is-loading-error]/table:text-destructive`}
-                  >
-                    {isPending
-                      ? "Loading"
-                      : data
-                        ? row.getValue("name")
-                        : "Error"}
-                  </p>
-                  <ExternalLinkIcon
-                    className="opacity-0 shrink-0 origin-bottom-left scale-0 pointer-events-none size-3 md:size-4 -my-1 transition duration-100
-                    not-touch:group-data-[has-data]/table:group-hover/link:opacity-100 not-touch:group-data-[has-data]/table:group-hover/link:scale-100"
-                  />
-                </div>
-                <p
-                  className={`${pendingClassesMuted} max-w-full whitespace-nowrap overflow-hidden overflow-ellipsis text-muted-foreground leading-none text-xs group-data-[is-loading-error]/table:text-destructive`}
-                >
-                  {isPending
-                    ? "Loading"
-                    : data
-                      ? dataOrFallback[row.index].ticker
-                      : "Error"}
-                </p>
-              </div>
-            </Comp>
-          );
-        },
+        cell: ({ row }) => (
+          <NameColumn
+            id={dataOrFallback[row.index].id}
+            value={row.getValue("name")}
+            ticker={dataOrFallback[row.index].ticker}
+            rank={dataOrFallback[row.index].rank}
+            slug={dataOrFallback[row.index].slug}
+            isPending={isPending}
+            hasData={data !== undefined}
+          />
+        ),
         sortingFn: (rowA, rowB, _columnId) => {
           const a = rowA.original.name;
           const b = rowB.original.name;
@@ -340,7 +259,7 @@ export default function CoinListCard({ className }: { className?: string }) {
 
   return (
     <div className={cn("flex flex-col p-1 group/card w-full", className)}>
-      <DataTable
+      <AsyncDataTable
         className="h-167 max-h-[calc((100svh-3rem)*0.75)]"
         table={table}
         data={dataOrFallback}
@@ -467,6 +386,83 @@ function RegularColumn({
         {isPending ? "Loading" : !isLoadingError ? children : "Error"}
       </p>
     </div>
+  );
+}
+
+function NameColumn({
+  hasData,
+  isPending,
+  slug,
+  id,
+  rank,
+  value,
+  ticker,
+}: {
+  hasData: boolean;
+  isPending: boolean;
+  slug: string;
+  id: number;
+  rank: number;
+  value: string;
+  ticker: string;
+}) {
+  const Comp = hasData ? Link : "div";
+
+  return (
+    <Comp
+      target="_blank"
+      href={
+        isPending
+          ? "#"
+          : hasData
+            ? `https://coinmarketcap.com/currencies/${slug}`
+            : "#"
+      }
+      data-has-data={hasData}
+      className={cn(
+        `pl-4 md:pl-5 ${paddingRight} group/link py-3.5 flex flex-row items-center gap-3.5 overflow-hidden`
+      )}
+    >
+      <div className="flex flex-col items-center justify-center gap-1.5">
+        {isPending ? (
+          <div className="size-4.5 rounded-full shrink-0 bg-foreground animate-skeleton" />
+        ) : hasData ? (
+          <img
+            src={`https://s2.coinmarketcap.com/static/img/coins/64x64/${id}.png`}
+            className="size-4.5 shrink-0 rounded-full bg-foreground p-px"
+          />
+        ) : (
+          <div className="size-4.5 rounded-full shrink-0 bg-destructive" />
+        )}
+        <div className={`w-6 overflow-hidden flex items-center justify-center`}>
+          <p
+            className={`${pendingClassesMuted} max-w-full overflow-hidden overflow-ellipsis text-xs leading-none font-medium text-muted-foreground text-center group-data-[is-loading-error]/table:text-destructive`}
+          >
+            {isPending ? "#" : hasData ? rank : "E"}
+          </p>
+        </div>
+      </div>
+      <div
+        className={`flex-1 w-20 md:w-40 min-w-0 flex flex-col justify-center items-start gap-1.5 overflow-hidden`}
+      >
+        <div className="max-w-full flex items-center justify-start gap-1 md:gap-1.5">
+          <p
+            className={`${pendingClasses} shrink min-w-0 font-semibold text-xs md:text-sm md:leading-none leading-none whitespace-nowrap overflow-hidden overflow-ellipsis group-data-[is-loading-error]/table:text-destructive`}
+          >
+            {isPending ? "Loading" : hasData ? value : "Error"}
+          </p>
+          <ExternalLinkIcon
+            className="opacity-0 shrink-0 origin-bottom-left scale-0 pointer-events-none size-3 md:size-4 -my-1 transition duration-100
+              not-touch:group-data-[has-data]/table:group-hover/link:opacity-100 not-touch:group-data-[has-data]/table:group-hover/link:scale-100"
+          />
+        </div>
+        <p
+          className={`${pendingClassesMuted} max-w-full whitespace-nowrap overflow-hidden overflow-ellipsis text-muted-foreground leading-none text-xs group-data-[is-loading-error]/table:text-destructive`}
+        >
+          {isPending ? "Loading" : hasData ? ticker : "Error"}
+        </p>
+      </div>
+    </Comp>
   );
 }
 

@@ -21,13 +21,13 @@ import { cn } from "@/lib/utils";
 import { CSSProperties, Dispatch, SetStateAction } from "react";
 import Indicator from "@/components/cards/indicator";
 
-export type TDataTablePage = {
+export type TAsyncDataTablePage = {
   min: number;
   max: number;
   current: number;
 };
 
-export default function DataTable<T, Z>({
+export default function AsyncDataTable<T, Z>({
   data,
   table,
   isPending,
@@ -44,8 +44,8 @@ export default function DataTable<T, Z>({
   isRefetching: boolean;
   isError: boolean;
   isLoadingError: boolean;
-  page: TDataTablePage;
-  setPage: Dispatch<SetStateAction<TDataTablePage>>;
+  page: TAsyncDataTablePage;
+  setPage: Dispatch<SetStateAction<TAsyncDataTablePage>>;
   className?: string;
 }) {
   return (
@@ -127,7 +127,7 @@ export default function DataTable<T, Z>({
                     <PaginationItem key={i}>
                       <PaginationLink
                         data-active={page.current === adjustedPage}
-                        className="p-1 flex w-14 h-10.5 md:h-11 items-center justify-center font-medium group/link transition-none rounded-none border-none text-xs md:text-sm 
+                        className="px-0.75 py-1.5 flex w-14 h-10.5 md:h-11 items-center justify-center font-medium group/link transition-none rounded-none border-none text-xs md:text-sm 
                         text-foreground/50 data-[active=true]:text-foreground not-touch:hover:bg-transparent hover:text-foreground"
                         isActive={page.current === adjustedPage}
                         isButton={true}
@@ -138,7 +138,7 @@ export default function DataTable<T, Z>({
                           }))
                         }
                       >
-                        <p className="min-w-0 w-full overflow-hidden overflow-ellipsis rounded-md p-2 items-center justify-center not-touch:group-hover/link:bg-background-secondary">
+                        <p className="min-w-0 w-full h-full overflow-hidden overflow-ellipsis rounded-md p-0.5 flex items-center justify-center not-touch:group-hover/link:bg-background-secondary">
                           {adjustedPage}
                         </p>
                       </PaginationLink>
@@ -152,7 +152,7 @@ export default function DataTable<T, Z>({
                     }%)`,
                     width: `${100 / (page.max - page.min + 1)}%`,
                   }}
-                  className="h-full absolute p-1 left-0 top-0 transition flex items-center justify-center pointer-events-none"
+                  className="h-full absolute px-0.75 py-1.5 left-0 top-0 transition flex items-center justify-center pointer-events-none"
                 >
                   <div className="w-full border h-full rounded-md" />
                 </div>
