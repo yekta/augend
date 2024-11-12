@@ -19,7 +19,6 @@ import {
   CellContext,
   Column,
   ColumnDef,
-  ColumnDefTemplate,
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
@@ -74,71 +73,22 @@ export default function AsyncDataTable<T>({
 }) {
   const columnDefsFinal = useMemo(() => {
     return columnDefs.map((columnDef, index) => {
-      const header = columnDef.header;
-      const headerVariant = columnDef.headerVariant || "regular";
-      const headerAlignment = columnDef.headerAlignment || "end";
-      const cell = columnDef.cell;
-      const cellVariant = columnDef.cellVariant || "regular";
       const firstColumnClasses = index === 0 ? "pl-4 md:pl-5" : "";
       const lastColumnClasses =
         index === columnDefs.length - 1 ? "pr-4 md:pr-5" : "";
-      const headerFinal:
-        | ColumnDefTemplate<HeaderContext<T, unknown>>
-        | undefined =
-        headerVariant === "custom" ||
-        header === undefined ||
-        typeof header === "string"
-          ? header
-          : (props) => {
-              return (
-                <HeaderColumn
-                  className={`${
-                    headerAlignment === "start"
-                      ? "justify-start mr-auto ml-0"
-                      : ""
-                  } ${firstColumnClasses} ${lastColumnClasses}`}
-                  innerClassName={
-                    headerAlignment === "start"
-                      ? "justify-start text-left"
-                      : undefined
-                  }
-                  isSorted={props.header.column.getIsSorted()}
-                  indicatorPosition={
-                    headerAlignment === "start" ? "end" : "start"
-                  }
-                  sortDescFirst={columnDef.sortDescFirst}
-                >
-                  {header(props)}
-                </HeaderColumn>
-              );
-            };
-      const cellFinal: ColumnDefTemplate<CellContext<T, unknown>> | undefined =
-        cellVariant === "custom" ||
-        cell === undefined ||
-        typeof cell === "string"
-          ? cell
-          : cellVariant === "change"
-            ? (props) => {
-                return (
-                  <ChangeColumn
-                    change={cell(props)}
-                    isPending={isPending}
-                    isLoadingError={isLoadingError}
-                    className={`${firstColumnClasses} ${lastColumnClasses}`}
-                  />
-                );
-              }
-            : (props) => {
-                return (
-                  <RegularColumn
-                    isPending={isPending}
-                    isLoadingError={isLoadingError}
-                    className={`${firstColumnClasses} ${lastColumnClasses}`}
-                  >
-                    {cell(props)}
-                  </RegularColumn>
-                );
-              };
+
+      const headerFinal = getHeader({
+        columnDef,
+        firstColumnClasses,
+        lastColumnClasses,
+      });
+      const cellFinal = getCell({
+        columnDef,
+        firstColumnClasses,
+        lastColumnClasses,
+        isPending,
+        isLoadingError,
+      });
 
       return {
         meta: {
@@ -293,6 +243,94 @@ export default function AsyncDataTable<T>({
       />
     </div>
   );
+}
+
+function getHeader<T>({
+  columnDef,
+  firstColumnClasses,
+  lastColumnClasses,
+}: {
+  columnDef: TAsyncDataTableColumnDef<T>;
+  firstColumnClasses: string;
+  lastColumnClasses: string;
+}) {
+  const header = columnDef.header;
+  const headerVariant = columnDef.headerVariant || "regular";
+  const headerAlignment = columnDef.headerAlignment || "end";
+
+  if (
+    headerVariant === "custom" ||
+    header === undefined ||
+    typeof header === "string"
+  ) {
+    return header;
+  }
+
+  return (props: HeaderContext<T, unknown>) => (
+    <HeaderColumn
+      className={`${
+        headerAlignment === "start" ? "justify-start mr-auto ml-0" : ""
+      } ${firstColumnClasses} ${lastColumnClasses}`}
+      innerClassName={
+        headerAlignment === "start" ? "justify-start text-left" : undefined
+      }
+      isSorted={props.header.column.getIsSorted()}
+      indicatorPosition={headerAlignment === "start" ? "end" : "start"}
+      sortDescFirst={columnDef.sortDescFirst}
+    >
+      {header(props)}
+    </HeaderColumn>
+  );
+}
+
+function getCell<T>({
+  columnDef,
+  firstColumnClasses,
+  lastColumnClasses,
+  isPending,
+  isLoadingError,
+}: {
+  columnDef: TAsyncDataTableColumnDef<T>;
+  firstColumnClasses: string;
+  lastColumnClasses: string;
+  isPending: boolean;
+  isLoadingError: boolean;
+}) {
+  const cell = columnDef.cell;
+  const cellVariant = columnDef.cellVariant || "regular";
+
+  if (
+    cellVariant === "custom" ||
+    cell === undefined ||
+    typeof cell === "string"
+  ) {
+    return cell;
+  }
+
+  if (cellVariant === "change") {
+    return (props: CellContext<T, unknown>) => {
+      return (
+        <ChangeColumn
+          change={cell(props)}
+          isPending={isPending}
+          isLoadingError={isLoadingError}
+          className={`${firstColumnClasses} ${lastColumnClasses}`}
+        />
+      );
+    };
+  }
+
+  return (props: CellContext<T, unknown>) => {
+    return (
+      <RegularColumn
+        isPending={isPending}
+        isLoadingError={isLoadingError}
+        className={`${firstColumnClasses} ${lastColumnClasses}`}
+      >
+        {cell(props)}
+      </RegularColumn>
+    );
+  };
 }
 
 const pendingClasses =
