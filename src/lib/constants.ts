@@ -1,5 +1,3 @@
-import { cleanEnvVar } from "@/lib/helpers";
-
 const refetchInterval = {
   slow: 30_000,
   normal: 20_000,
