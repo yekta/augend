@@ -431,13 +431,13 @@ export default function CoinListCard({ className }: { className?: string }) {
                     <PaginationItem key={i}>
                       <PaginationLink
                         data-active={page === i + 1}
-                        className="p-1 flex w-14 items-center justify-center font-medium group/link transition-none rounded-none border-none text-xs md:text-sm 
+                        className="p-1 flex w-14 h-10.5 md:h-11 items-center justify-center font-medium group/link transition-none rounded-none border-none text-xs md:text-sm 
                           text-foreground/50 data-[active=true]:text-foreground not-touch:hover:bg-transparent hover:text-foreground"
                         isActive={page === i + 1}
                         isButton={true}
                         onClick={() => setPage(i + 1)}
                       >
-                        <p className="min-w-0 w-full overflow-hidden overflow-ellipsis rounded-md px-2 py-2 md:py-1.75 items-center justify-center not-touch:group-hover/link:bg-background-secondary">
+                        <p className="min-w-0 w-full overflow-hidden overflow-ellipsis rounded-md p-2 items-center justify-center not-touch:group-hover/link:bg-background-secondary">
                           {i + 1}
                         </p>
                       </PaginationLink>
