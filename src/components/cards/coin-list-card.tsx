@@ -37,7 +37,7 @@ import {
   PaginationLink,
 } from "@/components/ui/pagination";
 import { CSSProperties, useMemo, useState } from "react";
-import DataTable from "@/components/ui/data-table";
+import DataTable, { TDataTablePage } from "@/components/ui/data-table";
 import { defaultQueryOptions } from "@/lib/constants";
 
 const convertCurrency = {
@@ -87,11 +87,7 @@ declare module "@tanstack/react-table" {
 }
 
 export default function CoinListCard({ className }: { className?: string }) {
-  const [page, setPage] = useState<{
-    min: number;
-    max: number;
-    current: number;
-  }>({
+  const [page, setPage] = useState<TDataTablePage>({
     min: 1,
     max: 5,
     current: 1,

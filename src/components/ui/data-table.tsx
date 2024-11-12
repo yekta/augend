@@ -21,7 +21,7 @@ import { cn } from "@/lib/utils";
 import { CSSProperties, Dispatch, SetStateAction } from "react";
 import Indicator from "@/components/cards/indicator";
 
-type TPage = {
+export type TDataTablePage = {
   min: number;
   max: number;
   current: number;
@@ -44,8 +44,8 @@ export default function DataTable<T, Z>({
   isRefetching: boolean;
   isError: boolean;
   isLoadingError: boolean;
-  page: TPage;
-  setPage: Dispatch<SetStateAction<TPage>>;
+  page: TDataTablePage;
+  setPage: Dispatch<SetStateAction<TDataTablePage>>;
   className?: string;
 }) {
   return (
