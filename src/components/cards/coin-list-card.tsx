@@ -429,9 +429,9 @@ export default function CoinListCard({ className }: { className?: string }) {
                 {Array.from({ length: pageMax }, (_, i) => (
                   <PaginationItem key={i}>
                     <PaginationLink
-                      className={`py-5 px-6 rounded-none border-none text-xs md:text-sm ${
+                      className={`py-5 font-medium px-6 rounded-none border-none text-xs md:text-sm ${
                         !(page === i + 1)
-                          ? "text-foreground/50 not-touch:hover:bg-background-secondary hover:text-foreground"
+                          ? "text-muted-foreground not-touch:hover:bg-background-secondary hover:text-foreground"
                           : "bg-background-secondary not-touch:hover:bg-background-secondary"
                       }`}
                       isActive={page === i + 1}
