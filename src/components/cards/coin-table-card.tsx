@@ -83,12 +83,11 @@ export default function CoinTableCard({ className }: { className?: string }) {
     return [
       {
         accessorKey: "name",
+        header: "Name",
+        headerAlignment: "start",
         isPinnedLeft: true,
         sortDescFirst: false,
-        headerVariant: "regular",
-        header: ({ header }) => "Name",
-        headerAlignment: "start",
-        cellVariant: "custom",
+        cellType: "custom",
         cell: ({ row }) => (
           <NameColumn
             id={dataOrFallback[row.index].id}
@@ -109,16 +108,14 @@ export default function CoinTableCard({ className }: { className?: string }) {
       },
       {
         accessorKey: "price",
-        sortDescFirst: true,
-        header: ({ header }) => "Price",
+        header: "Price",
         cell: ({ row }) =>
           `${convertCurrency.symbol}${formatNumberTBMK(row.getValue("price"))}`,
       },
       {
         accessorKey: "percentChange24h",
-        sortDescFirst: true,
-        header: ({ header }) => "24H",
-        cellVariant: "change",
+        header: "24H",
+        cellType: "change",
         cell: ({ row }) => row.getValue("percentChange24h"),
         sortingFn: (rowA, rowB, _columnId) => {
           const a = rowA.original.percentChange24h;
@@ -129,21 +126,19 @@ export default function CoinTableCard({ className }: { className?: string }) {
       },
       {
         accessorKey: "percentChange7d",
-        sortDescFirst: true,
-        header: ({ header }) => "7D",
+        header: "7D",
+        cellType: "change",
+        cell: ({ row }) => row.getValue("percentChange7d"),
         sortingFn: (rowA, rowB, _columnId) => {
           const a = rowA.original.percentChange7d;
           const b = rowB.original.percentChange7d;
           if (a === undefined || b === undefined) return 0;
           return a - b;
         },
-        cellVariant: "change",
-        cell: ({ row }) => row.getValue("percentChange7d"),
       },
       {
         accessorKey: "marketCap",
-        sortDescFirst: true,
-        header: ({ header }) => "MC",
+        header: "MC",
         cell: ({ row }) =>
           `${convertCurrency.symbol}${formatNumberTBMK(
             row.getValue("marketCap")
@@ -151,8 +146,7 @@ export default function CoinTableCard({ className }: { className?: string }) {
       },
       {
         accessorKey: "volume",
-        sortDescFirst: true,
-        header: ({ header }) => "Vol",
+        header: "Vol",
         cell: ({ row }) =>
           `${convertCurrency.symbol}${formatNumberTBMK(
             row.getValue("volume")
@@ -196,7 +190,8 @@ function NameColumn({
   ticker: string;
 }) {
   const Comp = hasData ? Link : "div";
-  const pendingClassesMuted = "";
+  const pendingClassesMuted =
+    "group-data-[is-pending]/table:text-transparent group-data-[is-pending]/table:bg-muted-foreground group-data-[is-pending]/table:rounded-sm group-data-[is-pending]/table:animate-skeleton";
   const pendingClasses =
     "group-data-[is-pending]/table:text-transparent group-data-[is-pending]/table:bg-foreground group-data-[is-pending]/table:rounded-sm group-data-[is-pending]/table:animate-skeleton";
   const paddingRight = "pr-2 md:pr-4";

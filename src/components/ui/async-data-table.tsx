@@ -45,9 +45,9 @@ export type TAsyncDataTablePage = {
 export type TAsyncDataTableColumnDef<T> = ColumnDef<T> & {
   isPinnedLeft?: boolean;
   accessorKey: string;
-  headerVariant?: "regular" | "custom";
+  headerType?: "regular" | "custom";
   headerAlignment?: "start" | "end";
-  cellVariant?: "regular" | "change" | "custom";
+  cellType?: "regular" | "change" | "custom";
 };
 
 export default function AsyncDataTable<T>({
@@ -255,14 +255,10 @@ function getHeader<T>({
   lastColumnClasses: string;
 }) {
   const header = columnDef.header;
-  const headerVariant = columnDef.headerVariant || "regular";
+  const headerType = columnDef.headerType || "regular";
   const headerAlignment = columnDef.headerAlignment || "end";
 
-  if (
-    headerVariant === "custom" ||
-    header === undefined ||
-    typeof header === "string"
-  ) {
+  if (headerType === "custom" || header === undefined) {
     return header;
   }
 
@@ -278,7 +274,7 @@ function getHeader<T>({
       indicatorPosition={headerAlignment === "start" ? "end" : "start"}
       sortDescFirst={columnDef.sortDescFirst}
     >
-      {header(props)}
+      {typeof header === "string" ? header : header(props)}
     </HeaderColumn>
   );
 }
@@ -297,17 +293,13 @@ function getCell<T>({
   isLoadingError: boolean;
 }) {
   const cell = columnDef.cell;
-  const cellVariant = columnDef.cellVariant || "regular";
+  const cellType = columnDef.cellType || "regular";
 
-  if (
-    cellVariant === "custom" ||
-    cell === undefined ||
-    typeof cell === "string"
-  ) {
+  if (cellType === "custom" || cell === undefined || typeof cell === "string") {
     return cell;
   }
 
-  if (cellVariant === "change") {
+  if (cellType === "change") {
     return (props: CellContext<T, unknown>) => {
       return (
         <ChangeColumn
