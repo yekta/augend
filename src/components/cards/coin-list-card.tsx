@@ -437,7 +437,7 @@ export default function CoinListCard({ className }: { className?: string }) {
                         isButton={true}
                         onClick={() => setPage(i + 1)}
                       >
-                        <div className="flex rounded-md w-10 px-2 py-2 items-center justify-center not-touch:group-hover/link:bg-background-secondary">
+                        <div className="flex rounded-md w-10 px-2 py-2 md:py-1.75 items-center justify-center not-touch:group-hover/link:bg-background-secondary">
                           {i + 1}
                         </div>
                       </PaginationLink>
