@@ -86,7 +86,12 @@ export default function MiniCryptoCard({
                   {isPending
                     ? "Load"
                     : data
-                      ? formatNumberTBMK(data.quote.USD.percent_change_24h, 3)
+                      ? formatNumberTBMK(
+                          data.quote.USD.percent_change_24h,
+                          3,
+                          false,
+                          true
+                        )
                       : "Error"}
                 </p>
               </div>

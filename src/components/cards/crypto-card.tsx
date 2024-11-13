@@ -70,7 +70,9 @@ export default function CryptoCard({ config }: { config: TCrypto }) {
                     ? formatNumberTBMK(
                         data[config.ticker].quote[convertCurrency.ticker]
                           .percent_change_24h,
-                        3
+                        3,
+                        false,
+                        true
                       )
                     : "Error"}
               </p>

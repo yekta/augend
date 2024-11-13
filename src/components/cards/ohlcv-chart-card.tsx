@@ -360,7 +360,7 @@ function Header({
   isPlaceholderData: boolean;
   priceFormatter: (i: number, d: number, s: boolean) => string;
 }) {
-  const ChangeRateIcon =
+  const ChangeIcon =
     priceInfo.changeRate === 0
       ? ArrowRightIcon
       : priceInfo.changeRate < 0
@@ -407,12 +407,13 @@ function Header({
                 className="inline-flex min-w-0 pb-0.75 text-muted-foreground data-[is-positive]:text-success data-[is-negative]:text-destructive shrink-0 items-end"
               >
                 <div className="size-4.5 shrink-0 -mb-0.25">
-                  <ChangeRateIcon className="size-full" />
+                  <ChangeIcon className="size-full" />
                 </div>
                 <p className="text-base font-semibold leading-none shrink min-w-0 overflow-hidden overflow-ellipsis">
                   {formatNumberTBMK(
                     Math.abs(priceInfo.changeRate * 100),
                     3,
+                    true,
                     true
                   )}
                   %

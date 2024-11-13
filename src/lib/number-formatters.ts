@@ -1,7 +1,8 @@
 export function formatNumberTBMK(
   number: number,
   maxSignificantDigits: number = 4,
-  shouldPad: boolean = false
+  shouldPad: boolean = false,
+  absoluteValue: boolean = false
 ): string {
   const suffixes = [
     { value: 1e12, symbol: "T" },
@@ -41,7 +42,8 @@ export function formatNumberTBMK(
   }
 
   // Prepend negative sign if necessary
-  const formattedNumber = (isNegative ? "-" : "") + numberPartStr + suffix;
+  const formattedNumber =
+    (isNegative && !absoluteValue ? "-" : "") + numberPartStr + suffix;
 
   return formattedNumber;
 }

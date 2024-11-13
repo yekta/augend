@@ -79,7 +79,9 @@ export default function FearGreedIndexCard({
                     : data
                       ? formatNumberTBMK(
                           data.total_market_cap_yesterday_percentage_change,
-                          3
+                          3,
+                          false,
+                          true
                         )
                       : "Error"}
                 </p>

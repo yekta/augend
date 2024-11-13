@@ -425,7 +425,7 @@ function ChangeColumn({
         {isPending
           ? "Loading"
           : !isLoadingError
-            ? formatNumberTBMK(change, 3)
+            ? formatNumberTBMK(change, 3, false, true)
             : "Error"}
       </p>
     </div>
