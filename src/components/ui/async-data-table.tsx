@@ -28,13 +28,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { ArrowDownIcon, ArrowRightIcon, ArrowUpIcon } from "lucide-react";
-import {
-  CSSProperties,
-  Dispatch,
-  SetStateAction,
-  useMemo,
-  useState,
-} from "react";
+import { CSSProperties, Dispatch, SetStateAction, useMemo } from "react";
 
 export type TAsyncDataTablePage = {
   min: number;
