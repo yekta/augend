@@ -205,7 +205,7 @@ function NameColumn({
             : "#"
       }
       className={cn(
-        `pl-4 md:pl-5 ${paddingRight} group/link py-3.5 flex flex-row items-center gap-3.5 overflow-hidden`
+        `pl-4 md:pl-5 w-34 md:w-52 ${paddingRight} group/link py-3.5 flex flex-row items-center gap-3.5 overflow-hidden`
       )}
     >
       <div className="flex flex-col items-center justify-center gap-1.5">
@@ -228,7 +228,7 @@ function NameColumn({
         </div>
       </div>
       <div
-        className={`flex-1 w-20 md:w-40 min-w-0 flex flex-col justify-center items-start gap-1.5 overflow-hidden`}
+        className={`flex-1 min-w-0 flex flex-col justify-center items-start gap-1.5 overflow-hidden`}
       >
         <div className="max-w-full flex items-center justify-start gap-1 md:gap-1.5">
           <p

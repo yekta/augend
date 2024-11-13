@@ -1,4 +1,5 @@
 import type { PoolSummary } from "@gfxlabs/oku";
+import { z } from "zod";
 
 export type TUniswapPoolsResultRaw = {
   result: {
@@ -6,8 +7,12 @@ export type TUniswapPoolsResultRaw = {
   };
 };
 
+export const UniswapNetworkSchema = z.enum(["ethereum"]);
+export type TUniswapNetwork = z.infer<typeof UniswapNetworkSchema>;
+
 export type TUniswapPoolsResult = {
   pools: {
+    address: string;
     price: number;
     feeTier: number;
     tvlUSD: number;

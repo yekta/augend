@@ -8,7 +8,10 @@ import AsyncDataTable, {
 import { defaultQueryOptions } from "@/lib/constants";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
-import { TUniswapPoolsResult } from "@/server/api/routers/uniswap/types";
+import {
+  TUniswapNetwork,
+  TUniswapPoolsResult,
+} from "@/server/api/routers/uniswap/types";
 import { api } from "@/trpc/react";
 import { RowData } from "@tanstack/react-table";
 import { ExternalLinkIcon } from "lucide-react";
@@ -24,6 +27,7 @@ type TData = TUniswapPoolsResult["pools"][number];
 
 const dataFallback: TUniswapPoolsResult = {
   pools: Array.from({ length: 100 }, (_, i) => ({
+    address: "0xcbcdf9626bc03e24f779434178a73a0b4bad62ed",
     tvlUSD: 12345678,
     price: 1345,
     apr24h: 1,
@@ -54,6 +58,8 @@ export default function UniswapPoolsTableCard({
 }: {
   className?: string;
 }) {
+  const [network, setNetwork] = useState<TUniswapNetwork>("ethereum");
+
   const [page, setPage] = useState<TAsyncDataTablePage>({
     min: 1,
     max: 5,
@@ -62,7 +68,7 @@ export default function UniswapPoolsTableCard({
 
   const { data, isLoadingError, isPending, isError, isRefetching } =
     api.uniswap.getPools.useQuery(
-      { page: page.current },
+      { page: page.current, network },
       defaultQueryOptions.slow
     );
 
@@ -84,6 +90,7 @@ export default function UniswapPoolsTableCard({
         cell: ({ row }) => {
           const pendingClassName =
             "group-data-[is-pending]/table:text-transparent group-data-[is-pending]/table:bg-foreground group-data-[is-pending]/table:rounded-sm group-data-[is-pending]/table:animate-skeleton group-data-[is-loading-error]/table:text-destructive";
+
           let className = "text-foreground bg-foreground/8";
           const feeTierP = row.original.feeTier * 100;
           if (feeTierP >= 1) className = "text-chart-4 bg-chart-4/8";
@@ -94,52 +101,66 @@ export default function UniswapPoolsTableCard({
             "group-data-[is-pending]/table:bg-foreground/8 group-data-[is-pending]/table:text-transparent group-data-[is-pending]/table:rounded-sm group-data-[is-loading-error]/table:text-destructive group-data-[is-loading-error]/table:bg-destructive/8"
           );
 
+          const iconSizeClassName = "size-4.5 md:size-5.5";
           const PendingIcon = (
-            <div className="size-5 bg-foreground animate-skeleton rounded-full" />
+            <div
+              className={`${iconSizeClassName} bg-foreground animate-skeleton rounded-full`}
+            />
           );
           const ErrorIcon = (
-            <div className="size-5 bg-destructive rounded-full" />
+            <div
+              className={`${iconSizeClassName} bg-destructive rounded-full`}
+            />
           );
+          const Component = isPending ? "div" : data ? Link : "div";
           return (
-            <div className="flex gap-3 items-center justify-start pl-4 md:pl-5 py-3.5">
-              <div className="flex flex-row items-center gap-2">
-                <div className="flex flex-col justify-center">
-                  <div className="bg-background not-touch:group-hover/row:bg-background-secondary rounded-full p-0.5">
+            <Component
+              target="_blank"
+              href={`https://app.uniswap.org/explore/pools/${network}/${row.original.address}`}
+              className="group/link w-34 md:w-52 text-xs md:text-sm leading-none md:leading-none flex gap-2 md:gap-2.5 items-center justify-start pl-4 md:pl-5 py-3"
+            >
+              <div className="shrink min-w-0 flex flex-row items-center gap-1.5 md:gap-2">
+                <div className="flex -ml-1 flex-col justify-center shrink-0">
+                  <div className="bg-background not-touch:group-data-[has-data]/table:group-hover/row:bg-background-secondary rounded-full p-0.5">
                     {isPending ? (
                       PendingIcon
                     ) : data ? (
                       <CryptoIcon
                         variant="branded"
                         ticker={row.original.token0.symbol}
-                        className="size-5 bg-border p-0.5 rounded-full"
+                        className={`${iconSizeClassName} bg-border p-0.5 md:p-0.75 rounded-full`}
                       />
                     ) : (
                       ErrorIcon
                     )}
                   </div>
-                  <div className="-mt-1.5 z-10 bg-background not-touch:group-hover/row:bg-background-secondary rounded-full p-0.5">
+                  <div className="-mt-1.5 z-10 bg-background not-touch:group-data-[has-data]/table:group-hover/row:bg-background-secondary rounded-full p-0.5">
                     {isPending ? (
                       PendingIcon
                     ) : data ? (
                       <CryptoIcon
                         variant="branded"
                         ticker={row.original.token1.symbol}
-                        className="size-5 bg-border p-0.5 rounded-full"
+                        className={`${iconSizeClassName} bg-border p-0.5 md:p-0.75 rounded-full`}
                       />
                     ) : (
                       ErrorIcon
                     )}
                   </div>
                 </div>
-                <div className="flex flex-col gap-1.5">
-                  <p className={`leading-none ${pendingClassName}`}>
+                <div className="shrink min-w-0 flex flex-col gap-1.5 font-semibold">
+                  <p
+                    className={`leading-none max-w-full overflow-hidden overflow-ellipsis ${pendingClassName}`}
+                  >
                     {isPending
                       ? "Load"
                       : data
                         ? row.original.token0.symbol
                         : "ERR"}
                   </p>
-                  <p className={`leading-none ${pendingClassName}`}>
+                  <p
+                    className={`leading-none max-w-full overflow-hidden overflow-ellipsis ${pendingClassName}`}
+                  >
                     {isPending
                       ? "Load"
                       : data
@@ -149,11 +170,19 @@ export default function UniswapPoolsTableCard({
                 </div>
               </div>
               <p
-                className={`${className} font-medium px-1.25 py-1 rounded leading-none text-xs`}
+                className={`${className} shrink-0 font-medium px-1 py-0.75 md:px-1.25 md:py-1 rounded leading-none md:leading-none text-xxs md:text-xs`}
               >
-                {isPending ? "10%" : data ? `${feeTierP}%` : "ERR"}
+                {isPending
+                  ? "10%"
+                  : data
+                    ? `${formatNumberTBMK(feeTierP)}%`
+                    : "ERR"}
               </p>
-            </div>
+              <ExternalLinkIcon
+                className="opacity-0 shrink-0 -ml-0.5 origin-bottom-left scale-0 pointer-events-none size-3 md:size-4 -my-1 transition duration-100
+                not-touch:group-data-[has-data]/table:group-hover/link:opacity-100 not-touch:group-data-[has-data]/table:group-hover/link:scale-100"
+              />
+            </Component>
           );
         },
         sortingFn: (a, b) =>
@@ -166,9 +195,19 @@ export default function UniswapPoolsTableCard({
         sortingFn: (a, b) => a.original.price - b.original.price,
       },
       {
-        accessorKey: "fees-tvl",
-        header: "APR 24h",
-        cell: ({ row }) => `${formatNumberTBMK(row.original.apr24h * 100)}%`,
+        accessorKey: "apr-24h",
+        header: "APR 24H",
+        cell: ({ row }) => {
+          let className = "text-foreground";
+          if (row.original.apr24h >= 10) className = "text-chart-4";
+          else if (row.original.apr24h >= 5) className = "text-chart-1";
+          else if (row.original.apr24h >= 1) className = "text-chart-3";
+          return (
+            <span className={className}>
+              {formatNumberTBMK(row.original.apr24h * 100)}%
+            </span>
+          );
+        },
         sortingFn: (a, b) => a.original.apr24h - b.original.apr24h,
       },
       {
@@ -179,13 +218,22 @@ export default function UniswapPoolsTableCard({
         sortingFn: (a, b) => a.original.tvlUSD - b.original.tvlUSD,
       },
       {
-        accessorKey: "volume",
-        header: "Vol 24h",
+        accessorKey: "volume-24h",
+        header: "Vol 24H",
         cell: ({ row }) =>
           `${convertCurrency.symbol}${formatNumberTBMK(
             row.original.volume24hUSD
           )}`,
         sortingFn: (a, b) => a.original.volume24hUSD - b.original.volume24hUSD,
+      },
+      {
+        accessorKey: "volume-7d",
+        header: "Vol 7D",
+        cell: ({ row }) =>
+          `${convertCurrency.symbol}${formatNumberTBMK(
+            row.original.volume7dUSD
+          )}`,
+        sortingFn: (a, b) => a.original.volume7dUSD - b.original.volume7dUSD,
       },
     ];
   }, [data, isPending, isError, isLoadingError]);
@@ -204,86 +252,5 @@ export default function UniswapPoolsTableCard({
         setPage={setPage}
       />
     </div>
-  );
-}
-
-function NameColumn({
-  hasData,
-  isPending,
-  slug,
-  id,
-  rank,
-  value,
-  ticker,
-}: {
-  hasData: boolean;
-  isPending: boolean;
-  slug: string;
-  id: number;
-  rank: number;
-  value: string;
-  ticker: string;
-}) {
-  const Comp = hasData ? Link : "div";
-  const pendingClassesMuted =
-    "group-data-[is-pending]/table:text-transparent group-data-[is-pending]/table:bg-muted-foreground group-data-[is-pending]/table:rounded-sm group-data-[is-pending]/table:animate-skeleton";
-  const pendingClasses =
-    "group-data-[is-pending]/table:text-transparent group-data-[is-pending]/table:bg-foreground group-data-[is-pending]/table:rounded-sm group-data-[is-pending]/table:animate-skeleton";
-  const paddingRight = "pr-2 md:pr-4";
-
-  return (
-    <Comp
-      target="_blank"
-      href={
-        isPending
-          ? "#"
-          : hasData
-            ? `https://coinmarketcap.com/currencies/${slug}`
-            : "#"
-      }
-      className={cn(
-        `pl-4 md:pl-5 ${paddingRight} group/link py-3.5 flex flex-row items-center gap-3.5 overflow-hidden`
-      )}
-    >
-      <div className="flex flex-col items-center justify-center gap-1.5">
-        {isPending ? (
-          <div className="size-4.5 rounded-full shrink-0 bg-foreground animate-skeleton" />
-        ) : hasData ? (
-          <img
-            src={`https://s2.coinmarketcap.com/static/img/coins/64x64/${id}.png`}
-            className="size-4.5 shrink-0 rounded-full bg-foreground p-px"
-          />
-        ) : (
-          <div className="size-4.5 rounded-full shrink-0 bg-destructive" />
-        )}
-        <div className={`w-6 overflow-hidden flex items-center justify-center`}>
-          <p
-            className={`${pendingClassesMuted} max-w-full overflow-hidden overflow-ellipsis text-xs leading-none font-medium text-muted-foreground text-center group-data-[is-loading-error]/table:text-destructive`}
-          >
-            {isPending ? "#" : hasData ? rank : "E"}
-          </p>
-        </div>
-      </div>
-      <div
-        className={`flex-1 w-20 md:w-40 min-w-0 flex flex-col justify-center items-start gap-1.5 overflow-hidden`}
-      >
-        <div className="max-w-full flex items-center justify-start gap-1 md:gap-1.5">
-          <p
-            className={`${pendingClasses} shrink min-w-0 font-semibold text-xs md:text-sm md:leading-none leading-none whitespace-nowrap overflow-hidden overflow-ellipsis group-data-[is-loading-error]/table:text-destructive`}
-          >
-            {isPending ? "Loading" : hasData ? value : "Error"}
-          </p>
-          <ExternalLinkIcon
-            className="opacity-0 shrink-0 origin-bottom-left scale-0 pointer-events-none size-3 md:size-4 -my-1 transition duration-100
-              not-touch:group-data-[has-data]/table:group-hover/link:opacity-100 not-touch:group-data-[has-data]/table:group-hover/link:scale-100"
-          />
-        </div>
-        <p
-          className={`${pendingClassesMuted} max-w-full whitespace-nowrap overflow-hidden overflow-ellipsis text-muted-foreground leading-none text-xs group-data-[is-loading-error]/table:text-destructive`}
-        >
-          {isPending ? "Loading" : hasData ? ticker : "Error"}
-        </p>
-      </div>
-    </Comp>
   );
 }
