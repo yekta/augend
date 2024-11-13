@@ -1,9 +1,9 @@
 import { cmcRouter } from "@/server/api/routers/cmc/router";
 import { coinGeckoRouter } from "@/server/api/routers/coin-gecko/router";
 import { exchangeRouter } from "@/server/api/routers/exchange/router";
-import { graphRouter } from "@/server/api/routers/graph/router";
 import { nanoBananoRouter } from "@/server/api/routers/nano-banano/router";
 import { turkishLiraRouter } from "@/server/api/routers/turkish-lira/router";
+import { uniswapRouter } from "@/server/api/routers/uniswap/router";
 import { wbanRouter } from "@/server/api/routers/wban/router";
 import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
 import {
@@ -25,7 +25,7 @@ export const appRouter = createTRPCRouter({
   turkishLira: turkishLiraRouter,
   wban: wbanRouter,
   coinGecko: coinGeckoRouter,
-  graph: graphRouter,
+  uniswap: uniswapRouter,
 });
 
 // export type definition of API

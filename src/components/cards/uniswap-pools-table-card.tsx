@@ -1,5 +1,6 @@
 "use client";
 
+import CryptoIcon from "@/components/icons/crypto-icon";
 import AsyncDataTable, {
   TAsyncDataTableColumnDef,
   TAsyncDataTablePage,
@@ -7,7 +8,7 @@ import AsyncDataTable, {
 import { defaultQueryOptions } from "@/lib/constants";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
-import { TUniswapPoolsResult } from "@/server/api/routers/graph/types";
+import { TUniswapPoolsResult } from "@/server/api/routers/uniswap/types";
 import { api } from "@/trpc/react";
 import { RowData } from "@tanstack/react-table";
 import { ExternalLinkIcon } from "lucide-react";
@@ -22,38 +23,23 @@ const convertCurrency = {
 type TData = TUniswapPoolsResult["pools"][number];
 
 const dataFallback: TUniswapPoolsResult = {
-  bundles: Array.from({ length: 1 }, (_, i) => ({
-    id: "1",
-    ethPriceUSD: 1234,
-  })),
   pools: Array.from({ length: 100 }, (_, i) => ({
-    feesUSD: 1234,
-    feeTier: 500,
-    price: 1234,
-    feesUSD24h: 1234,
-    volumeUSD24h: 1234,
-    feesUSD7d: 2134,
-    tvlUSD: 123412,
-    apr24h: 1234,
-    poolDayData: Array.from({ length: 7 }, (_, i) => ({
-      date: 123456,
-      feesUSD: 1234,
-      tvlUSD: 123456,
-      volumeUSD: 123456,
-    })),
+    tvlUSD: 12345678,
+    price: 1345,
+    apr24h: 1,
+    feeTier: 0.3,
+    fees24hUSD: 123456,
+    fees7dUSD: 1234567,
+    volume24hUSD: 12345678,
+    volume7dUSD: 123456789,
     token0: {
-      derivedETH: 1234,
-      id: "1",
-      symbol: "BTC",
-      totalValueLocked: 123456,
+      name: "Wrapped Bitcoin",
+      symbol: "WBTC",
     },
     token1: {
-      derivedETH: 1234,
-      id: "2",
-      symbol: "ETH",
-      totalValueLocked: 123456,
+      name: "Ethereum",
+      symbol: "WETH",
     },
-    totalValueLockedETH: 123456,
   })),
 };
 
@@ -75,7 +61,7 @@ export default function UniswapPoolsTableCard({
   });
 
   const { data, isLoadingError, isPending, isError, isRefetching } =
-    api.graph.getUniswapPools.useQuery(
+    api.uniswap.getPools.useQuery(
       { page: page.current },
       defaultQueryOptions.slow
     );
@@ -89,12 +75,87 @@ export default function UniswapPoolsTableCard({
     return [
       {
         accessorKey: "name",
+        accessorFn: (row) => row.token0.symbol,
         header: "Name",
         headerAlignment: "start",
         isPinnedLeft: true,
         sortDescFirst: false,
-        cell: ({ row }) =>
-          row.original.token0.symbol + "/" + row.original.token1.symbol,
+        cellType: "custom",
+        cell: ({ row }) => {
+          const pendingClassName =
+            "group-data-[is-pending]/table:text-transparent group-data-[is-pending]/table:bg-foreground group-data-[is-pending]/table:rounded-sm group-data-[is-pending]/table:animate-skeleton group-data-[is-loading-error]/table:text-destructive";
+          let className = "text-foreground bg-foreground/8";
+          const feeTierP = row.original.feeTier * 100;
+          if (feeTierP >= 1) className = "text-chart-4 bg-chart-4/8";
+          else if (feeTierP >= 0.3) className = "text-chart-1 bg-chart-1/8";
+          else if (feeTierP >= 0.05) className = "text-chart-3 bg-chart-3/8";
+          className = cn(
+            className,
+            "group-data-[is-pending]/table:bg-foreground/8 group-data-[is-pending]/table:text-transparent group-data-[is-pending]/table:rounded-sm group-data-[is-loading-error]/table:text-destructive group-data-[is-loading-error]/table:bg-destructive/8"
+          );
+
+          const PendingIcon = (
+            <div className="size-5 bg-foreground animate-skeleton rounded-full" />
+          );
+          const ErrorIcon = (
+            <div className="size-5 bg-destructive rounded-full" />
+          );
+          return (
+            <div className="flex gap-3 items-center justify-start pl-4 md:pl-5 py-3.5">
+              <div className="flex flex-row items-center gap-2">
+                <div className="flex flex-col justify-center">
+                  <div className="bg-background not-touch:group-hover/row:bg-background-secondary rounded-full p-0.5">
+                    {isPending ? (
+                      PendingIcon
+                    ) : data ? (
+                      <CryptoIcon
+                        variant="branded"
+                        ticker={row.original.token0.symbol}
+                        className="size-5 bg-border p-0.5 rounded-full"
+                      />
+                    ) : (
+                      ErrorIcon
+                    )}
+                  </div>
+                  <div className="-mt-1.5 z-10 bg-background not-touch:group-hover/row:bg-background-secondary rounded-full p-0.5">
+                    {isPending ? (
+                      PendingIcon
+                    ) : data ? (
+                      <CryptoIcon
+                        variant="branded"
+                        ticker={row.original.token1.symbol}
+                        className="size-5 bg-border p-0.5 rounded-full"
+                      />
+                    ) : (
+                      ErrorIcon
+                    )}
+                  </div>
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <p className={`leading-none ${pendingClassName}`}>
+                    {isPending
+                      ? "Load"
+                      : data
+                        ? row.original.token0.symbol
+                        : "ERR"}
+                  </p>
+                  <p className={`leading-none ${pendingClassName}`}>
+                    {isPending
+                      ? "Load"
+                      : data
+                        ? row.original.token1.symbol
+                        : "ERR"}
+                  </p>
+                </div>
+              </div>
+              <p
+                className={`${className} font-medium px-1.25 py-1 rounded leading-none text-xs`}
+              >
+                {isPending ? "10%" : data ? `${feeTierP}%` : "ERR"}
+              </p>
+            </div>
+          );
+        },
         sortingFn: (a, b) =>
           a.original.token0.symbol.localeCompare(b.original.token0.symbol),
       },
@@ -107,25 +168,8 @@ export default function UniswapPoolsTableCard({
       {
         accessorKey: "fees-tvl",
         header: "APR 24h",
-        cell: ({ row }) => `${formatNumberTBMK(row.original.apr24h * 100)}`,
+        cell: ({ row }) => `${formatNumberTBMK(row.original.apr24h * 100)}%`,
         sortingFn: (a, b) => a.original.apr24h - b.original.apr24h,
-      },
-      {
-        accessorKey: "fee-tier",
-        header: "Fee Tier",
-        cell: ({ row }) => {
-          let className = "text-foreground bg-foreground/8";
-          const feeTierP = row.original.feeTier * 100;
-          if (feeTierP >= 1) className = "text-chart-4 bg-chart-4/8";
-          else if (feeTierP >= 0.3) className = "text-chart-1 bg-chart-1/8";
-          else if (feeTierP >= 0.05) className = "text-chart-3 bg-chart-3/8";
-          return (
-            <div className={`${className} px-1.5 py-1 rounded`}>
-              {feeTierP}%
-            </div>
-          );
-        },
-        sortingFn: (a, b) => a.original.feeTier - b.original.feeTier,
       },
       {
         accessorKey: "tvl",
@@ -139,9 +183,9 @@ export default function UniswapPoolsTableCard({
         header: "Vol 24h",
         cell: ({ row }) =>
           `${convertCurrency.symbol}${formatNumberTBMK(
-            row.original.volumeUSD24h
+            row.original.volume24hUSD
           )}`,
-        sortingFn: (a, b) => a.original.volumeUSD24h - b.original.volumeUSD24h,
+        sortingFn: (a, b) => a.original.volume24hUSD - b.original.volume24hUSD,
       },
     ];
   }, [data, isPending, isError, isLoadingError]);

@@ -12,21 +12,31 @@ import {
   TokenBNB,
   TokenETH,
   TokenBTC,
+  TokenUSDC,
+  TokenDAI,
+  TokenFRAX,
+  TokenUSDT,
 } from "@web3icons/react";
 import { BanIcon } from "lucide-react";
 
 export default function CryptoIcon({
   ticker,
   className,
+  variant = "mono",
 }: {
   ticker: string | undefined;
   className?: string;
+  variant?: "branded" | "mono";
 }) {
   const defaultClasses = "size-6";
   if (ticker === "SOL")
-    return <TokenSOL className={cn(defaultClasses, className)} />;
+    return (
+      <TokenSOL variant={variant} className={cn(defaultClasses, className)} />
+    );
   if (ticker === "XRP")
-    return <TokenXRP className={cn(defaultClasses, className)} />;
+    return (
+      <TokenXRP variant={variant} className={cn(defaultClasses, className)} />
+    );
   if (ticker === "DOGE")
     return (
       <svg
@@ -44,24 +54,78 @@ export default function CryptoIcon({
       </svg>
     );
   if (ticker === "UNI")
-    return <TokenUNI className={cn(defaultClasses, className)} />;
+    return (
+      <TokenUNI variant={variant} className={cn(defaultClasses, className)} />
+    );
   if (ticker === "XMR")
-    return <TokenXMR className={cn(defaultClasses, className)} />;
+    return (
+      <TokenXMR variant={variant} className={cn(defaultClasses, className)} />
+    );
   if (ticker === "OP")
-    return <TokenOP className={cn(defaultClasses, className)} />;
+    return (
+      <TokenOP variant={variant} className={cn(defaultClasses, className)} />
+    );
   if (ticker === "ARB")
     return <NetworkArbitrumOne className={cn(defaultClasses, className)} />;
   if (ticker === "MATIC")
-    return <TokenMATIC className={cn(defaultClasses, className)} />;
+    return (
+      <TokenMATIC variant={variant} className={cn(defaultClasses, className)} />
+    );
   if (ticker === "BNB")
-    return <TokenBNB className={cn(defaultClasses, className)} />;
-  if (ticker === "ETH")
-    return <TokenETH className={cn(defaultClasses, className)} />;
-  if (ticker === "BTC")
-    return <TokenBTC className={cn(defaultClasses, className)} />;
+    return (
+      <TokenBNB variant={variant} className={cn(defaultClasses, className)} />
+    );
+  if (ticker === "ETH" || ticker === "WETH")
+    return (
+      <TokenETH variant={variant} className={cn(defaultClasses, className)} />
+    );
+  if (ticker === "BTC" || ticker === "WBTC")
+    return (
+      <TokenBTC variant={variant} className={cn(defaultClasses, className)} />
+    );
   if (ticker === "BAN")
     return <BananoIcon className={cn(defaultClasses, className)} />;
   if (ticker === "XNO")
     return <NanoIcon className={cn(defaultClasses, className)} />;
+  if (ticker === "USDC")
+    return (
+      <TokenUSDC variant={variant} className={cn(defaultClasses, className)} />
+    );
+  if (ticker === "DAI")
+    return (
+      <TokenDAI variant={variant} className={cn(defaultClasses, className)} />
+    );
+  if (ticker === "FRAX")
+    return (
+      <TokenFRAX variant={variant} className={cn(defaultClasses, className)} />
+    );
+  if (ticker === "USDT")
+    return (
+      <TokenUSDT variant={variant} className={cn(defaultClasses, className)} />
+    );
+  if (ticker !== undefined) {
+    return (
+      <svg
+        className={cn(defaultClasses, className)}
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <text
+          fill="currentColor"
+          x="50%"
+          y="50%"
+          dominant-baseline="middle"
+          text-anchor="middle"
+          className="text-bold"
+          fontSize={16}
+        >
+          {ticker.slice(0, 1)}
+        </text>
+      </svg>
+    );
+  }
   return <BanIcon className={cn(defaultClasses, className)} />;
 }
