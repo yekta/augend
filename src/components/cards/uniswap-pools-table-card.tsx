@@ -37,10 +37,12 @@ const dataFallback: TUniswapPoolsResult = {
     volume24hUSD: 12345678,
     volume7dUSD: 123456789,
     token0: {
+      id: "0x2260fac5e5542a773aa44fbcfedf7c193bc2c111",
       name: "Wrapped Bitcoin",
       symbol: "WBTC",
     },
     token1: {
+      id: "0x2260fac5e5542a773aa44fbcfedf7c193bc2c111",
       name: "Ethereum",
       symbol: "WETH",
     },
