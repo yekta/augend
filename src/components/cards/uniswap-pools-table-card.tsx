@@ -140,7 +140,7 @@ export default function UniswapPoolsTableCard({
                       ErrorIcon
                     )}
                   </div>
-                  <div className="-mt-1.5 z-10 bg-background not-touch:group-data-[has-data]/table:group-hover/row:bg-background-secondary rounded-full p-0.5">
+                  <div className="-mt-1 z-10 bg-background not-touch:group-data-[has-data]/table:group-hover/row:bg-background-secondary rounded-full p-0.5">
                     {isPending ? (
                       PendingIcon
                     ) : data ? (
@@ -154,16 +154,27 @@ export default function UniswapPoolsTableCard({
                     )}
                   </div>
                 </div>
-                <div className="shrink min-w-0 flex flex-col gap-1.5 font-semibold">
-                  <p
-                    className={`leading-none max-w-full overflow-hidden overflow-ellipsis ${pendingClassName}`}
-                  >
-                    {isPending
-                      ? "Load"
-                      : data
-                        ? row.original.token0.symbol
-                        : "ERR"}
-                  </p>
+                <div className="shrink min-w-0 flex flex-col items-start gap-1 font-semibold overflow-hidden">
+                  <div className="max-w-full flex flex-row items-center gap-2 overflow-hidden">
+                    <p
+                      className={`shrink min-w-0 overflow-hidden overflow-ellipsis ${pendingClassName}`}
+                    >
+                      {isPending
+                        ? "Load"
+                        : data
+                          ? row.original.token0.symbol
+                          : "ERR"}
+                    </p>
+                    <p
+                      className={`${className} shrink-0 font-medium px-1 py-0.75 rounded leading-none md:leading-none text-xxs md:text-xs`}
+                    >
+                      {isPending
+                        ? "10%"
+                        : data
+                          ? `${formatNumberTBMK(feeTierP)}%`
+                          : "ERR"}
+                    </p>
+                  </div>
                   <p
                     className={`leading-none max-w-full overflow-hidden overflow-ellipsis ${pendingClassName}`}
                   >
@@ -175,15 +186,6 @@ export default function UniswapPoolsTableCard({
                   </p>
                 </div>
               </div>
-              <p
-                className={`${className} shrink-0 font-medium px-1 py-0.75 md:px-1.25 md:py-1 rounded leading-none md:leading-none text-xxs md:text-xs`}
-              >
-                {isPending
-                  ? "10%"
-                  : data
-                    ? `${formatNumberTBMK(feeTierP)}%`
-                    : "ERR"}
-              </p>
               <ExternalLinkIcon
                 className="opacity-0 shrink-0 -ml-0.5 origin-bottom-left scale-0 pointer-events-none size-3 md:size-4 -my-1 transition duration-100
                 not-touch:group-data-[has-data]/table:group-hover/link:opacity-100 not-touch:group-data-[has-data]/table:group-hover/link:scale-100"

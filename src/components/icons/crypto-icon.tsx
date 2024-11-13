@@ -119,7 +119,7 @@ export default function CryptoIcon({
           y="50%"
           dominantBaseline="middle"
           textAnchor="middle"
-          className="text-bold"
+          className="font-extrabold"
           fontSize={16}
         >
           {ticker.slice(0, 1)}

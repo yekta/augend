@@ -18,7 +18,6 @@ export const uniswapRouter = createTRPCRouter({
       })
     )
     .query(async ({ input: { page, network } }) => {
-      /* throw new Error("Not implemented"); */
       const first = 100;
       const url = `${uniswapOkuUrl}/${network}/cush/topPools`;
       const body: { params: SearchFilterOpts[] } = {
