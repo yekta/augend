@@ -120,7 +120,7 @@ export default function UniswapPoolsTableCard({
               className="group/link w-34 md:w-52 text-xs md:text-sm leading-none md:leading-none flex gap-2 md:gap-2.5 items-center justify-start pl-4 md:pl-5 py-3"
             >
               <div className="shrink min-w-0 flex flex-row items-center gap-1.5 md:gap-2">
-                <div className="flex -ml-1 flex-col justify-center shrink-0">
+                <div className="flex -ml-0.75 flex-col justify-center shrink-0">
                   <div className="bg-background not-touch:group-data-[has-data]/table:group-hover/row:bg-background-secondary rounded-full p-0.5">
                     {isPending ? (
                       PendingIcon
