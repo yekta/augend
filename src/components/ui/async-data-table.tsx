@@ -62,6 +62,8 @@ export default function AsyncDataTable<T>({
   page,
   setPage,
   className,
+  sorting,
+  setSorting,
 }: {
   columnDefs: TAsyncDataTableColumnDef<T>[];
   data: T[];
@@ -72,6 +74,8 @@ export default function AsyncDataTable<T>({
   page: TAsyncDataTablePage;
   setPage: Dispatch<SetStateAction<TAsyncDataTablePage>>;
   className?: string;
+  sorting: SortingState;
+  setSorting: Dispatch<SetStateAction<SortingState>>;
 }) {
   const columnDefsFinal = useMemo(() => {
     return columnDefs.map((columnDef, index) => {
@@ -102,8 +106,6 @@ export default function AsyncDataTable<T>({
       };
     });
   }, [columnDefs, data, isPending, isLoadingError]);
-
-  const [sorting, setSorting] = useState<SortingState>([]);
 
   const table = useReactTable({
     data,

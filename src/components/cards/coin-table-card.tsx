@@ -8,7 +8,7 @@ import { defaultQueryOptions } from "@/lib/constants";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
 import { api } from "@/trpc/react";
-import { RowData } from "@tanstack/react-table";
+import { RowData, SortingState } from "@tanstack/react-table";
 import { ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
@@ -56,6 +56,9 @@ export default function CoinTableCard({ className }: { className?: string }) {
     max: 5,
     current: 1,
   });
+  const [sorting, setSorting] = useState<SortingState>([
+    { id: "marketCap", desc: true },
+  ]);
 
   const { data, isLoadingError, isPending, isError, isRefetching } =
     api.cmc.getCoinList.useQuery(
@@ -165,6 +168,8 @@ export default function CoinTableCard({ className }: { className?: string }) {
         isRefetching={isRefetching}
         page={page}
         setPage={setPage}
+        sorting={sorting}
+        setSorting={setSorting}
       />
     </div>
   );
@@ -205,20 +210,22 @@ function NameColumn({
             : "#"
       }
       className={cn(
-        `pl-4 md:pl-5 w-34 md:w-52 ${paddingRight} group/link py-3.5 flex flex-row items-center gap-3.5 overflow-hidden`
+        `pl-4 md:pl-5 w-34 md:w-52 ${paddingRight} gap-2 md:gap-3 group/link py-3.5 flex flex-row items-center overflow-hidden`
       )}
     >
-      <div className="flex flex-col items-center justify-center gap-1.5">
-        {isPending ? (
-          <div className="size-4.5 rounded-full shrink-0 bg-foreground animate-skeleton" />
-        ) : hasData ? (
-          <img
-            src={`https://s2.coinmarketcap.com/static/img/coins/64x64/${id}.png`}
-            className="size-4.5 shrink-0 rounded-full bg-foreground p-px"
-          />
-        ) : (
-          <div className="size-4.5 rounded-full shrink-0 bg-destructive" />
-        )}
+      <div className="-ml-0.75 flex flex-col items-center justify-center gap-1.5">
+        <div className="size-4.5 shrink-0">
+          {isPending ? (
+            <div className="size-full rounded-full bg-foreground animate-skeleton" />
+          ) : hasData ? (
+            <img
+              src={`https://s2.coinmarketcap.com/static/img/coins/64x64/${id}.png`}
+              className="size-full rounded-full bg-foreground p-px"
+            />
+          ) : (
+            <div className="size-full rounded-full bg-destructive" />
+          )}
+        </div>
         <div className={`w-6 overflow-hidden flex items-center justify-center`}>
           <p
             className={`${pendingClassesMuted} max-w-full overflow-hidden overflow-ellipsis text-xs leading-none font-medium text-muted-foreground text-center group-data-[is-loading-error]/table:text-destructive`}

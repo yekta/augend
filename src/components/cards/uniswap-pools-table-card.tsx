@@ -13,7 +13,7 @@ import {
   TUniswapPoolsResult,
 } from "@/server/api/routers/uniswap/types";
 import { api } from "@/trpc/react";
-import { RowData } from "@tanstack/react-table";
+import { RowData, SortingState } from "@tanstack/react-table";
 import { ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
@@ -65,6 +65,12 @@ export default function UniswapPoolsTableCard({
     max: 5,
     current: 1,
   });
+  const [sorting, setSorting] = useState<SortingState>([
+    {
+      id: "apr",
+      desc: true,
+    },
+  ]);
 
   const { data, isLoadingError, isPending, isError, isRefetching } =
     api.uniswap.getPools.useQuery(
@@ -117,9 +123,9 @@ export default function UniswapPoolsTableCard({
             <Component
               target="_blank"
               href={`https://app.uniswap.org/explore/pools/${network}/${row.original.address}`}
-              className="group/link w-34 md:w-52 text-xs md:text-sm leading-none md:leading-none flex gap-2 md:gap-2.5 items-center justify-start pl-4 md:pl-5 py-3"
+              className="group/link w-34 md:w-52 gap-2 md:gap-2.5 text-xs md:text-sm leading-none md:leading-none flex items-center justify-start pl-4 md:pl-5 py-3"
             >
-              <div className="shrink min-w-0 flex flex-row items-center gap-1.5 md:gap-2">
+              <div className="shrink min-w-0 gap-2 md:gap-2.5 flex flex-row items-center">
                 <div className="flex -ml-0.75 flex-col justify-center shrink-0">
                   <div className="bg-background not-touch:group-data-[has-data]/table:group-hover/row:bg-background-secondary rounded-full p-0.5">
                     {isPending ? (
@@ -195,8 +201,8 @@ export default function UniswapPoolsTableCard({
         sortingFn: (a, b) => a.original.price - b.original.price,
       },
       {
-        accessorKey: "apr-24h",
-        header: "APR 24H",
+        accessorKey: "apr",
+        header: "APR",
         cell: ({ row }) => {
           let className = "text-foreground";
           if (row.original.apr24h >= 10) className = "text-chart-4";
@@ -218,7 +224,7 @@ export default function UniswapPoolsTableCard({
         sortingFn: (a, b) => a.original.tvlUSD - b.original.tvlUSD,
       },
       {
-        accessorKey: "volume-24h",
+        accessorKey: "volume24H",
         header: "Vol 24H",
         cell: ({ row }) =>
           `${convertCurrency.symbol}${formatNumberTBMK(
@@ -227,7 +233,7 @@ export default function UniswapPoolsTableCard({
         sortingFn: (a, b) => a.original.volume24hUSD - b.original.volume24hUSD,
       },
       {
-        accessorKey: "volume-7d",
+        accessorKey: "volume7D",
         header: "Vol 7D",
         cell: ({ row }) =>
           `${convertCurrency.symbol}${formatNumberTBMK(
@@ -250,6 +256,8 @@ export default function UniswapPoolsTableCard({
         isRefetching={isRefetching}
         page={page}
         setPage={setPage}
+        sorting={sorting}
+        setSorting={setSorting}
       />
     </div>
   );
