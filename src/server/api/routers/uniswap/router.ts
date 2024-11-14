@@ -130,14 +130,19 @@ export const uniswapRouter = createTRPCRouter({
       );
       const ratio0 = amount0USD / amountTotalUSD;
       const ratio1 = 1 - ratio0;
+      const priceCurrent = Number(
+        position.position_pool_data.current_pool_price
+      );
       const editedRes: TUniswapPositionResult = {
         position: {
-          amount0:
-            Number(position.current_position_values.amount0_current) /
-            decimals0,
-          amount1:
-            Number(position.current_position_values.amount1_current) /
-            decimals1,
+          amount0: getDecimalAmount(
+            position.current_position_values.amount0_current,
+            position.position_pool_data.token0_decimals
+          ),
+          amount1: getDecimalAmount(
+            position.current_position_values.amount1_current,
+            position.position_pool_data.token0_decimals
+          ),
           amount0USD,
           amount1USD,
           amountTotalUSD,
@@ -145,19 +150,25 @@ export const uniswapRouter = createTRPCRouter({
           ratio1,
           priceLower: Number(position.position_price_range.lower_price),
           priceUpper: Number(position.position_price_range.upper_price),
-          priceCurrent: Number(position.position_pool_data.token0_price),
-          uncollectedFees0:
-            Number(position.current_fee_info.token0FeesUncollected) / decimals0,
-          uncollectedFees1:
-            Number(position.current_fee_info.token1FeesUncollected) / decimals1,
+          priceCurrent,
+          uncollectedFees0: getDecimalAmount(
+            position.current_fee_info.token0FeesUncollected,
+            position.position_pool_data.token0_decimals
+          ),
+          uncollectedFees1: getDecimalAmount(
+            position.current_fee_info.token1FeesUncollected,
+            position.position_pool_data.token1_decimals
+          ),
           uncollectedFeesTotalUSD:
             position.position_profit.uncollected_usd_fees,
-          deposit0:
-            Number(position.total_deposit_amounts.total_deposit_amount0) /
-            decimals0,
-          deposit1:
-            Number(position.total_deposit_amounts.total_deposit_amount1) /
-            decimals1,
+          deposit0: getDecimalAmount(
+            position.total_deposit_amounts.total_deposit_amount0,
+            position.position_pool_data.token1_decimals
+          ),
+          deposit1: getDecimalAmount(
+            position.total_deposit_amounts.total_deposit_amount1,
+            position.position_pool_data.token1_decimals
+          ),
           token0: {
             id: position.position_pool_data.token0,
             symbol: position.position_pool_data.token0_symbol,
@@ -174,3 +185,7 @@ export const uniswapRouter = createTRPCRouter({
       return editedRes;
     }),
 });
+
+function getDecimalAmount(amount: string, decimals: number) {
+  return Number(amount) / Math.pow(10, decimals);
+}

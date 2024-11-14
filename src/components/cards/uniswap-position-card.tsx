@@ -169,9 +169,9 @@ function Section({
         {chip && (
           <p
             className={cn(
-              "whitespace-nowrap shrink min-w-0 overflow-hidden overflow-ellipsis text-xs text-center md:text-sm leading-none md:leading-none font-medium text-muted-foreground bg-muted-foreground/8 px-1.5 py-1.25 rounded-md",
+              "whitespace-nowrap shrink min-w-0 overflow-hidden overflow-ellipsis text-xs text-center md:text-sm leading-none md:leading-none font-medium text-muted-foreground bg-muted-foreground/12 px-1.5 py-1.25 rounded-md",
               pendingClasses,
-              "group-data-[is-pending]/card:bg-muted-foreground/50",
+              "group-data-[is-pending]/card:bg-muted-foreground/36",
               errorClasses
             )}
           >
@@ -272,7 +272,10 @@ function timeAgo(date: Date): string {
   const now = new Date();
   const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
-  const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
+  const rtf = new Intl.RelativeTimeFormat("en", {
+    numeric: "auto",
+    style: "narrow",
+  });
 
   if (seconds < 60) return rtf.format(-seconds, "second");
   const minutes = Math.floor(seconds / 60);
