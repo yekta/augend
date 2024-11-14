@@ -126,7 +126,7 @@ export default function AsyncDataTable<T>({
         (!isPending && !isLoadingError && data !== undefined) || undefined
       }
       className={cn(
-        "w-full h-128 flex flex-1 text-sm flex-col justify-center items-center border rounded-xl gap-3 group/table relative overflow-hidden",
+        "w-full h-128 flex flex-col text-sm justify-center items-center border rounded-xl gap-3 group/table relative overflow-hidden",
         className
       )}
     >
