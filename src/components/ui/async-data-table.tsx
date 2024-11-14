@@ -373,7 +373,7 @@ function HeaderColumn({
         }
         data-indicator-position={indicatorPosition}
         className={cn(
-          "size-3.5 -my-1 shrink-0 data-[indicator-position=end]:order-last data-[sort=false]:opacity-0 data-[sort=asc]:rotate-180 data-[sort=desc]:rotate-0 duration-100 transition",
+          "size-3.5 -my-1 shrink-0 data-[indicator-position=end]:order-last data-[sort=false]:opacity-0 data-[sort=asc]:rotate-180 data-[sort=desc]:rotate-0 transition",
           sortDescFirst === false ? "rotate-180" : undefined
         )}
       />

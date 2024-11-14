@@ -201,19 +201,25 @@ function getDecimalAmount(amount: string, decimals: number) {
 }
 
 function parseNftUri(uriBase64: string): string {
-  let animateTagRegex = /<animate.*?"(.*?)"[^\>]+>/g;
+  const animateTagRegex = /<animate.*?"(.*?)"[^\>]+>/g;
   /<g style="transform:translate\(226px, 392px\)"(.*?)<\/g><\/g>/g;
-  const regexes = [animateTagRegex];
-  let baseURI = uriBase64.split(",")[1] || uriBase64;
-  let uriUTF8 = Buffer.from(baseURI, "base64").toString("utf8");
-  let image = JSON.parse(uriUTF8).image;
+  const textPathRegex = /<textPath.*?href="#(.*?)".*?>(.*?)<\/textPath>/g;
+
+  const regexes = [animateTagRegex, textPathRegex];
+
+  const baseURI = uriBase64.split(",")[1] || uriBase64;
+  const uriUTF8 = Buffer.from(baseURI, "base64").toString("utf8");
+  const image = JSON.parse(uriUTF8).image;
+
   const dataStr = "data:image/svg+xml;base64,";
   const [_, svgBase64] = image.split(dataStr);
   const svg = Buffer.from(svgBase64, "base64").toString("utf8");
+
   let editedSvg = svg;
   regexes.forEach((regex) => {
     editedSvg = editedSvg.replace(regex, "");
   });
+
   const editedSvgBase64 = Buffer.from(editedSvg).toString("base64");
   return dataStr + editedSvgBase64;
 }

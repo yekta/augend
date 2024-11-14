@@ -244,7 +244,7 @@ function NameColumn({
             {isPending ? "Loading" : hasData ? value : "Error"}
           </p>
           <ExternalLinkIcon
-            className="opacity-0 shrink-0 origin-bottom-left scale-0 pointer-events-none size-3 md:size-4 -my-1 transition duration-100
+            className="opacity-0 shrink-0 origin-bottom-left scale-50 pointer-events-none size-3 md:size-4 -my-1 transition
               not-touch:group-data-[has-data]/table:group-hover/link:opacity-100 not-touch:group-data-[has-data]/table:group-hover/link:scale-100"
           />
         </div>

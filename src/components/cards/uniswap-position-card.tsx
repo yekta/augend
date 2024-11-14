@@ -8,6 +8,7 @@ import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
 import { TUniswapNetwork } from "@/server/api/routers/uniswap/types";
 import { api } from "@/trpc/react";
+import { ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
@@ -54,13 +55,13 @@ export default function UniswapPositionCard({
         <NFTImageLink
           href={href || "placeholder"}
           uri={data?.position.nftUri}
-          className="h-36 px-4 py-3.5 -mr-4 hidden lg:block"
+          className="h-36 px-4 py-3.25 -mr-4 hidden lg:block"
         />
         <div className="flex-1 flex flex-row flex-wrap items-end p-1.5 md:p-3 min-w-0">
           <div className="w-full overflow-hidden mt-0.5 md:mt-0 lg:w-1/3 flex flex-row items-center justify-start">
             <NFTImageLink
               href={href || "placeholder"}
-              className="h-28 shrink-0 md:h-30 px-2 md:px-3 py-2 lg:hidden"
+              className="h-28 shrink-0 md:h-30 px-2 md:px-3 py-1.5 lg:hidden"
               uri={data?.position.nftUri}
             />
             <Section
@@ -124,6 +125,13 @@ export default function UniswapPositionCard({
             title={getConditionalValue(
               `${formatNumberTBMK(data?.position?.priceCurrent || 0)}`
             )}
+            titleClassName={
+              data &&
+              (data.position.priceCurrent > data.position.priceUpper ||
+                data.position.priceCurrent < data.position.priceLower)
+                ? "text-destructive"
+                : ""
+            }
             ticker0={"Min"}
             amount0={getConditionalValue(
               formatNumberTBMK(data?.position?.priceLower || 0)
@@ -339,13 +347,17 @@ function NFTImageLink({
     <Link
       target="_blank"
       href={href || "placeholder"}
-      className={cn("h-36 group/link", className)}
+      className={cn("h-36 group/link relative overflow-hidden", className)}
     >
       <img
         width="290"
         height="500"
-        className="h-full w-auto not-touch:group-hover/link:scale-105 transition"
+        className="h-full w-auto filter transition not-touch:group-hover/link:opacity-50"
         src={uri}
+      />
+      <ExternalLinkIcon
+        className="absolute size-5 left-1/2 top-1/2 transition transform -translate-x-1/2 -translate-y-1/2 opacity-0 scale-50
+        not-touch:group-hover/link:scale-100 not-touch:group-hover/link:opacity-100"
       />
     </Link>
   );
