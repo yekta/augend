@@ -250,7 +250,8 @@ function NameColumn({
           </p>
           <ExternalLinkIcon
             className="opacity-0 shrink-0 origin-bottom-left scale-50 pointer-events-none size-3 md:size-4 -my-1 transition
-              not-touch:group-data-[has-data]/table:group-hover/link:opacity-100 not-touch:group-data-[has-data]/table:group-hover/link:scale-100"
+              not-touch:group-data-[has-data]/table:group-hover/link:opacity-100 not-touch:group-data-[has-data]/table:group-hover/link:scale-100
+              group-data-[has-data]/table:group-active/link:opacity-100 group-data-[has-data]/table:group-active/link:scale-100"
           />
         </div>
         <p

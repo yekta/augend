@@ -146,7 +146,7 @@ export default function AsyncDataTable<T>({
                     className={cn(
                       "overflow-hidden",
                       header.column.getCanSort() &&
-                        "cursor-pointer not-touch:hover:bg-background-secondary",
+                        "cursor-pointer not-touch:hover:bg-background-secondary active:bg-background-secondary",
                       header.column.getIsPinned() && "bg-background"
                     )}
                   >
@@ -167,7 +167,7 @@ export default function AsyncDataTable<T>({
                 borderless
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
-                className="group/row not-touch:group-data-[has-data]/table:hover:bg-background-secondary"
+                className="group/row not-touch:group-data-[has-data]/table:hover:bg-background-secondary group-data-[has-data]/table:active:bg-background-secondary"
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell
@@ -179,7 +179,7 @@ export default function AsyncDataTable<T>({
                     className={cn(
                       "p-0 overflow-hidden",
                       cell.column.getIsPinned() &&
-                        "bg-background not-touch:group-data-[has-data]/table:group-hover/row:bg-background-secondary"
+                        "bg-background not-touch:group-data-[has-data]/table:group-hover/row:bg-background-secondary group-data-[has-data]/table:group-active/row:bg-background-secondary"
                     )}
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -200,7 +200,7 @@ export default function AsyncDataTable<T>({
                       <PaginationLink
                         data-active={page.current === adjustedPage}
                         className="px-0.75 py-1.5 flex w-14 h-10.5 md:h-11 items-center justify-center font-medium group/link transition-none rounded-none border-none text-xs md:text-sm 
-                        text-foreground/50 data-[active=true]:text-foreground not-touch:hover:bg-transparent not-touch:hover:text-foreground"
+                        text-foreground/50 data-[active=true]:text-foreground not-touch:hover:bg-transparent active:bg-transparent not-touch:hover:text-foreground active:text-foreground"
                         isActive={page.current === adjustedPage}
                         isButton={true}
                         onClick={() =>
@@ -210,7 +210,7 @@ export default function AsyncDataTable<T>({
                           }))
                         }
                       >
-                        <p className="min-w-0 w-full h-full overflow-hidden overflow-ellipsis rounded-md p-0.5 flex items-center justify-center not-touch:group-hover/link:bg-background-secondary">
+                        <p className="min-w-0 w-full h-full overflow-hidden overflow-ellipsis rounded-md p-0.5 flex items-center justify-center not-touch:group-hover/link:bg-background-secondary group-active/link:bg-background-secondary">
                           {adjustedPage}
                         </p>
                       </PaginationLink>

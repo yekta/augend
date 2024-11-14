@@ -45,7 +45,8 @@ export default function FearGreedIndexCard({
       <div
         data-is-loading-error={(isLoadingError && true) || undefined}
         data-is-pending={(isPending && true) || undefined}
-        className="flex flex-1 flex-col justify-center items-center border rounded-xl px-3 py-1 text-center gap-3 group not-touch:group-hover/card:bg-background-secondary relative overflow-hidden"
+        className="flex flex-1 flex-col justify-center items-center border rounded-xl px-3 py-1 text-center gap-3 group not-touch:group-hover/card:bg-background-secondary relative overflow-hidden
+        group-active/card:bg-background-secondary"
       >
         <div className="max-w-full items-center justify-center flex flex-col gap-2.5">
           <Gauge isPending={isPending} data={data} />
@@ -131,7 +132,7 @@ function Gauge({
               }}
               className="w-full h-full"
             >
-              <div className="w-full h-full rounded-full bg-background not-touch:group-hover:bg-background-secondary" />
+              <div className="w-full h-full rounded-full bg-background not-touch:group-hover:bg-background-secondary group-active:bg-background-secondary" />
             </div>
           </div>
         </div>
@@ -148,7 +149,7 @@ function Gauge({
                     width: `calc(100% + ${lineWidth}px)`,
                     height: lineWidth,
                   }}
-                  className="flex justify-start not-touch:group-hover:bg-background-secondary bg-background items-center z-20 absolute"
+                  className="flex justify-start not-touch:group-hover:bg-background-secondary group-active:bg-background-secondary bg-background items-center z-20 absolute"
                 />
               );
             })}
@@ -166,7 +167,7 @@ function Gauge({
             }}
             className="flex justify-start items-center z-20 absolute rounded-full transition-transform"
           >
-            <div className="bg-background ring-4 ring-background not-touch:group-hover:ring-background-secondary not-touch:group-hover:bg-background-secondary rounded-full">
+            <div className="bg-background ring-4 ring-background not-touch:group-hover:ring-background-secondary group-active:ring-background-secondary group-active:bg-background-secondary not-touch:group-hover:bg-background-secondary rounded-full">
               <div
                 style={{
                   width: circleWidth,

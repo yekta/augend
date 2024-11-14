@@ -62,7 +62,7 @@ export default function OrderBookCard({
       <div
         data-is-loading-error={(isLoadingError && true) || undefined}
         data-is-pending={(isPending && true) || undefined}
-        className="flex flex-col items-center border rounded-xl px-4 py-4.5 text-center gap-4 group not-touch:group-hover/card:bg-background-secondary transition text-sm relative"
+        className="flex flex-col items-center border rounded-xl px-4 py-4.5 text-center gap-4 group not-touch:group-hover/card:bg-background-secondary group-active/card:bg-background-secondary transition text-sm relative"
       >
         {/* Top */}
         <p className="font-semibold leading-none max-w-full text-foreground whitespace-nowrap overflow-hidden overflow-ellipsis group-data-[is-pending]:bg-foreground group-data-[is-pending]:text-transparent group-data-[is-pending]:rounded-sm group-data-[is-pending]:animate-skeleton">

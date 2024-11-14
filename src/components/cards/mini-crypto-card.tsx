@@ -50,7 +50,8 @@ export default function MiniCryptoCard({
       <div
         data-is-loading-error={(isLoadingError && true) || undefined}
         data-is-pending={(isPending && true) || undefined}
-        className="w-full flex px-2.5 md:pl-3.5 md:pr-3.75 py-3 md:py-4 gap-2.25 md:gap-3 flex-row border items-center rounded-xl text-left group not-touch:group-hover/card:bg-background-secondary relative overflow-hidden"
+        className="w-full flex px-2.5 md:pl-3.5 md:pr-3.75 py-3 md:py-4 gap-2.25 md:gap-3 flex-row border items-center rounded-xl text-left group
+        not-touch:group-hover/card:bg-background-secondary group-active/card:bg-background-secondary relative overflow-hidden"
       >
         {isPending ? (
           <div className="size-5 md:size-6 rounded-md bg-foreground animate-skeleton shrink-0" />

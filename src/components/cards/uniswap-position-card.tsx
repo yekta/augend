@@ -337,7 +337,7 @@ function NFTImageLink({
     return (
       <div className={cn("h-36 group/link", className)}>
         <svg
-          className="h-full bg-muted-foreground group-data-[is-loading-error]/card:bg-destructive/50 rounded-lg md:rounded-lg lg:rounded-xl w-auto not-touch:group-hover/link:scale-105 transition group-data-[is-pending]/card:animate-skeleton"
+          className="h-full bg-muted-foreground group-data-[is-loading-error]/card:bg-destructive/50 rounded-lg md:rounded-lg lg:rounded-xl w-auto not-touch:group-hover/link:scale-105 group-active/link:scale-105 transition group-data-[is-pending]/card:animate-skeleton"
           viewBox="0 0 290 500"
           width="290"
           height="500"
@@ -353,12 +353,13 @@ function NFTImageLink({
       <img
         width="290"
         height="500"
-        className="h-full w-auto filter transition not-touch:group-hover/link:opacity-50"
+        className="h-full w-auto filter transition not-touch:group-hover/link:opacity-50 group-active/link:opacity-50"
         src={uri}
       />
       <ExternalLinkIcon
         className="absolute size-5 left-1/2 origin-bottom-left top-1/2 transition transform -translate-x-1/2 -translate-y-1/2 opacity-0 scale-50
-        not-touch:group-hover/link:scale-100 not-touch:group-hover/link:opacity-100"
+        not-touch:group-hover/link:scale-100 not-touch:group-hover/link:opacity-100
+        group-active/link:scale-100 group-active/link:opacity-100"
       />
     </Link>
   );

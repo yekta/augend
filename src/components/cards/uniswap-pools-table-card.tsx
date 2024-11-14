@@ -133,7 +133,7 @@ export default function UniswapPoolsTableCard({
             >
               <div className="shrink min-w-0 gap-2 md:gap-2.5 flex flex-row items-center">
                 <div className="flex -ml-0.75 flex-col justify-center shrink-0">
-                  <div className="bg-background not-touch:group-data-[has-data]/table:group-hover/row:bg-background-secondary rounded-full p-0.5">
+                  <div className="bg-background not-touch:group-data-[has-data]/table:group-hover/row:bg-background-secondary group-data-[has-data]/table:group-active/row:bg-background-secondary rounded-full p-0.5">
                     {isPending ? (
                       PendingIcon
                     ) : data ? (
@@ -146,7 +146,7 @@ export default function UniswapPoolsTableCard({
                       ErrorIcon
                     )}
                   </div>
-                  <div className="-mt-1 z-10 bg-background not-touch:group-data-[has-data]/table:group-hover/row:bg-background-secondary rounded-full p-0.5">
+                  <div className="-mt-1 z-10 bg-background not-touch:group-data-[has-data]/table:group-hover/row:bg-background-secondary group-data-[has-data]/table:group-active/row:bg-background-secondary rounded-full p-0.5">
                     {isPending ? (
                       PendingIcon
                     ) : data ? (
@@ -194,7 +194,9 @@ export default function UniswapPoolsTableCard({
               </div>
               <ExternalLinkIcon
                 className="opacity-0 shrink-0 -ml-0.5 origin-bottom-left scale-50 pointer-events-none size-3 md:size-4 -my-1 transition
-                not-touch:group-data-[has-data]/table:group-hover/link:opacity-100 not-touch:group-data-[has-data]/table:group-hover/link:scale-100"
+                not-touch:group-data-[has-data]/table:group-hover/link:opacity-100 not-touch:group-data-[has-data]/table:group-hover/link:scale-100
+                group-data-[has-data]/table:group-active/link:opacity-100 group-data-[has-data]/table:group-active/link:scale-100
+                "
               />
             </Component>
           );

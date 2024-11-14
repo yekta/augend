@@ -51,7 +51,7 @@ export default function Navbar() {
               key={route.href}
               href={route.href}
               data-active={pathname === route.href ? true : undefined}
-              className="flex items-center text-sm justify-center flex-1 font-semibold px-3 md:px-4 py-4 text-center gap-2 group not-touch:hover:bg-background-secondary relative"
+              className="flex items-center text-sm justify-center flex-1 font-semibold px-3 md:px-4 py-4 text-center gap-2 group active:bg-background-secondary not-touch:hover:bg-background-secondary relative"
             >
               <route.Icon className="shrink-0 size-5 md:size-4 transition text-muted-foreground group-data-[active]:text-foreground" />
               <p className="hidden md:block shrink min-w-0 overflow-hidden overflow-ellipsis transition text-muted-foreground group-data-[active]:text-foreground">
