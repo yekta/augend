@@ -23,7 +23,7 @@ export const uniswapRouter = createTRPCRouter({
       })
     )
     .query(async ({ input: { page, network } }) => {
-      const first = 100;
+      const first = 200;
       const url = `${uniswapOkuUrl}/${network}/cush/topPools`;
       const body: { params: SearchFilterOpts[] } = {
         params: [

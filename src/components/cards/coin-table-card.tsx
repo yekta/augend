@@ -54,7 +54,7 @@ declare module "@tanstack/react-table" {
 export default function CoinTableCard({ className }: { className?: string }) {
   const [page, setPage] = useState<TAsyncDataTablePage>({
     min: 1,
-    max: 10,
+    max: 5,
     current: 1,
   });
   const [sorting, setSorting] = useState<SortingState>([
