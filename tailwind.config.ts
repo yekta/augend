@@ -73,6 +73,7 @@ const config: Config = {
         8: "0.08",
         12: "0.12",
         36: "0.36",
+        85: "0.85",
       },
       fontSize: {
         xxs: ["0.625rem", "1rem"],

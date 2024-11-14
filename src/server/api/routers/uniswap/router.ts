@@ -9,7 +9,7 @@ import {
   UniswapNetworkSchema,
 } from "@/server/api/routers/uniswap/types";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
-import type { AnalyticsPosition, SearchFilterOpts } from "@gfxlabs/oku";
+import type { SearchFilterOpts } from "@gfxlabs/oku";
 
 export const uniswapRouter = createTRPCRouter({
   getPools: publicProcedure
@@ -110,15 +110,6 @@ export const uniswapRouter = createTRPCRouter({
       }
 
       const position = resJson.result.position;
-
-      const decimals0 = Math.pow(
-        10,
-        position.position_pool_data.token0_decimals
-      );
-      const decimals1 = Math.pow(
-        10,
-        position.position_pool_data.token1_decimals
-      );
       const amount0USD = Number(
         position.current_position_values.amount0_current_usd
       );
@@ -133,6 +124,10 @@ export const uniswapRouter = createTRPCRouter({
       const priceCurrent = Number(
         position.position_pool_data.current_pool_price
       );
+      const feeRatio =
+        position.position_profit.uncollected_usd_fees / amountTotalUSD;
+      const sinceCreatedAt = Date.now() - position.created_date;
+      const yearInMs = 1000 * 60 * 60 * 24 * 365;
       const editedRes: TUniswapPositionResult = {
         position: {
           amount0: getDecimalAmount(
@@ -146,6 +141,7 @@ export const uniswapRouter = createTRPCRouter({
           amount0USD,
           amount1USD,
           amountTotalUSD,
+          apr: (feeRatio / sinceCreatedAt) * yearInMs,
           ratio0,
           ratio1,
           priceLower: Number(position.position_price_range.lower_price),

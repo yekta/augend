@@ -1,5 +1,6 @@
 "use client";
 
+import { getNumberColorClass } from "@/components/cards/helpers";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import AsyncDataTable, {
   TAsyncDataTableColumnDef,
@@ -99,13 +100,15 @@ export default function UniswapPoolsTableCard({
           const pendingClassName =
             "group-data-[is-pending]/table:text-transparent group-data-[is-pending]/table:bg-foreground group-data-[is-pending]/table:rounded-sm group-data-[is-pending]/table:animate-skeleton group-data-[is-loading-error]/table:text-destructive";
 
-          let className = "text-foreground bg-foreground/8";
+          let feeTierClassName = "text-foreground/80 bg-foreground/8";
           const feeTierP = row.original.feeTier * 100;
-          if (feeTierP >= 1) className = "text-chart-4 bg-chart-4/8";
-          else if (feeTierP >= 0.3) className = "text-chart-1 bg-chart-1/8";
-          else if (feeTierP >= 0.05) className = "text-chart-3 bg-chart-3/8";
-          className = cn(
-            className,
+          if (feeTierP >= 1) feeTierClassName = "text-chart-4 bg-chart-4/8";
+          else if (feeTierP >= 0.3)
+            feeTierClassName = "text-chart-1 bg-chart-1/8";
+          else if (feeTierP >= 0.05)
+            feeTierClassName = "text-chart-3 bg-chart-3/8";
+          feeTierClassName = cn(
+            feeTierClassName,
             "group-data-[is-pending]/table:bg-foreground/8 group-data-[is-pending]/table:text-transparent group-data-[is-pending]/table:rounded-sm group-data-[is-loading-error]/table:text-destructive group-data-[is-loading-error]/table:bg-destructive/8"
           );
 
@@ -168,7 +171,7 @@ export default function UniswapPoolsTableCard({
                           : "ERR"}
                     </p>
                     <p
-                      className={`${className} shrink-0 font-medium px-1 py-0.75 rounded leading-none md:leading-none text-xxs md:text-xs`}
+                      className={`${feeTierClassName} shrink-0 font-medium px-1 py-0.75 rounded leading-none md:leading-none text-xxs md:text-xs`}
                     >
                       {isPending
                         ? "10%"
@@ -207,17 +210,11 @@ export default function UniswapPoolsTableCard({
       {
         accessorKey: "apr",
         header: "APR",
-        cell: ({ row }) => {
-          let className = "text-foreground";
-          if (row.original.apr24h >= 10) className = "text-chart-4";
-          else if (row.original.apr24h >= 5) className = "text-chart-1";
-          else if (row.original.apr24h >= 1) className = "text-chart-3";
-          return (
-            <span className={className}>
-              {formatNumberTBMK(row.original.apr24h * 100)}%
-            </span>
-          );
-        },
+        cell: ({ row }) => (
+          <span className={getNumberColorClass(row.original.apr24h * 100)}>
+            {formatNumberTBMK(row.original.apr24h * 100)}%
+          </span>
+        ),
         sortingFn: (a, b) => a.original.apr24h - b.original.apr24h,
       },
       {

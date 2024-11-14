@@ -45,6 +45,7 @@ export type TUniswapPositionResult = {
     amount0USD: number;
     amount1USD: number;
     amountTotalUSD: number;
+    apr: number;
     ratio0: number;
     ratio1: number;
     priceLower: number;

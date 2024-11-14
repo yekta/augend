@@ -1,5 +1,6 @@
 "use client";
 
+import { getNumberColorClass } from "@/components/cards/helpers";
 import Indicator from "@/components/cards/indicator";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import { defaultQueryOptions } from "@/lib/constants";
@@ -66,6 +67,7 @@ export default function UniswapPositionCard({
                   ? timeAgo(new Date(data.position.createdAt))
                   : "Error"
             }
+            chipClassName={getNumberColorClass(0, true)}
             ticker0={getConditionalValue(data?.position.token0.symbol)}
             amount0={getConditionalValue(
               formatNumberTBMK(data?.position?.amount0 || 0)
@@ -87,6 +89,17 @@ export default function UniswapPositionCard({
               `$${formatNumberTBMK(
                 data?.position?.uncollectedFeesTotalUSD || 0
               )}`
+            )}
+            chip={
+              isPending
+                ? "Loading"
+                : data
+                  ? `${formatNumberTBMK(data.position.apr * 100, 3)}%`
+                  : "Error"
+            }
+            chipClassName={getNumberColorClass(
+              (data?.position?.apr || 0) * 100,
+              true
             )}
             ticker0={getConditionalValue(data?.position.token0.symbol)}
             amount0={getConditionalValue(
@@ -136,6 +149,7 @@ function Section({
   hideIcons,
   className,
   titleClassName,
+  chipClassName,
 }: {
   title: string;
   chip?: string;
@@ -148,6 +162,7 @@ function Section({
   hideIcons?: boolean;
   className?: string;
   titleClassName?: string;
+  chipClassName?: string;
 }) {
   const pendingClasses =
     "group-data-[is-pending]/card:text-transparent group-data-[is-pending]/card:animate-skeleton group-data-[is-pending]/card:bg-foreground";
@@ -157,7 +172,7 @@ function Section({
       <div className="flex flex-row items-center gap-2 pl-1.5">
         <p
           className={cn(
-            "shrink min-w-0 overflow-hidden overflow-ellipsis font-bold text-xl md:text-2xl leading-none md:leading-none",
+            "shrink min-w-0 whitespace-nowrap overflow-hidden overflow-ellipsis font-bold text-xl md:text-2xl leading-none md:leading-none",
             pendingClasses,
             errorClasses,
             "group-data-[is-pending]/card:rounded-md",
@@ -169,10 +184,11 @@ function Section({
         {chip && (
           <p
             className={cn(
-              "whitespace-nowrap shrink min-w-0 overflow-hidden overflow-ellipsis text-xs text-center md:text-sm leading-none md:leading-none font-medium text-muted-foreground bg-muted-foreground/12 px-1.5 py-1.25 rounded-md",
+              "font-medium whitespace-nowrap shrink min-w-0 overflow-hidden overflow-ellipsis text-xs text-center md:text-sm leading-none md:leading-none text-foreground/80 bg-foreground/8 px-1.5 py-1 md:py-1.25 rounded-md",
               pendingClasses,
               "group-data-[is-pending]/card:bg-muted-foreground/36",
-              errorClasses
+              errorClasses,
+              chipClassName
             )}
           >
             {chip}
@@ -232,7 +248,7 @@ function TickerTextAmount({
           )}
         <p
           className={cn(
-            "font-medium text-muted-foreground max-w-full overflow-hidden overflow-ellipsis",
+            "whitespace-nowrap text-muted-foreground max-w-full overflow-hidden overflow-ellipsis",
             pendingClasses,
             "group-data-[is-pending]/card:bg-muted-foreground",
             errorClasses
@@ -244,7 +260,7 @@ function TickerTextAmount({
       <div className="flex items-center gap-2 max-w-full overflow-hidden overflow-ellipsis">
         <p
           className={cn(
-            "font-medium max-w-full overflow-hidden overflow-ellipsis",
+            "font-semibold whitespace-nowrap max-w-full overflow-hidden overflow-ellipsis",
             pendingClasses,
             errorClasses
           )}
@@ -254,7 +270,7 @@ function TickerTextAmount({
         {chip !== undefined && (
           <p
             className={cn(
-              "text-muted-foreground shrink min-w-0 font-medium max-w-full overflow-hidden overflow-ellipsis",
+              "text-muted-foreground whitespace-nowrap shrink min-w-0 max-w-full overflow-hidden overflow-ellipsis",
               pendingClasses,
               "group-data-[is-pending]/card:bg-muted-foreground",
               errorClasses
