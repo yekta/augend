@@ -1,5 +1,6 @@
 "use client";
 
+import CardWrapper from "@/components/cards/card-wrapper";
 import Indicator from "@/components/cards/indicator";
 import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
 import {
@@ -177,13 +178,13 @@ export default function OhlcvChartCard({
   };
 
   return (
-    <div
+    <CardWrapper
       data-is-pending={(isPending && true) || undefined}
       data-is-loading-error={
         isLoadingError && !isPending && !isRefetching ? true : undefined
       }
       data-is-placeholder-data={isPlaceholderData ? true : undefined}
-      className={cn("w-full lg:w-1/2 p-1 group", className)}
+      className={cn("w-full lg:w-1/2 p-1", className)}
     >
       <div className="w-full px-5 pt-4.5 pb-3 border rounded-xl gap-12 flex flex-col items-start relative">
         <Header
@@ -198,8 +199,8 @@ export default function OhlcvChartCard({
           <ChartContainer
             config={chartContainerConfig}
             className="h-28 w-full relative
-            group-data-[is-pending]:opacity-0 group-data-[is-loading-error]:opacity-0 group-data-[is-pending]:pointer-events-none
-            group-data-[is-placeholder-data]:opacity-0 group-data-[is-placeholder-data]:pointer-events-none"
+            group-data-[is-pending]/card:opacity-0 group-data-[is-loading-error]/card:opacity-0 group-data-[is-pending]/card:pointer-events-none
+            group-data-[is-placeholder-data]/card:opacity-0 group-data-[is-placeholder-data]/card:pointer-events-none"
           >
             <AreaChart
               accessibilityLayer
@@ -291,7 +292,7 @@ export default function OhlcvChartCard({
           />
         )}
       </div>
-    </div>
+    </CardWrapper>
   );
 }
 

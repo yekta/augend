@@ -1,6 +1,6 @@
 "use client";
 
-import NanoBananoCard from "@/components/cards/nano-banano-cards";
+import NanoBananoCard from "@/components/cards/nano-banano-card";
 import { defaultQueryOptions } from "@/lib/constants";
 import { cleanEnvVar } from "@/lib/helpers";
 import { TNanoBananoAccount } from "@/server/api/routers/nano-banano/types";

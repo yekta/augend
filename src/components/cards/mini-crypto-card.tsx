@@ -1,3 +1,4 @@
+import CardWrapper from "@/components/cards/card-wrapper";
 import Indicator from "@/components/cards/indicator";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import { getCmcUrl } from "@/lib/get-cmc-url";
@@ -42,13 +43,9 @@ export default function MiniCryptoCard({
         ? ArrowUpIcon
         : ArrowRightIcon;
   return (
-    <Link
-      target="_blank"
+    <CardWrapper
       href={getCmcUrl(slug || "")}
-      className={cn(
-        "flex flex-col p-1 group/card w-1/2 md:w-1/3 xl:w-1/4",
-        className
-      )}
+      className={cn("w-1/2 md:w-1/3 xl:w-1/4", className)}
     >
       <div
         data-is-loading-error={(isLoadingError && true) || undefined}
@@ -138,6 +135,6 @@ export default function MiniCryptoCard({
           className="left-0 top-0 bottom-auto right-auto"
         />
       </div>
-    </Link>
+    </CardWrapper>
   );
 }

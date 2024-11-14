@@ -7,6 +7,7 @@ import OrderBookCards from "@/app/dashboard/_components/order-book-cards";
 import TurkishLiraCards from "@/app/dashboard/_components/turkish-lira-cards";
 import UniswapPositions from "@/app/dashboard/_components/uniswap-positions";
 import CoinTableCard from "@/components/cards/coin-table-card";
+import EthereumGasCard from "@/components/cards/ethereum-gas-card";
 import FearGreedIndexCard from "@/components/cards/fear-greed-index-card";
 import UniswapPoolsTableCard from "@/components/cards/uniswap-pools-table-card";
 import WBanCard from "@/components/cards/wban-card";
@@ -31,6 +32,7 @@ export default async function Page() {
             <FearGreedIndexCard />
             <TurkishLiraCards />
             <MiniCryptoCards />
+            <EthereumGasCard network="ethereum" />
             <UniswapPositions />
             <WBanCard />
             <NanoBananoCards />

@@ -1,5 +1,6 @@
 "use client";
 
+import CardWrapper from "@/components/cards/card-wrapper";
 import { getNumberColorClass } from "@/components/cards/helpers";
 import Indicator from "@/components/cards/indicator";
 import CryptoIcon from "@/components/icons/crypto-icon";
@@ -38,8 +39,8 @@ export default function UniswapPositionCard({
     return "Error";
   }
   return (
-    <div
-      className={cn("flex flex-col p-1 group/card w-full", className)}
+    <CardWrapper
+      className={cn("w-full", className)}
       data-is-loading-error={(isLoadingError && true) || undefined}
       data-is-pending={(isPending && true) || undefined}
       data-has-data={
@@ -48,7 +49,7 @@ export default function UniswapPositionCard({
     >
       <div
         className={cn(
-          "w-full group flex flex-1 text-sm justify-center items-center border rounded-xl relative overflow-hidden",
+          "w-full flex flex-1 text-sm justify-center items-center border rounded-xl relative overflow-hidden",
           className
         )}
       >
@@ -150,7 +151,7 @@ export default function UniswapPositionCard({
           hasData={!isLoadingError && data !== undefined}
         />
       </div>
-    </div>
+    </CardWrapper>
   );
 }
 

@@ -1,5 +1,6 @@
 "use client";
 
+import CardWrapper from "@/components/cards/card-wrapper";
 import { getNumberColorClass } from "@/components/cards/helpers";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import AsyncDataTable, {
@@ -65,7 +66,7 @@ export default function UniswapPoolsTableCard({
 
   const [page, setPage] = useState<TAsyncDataTablePage>({
     min: 1,
-    max: 5,
+    max: 10,
     current: 1,
   });
   const [sorting, setSorting] = useState<SortingState>([
@@ -246,7 +247,7 @@ export default function UniswapPoolsTableCard({
   }, [data, isPending, isError, isLoadingError]);
 
   return (
-    <div className={cn("flex flex-col p-1 group/card w-full", className)}>
+    <CardWrapper className={cn("w-full", className)}>
       <AsyncDataTable
         className="h-167 max-h-[calc((100svh-3rem)*0.75)]"
         columnDefs={columnDefs}
@@ -260,6 +261,6 @@ export default function UniswapPoolsTableCard({
         sorting={sorting}
         setSorting={setSorting}
       />
-    </div>
+    </CardWrapper>
   );
 }

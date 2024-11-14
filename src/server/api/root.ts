@@ -1,5 +1,6 @@
 import { cmcRouter } from "@/server/api/routers/cmc/router";
 import { coinGeckoRouter } from "@/server/api/routers/coin-gecko/router";
+import { ethereumRouter } from "@/server/api/routers/ethereum/router";
 import { exchangeRouter } from "@/server/api/routers/exchange/router";
 import { nanoBananoRouter } from "@/server/api/routers/nano-banano/router";
 import { turkishLiraRouter } from "@/server/api/routers/turkish-lira/router";
@@ -26,6 +27,7 @@ export const appRouter = createTRPCRouter({
   wban: wbanRouter,
   coinGecko: coinGeckoRouter,
   uniswap: uniswapRouter,
+  ethereum: ethereumRouter,
 });
 
 // export type definition of API

@@ -1,3 +1,4 @@
+import CardWrapper from "@/components/cards/card-wrapper";
 import Indicator from "@/components/cards/indicator";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -47,13 +48,9 @@ export default function ThreeLineCard({
   };
 
   return (
-    <Comp
-      target="_blank"
-      href={href || "placeholder"}
-      className={cn(
-        "flex flex-col p-1 group/card w-1/2 md:w-1/3 xl:w-1/4 h-32",
-        className
-      )}
+    <CardWrapper
+      href={href}
+      className={cn("w-1/2 md:w-1/3 xl:w-1/4 h-32", className)}
     >
       <div
         data-is-loading-error={(isLoadingError && true) || undefined}
@@ -114,6 +111,6 @@ export default function ThreeLineCard({
           }
         />
       </div>
-    </Comp>
+    </CardWrapper>
   );
 }

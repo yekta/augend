@@ -1,3 +1,4 @@
+import CardWrapper from "@/components/cards/card-wrapper";
 import Indicator from "@/components/cards/indicator";
 import { defaultQueryOptions } from "@/lib/constants";
 import { formatNumberTBMK } from "@/lib/number-formatters";
@@ -54,13 +55,9 @@ export default function OrderBookCard({
       : placeholderData;
 
   return (
-    <Link
-      target="_blank"
+    <CardWrapper
       href={config.getUrl(config.ticker)}
-      className={cn(
-        "flex flex-col p-1 group/card w-full md:w-1/2 lg:w-1/3 xl:w-1/4",
-        className
-      )}
+      className={cn("w-full md:w-1/2 lg:w-1/3 xl:w-1/4", className)}
     >
       <div
         data-is-loading-error={(isLoadingError && true) || undefined}
@@ -194,7 +191,7 @@ export default function OrderBookCard({
           isRefetching={isRefetching}
         />
       </div>
-    </Link>
+    </CardWrapper>
   );
 }
 

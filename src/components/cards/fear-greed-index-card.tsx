@@ -1,5 +1,6 @@
 "use client";
 
+import CardWrapper from "@/components/cards/card-wrapper";
 import Indicator from "@/components/cards/indicator";
 import { useCmcGlobalMetrics } from "@/components/providers/cmc/cmc-global-metrics-provider";
 import { linearInterpolation } from "@/lib/helpers";
@@ -37,13 +38,9 @@ export default function FearGreedIndexCard({
         : ArrowRightIcon;
 
   return (
-    <Link
-      target="_blank"
+    <CardWrapper
       href={"https://coinmarketcap.com/charts/fear-and-greed-index"}
-      className={cn(
-        "flex flex-col p-1 group/card w-1/2 md:w-1/3 xl:w-1/4 h-32",
-        className
-      )}
+      className={cn("w-1/2 md:w-1/3 xl:w-1/4 h-32", className)}
     >
       <div
         data-is-loading-error={(isLoadingError && true) || undefined}
@@ -96,7 +93,7 @@ export default function FearGreedIndexCard({
           hasData={data !== undefined}
         />
       </div>
-    </Link>
+    </CardWrapper>
   );
 }
 

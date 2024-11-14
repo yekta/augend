@@ -1,5 +1,6 @@
 "use client";
 
+import CardWrapper from "@/components/cards/card-wrapper";
 import AsyncDataTable, {
   TAsyncDataTableColumnDef,
   TAsyncDataTablePage,
@@ -53,7 +54,7 @@ declare module "@tanstack/react-table" {
 export default function CoinTableCard({ className }: { className?: string }) {
   const [page, setPage] = useState<TAsyncDataTablePage>({
     min: 1,
-    max: 5,
+    max: 10,
     current: 1,
   });
   const [sorting, setSorting] = useState<SortingState>([
@@ -157,7 +158,9 @@ export default function CoinTableCard({ className }: { className?: string }) {
   }, [data, isPending, isError, isLoadingError]);
 
   return (
-    <div className={cn("flex flex-col p-1 group/card w-full", className)}>
+    <CardWrapper
+      className={cn("flex flex-col p-1 group/card w-full", className)}
+    >
       <AsyncDataTable
         className="h-167 max-h-[calc((100svh-3rem)*0.75)]"
         columnDefs={columnDefs}
@@ -171,7 +174,7 @@ export default function CoinTableCard({ className }: { className?: string }) {
         sorting={sorting}
         setSorting={setSorting}
       />
-    </div>
+    </CardWrapper>
   );
 }
 
@@ -213,7 +216,7 @@ function NameColumn({
         `pl-4 md:pl-5 w-34 md:w-52 ${paddingRight} gap-2 md:gap-3 group/link py-3.5 flex flex-row items-center overflow-hidden`
       )}
     >
-      <div className="-ml-0.75 flex flex-col items-center justify-center gap-1.5">
+      <div className="-ml-1 md:-ml-0.75 flex flex-col items-center justify-center gap-1.5">
         <div className="size-4.5 shrink-0">
           {isPending ? (
             <div className="size-full rounded-full bg-foreground animate-skeleton" />
@@ -226,7 +229,9 @@ function NameColumn({
             <div className="size-full rounded-full bg-destructive" />
           )}
         </div>
-        <div className={`w-6 overflow-hidden flex items-center justify-center`}>
+        <div
+          className={`w-6.5 overflow-hidden flex items-center justify-center`}
+        >
           <p
             className={`${pendingClassesMuted} max-w-full overflow-hidden overflow-ellipsis text-xs leading-none font-medium text-muted-foreground text-center group-data-[is-loading-error]/table:text-destructive`}
           >

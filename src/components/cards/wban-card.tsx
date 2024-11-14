@@ -1,5 +1,6 @@
 "use client";
 
+import CardWrapper from "@/components/cards/card-wrapper";
 import Indicator from "@/components/cards/indicator";
 import { defaultQueryOptions } from "@/lib/constants";
 import { formatNumberTBMK } from "@/lib/number-formatters";
@@ -72,7 +73,7 @@ export default function WBanCard({ className }: { className?: string }) {
   };
 
   return (
-    <div className={cn("w-full flex flex-col p-1 group/card", className)}>
+    <CardWrapper className={cn("w-full", className)}>
       <div
         data-loading-error={isLoadingError ? true : undefined}
         data-is-pending={(isPending && true) || undefined}
@@ -209,7 +210,7 @@ export default function WBanCard({ className }: { className?: string }) {
           hasData={hasData}
         />
       </div>
-    </div>
+    </CardWrapper>
   );
 }
 

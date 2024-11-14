@@ -191,7 +191,7 @@ export default function AsyncDataTable<T>({
         </Table>
         <div className="w-full border-t">
           <Pagination>
-            <PaginationContent className="overflow-x-auto relative">
+            <PaginationContent className="overflow-x-auto px-0.75 relative">
               <div className="flex items-center justify-center relative">
                 {Array.from({ length: page.max - page.min + 1 }, (_, i) => {
                   const adjustedPage = i + page.min;
