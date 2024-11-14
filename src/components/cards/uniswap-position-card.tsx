@@ -356,7 +356,7 @@ function NFTImageLink({
         src={uri}
       />
       <ExternalLinkIcon
-        className="absolute size-5 left-1/2 top-1/2 transition transform -translate-x-1/2 -translate-y-1/2 opacity-0 scale-50
+        className="absolute size-5 left-1/2 origin-bottom-left top-1/2 transition transform -translate-x-1/2 -translate-y-1/2 opacity-0 scale-50
         not-touch:group-hover/link:scale-100 not-touch:group-hover/link:opacity-100"
       />
     </Link>
