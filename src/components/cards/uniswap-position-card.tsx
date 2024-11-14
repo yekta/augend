@@ -29,7 +29,6 @@ export default function UniswapPositionCard({
       defaultQueryOptions.fast
     );
 
-  const Comp = isPending ? "div" : data ? Link : "div";
   const href = `https://app.uniswap.org/pools/${id}`;
 
   function getConditionalValue<T>(value: T) {
@@ -38,9 +37,7 @@ export default function UniswapPositionCard({
     return "Error";
   }
   return (
-    <Comp
-      target="_blank"
-      href={href || "placeholder"}
+    <div
       className={cn("flex flex-col p-1 group/card w-full", className)}
       data-is-loading-error={(isLoadingError && true) || undefined}
       data-is-pending={(isPending && true) || undefined}
@@ -50,39 +47,51 @@ export default function UniswapPositionCard({
     >
       <div
         className={cn(
-          "w-full group flex not-touch:group-data-[has-data]/card:group-hover/card:bg-background-secondary flex-1 p-1.5 md:p-3 text-sm flex-col justify-center items-center border rounded-xl relative overflow-hidden",
+          "w-full group flex flex-1 text-sm justify-center items-center border rounded-xl relative overflow-hidden",
           className
         )}
       >
-        <div className="w-full h-full flex flex-row flex-wrap items-end">
-          <Section
-            className="w-full mt-0.5 md:mt-0 lg:w-1/3"
-            title={getConditionalValue(
-              `$${formatNumberTBMK(data?.position?.amountTotalUSD || 0)}`
-            )}
-            chip={
-              isPending
-                ? "Loading"
-                : data
-                  ? timeAgo(new Date(data.position.createdAt))
-                  : "Error"
-            }
-            chipClassName={getNumberColorClass(0, true)}
-            ticker0={getConditionalValue(data?.position.token0.symbol)}
-            amount0={getConditionalValue(
-              formatNumberTBMK(data?.position?.amount0 || 0)
-            )}
-            amount0Chip={getConditionalValue(
-              formatNumberTBMK((data?.position?.ratio0 || 0) * 100, 3) + "%"
-            )}
-            ticker1={getConditionalValue(data?.position.token1.symbol)}
-            amount1={getConditionalValue(
-              formatNumberTBMK(data?.position?.amount1 || 0)
-            )}
-            amount1Chip={getConditionalValue(
-              formatNumberTBMK((data?.position?.ratio1 || 0) * 100, 3) + "%"
-            )}
-          />
+        <NFTImageLink
+          href={href || "placeholder"}
+          uri={data?.position.nftUri}
+          className="h-36 px-4 py-3.5 -mr-4 hidden lg:block"
+        />
+        <div className="flex-1 flex flex-row flex-wrap items-end p-1.5 md:p-3 min-w-0">
+          <div className="w-full overflow-hidden mt-0.5 md:mt-0 lg:w-1/3 flex flex-row items-center justify-start">
+            <NFTImageLink
+              href={href || "placeholder"}
+              className="h-28 shrink-0 md:h-30 px-2 md:px-3 py-2 lg:hidden"
+              uri={data?.position.nftUri}
+            />
+            <Section
+              className="flex-1 overflow-hidden"
+              title={getConditionalValue(
+                `$${formatNumberTBMK(data?.position?.amountTotalUSD || 0)}`
+              )}
+              chip={
+                isPending
+                  ? "Loading"
+                  : data
+                    ? timeAgo(new Date(data.position.createdAt))
+                    : "Error"
+              }
+              chipClassName={getNumberColorClass(0, true)}
+              ticker0={getConditionalValue(data?.position.token0.symbol)}
+              amount0={getConditionalValue(
+                formatNumberTBMK(data?.position?.amount0 || 0)
+              )}
+              amount0Chip={getConditionalValue(
+                formatNumberTBMK((data?.position?.ratio0 || 0) * 100, 3) + "%"
+              )}
+              ticker1={getConditionalValue(data?.position.token1.symbol)}
+              amount1={getConditionalValue(
+                formatNumberTBMK(data?.position?.amount1 || 0)
+              )}
+              amount1Chip={getConditionalValue(
+                formatNumberTBMK((data?.position?.ratio1 || 0) * 100, 3) + "%"
+              )}
+            />
+          </div>
           <Section
             className="w-1/2 mt-1.5 md:mt-0 lg:w-1/3"
             title={getConditionalValue(
@@ -133,7 +142,7 @@ export default function UniswapPositionCard({
           hasData={!isLoadingError && data !== undefined}
         />
       </div>
-    </Comp>
+    </div>
   );
 }
 
@@ -168,7 +177,7 @@ function Section({
     "group-data-[is-pending]/card:text-transparent group-data-[is-pending]/card:animate-skeleton group-data-[is-pending]/card:bg-foreground";
   const errorClasses = "group-data-[is-loading-error]/card:text-destructive";
   return (
-    <div className={cn("flex flex-col gap-3 p-1.5 md:p-3", className)}>
+    <div className={cn("flex min-w-0 flex-col gap-3 p-1.5 md:p-3", className)}>
       <div className="flex flex-row items-center gap-2 pl-1.5">
         <p
           className={cn(
@@ -304,4 +313,40 @@ function timeAgo(date: Date): string {
   if (months < 12) return rtf.format(-months, "month");
   const years = Math.floor(days / 365);
   return rtf.format(-years, "year");
+}
+
+function NFTImageLink({
+  className,
+  href,
+  uri,
+}: {
+  href: string;
+  uri?: string;
+  className?: string;
+}) {
+  if (!uri)
+    return (
+      <div className={cn("h-36 group/link", className)}>
+        <svg
+          className="h-full bg-muted-foreground group-data-[is-loading-error]/card:bg-destructive/50 rounded-lg md:rounded-lg lg:rounded-xl w-auto not-touch:group-hover/link:scale-105 transition group-data-[is-pending]/card:animate-skeleton"
+          viewBox="0 0 290 500"
+          width="290"
+          height="500"
+        ></svg>
+      </div>
+    );
+  return (
+    <Link
+      target="_blank"
+      href={href || "placeholder"}
+      className={cn("h-36 group/link", className)}
+    >
+      <img
+        width="290"
+        height="500"
+        className="h-full w-auto not-touch:group-hover/link:scale-105 transition"
+        src={uri}
+      />
+    </Link>
+  );
 }

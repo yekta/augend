@@ -1,6 +1,9 @@
 import { z } from "zod";
 
-import { uniswapOkuUrl } from "@/server/api/routers/uniswap/constants";
+import {
+  getUniswapPositionManager,
+  uniswapOkuUrl,
+} from "@/server/api/routers/uniswap/constants";
 import {
   TUniswapPoolsResult,
   TUniswapPoolsResultRaw,
@@ -86,6 +89,7 @@ export const uniswapRouter = createTRPCRouter({
       })
     )
     .query(async ({ input: { id, network } }) => {
+      const positionManager = getUniswapPositionManager(network);
       const url = `${uniswapOkuUrl}/${network}/cush/analyticsPosition`;
       const body = {
         params: [
@@ -94,22 +98,31 @@ export const uniswapRouter = createTRPCRouter({
           },
         ],
       };
-      const res = await fetch(url, {
+      const nftUriPromise = positionManager.tokenURI(id);
+      const positionPromise = fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(body),
       });
-      if (!res.ok) {
-        throw new Error(`${res.status}: Failed to fetch Uniswap pools`);
-      }
-      const resJson: TUniswapPositionResultRaw = await res.json();
-      if (resJson.error) {
-        throw new Error(resJson.error.message);
+      const [nftUriRaw, positionRes] = await Promise.all([
+        nftUriPromise,
+        positionPromise,
+      ]);
+
+      if (!positionRes.ok) {
+        throw new Error(`${positionRes.status}: Failed to fetch Uniswap pools`);
       }
 
-      const position = resJson.result.position;
+      const nftUri = parseNftUri(nftUriRaw);
+
+      const positionJson: TUniswapPositionResultRaw = await positionRes.json();
+      if (positionJson.error) {
+        throw new Error(positionJson.error.message);
+      }
+
+      const position = positionJson.result.position;
       const amount0USD = Number(
         position.current_position_values.amount0_current_usd
       );
@@ -130,6 +143,7 @@ export const uniswapRouter = createTRPCRouter({
       const yearInMs = 1000 * 60 * 60 * 24 * 365;
       const editedRes: TUniswapPositionResult = {
         position: {
+          nftUri,
           amount0: getDecimalAmount(
             position.current_position_values.amount0_current,
             position.position_pool_data.token0_decimals
@@ -184,4 +198,22 @@ export const uniswapRouter = createTRPCRouter({
 
 function getDecimalAmount(amount: string, decimals: number) {
   return Number(amount) / Math.pow(10, decimals);
+}
+
+function parseNftUri(uriBase64: string): string {
+  let animateTagRegex = /<animate.*?"(.*?)"[^\>]+>/g;
+  /<g style="transform:translate\(226px, 392px\)"(.*?)<\/g><\/g>/g;
+  const regexes = [animateTagRegex];
+  let baseURI = uriBase64.split(",")[1] || uriBase64;
+  let uriUTF8 = Buffer.from(baseURI, "base64").toString("utf8");
+  let image = JSON.parse(uriUTF8).image;
+  const dataStr = "data:image/svg+xml;base64,";
+  const [_, svgBase64] = image.split(dataStr);
+  const svg = Buffer.from(svgBase64, "base64").toString("utf8");
+  let editedSvg = svg;
+  regexes.forEach((regex) => {
+    editedSvg = editedSvg.replace(regex, "");
+  });
+  const editedSvgBase64 = Buffer.from(editedSvg).toString("base64");
+  return dataStr + editedSvgBase64;
 }

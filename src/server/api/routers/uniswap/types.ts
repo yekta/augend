@@ -59,6 +59,7 @@ export type TUniswapPositionResult = {
     token0: TToken;
     token1: TToken;
     createdAt: number;
+    nftUri: string;
   };
 };
 
