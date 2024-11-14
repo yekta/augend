@@ -53,9 +53,9 @@ export default function UniswapPositionCard({
           className
         )}
       >
-        <div className="w-full h-full flex flex-row flex-wrap items-center">
+        <div className="w-full h-full flex flex-row flex-wrap items-end">
           <Section
-            className="w-full lg:w-1/3"
+            className="w-full mt-0.5 md:mt-0 lg:w-1/3"
             title={getConditionalValue(
               `$${formatNumberTBMK(data?.position?.amountTotalUSD || 0)}`
             )}
@@ -82,7 +82,7 @@ export default function UniswapPositionCard({
             )}
           />
           <Section
-            className="w-1/2 mt-1 lg:mt-0 lg:w-1/3"
+            className="w-1/2 mt-1.5 md:mt-0 lg:w-1/3"
             title={getConditionalValue(
               `$${formatNumberTBMK(
                 data?.position?.uncollectedFeesTotalUSD || 0
@@ -98,7 +98,7 @@ export default function UniswapPositionCard({
             )}
           />
           <Section
-            className="w-1/2 mt-1 lg:mt-0 lg:w-1/3"
+            className="w-1/2 mt-1.5 md:mt-0 lg:w-1/3"
             title={getConditionalValue(
               `${formatNumberTBMK(data?.position?.priceCurrent || 0)}`
             )}
@@ -135,6 +135,7 @@ function Section({
   amount1Chip,
   hideIcons,
   className,
+  titleClassName,
 }: {
   title: string;
   chip?: string;
@@ -146,6 +147,7 @@ function Section({
   amount1Chip?: string;
   hideIcons?: boolean;
   className?: string;
+  titleClassName?: string;
 }) {
   const pendingClasses =
     "group-data-[is-pending]/card:text-transparent group-data-[is-pending]/card:animate-skeleton group-data-[is-pending]/card:bg-foreground";
@@ -155,10 +157,11 @@ function Section({
       <div className="flex flex-row items-center gap-2 pl-1.5">
         <p
           className={cn(
-            "font-bold text-xl md:text-2xl leading-none md:leading-none",
+            "shrink min-w-0 overflow-hidden overflow-ellipsis font-bold text-xl md:text-2xl leading-none md:leading-none",
             pendingClasses,
             errorClasses,
-            "group-data-[is-pending]/card:rounded-md"
+            "group-data-[is-pending]/card:rounded-md",
+            titleClassName
           )}
         >
           {title}
@@ -166,7 +169,7 @@ function Section({
         {chip && (
           <p
             className={cn(
-              "text-xs md:text-sm leading-none md:leading-none font-medium text-muted-foreground bg-muted-foreground/8 px-2 py-1.25 rounded-md",
+              "whitespace-nowrap shrink min-w-0 overflow-hidden overflow-ellipsis text-xs text-center md:text-sm leading-none md:leading-none font-medium text-muted-foreground bg-muted-foreground/8 px-1.5 py-1.25 rounded-md",
               pendingClasses,
               "group-data-[is-pending]/card:bg-muted-foreground/50",
               errorClasses
@@ -210,7 +213,7 @@ function TickerTextAmount({
   const errorClasses = "group-data-[is-loading-error]/card:text-destructive";
   return (
     <div className="flex shrink min-w-0 flex-col gap-1.5 flex-1 text-xs md:text-sm leading-none md:leading-none">
-      <div className="flex flex-row items-center gap-1.5">
+      <div className="min-h-[1rem] md:min-h-[1.125rem] flex flex-row items-center gap-1.5">
         {ticker !== undefined &&
           (hideIcons === undefined || hideIcons === false) && (
             <div
@@ -222,7 +225,6 @@ function TickerTextAmount({
               )}
             >
               <CryptoIcon
-                variant="branded"
                 className="size-full bg-border rounded-full p-0.5 group-data-[is-pending]/card:hidden group-data-[is-loading-error]/card:hidden"
                 ticker={ticker}
               />
@@ -252,8 +254,9 @@ function TickerTextAmount({
         {chip !== undefined && (
           <p
             className={cn(
-              "text-muted-foreground font-medium max-w-full overflow-hidden overflow-ellipsis",
+              "text-muted-foreground shrink min-w-0 font-medium max-w-full overflow-hidden overflow-ellipsis",
               pendingClasses,
+              "group-data-[is-pending]/card:bg-muted-foreground",
               errorClasses
             )}
           >
