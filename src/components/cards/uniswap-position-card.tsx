@@ -247,19 +247,19 @@ function TickerTextAmount({
   const errorClasses = "group-data-[is-loading-error]/card:text-destructive";
   return (
     <div className="flex shrink min-w-0 flex-col gap-1.5 flex-1 text-xs md:text-sm leading-none md:leading-none">
-      <div className="min-h-[1rem] md:min-h-[1.125rem] flex flex-row items-center gap-1.5">
+      <div className="min-h-[1rem] md:min-h-[1.125rem] flex flex-row items-center gap-1.25">
         {ticker !== undefined &&
           (hideIcons === undefined || hideIcons === false) && (
             <div
               className={cn(
-                "size-4 md:size-4.5 rounded-full shrink-0",
+                "size-3.5 md:size-4 rounded-full shrink-0",
                 pendingClasses,
                 "group-data-[is-loading-error]/card:bg-destructive",
                 "group-data-[is-pending]/card:rounded-full"
               )}
             >
               <CryptoIcon
-                className="size-full bg-border rounded-full p-0.5 group-data-[is-pending]/card:hidden group-data-[is-loading-error]/card:hidden"
+                className="size-full bg-border rounded-full p-0.25 md:p-0.5 group-data-[is-pending]/card:hidden group-data-[is-loading-error]/card:hidden"
                 ticker={ticker}
               />
             </div>

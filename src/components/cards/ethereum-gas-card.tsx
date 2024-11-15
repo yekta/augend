@@ -39,39 +39,43 @@ export default function EthereumGasCard({
       }
       className={className}
     >
-      <div className="w-full px-1.5 py-2 flex flex-wrap items-center justify-center flex-row rounded-xl border leading-none font-semibold relative">
-        <IconAndText
-          text={data ? `${formatNumberTBMK(data.gwei, 3, true)}` : undefined}
-          Icon={FuelIcon}
-          isPending={isPending}
-        />
-        <IconAndText
-          text={
-            data ? `$${formatNumberTBMK(data.sendUsd, 3, true)}` : undefined
-          }
-          Icon={SendIcon}
-          isPending={isPending}
-        />
-        <IconAndText
-          text={
-            data ? `$${formatNumberTBMK(data.swapUsd, 3, true)}` : undefined
-          }
-          Icon={ArrowRightLeftIcon}
-          isPending={isPending}
-        />
-        <IconAndText
-          text={
-            data
-              ? `$${formatNumberTBMK(
-                  data.uniswapV3PositionCreationUsd,
-                  3,
-                  true
-                )}`
-              : undefined
-          }
-          Icon={DropletIcon}
-          isPending={isPending}
-        />
+      <div className="w-full px-2 py-2 flex flex-wrap shrink min-w-0 items-center justify-center flex-row rounded-xl border leading-none font-semibold relative">
+        <div className="flex flex-wrap shrink min-w-0 overflow-hidden items-center justify-center">
+          <IconAndText
+            text={data ? `${formatNumberTBMK(data.gwei, 3, true)}` : undefined}
+            Icon={FuelIcon}
+            isPending={isPending}
+          />
+          <IconAndText
+            text={
+              data ? `$${formatNumberTBMK(data.sendUsd, 3, true)}` : undefined
+            }
+            Icon={SendIcon}
+            isPending={isPending}
+          />
+        </div>
+        <div className="flex flex-wrap shrink min-w-0 overflow-hidden items-center justify-center">
+          <IconAndText
+            text={
+              data ? `$${formatNumberTBMK(data.swapUsd, 3, true)}` : undefined
+            }
+            Icon={ArrowRightLeftIcon}
+            isPending={isPending}
+          />
+          <IconAndText
+            text={
+              data
+                ? `$${formatNumberTBMK(
+                    data.uniswapV3PositionCreationUsd,
+                    3,
+                    true
+                  )}`
+                : undefined
+            }
+            Icon={DropletIcon}
+            isPending={isPending}
+          />
+        </div>
         <Indicator
           isError={isError}
           isPending={isPending}
@@ -97,7 +101,7 @@ function IconAndText({
   return (
     <div
       className={cn(
-        "w-21 md:w-32 px-2 py-2 flex justify-start items-center gap-1 md:gap-1.5",
+        "w-21 md:w-32 max-w-full md:max-w-full px-2 py-2 flex justify-start items-center gap-1 md:gap-1.5",
         "group-data-[is-loading-error]/card:text-destructive",
         className
       )}

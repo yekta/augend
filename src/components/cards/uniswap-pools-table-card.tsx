@@ -163,7 +163,7 @@ export default function UniswapPoolsTableCard({
                 <div className="shrink min-w-0 flex flex-col items-start gap-1 font-semibold overflow-hidden">
                   <div className="max-w-full flex flex-row items-center gap-2 overflow-hidden">
                     <p
-                      className={`shrink min-w-0 overflow-hidden overflow-ellipsis ${pendingClassName}`}
+                      className={`whitespace-nowrap shrink min-w-0 overflow-hidden overflow-ellipsis ${pendingClassName}`}
                     >
                       {isPending
                         ? "Load"
@@ -182,7 +182,7 @@ export default function UniswapPoolsTableCard({
                     </p>
                   </div>
                   <p
-                    className={`leading-none max-w-full overflow-hidden overflow-ellipsis ${pendingClassName}`}
+                    className={`whitespace-nowrap leading-none max-w-full overflow-hidden overflow-ellipsis ${pendingClassName}`}
                   >
                     {isPending
                       ? "Load"
