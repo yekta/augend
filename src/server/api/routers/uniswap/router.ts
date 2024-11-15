@@ -16,74 +16,108 @@ import {
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import type { SearchFilterOpts } from "@gfxlabs/oku";
 
+const isEthereumAddress = (address: string): boolean =>
+  /^0x[a-fA-F0-9]{40}$/.test(address);
+
 export const uniswapRouter = createTRPCRouter({
   getPools: publicProcedure
     .input(
       z.object({
         page: z.number().int().positive().default(1),
         network: UniswapNetworkSchema.optional().default("ethereum"),
+        limit: z.number().int().positive().min(1).max(200).default(200),
+        searchAddress: z
+          .string()
+          .refine(isEthereumAddress, {
+            message: "Invalid Ethereum address",
+          })
+          .optional(),
+        errorOnUnmatchingSearchResult: z.boolean().optional().default(false),
       })
     )
-    .query(async ({ input: { page, network } }) => {
-      const limit = 200;
-      const url = `${uniswapOkuUrl}/${network}/cush/topPools`;
-      const body: { params: SearchFilterOpts[] } = {
-        params: [
-          {
-            fee_tiers: [],
-            sort_by: "tvl_usd",
-            sort_order: false,
-            result_size: limit,
-            result_offset: page - 1,
-          },
-        ],
-      };
-      const res = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+    .query(
+      async ({
+        input: {
+          page,
+          network,
+          limit,
+          searchAddress,
+          errorOnUnmatchingSearchResult,
         },
-        body: JSON.stringify(body),
-      });
-      if (!res.ok) {
-        throw new Error(`${res.status}: Failed to fetch Uniswap pools`);
+      }) => {
+        const endpoint = searchAddress ? "searchPoolsByAddress" : "topPools";
+        const url = `${uniswapOkuUrl}/${network}/cush/${endpoint}`;
+        let body: { params: (SearchFilterOpts | string)[] } = {
+          params: [
+            {
+              fee_tiers: [],
+              sort_by: "tvl_usd",
+              sort_order: false,
+              result_size: limit,
+              result_offset: page - 1,
+            },
+          ],
+        };
+        if (searchAddress) {
+          body.params.unshift(searchAddress);
+        }
+        const res = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        });
+        if (!res.ok) {
+          throw new Error(`${res.status}: Failed to fetch Uniswap pools`);
+        }
+        const resJson: TUniswapPoolsResultRaw = await res.json();
+        if (resJson.error) {
+          throw new Error(resJson.error.message);
+        }
+
+        if (
+          searchAddress &&
+          errorOnUnmatchingSearchResult &&
+          (resJson.result.pools.length < 1 ||
+            resJson.result.pools[0].address !== searchAddress)
+        ) {
+          throw new Error(`No pool found for address: ${searchAddress}`);
+        }
+
+        const editedRes: TUniswapPoolsResult = {
+          pools: resJson.result.pools
+            .filter((p) => p.t0_volume_usd > 1000)
+            .map((pool) => {
+              const feeTier = pool.fee / 1_000_000;
+              const fees24hUSD = pool.total_fees_usd;
+              return {
+                address: pool.address,
+                tvlUSD: pool.tvl_usd,
+                price: pool.last_price,
+                apr24h: (fees24hUSD / pool.tvl_usd) * 365,
+                feeTier,
+                fees24hUSD,
+                fees7dUSD: pool.total_volume_7d_usd * feeTier,
+                volume24hUSD: pool.t0_volume_usd,
+                volume7dUSD: pool.total_volume_7d_usd,
+                token0: {
+                  id: pool.t0,
+                  name: pool.t0_name,
+                  symbol: pool.t0_symbol,
+                },
+                token1: {
+                  id: pool.t1,
+                  name: pool.t1_name,
+                  symbol: pool.t1_symbol,
+                },
+                isTokensReversed: pool.is_preferred_token_order === false,
+              };
+            }),
+        };
+        return editedRes;
       }
-      const resJson: TUniswapPoolsResultRaw = await res.json();
-      if (resJson.error) {
-        throw new Error(resJson.error.message);
-      }
-      const editedRes: TUniswapPoolsResult = {
-        pools: resJson.result.pools
-          .filter((p) => p.t0_volume_usd > 1000)
-          .map((pool) => {
-            const feeTier = pool.fee / 1_000_000;
-            const fees24hUSD = pool.total_fees_usd;
-            return {
-              address: pool.address,
-              tvlUSD: pool.tvl_usd,
-              price: pool.last_price,
-              apr24h: (fees24hUSD / pool.tvl_usd) * 365,
-              feeTier,
-              fees24hUSD,
-              fees7dUSD: pool.total_volume_7d_usd * feeTier,
-              volume24hUSD: pool.t0_volume_usd,
-              volume7dUSD: pool.total_volume_7d_usd,
-              token0: {
-                id: pool.t0,
-                name: pool.t0_name,
-                symbol: pool.t0_symbol,
-              },
-              token1: {
-                id: pool.t1,
-                name: pool.t1_name,
-                symbol: pool.t1_symbol,
-              },
-              isTokensReversed: pool.is_preferred_token_order === false,
-            };
-          }),
-      };
-      return editedRes;
-    }),
+    ),
   getPosition: publicProcedure
     .input(
       z.object({
@@ -223,7 +257,7 @@ export const uniswapRouter = createTRPCRouter({
           },
         ],
       };
-      const [swapsRes, poolRes] = await Promise.all([
+      const [swapsRes] = await Promise.all([
         fetch(url, {
           method: "POST",
           headers: {
@@ -243,49 +277,22 @@ export const uniswapRouter = createTRPCRouter({
       if (!swapsRes.ok) {
         throw new Error(`${swapsRes.status}: Failed to fetch Uniswap swaps`);
       }
-      if (!poolRes.ok) {
-        throw new Error(`${poolRes.status}: Failed to fetch Uniswap pool`);
-      }
 
-      const [swapsResJson, poolResJson]: [
-        TUniswapPoolSwapsResultRaw,
-        TUniswapPoolsResultRaw,
-      ] = await Promise.all([swapsRes.json(), poolRes.json()]);
+      const [swapsResJson]: [TUniswapPoolSwapsResultRaw] = await Promise.all([
+        swapsRes.json(),
+      ]);
 
       if (swapsResJson.error) {
         throw new Error(`Swap result has error: ${swapsResJson.error.message}`);
       }
 
-      if (poolResJson.error) {
-        throw new Error(`Pool result has error: ${poolResJson.error.message}`);
-      }
-
-      const pool = poolResJson.result.pools.find(
-        (p) => p.address === poolAddress
-      );
-      if (!pool) {
-        throw new Error(`Pool not found with address: ${poolAddress}`);
-      }
-
-      const isPoolReversed = pool.t0 !== swapsResJson.result.token0;
-
       const swapsResult: TUniswapPoolSwapsResult = {
         pool: {
-          tvlUSD: pool.tvl_usd,
-          tvl0USD: isPoolReversed ? pool.t1_tvl_usd : pool.t0_tvl_usd,
-          tvl1USD: isPoolReversed ? pool.t0_tvl_usd : pool.t1_tvl_usd,
-          volume24hUSD: pool.t0_volume_usd,
-          fees24hUSD: pool.total_fees_usd,
-          address: poolResJson.result.pools[0].address,
           token0: {
-            id: isPoolReversed ? pool.t1 : pool.t0,
-            name: isPoolReversed ? pool.t1_name : pool.t0_name,
-            symbol: isPoolReversed ? pool.t1_symbol : pool.t0_symbol,
+            id: swapsResJson.result.token0,
           },
           token1: {
-            id: isPoolReversed ? pool.t0 : pool.t1,
-            name: isPoolReversed ? pool.t0_name : pool.t1_name,
-            symbol: isPoolReversed ? pool.t0_symbol : pool.t1_symbol,
+            id: swapsResJson.result.token1,
           },
         },
         swaps: swapsResJson.result.swaps

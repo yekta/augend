@@ -90,6 +90,26 @@ export default function UniswapPositionCard({
     }
   );
 
+  const {
+    data: statsData,
+    isPending: statsIsPending,
+    isError: statsIsError,
+    isLoadingError: statsIsLoadingError,
+    isRefetching: statsIsRefetching,
+  } = api.uniswap.getPools.useQuery(
+    {
+      network,
+      searchAddress: data?.position.poolAddress || "",
+      errorOnUnmatchingSearchResult: true,
+      page: 1,
+      limit: 1,
+    },
+    {
+      ...defaultQueryOptions.fast,
+      enabled: data !== undefined && isSwapsOpen,
+    }
+  );
+
   const swapsTableDataOrFallback: TSwapData[] = useMemo(() => {
     if (!swapsData || !data) return swapsTableDataFallback;
     const isReversed =
@@ -239,6 +259,12 @@ export default function UniswapPositionCard({
     return "Error";
   }
 
+  function getConditionalValueStats<T>(value: T) {
+    if (statsIsPending) return "Loading";
+    if (statsData && value !== undefined) return value;
+    return "Error";
+  }
+
   return (
     <CardWrapper
       className={cn("w-full", className)}
@@ -360,36 +386,42 @@ export default function UniswapPositionCard({
           </div>
         </Button>
         {data && isSwapsOpen && (
-          <div
-            data-is-loading-error={(swapsIsLoadingError && true) || undefined}
-            data-is-pending={(swapsIsPending && true) || undefined}
-            data-has-data={
-              (!swapsIsPending &&
-                !swapsIsLoadingError &&
-                swapsData !== undefined) ||
-              undefined
-            }
-            className="w-full group/stats border-t"
-          >
+          <div className="w-full  border-t">
             {/* Stats */}
-            <div className="w-full px-3 md:px-2 flex flex-row justify-start items-end py-4 whitespace-nowrap overflow-auto">
+            <div
+              data-is-loading-error={(statsIsLoadingError && true) || undefined}
+              data-is-pending={(statsIsPending && true) || undefined}
+              data-has-data={
+                (!statsIsPending &&
+                  !statsIsLoadingError &&
+                  statsData !== undefined) ||
+                undefined
+              }
+              className="w-full group/stats px-3 md:px-2 flex flex-row justify-start items-end py-4 whitespace-nowrap overflow-auto relative"
+            >
               <StatColumn
                 title="TVL"
-                value={getConditionalValueSwaps(
-                  `$${formatNumberTBMK(swapsData?.pool.tvlUSD || 0)}`
+                value={getConditionalValueStats(
+                  `$${formatNumberTBMK(statsData?.pools[0].tvlUSD || 0)}`
                 )}
               />
               <StatColumn
                 title="Vol (24H)"
-                value={getConditionalValueSwaps(
-                  `$${formatNumberTBMK(swapsData?.pool.volume24hUSD || 0)}`
+                value={getConditionalValueStats(
+                  `$${formatNumberTBMK(statsData?.pools[0].volume24hUSD || 0)}`
                 )}
               />
               <StatColumn
                 title="Fees (24H)"
-                value={getConditionalValueSwaps(
-                  `$${formatNumberTBMK(swapsData?.pool.fees24hUSD || 0)}`
+                value={getConditionalValueStats(
+                  `$${formatNumberTBMK(statsData?.pools[0].fees24hUSD || 0)}`
                 )}
+              />
+              <Indicator
+                isError={statsIsError}
+                isPending={statsIsPending}
+                isRefetching={statsIsRefetching}
+                hasData={!statsIsLoadingError && statsData !== undefined}
               />
             </div>
             {/* Table */}

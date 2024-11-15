@@ -78,14 +78,12 @@ export type TUniswapPoolSwapsResult = {
     traderAddress: string;
   }[];
   pool: {
-    address: string;
-    tvlUSD: number;
-    volume24hUSD: number;
-    fees24hUSD: number;
-    tvl0USD: number;
-    tvl1USD: number;
-    token0: TToken;
-    token1: TToken;
+    token0: {
+      id: string;
+    };
+    token1: {
+      id: string;
+    };
   };
 };
 
