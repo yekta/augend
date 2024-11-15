@@ -150,6 +150,8 @@ export default function UniswapPositionCard({
       {
         accessorKey: "usd",
         header: "USD",
+        cellClassName: ({ row }) =>
+          getNumberColorClass(row.original.amountUSD / 1000),
         cell: ({ row }) => `$${formatNumberTBMK(row.original.amountUSD)}`,
         sortingFn: (rowA, rowB, _columnId) => {
           const a = rowA.original.amountUSD;
@@ -301,7 +303,7 @@ export default function UniswapPositionCard({
                     : "Error"
               }
               chipClassName={getNumberColorClass(
-                (data?.position?.apr || 0) * 100,
+                data?.position?.apr || 0,
                 true
               )}
               ticker0={getConditionalValue(data?.position.token0.symbol)}
@@ -359,7 +361,7 @@ export default function UniswapPositionCard({
           </div>
         </Button>
         {data && isSwapsOpen && (
-          <div className="w-full px-2 pb-2">
+          <div className="w-full px-3 pb-3 md:px-2 md:pb-2">
             <AsyncDataTable
               className="h-128 rounded-lg max-h-[calc((100svh-3rem)*0.4)]"
               columnDefs={swapsColumnDefs}

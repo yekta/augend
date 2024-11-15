@@ -210,7 +210,7 @@ export const uniswapRouter = createTRPCRouter({
       const limit = 100;
       const url = `${uniswapOkuUrl}/${network}/cush/poolSwaps`;
       const body = {
-        params: [poolAddress, limit, page - 1, true],
+        params: [poolAddress, limit, page - 1, false],
       };
       const [swapsRes] = await Promise.all([
         fetch(url, {
@@ -236,16 +236,18 @@ export const uniswapRouter = createTRPCRouter({
       const swapsResult: TUniswapPoolSwapsResult = {
         token0Address: swapResJson.result.token0,
         token1Address: swapResJson.result.token1,
-        swaps: swapResJson.result.swaps.map((swap) => {
-          return {
-            amount0: swap.amount0,
-            amount1: swap.amount1,
-            amountUSD: swap.usd_value,
-            timestamp: swap.time,
-            type: swap.side === "sell" ? "sell" : "buy",
-            traderAddress: swap.recipient,
-          };
-        }),
+        swaps: swapResJson.result.swaps
+          .sort((a, b) => b.time - a.time)
+          .map((swap) => {
+            return {
+              amount0: swap.amount0,
+              amount1: swap.amount1,
+              amountUSD: swap.usd_value,
+              timestamp: swap.time,
+              type: swap.side === "sell" ? "sell" : "buy",
+              traderAddress: swap.recipient,
+            };
+          }),
       };
 
       return swapsResult;

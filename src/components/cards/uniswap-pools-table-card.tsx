@@ -214,11 +214,8 @@ export default function UniswapPoolsTableCard({
       {
         accessorKey: "apr",
         header: "APR",
-        cell: ({ row }) => (
-          <span className={getNumberColorClass(row.original.apr24h * 100)}>
-            {formatNumberTBMK(row.original.apr24h * 100)}%
-          </span>
-        ),
+        cellClassName: ({ row }) => getNumberColorClass(row.original.apr24h),
+        cell: ({ row }) => `${formatNumberTBMK(row.original.apr24h * 100)}%`,
         sortingFn: (a, b) => a.original.apr24h - b.original.apr24h,
       },
       {
