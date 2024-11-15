@@ -222,7 +222,7 @@ export default function UniswapPositionCard({
         },
       },
     ];
-  }, [data, swapsData, swapsIsPending, swapsIsError, swapsIsLoadingError]);
+  }, [data, swapsData, swapsIsPending]);
 
   function getConditionalValue<T>(value: T) {
     if (isPending) return "Loading";
