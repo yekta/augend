@@ -3,26 +3,37 @@
 import { ReactNode, useEffect, useState } from "react";
 import React, { createContext, useContext } from "react";
 
+function detectTouchDevice() {
+  return "ontouchstart" in window || navigator.maxTouchPoints > 0;
+}
+
 export function useIsTouchDevice() {
-  const [isTouchDevice, setIsTouchDevice] = useState(false);
+  const [isTouchDevice, setIsTouchDevice] = useState(detectTouchDevice());
 
   useEffect(() => {
     function onResize() {
-      const isTouch =
-        "ontouchstart" in window ||
-        navigator.maxTouchPoints > 0 ||
-        navigator.maxTouchPoints > 0;
+      const isTouch = detectTouchDevice();
       if (document && document.body) {
         document.body.classList.toggle("not-touch", !isTouch);
       }
       setIsTouchDevice(isTouch);
     }
 
-    window.addEventListener("resize", onResize);
+    // Add a small debounce to avoid excessive state updates on rapid resizes
+    const debounceTimeout = 200;
+    let timeoutId: NodeJS.Timeout | null = null;
+
+    const debouncedResize = () => {
+      if (timeoutId) clearTimeout(timeoutId);
+      timeoutId = setTimeout(onResize, debounceTimeout);
+    };
+
+    window.addEventListener("resize", debouncedResize);
     onResize();
 
     return () => {
-      window.removeEventListener("resize", onResize);
+      if (timeoutId) clearTimeout(timeoutId);
+      window.removeEventListener("resize", debouncedResize);
     };
   }, []);
 
