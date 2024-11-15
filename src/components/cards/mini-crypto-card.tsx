@@ -44,7 +44,7 @@ export default function MiniCryptoCard({
         : ArrowRightIcon;
   return (
     <CardWrapper
-      href={getCmcUrl(slug || "")}
+      href={slug ? getCmcUrl(slug) : undefined}
       className={cn("w-1/2 md:w-1/3 xl:w-1/4", className)}
     >
       <div
