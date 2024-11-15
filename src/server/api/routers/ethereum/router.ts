@@ -1,12 +1,16 @@
-import { z } from "zod";
-import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
-import { EthereumNetworkSchema } from "@/server/api/routers/ethereum/types";
+import { cmcApiUrl, cmcFetchOptions } from "@/server/api/routers/cmc/constants";
+import { TCmcGetCryptosResult } from "@/server/api/routers/cmc/types";
 import {
   etherscanApiUrl,
   networkToChainId,
 } from "@/server/api/routers/ethereum/constants";
 import { etherscanApiKey } from "@/server/api/routers/ethereum/secrets";
-import { getExchangeInstance } from "@/server/api/routers/exchange/helpers";
+import {
+  EthereumNetworkSchema,
+  TGasInfoResultRaw,
+} from "@/server/api/routers/ethereum/types";
+import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
+import { z } from "zod";
 
 const baseGasLimit = 21_000;
 const swapGasLimit = 360_000;
@@ -22,42 +26,32 @@ export const ethereumRouter = createTRPCRouter({
       })
     )
     .query(async ({ input: { network } }) => {
-      const exchange = getExchangeInstance("OKX");
-      const ticker = "ETH/USDT";
       const chainId = networkToChainId[network];
       const url = `${etherscanApiUrl}/v2/api?chainid=${chainId}&module=gastracker&action=gasoracle&apikey=${etherscanApiKey}`;
+      const ethUsdUrl = `${cmcApiUrl}/v2/cryptocurrency/quotes/latest?symbol=ETH&convert=USD`;
 
-      const [ethUsdRes, response] = await Promise.all([
-        exchange.fetchTickers([ticker]),
+      const [response, ethUsdRes] = await Promise.all([
         fetch(url),
+        fetch(ethUsdUrl, cmcFetchOptions),
       ]);
-
-      if (!ethUsdRes[ticker]) {
-        throw new Error(`Ticker not in data: ${ticker}`);
-      }
-
-      const ethUsd = Number(ethUsdRes[ticker].last);
 
       if (!response.ok) {
         throw new Error(
           `Failed to fetch gas oracle data: ${response.statusText}`
         );
       }
-      const data: {
-        status: string;
-        message: string;
-        result?: {
-          LastBlock: string;
-          SafeGasPrice: string;
-          ProposeGasPrice: string;
-          FastGasPrice: string;
-          suggestBaseFee: string;
-          gasUsedRatio: string;
-        };
-      } = await response.json();
+      if (!ethUsdRes.ok) {
+        throw new Error(`Failed to fetch ETH price: ${ethUsdRes.statusText}`);
+      }
+
+      const [data, ethUsdResJson]: [TGasInfoResultRaw, TCmcGetCryptosResult] =
+        await Promise.all([response.json(), ethUsdRes.json()]);
+
       if (!data.result) {
         throw new Error(`No result data in gas oracle data: ${data.message}`);
       }
+
+      const ethUsd = ethUsdResJson.data.ETH[0].quote.USD.price;
 
       const block = parseInt(data.result.LastBlock);
       const fastGwei = parseFloat(data.result.FastGasPrice);
