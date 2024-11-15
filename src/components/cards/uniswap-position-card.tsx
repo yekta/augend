@@ -368,7 +368,7 @@ export default function UniswapPositionCard({
         </div>
         <Button
           disabled={!data}
-          className="absolute top-1 right-1 size-8 p-0 group-data-[is-loading-error]/card:text-destructive"
+          className="absolute top-1.5 right-1.5 size-8 p-0 group-data-[is-loading-error]/card:text-destructive"
           variant="outline"
           onClick={() => setIsSwapsOpen((prev) => !prev)}
         >
