@@ -4,14 +4,43 @@ import CardWrapper from "@/components/cards/card-wrapper";
 import { getNumberColorClass } from "@/components/cards/helpers";
 import Indicator from "@/components/cards/indicator";
 import CryptoIcon from "@/components/icons/crypto-icon";
+import AsyncDataTable, {
+  TAsyncDataTableColumnDef,
+  TAsyncDataTablePage,
+} from "@/components/ui/async-data-table";
+import { Button } from "@/components/ui/button";
 import { defaultQueryOptions } from "@/lib/constants";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
-import { TUniswapNetwork } from "@/server/api/routers/uniswap/types";
+import {
+  TUniswapNetwork,
+  TUniswapPoolSwapsResult,
+} from "@/server/api/routers/uniswap/types";
 import { api } from "@/trpc/react";
-import { ExternalLinkIcon } from "lucide-react";
+import { SortingState } from "@tanstack/react-table";
+import {
+  ExternalLinkIcon,
+  TableIcon,
+  TriangleAlertIcon,
+  XIcon,
+} from "lucide-react";
 import Link from "next/link";
-import React from "react";
+import { useMemo, useState } from "react";
+
+type TSwapData = TUniswapPoolSwapsResult["swaps"][number];
+
+const dataFallback: TSwapData[] = Array.from({ length: 100 }, (_, i) => ({
+  amount0: 10,
+  amount1: 10,
+  amountUSD: 100,
+  timestamp: Date.now(),
+  type: i % 2 === 0 ? "buy" : "sell",
+  traderAddress: "0x11111",
+}));
+
+const networkToAddressUrl: Record<TUniswapNetwork, (s: string) => string> = {
+  ethereum: (address: string) => `https://etherscan.io/address/${address}`,
+};
 
 export default function UniswapPositionCard({
   id,
@@ -30,14 +59,177 @@ export default function UniswapPositionCard({
       },
       defaultQueryOptions.fast
     );
-
   const href = `https://app.uniswap.org/pools/${id}`;
+
+  const [isSwapsOpen, setIsSwapsOpen] = useState(false);
+
+  const [swapsPage, setSwapsPage] = useState<TAsyncDataTablePage>({
+    min: 1,
+    max: 5,
+    current: 1,
+  });
+
+  const {
+    data: swapsData,
+    isPending: swapsIsPending,
+    isError: swapsIsError,
+    isLoadingError: swapsIsLoadingError,
+    isRefetching: swapsIsRefetching,
+  } = api.uniswap.getSwaps.useQuery(
+    {
+      network,
+      poolAddress: data?.position.poolAddress || "",
+      page: swapsPage.current,
+    },
+    {
+      ...defaultQueryOptions.fast,
+      enabled: data !== undefined && isSwapsOpen,
+    }
+  );
+
+  const swapsDataOrFallback: TSwapData[] = useMemo(() => {
+    if (!swapsData || !data) return dataFallback;
+    const isReversed =
+      data && swapsData && data.position.token0.id !== swapsData.token0Address
+        ? true
+        : false;
+    if (isReversed) {
+      return swapsData.swaps.map((swap) => ({
+        amount0: swap.amount1,
+        amount1: swap.amount0,
+        amountUSD: swap.amountUSD,
+        timestamp: swap.timestamp,
+        type: swap.type === "buy" ? "sell" : "buy",
+        traderAddress: swap.traderAddress,
+      }));
+    }
+    return swapsData.swaps;
+  }, [data, swapsData]);
+
+  const [swapsSorting, setSwapsSorting] = useState<SortingState>([
+    { id: "timestamp", desc: true },
+  ]);
+
+  const swapsColumnDefs = useMemo<TAsyncDataTableColumnDef<TSwapData>[]>(() => {
+    const token0Symbol = data?.position.token0.symbol || "Token0";
+    const token1Symbol = data?.position.token1.symbol || "Token1";
+    return [
+      {
+        accessorKey: "timestamp",
+        header: "Time",
+        headerAlignment: "start",
+        isPinnedLeft: true,
+        sortDescFirst: true,
+        cell: ({ row }) => timeAgo(new Date(row.original.timestamp)),
+        sortingFn: (rowA, rowB, _columnId) => {
+          const a = rowA.original.timestamp;
+          const b = rowB.original.timestamp;
+          if (a === undefined || b === undefined) return 0;
+          return a - b;
+        },
+      },
+      {
+        accessorKey: "type",
+        header: "Type",
+        sortDescFirst: false,
+        cellClassName: ({ row }) =>
+          row.original.type === "buy" ? "text-success" : "text-destructive",
+        cell: ({ row }) =>
+          `${
+            row.original.type === "buy"
+              ? `Buy ${token0Symbol}`
+              : `Sell ${token0Symbol}`
+          }`,
+        sortingFn: (rowA, rowB, _columnId) => {
+          const a = rowA.original.type;
+          const b = rowB.original.type;
+          if (a === undefined || b === undefined) return 0;
+          return a.localeCompare(b);
+        },
+      },
+      {
+        accessorKey: "usd",
+        header: "USD",
+        cell: ({ row }) => `$${formatNumberTBMK(row.original.amountUSD)}`,
+        sortingFn: (rowA, rowB, _columnId) => {
+          const a = rowA.original.amountUSD;
+          const b = rowB.original.amountUSD;
+          if (a === undefined || b === undefined) return 0;
+          return a - b;
+        },
+      },
+      {
+        accessorKey: token0Symbol,
+        header: token0Symbol,
+        cell: ({ row }) => `${formatNumberTBMK(row.original.amount0)}`,
+        sortingFn: (rowA, rowB, _columnId) => {
+          const a = rowA.original.amount0;
+          const b = rowB.original.amount0;
+          if (a === undefined || b === undefined) return 0;
+          return a - b;
+        },
+      },
+      {
+        accessorKey: token1Symbol,
+        header: token1Symbol,
+        cell: ({ row }) => `${formatNumberTBMK(row.original.amount1)}`,
+        sortingFn: (rowA, rowB, _columnId) => {
+          const a = rowA.original.amount1;
+          const b = rowB.original.amount1;
+          if (a === undefined || b === undefined) return 0;
+          return a - b;
+        },
+      },
+      {
+        accessorKey: "trader",
+        header: "Trader",
+        cellType: "custom",
+        sortDescFirst: false,
+        cell: ({ row }) => {
+          const Comp = isPending ? "div" : swapsData ? Link : "div";
+          return (
+            <Comp
+              href={networkToAddressUrl[network](row.original.traderAddress)}
+              target="_blank"
+              className="w-full font-mono text-xs md:text-sm leading-none md:leading-none font-medium py-3.25 md:py-3.5 gap-1 flex items-center justify-end pl-2 pr-4 md:pr-5 group/link group-data-[is-loading-error]/table:text-destructive"
+            >
+              {swapsData && (
+                <ExternalLinkIcon
+                  className="size-3.5 opacity-0 scale-50 transition origin-bottom-left shrink-0
+                  not-touch:group-hover/link:scale-100 not-touch:group-hover/link:opacity-100
+                  group-active/link:scale-100 group-active/link:opacity-100 pointer-events-none"
+                />
+              )}
+              <p
+                className="min-w-0 leading-none flex-shrink whitespace-nowrap max-w-[4rem] overflow-hidden overflow-ellipsis
+                group-data-[is-pending]/table:text-transparent group-data-[is-pending]/table:animate-skeleton group-data-[is-pending]/table:bg-foreground
+                group-data-[is-pending]/table:rounded"
+              >
+                {swapsIsPending
+                  ? "Loading"
+                  : swapsData
+                    ? row.original.traderAddress.slice(0, 6)
+                    : "Error"}
+              </p>
+            </Comp>
+          );
+        },
+        sortingFn: (rowA, rowB, _columnId) => {
+          const a = rowA.original.traderAddress;
+          const b = rowB.original.traderAddress;
+          if (a === undefined || b === undefined) return 0;
+          return a.localeCompare(b);
+        },
+      },
+    ];
+  }, [data, swapsData, swapsIsPending, swapsIsError, swapsIsLoadingError]);
 
   function getConditionalValue<T>(value: T) {
     if (isPending) return "Loading";
     if (data && value !== undefined) return value;
     return "Error";
   }
+
   return (
     <CardWrapper
       className={cn("w-full", className)}
@@ -47,103 +239,142 @@ export default function UniswapPositionCard({
         (!isPending && !isLoadingError && data !== undefined) || undefined
       }
     >
-      <div
-        className={cn(
-          "w-full flex flex-1 text-sm justify-center items-center border rounded-xl relative overflow-hidden",
-          className
-        )}
-      >
-        <NFTImageLink
-          href={href || "placeholder"}
-          uri={data?.position.nftUri}
-          className="h-36 px-4 py-3.25 -mr-4 hidden lg:block"
-        />
-        <div className="flex-1 flex flex-row flex-wrap items-end p-1.5 md:p-3 min-w-0">
-          <div className="w-full overflow-hidden mt-0.5 md:mt-0 lg:w-1/3 flex flex-row items-center justify-start">
-            <NFTImageLink
-              href={href || "placeholder"}
-              className="h-28 shrink-0 md:h-30 px-2 md:px-3 py-1.5 lg:hidden"
-              uri={data?.position.nftUri}
-            />
+      <div className="w-full flex flex-col flex-1 border rounded-xl relative">
+        <div
+          className={cn(
+            "w-full flex flex-1 text-sm justify-center items-center overflow-hidden"
+          )}
+        >
+          <NFTImageLink
+            href={href || "placeholder"}
+            uri={data?.position.nftUri}
+            className="h-36 px-4 py-3.25 -mr-4 hidden lg:block"
+          />
+          <div className="flex-1 flex flex-row flex-wrap items-end p-1.5 md:p-3 min-w-0">
+            <div className="w-full overflow-hidden mt-0.5 md:mt-0 lg:w-1/3 flex flex-row items-center justify-start">
+              <NFTImageLink
+                href={href || "placeholder"}
+                className="h-28 shrink-0 md:h-30 px-2 md:px-3 py-1.5 lg:hidden"
+                uri={data?.position.nftUri}
+              />
+              <Section
+                className="flex-1 overflow-hidden"
+                title={getConditionalValue(
+                  `$${formatNumberTBMK(data?.position?.amountTotalUSD || 0)}`
+                )}
+                chip={
+                  isPending
+                    ? "Loading"
+                    : data
+                      ? timeAgo(new Date(data.position.createdAt))
+                      : "Error"
+                }
+                chipClassName={getNumberColorClass(0, true)}
+                ticker0={getConditionalValue(data?.position.token0.symbol)}
+                amount0={getConditionalValue(
+                  formatNumberTBMK(data?.position?.amount0 || 0)
+                )}
+                amount0Chip={getConditionalValue(
+                  formatNumberTBMK((data?.position?.ratio0 || 0) * 100, 3) + "%"
+                )}
+                ticker1={getConditionalValue(data?.position.token1.symbol)}
+                amount1={getConditionalValue(
+                  formatNumberTBMK(data?.position?.amount1 || 0)
+                )}
+                amount1Chip={getConditionalValue(
+                  formatNumberTBMK((data?.position?.ratio1 || 0) * 100, 3) + "%"
+                )}
+              />
+            </div>
             <Section
-              className="flex-1 overflow-hidden"
+              className="w-1/2 mt-1.5 md:mt-0 lg:w-1/3"
               title={getConditionalValue(
-                `$${formatNumberTBMK(data?.position?.amountTotalUSD || 0)}`
+                `$${formatNumberTBMK(
+                  data?.position?.uncollectedFeesTotalUSD || 0
+                )}`
               )}
               chip={
                 isPending
                   ? "Loading"
                   : data
-                    ? timeAgo(new Date(data.position.createdAt))
+                    ? `${formatNumberTBMK(data.position.apr * 100, 3)}%`
                     : "Error"
               }
-              chipClassName={getNumberColorClass(0, true)}
+              chipClassName={getNumberColorClass(
+                (data?.position?.apr || 0) * 100,
+                true
+              )}
               ticker0={getConditionalValue(data?.position.token0.symbol)}
               amount0={getConditionalValue(
-                formatNumberTBMK(data?.position?.amount0 || 0)
-              )}
-              amount0Chip={getConditionalValue(
-                formatNumberTBMK((data?.position?.ratio0 || 0) * 100, 3) + "%"
+                formatNumberTBMK(data?.position?.uncollectedFees0 || 0)
               )}
               ticker1={getConditionalValue(data?.position.token1.symbol)}
               amount1={getConditionalValue(
-                formatNumberTBMK(data?.position?.amount1 || 0)
-              )}
-              amount1Chip={getConditionalValue(
-                formatNumberTBMK((data?.position?.ratio1 || 0) * 100, 3) + "%"
+                formatNumberTBMK(data?.position?.uncollectedFees1 || 0)
               )}
             />
+            <Section
+              className="w-1/2 mt-1.5 md:mt-0 lg:w-1/3"
+              title={getConditionalValue(
+                `${formatNumberTBMK(data?.position?.priceCurrent || 0)}`
+              )}
+              titleClassName={
+                data &&
+                (data.position.priceCurrent > data.position.priceUpper ||
+                  data.position.priceCurrent < data.position.priceLower)
+                  ? "text-destructive"
+                  : ""
+              }
+              ticker0={"Min"}
+              amount0={getConditionalValue(
+                formatNumberTBMK(data?.position?.priceLower || 0)
+              )}
+              ticker1={"Max"}
+              amount1={getConditionalValue(
+                formatNumberTBMK(data?.position?.priceUpper || 0)
+              )}
+              hideIcons
+            />
           </div>
-          <Section
-            className="w-1/2 mt-1.5 md:mt-0 lg:w-1/3"
-            title={getConditionalValue(
-              `$${formatNumberTBMK(
-                data?.position?.uncollectedFeesTotalUSD || 0
-              )}`
-            )}
-            chip={
-              isPending
-                ? "Loading"
-                : data
-                  ? `${formatNumberTBMK(data.position.apr * 100, 3)}%`
-                  : "Error"
-            }
-            chipClassName={getNumberColorClass(
-              (data?.position?.apr || 0) * 100,
-              true
-            )}
-            ticker0={getConditionalValue(data?.position.token0.symbol)}
-            amount0={getConditionalValue(
-              formatNumberTBMK(data?.position?.uncollectedFees0 || 0)
-            )}
-            ticker1={getConditionalValue(data?.position.token1.symbol)}
-            amount1={getConditionalValue(
-              formatNumberTBMK(data?.position?.uncollectedFees1 || 0)
-            )}
-          />
-          <Section
-            className="w-1/2 mt-1.5 md:mt-0 lg:w-1/3"
-            title={getConditionalValue(
-              `${formatNumberTBMK(data?.position?.priceCurrent || 0)}`
-            )}
-            titleClassName={
-              data &&
-              (data.position.priceCurrent > data.position.priceUpper ||
-                data.position.priceCurrent < data.position.priceLower)
-                ? "text-destructive"
-                : ""
-            }
-            ticker0={"Min"}
-            amount0={getConditionalValue(
-              formatNumberTBMK(data?.position?.priceLower || 0)
-            )}
-            ticker1={"Max"}
-            amount1={getConditionalValue(
-              formatNumberTBMK(data?.position?.priceUpper || 0)
-            )}
-            hideIcons
-          />
         </div>
+        <Button
+          disabled={!data}
+          className="absolute top-1 right-1 size-8 p-0 group-data-[is-loading-error]/card:text-destructive"
+          variant="outline"
+          onClick={() => setIsSwapsOpen((prev) => !prev)}
+        >
+          <div
+            data-is-open={isSwapsOpen === true || undefined}
+            className="size-full flex items-center justify-center p-1.5 transition data-[is-open]:rotate-90"
+          >
+            {isPending ? (
+              <div className="size-full rounded animate-skeleton bg-foreground" />
+            ) : data && isSwapsOpen ? (
+              <XIcon className="size-full" />
+            ) : data && !isSwapsOpen ? (
+              <TableIcon className="size-full" />
+            ) : (
+              <TriangleAlertIcon className="size-full" />
+            )}
+          </div>
+        </Button>
+        {data && isSwapsOpen && (
+          <div className="w-full px-2 pb-2">
+            <AsyncDataTable
+              className="h-128 rounded-lg max-h-[calc((100svh-3rem)*0.4)]"
+              columnDefs={swapsColumnDefs}
+              data={swapsDataOrFallback}
+              isError={swapsIsError}
+              isPending={swapsIsPending}
+              isLoadingError={swapsIsLoadingError}
+              isRefetching={swapsIsRefetching}
+              page={swapsPage}
+              setPage={setSwapsPage}
+              sorting={swapsSorting}
+              setSorting={setSwapsSorting}
+            />
+          </div>
+        )}
         <Indicator
           isError={isError}
           isPending={isPending}
@@ -187,7 +418,7 @@ function Section({
   const errorClasses = "group-data-[is-loading-error]/card:text-destructive";
   return (
     <div className={cn("flex min-w-0 flex-col gap-3 p-1.5 md:p-3", className)}>
-      <div className="flex flex-row items-center gap-2 pl-1.5">
+      <div className="flex flex-row items-center gap-2 pl-1.5 pr-5">
         <p
           className={cn(
             "shrink min-w-0 whitespace-nowrap overflow-hidden overflow-ellipsis font-bold text-xl md:text-2xl leading-none md:leading-none",
@@ -305,13 +536,15 @@ function TickerTextAmount({
 function timeAgo(date: Date): string {
   const now = new Date();
   const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+  const formatNumberShort = (n: number) =>
+    n.toLocaleString("en-US", { maximumFractionDigits: 0 });
   const formatNumber = (n: number) =>
     n.toLocaleString("en-US", { maximumFractionDigits: 1 });
 
-  if (seconds < 60) return `${formatNumber(seconds)}s ago`;
+  if (seconds < 60) return `${formatNumberShort(seconds)}s ago`;
 
   const minutes = seconds / 60;
-  if (minutes < 60) return `${formatNumber(minutes)}m ago`;
+  if (minutes < 60) return `${formatNumberShort(minutes)}m ago`;
 
   const hours = minutes / 60;
   if (hours < 24) return `${formatNumber(hours)}h ago`;

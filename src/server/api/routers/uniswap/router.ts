@@ -7,6 +7,8 @@ import {
 import {
   TUniswapPoolsResult,
   TUniswapPoolsResultRaw,
+  TUniswapPoolSwapsResult,
+  TUniswapPoolSwapsResultRaw,
   TUniswapPositionResult,
   TUniswapPositionResultRaw,
   UniswapNetworkSchema,
@@ -23,7 +25,7 @@ export const uniswapRouter = createTRPCRouter({
       })
     )
     .query(async ({ input: { page, network } }) => {
-      const first = 200;
+      const limit = 200;
       const url = `${uniswapOkuUrl}/${network}/cush/topPools`;
       const body: { params: SearchFilterOpts[] } = {
         params: [
@@ -31,7 +33,7 @@ export const uniswapRouter = createTRPCRouter({
             fee_tiers: [],
             sort_by: "tvl_usd",
             sort_order: false,
-            result_size: first,
+            result_size: limit,
             result_offset: page - 1,
           },
         ],
@@ -76,6 +78,7 @@ export const uniswapRouter = createTRPCRouter({
                 name: pool.t1_name,
                 symbol: pool.t1_symbol,
               },
+              isTokensReversed: pool.is_preferred_token_order === false,
             };
           }),
       };
@@ -143,6 +146,7 @@ export const uniswapRouter = createTRPCRouter({
       const yearInMs = 1000 * 60 * 60 * 24 * 365;
       const editedRes: TUniswapPositionResult = {
         position: {
+          poolAddress: position.pool,
           nftUri,
           amount0: getDecimalAmount(
             position.current_position_values.amount0_current,
@@ -193,6 +197,58 @@ export const uniswapRouter = createTRPCRouter({
         },
       };
       return editedRes;
+    }),
+  getSwaps: publicProcedure
+    .input(
+      z.object({
+        network: UniswapNetworkSchema.optional().default("ethereum"),
+        poolAddress: z.string(),
+        page: z.number().int().positive().default(1),
+      })
+    )
+    .query(async ({ input: { network, poolAddress, page } }) => {
+      const limit = 100;
+      const url = `${uniswapOkuUrl}/${network}/cush/poolSwaps`;
+      const body = {
+        params: [poolAddress, limit, page - 1, true],
+      };
+      const [swapsRes] = await Promise.all([
+        fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        }),
+      ]);
+
+      if (!swapsRes.ok) {
+        throw new Error(`${swapsRes.status}: Failed to fetch Uniswap swaps`);
+      }
+      const [swapResJson]: [TUniswapPoolSwapsResultRaw] = await Promise.all([
+        swapsRes.json(),
+      ]);
+
+      if (swapResJson.error) {
+        throw new Error(`Swap result has error: ${swapResJson.error.message}`);
+      }
+
+      const swapsResult: TUniswapPoolSwapsResult = {
+        token0Address: swapResJson.result.token0,
+        token1Address: swapResJson.result.token1,
+        swaps: swapResJson.result.swaps.map((swap) => {
+          return {
+            amount0: swap.amount0,
+            amount1: swap.amount1,
+            amountUSD: swap.usd_value,
+            timestamp: swap.time,
+            type: swap.side === "sell" ? "sell" : "buy",
+            traderAddress: swap.recipient,
+          };
+        }),
+      };
+
+      return swapsResult;
     }),
 });
 

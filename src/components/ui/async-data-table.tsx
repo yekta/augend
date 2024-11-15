@@ -42,7 +42,7 @@ export type TAsyncDataTableColumnDef<T> = ColumnDef<T> & {
   headerType?: "regular" | "custom";
   headerAlignment?: "start" | "end";
   cellType?: "regular" | "change" | "custom";
-  cellClassName?: string;
+  cellClassName?: string | ((props: CellContext<T, unknown>) => string);
   headerClassName?: string;
 };
 
@@ -312,7 +312,9 @@ function getCell<T>({
             `${firstColumnClasses} ${lastColumnClasses} ${
               alignment === "start" ? "justify-start mr-auto ml-0" : ""
             }`,
-            columnDef.cellClassName
+            typeof columnDef.cellClassName === "function"
+              ? columnDef.cellClassName(props)
+              : columnDef.cellClassName
           )}
         />
       );
@@ -328,7 +330,9 @@ function getCell<T>({
           `${firstColumnClasses} ${lastColumnClasses} ${
             alignment === "start" ? "justify-start mr-auto ml-0 text-left" : ""
           }`,
-          columnDef.cellClassName
+          typeof columnDef.cellClassName === "function"
+            ? columnDef.cellClassName(props)
+            : columnDef.cellClassName
         )}
         classNameParagraph={alignment === "start" ? "text-left" : undefined}
       >

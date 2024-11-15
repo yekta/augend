@@ -48,6 +48,7 @@ const dataFallback: TUniswapPoolsResult = {
       name: "Ethereum",
       symbol: "WETH",
     },
+    isTokensReversed: false,
   })),
 };
 

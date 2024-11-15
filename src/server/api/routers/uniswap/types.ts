@@ -1,5 +1,8 @@
-import type { AnalyticsPosition, PoolSummary } from "@gfxlabs/oku";
+import type { AnalyticsPosition, PoolSummary, Swap } from "@gfxlabs/oku";
 import { z } from "zod";
+
+export const UniswapNetworkSchema = z.enum(["ethereum"]);
+export type TUniswapNetwork = z.infer<typeof UniswapNetworkSchema>;
 
 export type TUniswapPoolsResultRaw = {
   result: {
@@ -7,15 +10,6 @@ export type TUniswapPoolsResultRaw = {
   };
   error?: { code: number; message: string };
 };
-
-export type TUniswapPositionResultResultRaw = {
-  result: {
-    pools: PoolSummary[];
-  };
-};
-
-export const UniswapNetworkSchema = z.enum(["ethereum"]);
-export type TUniswapNetwork = z.infer<typeof UniswapNetworkSchema>;
 
 export type TUniswapPoolsResult = {
   pools: {
@@ -30,6 +24,7 @@ export type TUniswapPoolsResult = {
     apr24h: number;
     token0: TToken;
     token1: TToken;
+    isTokensReversed: boolean;
   }[];
 };
 
@@ -40,6 +35,7 @@ export type TUniswapPositionResultRaw = {
 
 export type TUniswapPositionResult = {
   position: {
+    poolAddress: string;
     amount0: number;
     amount1: number;
     amount0USD: number;
@@ -61,6 +57,28 @@ export type TUniswapPositionResult = {
     createdAt: number;
     nftUri: string;
   };
+};
+
+export type TUniswapPoolSwapsResultRaw = {
+  result: {
+    token0: string;
+    token1: string;
+    swaps: Swap[];
+  };
+  error?: { code: number; message: string };
+};
+
+export type TUniswapPoolSwapsResult = {
+  token0Address: string;
+  token1Address: string;
+  swaps: {
+    amount0: number;
+    amount1: number;
+    amountUSD: number;
+    timestamp: number;
+    type: "sell" | "buy";
+    traderAddress: string;
+  }[];
 };
 
 type TToken = {
