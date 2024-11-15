@@ -29,14 +29,17 @@ import { useMemo, useState } from "react";
 
 type TSwapData = TUniswapPoolSwapsResult["swaps"][number];
 
-const dataFallback: TSwapData[] = Array.from({ length: 100 }, (_, i) => ({
-  amount0: 10,
-  amount1: 10,
-  amountUSD: 100,
-  timestamp: Date.now(),
-  type: i % 2 === 0 ? "buy" : "sell",
-  traderAddress: "0x11111",
-}));
+const swapsTableDataFallback: TSwapData[] = Array.from(
+  { length: 100 },
+  (_, i) => ({
+    amount0: 10,
+    amount1: 10,
+    amountUSD: 100,
+    timestamp: Date.now(),
+    type: i % 2 === 0 ? "buy" : "sell",
+    traderAddress: "0x11111",
+  })
+);
 
 const networkToAddressUrl: Record<TUniswapNetwork, (s: string) => string> = {
   ethereum: (address: string) => `https://etherscan.io/address/${address}`,
@@ -87,10 +90,10 @@ export default function UniswapPositionCard({
     }
   );
 
-  const swapsDataOrFallback: TSwapData[] = useMemo(() => {
-    if (!swapsData || !data) return dataFallback;
+  const swapsTableDataOrFallback: TSwapData[] = useMemo(() => {
+    if (!swapsData || !data) return swapsTableDataFallback;
     const isReversed =
-      data && swapsData && data.position.token0.id !== swapsData.token0Address
+      data && swapsData && data.position.token0.id !== swapsData.pool.token0.id
         ? true
         : false;
     if (isReversed) {
@@ -207,11 +210,9 @@ export default function UniswapPositionCard({
                 group-data-[is-pending]/table:text-transparent group-data-[is-pending]/table:animate-skeleton group-data-[is-pending]/table:bg-foreground
                 group-data-[is-pending]/table:rounded"
               >
-                {swapsIsPending
-                  ? "Loading"
-                  : swapsData
-                    ? row.original.traderAddress.slice(0, 6)
-                    : "Error"}
+                {getConditionalValueSwaps(
+                  row.original.traderAddress.slice(0, 6)
+                )}
               </p>
             </Comp>
           );
@@ -229,6 +230,12 @@ export default function UniswapPositionCard({
   function getConditionalValue<T>(value: T) {
     if (isPending) return "Loading";
     if (data && value !== undefined) return value;
+    return "Error";
+  }
+
+  function getConditionalValueSwaps<T>(value: T) {
+    if (swapsIsPending) return "Loading";
+    if (swapsData && value !== undefined) return value;
     return "Error";
   }
 
@@ -252,11 +259,11 @@ export default function UniswapPositionCard({
             uri={data?.position.nftUri}
             className="h-36 px-4 py-3.25 -mr-4 hidden lg:block"
           />
-          <div className="flex-1 flex flex-row flex-wrap items-end p-1.5 md:p-3 min-w-0">
+          <div className="flex-1 flex flex-row flex-wrap items-end p-1.5 md:p-2 lg:p-3 min-w-0">
             <div className="w-full overflow-hidden mt-0.5 md:mt-0 lg:w-1/3 flex flex-row items-center justify-start">
               <NFTImageLink
                 href={href || "placeholder"}
-                className="h-28 shrink-0 md:h-30 px-2 md:px-3 py-1.5 lg:hidden"
+                className="h-28 shrink-0 md:h-32 px-2 md:px-2 py-1.5 lg:hidden"
                 uri={data?.position.nftUri}
               />
               <Section
@@ -264,13 +271,9 @@ export default function UniswapPositionCard({
                 title={getConditionalValue(
                   `$${formatNumberTBMK(data?.position?.amountTotalUSD || 0)}`
                 )}
-                chip={
-                  isPending
-                    ? "Loading"
-                    : data
-                      ? timeAgo(new Date(data.position.createdAt))
-                      : "Error"
-                }
+                chip={getConditionalValue(
+                  timeAgo(new Date(data?.position.createdAt || 1731679718000))
+                )}
                 chipClassName={getNumberColorClass(0, true)}
                 ticker0={getConditionalValue(data?.position.token0.symbol)}
                 amount0={getConditionalValue(
@@ -289,19 +292,15 @@ export default function UniswapPositionCard({
               />
             </div>
             <Section
-              className="w-1/2 mt-1.5 md:mt-0 lg:w-1/3"
+              className="w-1/2 mt-1.5 lg:mt-0 lg:w-1/3"
               title={getConditionalValue(
                 `$${formatNumberTBMK(
                   data?.position?.uncollectedFeesTotalUSD || 0
                 )}`
               )}
-              chip={
-                isPending
-                  ? "Loading"
-                  : data
-                    ? `${formatNumberTBMK(data.position.apr * 100, 3)}%`
-                    : "Error"
-              }
+              chip={getConditionalValue(
+                `${formatNumberTBMK((data?.position.apr || 0) * 100, 3)}%`
+              )}
               chipClassName={getNumberColorClass(
                 data?.position?.apr || 0,
                 true
@@ -316,7 +315,7 @@ export default function UniswapPositionCard({
               )}
             />
             <Section
-              className="w-1/2 mt-1.5 md:mt-0 lg:w-1/3"
+              className="w-1/2 mt-1.5 lg:mt-0 lg:w-1/3"
               title={getConditionalValue(
                 `${formatNumberTBMK(data?.position?.priceCurrent || 0)}`
               )}
@@ -361,20 +360,54 @@ export default function UniswapPositionCard({
           </div>
         </Button>
         {data && isSwapsOpen && (
-          <div className="w-full px-3 pb-3 md:px-2 md:pb-2">
-            <AsyncDataTable
-              className="h-112 rounded-lg max-h-[calc((100svh-3rem)*0.5)]"
-              columnDefs={swapsColumnDefs}
-              data={swapsDataOrFallback}
-              isError={swapsIsError}
-              isPending={swapsIsPending}
-              isLoadingError={swapsIsLoadingError}
-              isRefetching={swapsIsRefetching}
-              page={swapsPage}
-              setPage={setSwapsPage}
-              sorting={swapsSorting}
-              setSorting={setSwapsSorting}
-            />
+          <div
+            data-is-loading-error={(swapsIsLoadingError && true) || undefined}
+            data-is-pending={(swapsIsPending && true) || undefined}
+            data-has-data={
+              (!swapsIsPending &&
+                !swapsIsLoadingError &&
+                swapsData !== undefined) ||
+              undefined
+            }
+            className="w-full px-3 pb-3 md:px-2 md:pb-2 group/stats"
+          >
+            {/* Stats */}
+            <div className="w-full flex flex-row justify-start items-end pb-4 pt-2 whitespace-nowrap overflow-auto">
+              <StatColumn
+                title="TVL"
+                value={getConditionalValueSwaps(
+                  `$${formatNumberTBMK(swapsData?.pool.tvlUSD || 0)}`
+                )}
+              />
+              <StatColumn
+                title="Vol (24H)"
+                value={getConditionalValueSwaps(
+                  `$${formatNumberTBMK(swapsData?.pool.volume24hUSD || 0)}`
+                )}
+              />
+              <StatColumn
+                title="Fees (24H)"
+                value={getConditionalValueSwaps(
+                  `$${formatNumberTBMK(swapsData?.pool.fees24hUSD || 0)}`
+                )}
+              />
+            </div>
+            {/* Table */}
+            <div className="w-full flex flex-col">
+              <AsyncDataTable
+                className="h-112 rounded-lg max-h-[calc((100svh-3rem)*0.5)]"
+                columnDefs={swapsColumnDefs}
+                data={swapsTableDataOrFallback}
+                isError={swapsIsError}
+                isPending={swapsIsPending}
+                isLoadingError={swapsIsLoadingError}
+                isRefetching={swapsIsRefetching}
+                page={swapsPage}
+                setPage={setSwapsPage}
+                sorting={swapsSorting}
+                setSorting={setSwapsSorting}
+              />
+            </div>
           </div>
         )}
         <Indicator
@@ -419,8 +452,13 @@ function Section({
     "group-data-[is-pending]/card:text-transparent group-data-[is-pending]/card:animate-skeleton group-data-[is-pending]/card:bg-foreground";
   const errorClasses = "group-data-[is-loading-error]/card:text-destructive";
   return (
-    <div className={cn("flex min-w-0 flex-col gap-3 p-1.5 md:p-3", className)}>
-      <div className="flex flex-row items-center gap-2 pl-1.5 pr-5">
+    <div
+      className={cn(
+        "flex min-w-0 flex-col gap-3 p-1.5 md:p-2 lg:p-3",
+        className
+      )}
+    >
+      <div className="flex flex-row items-center gap-2 pl-1 pr-5">
         <p
           className={cn(
             "shrink min-w-0 whitespace-nowrap overflow-hidden overflow-ellipsis font-bold text-xl md:text-2xl leading-none md:leading-none",
@@ -599,5 +637,27 @@ function NFTImageLink({
         group-active/link:scale-100 group-active/link:opacity-100"
       />
     </Link>
+  );
+}
+
+function StatColumn({ title, value }: { title: string; value: string }) {
+  return (
+    <div className="px-3 first-of-type:pl-1.5 last-of-type:pr-1.5 md:first-of-type:pl-3 md:last-of-type:pr-3">
+      <div className="flex flex-col items-start gap-1.5 flex-shrink min-w-[5rem] md:min-w-[6rem]">
+        <p
+          className="shrink min-w-0 overflow-hidden overflow-ellipsis whitespace-nowrap text-xs md:text-sm font-medium text-muted-foreground leading-none md:leading-none
+          group-data-[is-pending]/stats:text-transparent group-data-[is-pending]/stats:animate-skeleton group-data-[is-pending]/stats:bg-muted-foreground group-data-[is-pending]/stats:rounded"
+        >
+          {title}
+        </p>
+        <p
+          className="shrink min-w-0 overflow-hidden overflow-ellipsis whitespace-nowrap text-base md:text-lg font-bold leading-none md:leading-none
+          group-data-[is-pending]/stats:text-transparent group-data-[is-pending]/stats:animate-skeleton group-data-[is-pending]/stats:bg-foreground group-data-[is-pending]/stats:rounded md:group-data-[is-pending]/stats:rounded-md
+          group-data-[is-loading-error]/stats:text-destructive"
+        >
+          {value}
+        </p>
+      </div>
+    </div>
   );
 }

@@ -209,10 +209,21 @@ export const uniswapRouter = createTRPCRouter({
     .query(async ({ input: { network, poolAddress, page } }) => {
       const limit = 100;
       const url = `${uniswapOkuUrl}/${network}/cush/poolSwaps`;
+      const poolUrl = `${uniswapOkuUrl}/${network}/cush/searchPoolsByAddress`;
       const body = {
         params: [poolAddress, limit, page - 1, false],
       };
-      const [swapsRes] = await Promise.all([
+      const poolBody = {
+        params: [
+          poolAddress,
+          {
+            result_size: 2,
+            sort_by: "tvl_usd",
+            sort_order: false,
+          },
+        ],
+      };
+      const [swapsRes, poolRes] = await Promise.all([
         fetch(url, {
           method: "POST",
           headers: {
@@ -220,23 +231,64 @@ export const uniswapRouter = createTRPCRouter({
           },
           body: JSON.stringify(body),
         }),
+        fetch(poolUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(poolBody),
+        }),
       ]);
 
       if (!swapsRes.ok) {
         throw new Error(`${swapsRes.status}: Failed to fetch Uniswap swaps`);
       }
-      const [swapResJson]: [TUniswapPoolSwapsResultRaw] = await Promise.all([
-        swapsRes.json(),
-      ]);
-
-      if (swapResJson.error) {
-        throw new Error(`Swap result has error: ${swapResJson.error.message}`);
+      if (!poolRes.ok) {
+        throw new Error(`${poolRes.status}: Failed to fetch Uniswap pool`);
       }
 
+      const [swapsResJson, poolResJson]: [
+        TUniswapPoolSwapsResultRaw,
+        TUniswapPoolsResultRaw,
+      ] = await Promise.all([swapsRes.json(), poolRes.json()]);
+
+      if (swapsResJson.error) {
+        throw new Error(`Swap result has error: ${swapsResJson.error.message}`);
+      }
+
+      if (poolResJson.error) {
+        throw new Error(`Pool result has error: ${poolResJson.error.message}`);
+      }
+
+      const pool = poolResJson.result.pools.find(
+        (p) => p.address === poolAddress
+      );
+      if (!pool) {
+        throw new Error(`Pool not found with address: ${poolAddress}`);
+      }
+
+      const isPoolReversed = pool.t0 !== swapsResJson.result.token0;
+
       const swapsResult: TUniswapPoolSwapsResult = {
-        token0Address: swapResJson.result.token0,
-        token1Address: swapResJson.result.token1,
-        swaps: swapResJson.result.swaps
+        pool: {
+          tvlUSD: pool.tvl_usd,
+          tvl0USD: isPoolReversed ? pool.t1_tvl_usd : pool.t0_tvl_usd,
+          tvl1USD: isPoolReversed ? pool.t0_tvl_usd : pool.t1_tvl_usd,
+          volume24hUSD: pool.t0_volume_usd,
+          fees24hUSD: pool.total_fees_usd,
+          address: poolResJson.result.pools[0].address,
+          token0: {
+            id: isPoolReversed ? pool.t1 : pool.t0,
+            name: isPoolReversed ? pool.t1_name : pool.t0_name,
+            symbol: isPoolReversed ? pool.t1_symbol : pool.t0_symbol,
+          },
+          token1: {
+            id: isPoolReversed ? pool.t0 : pool.t1,
+            name: isPoolReversed ? pool.t0_name : pool.t1_name,
+            symbol: isPoolReversed ? pool.t0_symbol : pool.t1_symbol,
+          },
+        },
+        swaps: swapsResJson.result.swaps
           .sort((a, b) => b.time - a.time)
           .map((swap) => {
             return {

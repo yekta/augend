@@ -69,8 +69,6 @@ export type TUniswapPoolSwapsResultRaw = {
 };
 
 export type TUniswapPoolSwapsResult = {
-  token0Address: string;
-  token1Address: string;
   swaps: {
     amount0: number;
     amount1: number;
@@ -79,6 +77,16 @@ export type TUniswapPoolSwapsResult = {
     type: "sell" | "buy";
     traderAddress: string;
   }[];
+  pool: {
+    address: string;
+    tvlUSD: number;
+    volume24hUSD: number;
+    fees24hUSD: number;
+    tvl0USD: number;
+    tvl1USD: number;
+    token0: TToken;
+    token1: TToken;
+  };
 };
 
 type TToken = {
