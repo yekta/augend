@@ -363,7 +363,7 @@ export default function UniswapPositionCard({
         {data && isSwapsOpen && (
           <div className="w-full px-3 pb-3 md:px-2 md:pb-2">
             <AsyncDataTable
-              className="h-128 rounded-lg max-h-[calc((100svh-3rem)*0.4)]"
+              className="h-112 rounded-lg max-h-[calc((100svh-3rem)*0.5)]"
               columnDefs={swapsColumnDefs}
               data={swapsDataOrFallback}
               isError={swapsIsError}
