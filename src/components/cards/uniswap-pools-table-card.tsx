@@ -227,7 +227,7 @@ export default function UniswapPoolsTableCard({
       },
       {
         accessorKey: "volume24H",
-        header: "Vol 24H",
+        header: "Vol (24H)",
         cell: ({ row }) =>
           `${convertCurrency.symbol}${formatNumberTBMK(
             row.original.volume24hUSD
@@ -236,7 +236,7 @@ export default function UniswapPoolsTableCard({
       },
       {
         accessorKey: "volume7D",
-        header: "Vol 7D",
+        header: "Vol (7D)",
         cell: ({ row }) =>
           `${convertCurrency.symbol}${formatNumberTBMK(
             row.original.volume7dUSD
