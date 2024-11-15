@@ -386,7 +386,7 @@ export default function UniswapPositionCard({
           </div>
         </Button>
         {data && isSwapsOpen && (
-          <div className="w-full  border-t">
+          <div className="w-full border-t">
             {/* Stats */}
             <div
               data-is-loading-error={(statsIsLoadingError && true) || undefined}
