@@ -397,7 +397,7 @@ export default function UniswapPositionCard({
                   statsData !== undefined) ||
                 undefined
               }
-              className="w-full group/stats px-3 md:px-2 flex flex-row justify-start items-end py-4 whitespace-nowrap overflow-auto relative"
+              className="w-full group/stats px-3 md:px-2 flex flex-row justify-start items-end pt-3.5 pb-4 whitespace-nowrap overflow-auto relative"
             >
               <StatColumn
                 title="TVL"
