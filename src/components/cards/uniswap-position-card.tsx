@@ -144,6 +144,8 @@ export default function UniswapPositionCard({
         isPinnedLeft: true,
         sortDescFirst: true,
         cell: ({ row }) => timeAgo(new Date(row.original.timestamp)),
+        cellParagraphClassName:
+          "text-muted-foreground group-data-[is-pending]/table:bg-muted-foreground",
         sortingFn: (rowA, rowB, _columnId) => {
           const a = rowA.original.timestamp;
           const b = rowB.original.timestamp;

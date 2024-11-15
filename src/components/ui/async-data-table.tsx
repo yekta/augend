@@ -43,6 +43,9 @@ export type TAsyncDataTableColumnDef<T> = ColumnDef<T> & {
   headerAlignment?: "start" | "end";
   cellType?: "regular" | "change" | "custom";
   cellClassName?: string | ((props: CellContext<T, unknown>) => string);
+  cellParagraphClassName?:
+    | string
+    | ((props: CellContext<T, unknown>) => string);
   headerClassName?: string;
 };
 
@@ -334,7 +337,12 @@ function getCell<T>({
             ? columnDef.cellClassName(props)
             : columnDef.cellClassName
         )}
-        classNameParagraph={alignment === "start" ? "text-left" : undefined}
+        classNameParagraph={cn(
+          alignment === "start" ? "text-left" : undefined,
+          typeof columnDef.cellParagraphClassName === "function"
+            ? columnDef.cellParagraphClassName(props)
+            : columnDef.cellParagraphClassName
+        )}
       >
         {cell(props)}
       </RegularColumn>

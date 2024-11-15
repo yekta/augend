@@ -4,16 +4,19 @@ import { ReactNode, useEffect, useState } from "react";
 import React, { createContext, useContext } from "react";
 
 function detectTouchDevice() {
-  return "ontouchstart" in window || navigator.maxTouchPoints > 0;
+  return (
+    typeof window !== "undefined" &&
+    ("ontouchstart" in window || navigator.maxTouchPoints > 0)
+  );
 }
 
 export function useIsTouchDevice() {
-  const [isTouchDevice, setIsTouchDevice] = useState(detectTouchDevice());
+  const [isTouchDevice, setIsTouchDevice] = useState(false); // Default to false
 
   useEffect(() => {
     function onResize() {
       const isTouch = detectTouchDevice();
-      if (document && document.body) {
+      if (typeof document !== "undefined" && document.body) {
         document.body.classList.toggle("not-touch", !isTouch);
       }
       setIsTouchDevice(isTouch);
@@ -28,12 +31,17 @@ export function useIsTouchDevice() {
       timeoutId = setTimeout(onResize, debounceTimeout);
     };
 
-    window.addEventListener("resize", debouncedResize);
-    onResize();
+    // Only add listeners on the client
+    if (typeof window !== "undefined") {
+      onResize(); // Run on initial mount
+      window.addEventListener("resize", debouncedResize);
+    }
 
     return () => {
       if (timeoutId) clearTimeout(timeoutId);
-      window.removeEventListener("resize", debouncedResize);
+      if (typeof window !== "undefined") {
+        window.removeEventListener("resize", debouncedResize);
+      }
     };
   }, []);
 
