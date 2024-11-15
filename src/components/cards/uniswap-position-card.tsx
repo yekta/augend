@@ -369,10 +369,10 @@ export default function UniswapPositionCard({
                 swapsData !== undefined) ||
               undefined
             }
-            className="w-full px-3 pb-3 md:px-2 md:pb-2 group/stats"
+            className="w-full group/stats border-t"
           >
             {/* Stats */}
-            <div className="w-full flex flex-row justify-start items-end pb-4 pt-2 whitespace-nowrap overflow-auto">
+            <div className="w-full px-3 md:px-2 flex flex-row justify-start items-end py-4 whitespace-nowrap overflow-auto">
               <StatColumn
                 title="TVL"
                 value={getConditionalValueSwaps(
@@ -395,7 +395,7 @@ export default function UniswapPositionCard({
             {/* Table */}
             <div className="w-full flex flex-col">
               <AsyncDataTable
-                className="h-112 rounded-lg max-h-[calc((100svh-3rem)*0.5)]"
+                className="h-112 rounded-none border-t border-b-0 border-l-0 border-r-0 max-h-[calc((100svh-3rem)*0.5)]"
                 columnDefs={swapsColumnDefs}
                 data={swapsTableDataOrFallback}
                 isError={swapsIsError}
