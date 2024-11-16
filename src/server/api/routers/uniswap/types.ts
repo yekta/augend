@@ -46,13 +46,13 @@ export type TUniswapPositionResult = {
     amount1USD: number;
     amountTotalUSD: number;
     apr: number;
-    ratio0: number;
-    ratio1: number;
     priceLower: number;
     priceUpper: number;
     priceCurrent: number;
     uncollectedFees0: number;
     uncollectedFees1: number;
+    uncollectedFees0USD: number;
+    uncollectedFees1USD: number;
     uncollectedFeesTotalUSD: number;
     deposit0: number;
     deposit1: number;

@@ -182,14 +182,26 @@ export default function UniswapPositionCard({
         },
       },
       {
-        accessorKey: "usd",
-        header: "USD",
+        accessorKey: "amount",
+        header: "Amount",
         cellClassName: ({ row }) =>
           getNumberColorClass(row.original.amountUSD / 1000),
         cell: ({ row }) => `$${formatNumberTBMK(row.original.amountUSD)}`,
         sortingFn: (rowA, rowB, _columnId) => {
           const a = rowA.original.amountUSD;
           const b = rowB.original.amountUSD;
+          if (a === undefined || b === undefined) return 0;
+          return a - b;
+        },
+      },
+      {
+        accessorKey: "price",
+        header: "Price",
+        cell: ({ row }) =>
+          formatNumberTBMK(row.original.amount1 / row.original.amount0),
+        sortingFn: (rowA, rowB, _columnId) => {
+          const a = rowA.original.amount1 / rowA.original.amount0;
+          const b = rowB.original.amount1 / rowB.original.amount0;
           if (a === undefined || b === undefined) return 0;
           return a - b;
         },
@@ -303,6 +315,7 @@ export default function UniswapPositionCard({
                 className="h-28 shrink-0 md:h-32 px-2 md:px-2 py-1.5 lg:hidden"
                 uri={data?.position.nftUri}
               />
+              {/* Balance */}
               <Section
                 className="flex-1 overflow-hidden"
                 title={getConditionalValue(
@@ -317,17 +330,29 @@ export default function UniswapPositionCard({
                   formatNumberTBMK(data?.position?.amount0 || 0)
                 )}
                 amount0Chip={getConditionalValue(
-                  formatNumberTBMK((data?.position?.ratio0 || 0) * 100, 3) + "%"
+                  formatNumberTBMK(
+                    ((data?.position?.amount0USD || 0) /
+                      (data?.position?.amountTotalUSD || 1)) *
+                      100,
+                    3
+                  ) + "%"
                 )}
                 ticker1={getConditionalValue(data?.position.token1.symbol)}
                 amount1={getConditionalValue(
                   formatNumberTBMK(data?.position?.amount1 || 0)
                 )}
                 amount1Chip={getConditionalValue(
-                  formatNumberTBMK((data?.position?.ratio1 || 0) * 100, 3) + "%"
+                  formatNumberTBMK(
+                    (((data?.position?.amountTotalUSD || 0) -
+                      (data?.position?.amount0USD || 1)) /
+                      (data?.position?.amountTotalUSD || 1)) *
+                      100,
+                    3
+                  ) + "%"
                 )}
               />
             </div>
+            {/* Fees */}
             <Section
               className="w-1/2 mt-1.5 lg:mt-0 lg:w-1/3"
               title={getConditionalValue(
@@ -346,12 +371,31 @@ export default function UniswapPositionCard({
               amount0={getConditionalValue(
                 formatNumberTBMK(data?.position?.uncollectedFees0 || 0)
               )}
+              /* amount0Chip={getConditionalValue(
+                `${formatNumberTBMK(
+                  ((data?.position?.uncollectedFees0USD || 0.5) /
+                    (data?.position?.uncollectedFeesTotalUSD || 1)) *
+                    100,
+                  3
+                )}%`
+              )} */
               ticker1={getConditionalValue(data?.position.token1.symbol)}
               amount1={getConditionalValue(
                 formatNumberTBMK(data?.position?.uncollectedFees1 || 0)
               )}
+              /* amount1Chip={getConditionalValue(
+                `${formatNumberTBMK(
+                  (((data?.position?.uncollectedFeesTotalUSD || 1) -
+                    (data?.position?.uncollectedFees0USD || 0.5)) /
+                    (data?.position?.uncollectedFeesTotalUSD || 1)) *
+                    100,
+                  3
+                )}%`
+              )} */
             />
+            {/* Prices */}
             <Section
+              hideIcons
               className="w-1/2 mt-1.5 lg:mt-0 lg:w-1/3"
               title={getConditionalValue(
                 `${formatNumberTBMK(data?.position?.priceCurrent || 0)}`
@@ -363,15 +407,52 @@ export default function UniswapPositionCard({
                   ? "text-destructive"
                   : ""
               }
-              ticker0={"Min"}
+              ticker0={
+                "Min" +
+                ` | ${getConditionalValue(
+                  `${
+                    data?.position?.priceCurrent ||
+                    100 >= (data?.position?.priceLower || 50)
+                      ? "-"
+                      : "+"
+                  }` +
+                    formatNumberTBMK(
+                      Math.abs(
+                        (((data?.position?.priceCurrent || 100) -
+                          (data?.position?.priceLower || 50)) /
+                          (data?.position?.priceCurrent || 100)) *
+                          100
+                      ),
+                      3
+                    ) +
+                    "%"
+                )}`
+              }
               amount0={getConditionalValue(
                 formatNumberTBMK(data?.position?.priceLower || 0)
               )}
-              ticker1={"Max"}
+              ticker1={
+                "Max" +
+                ` | ${getConditionalValue(
+                  `${
+                    (data?.position?.priceUpper || 100) >=
+                    (data?.position?.priceCurrent || 50)
+                      ? "+"
+                      : "-"
+                  }` +
+                    formatNumberTBMK(
+                      (((data?.position?.priceUpper || 100) -
+                        (data?.position?.priceCurrent || 50)) /
+                        (data?.position?.priceCurrent || 100)) *
+                        100,
+                      3
+                    ) +
+                    "%"
+                )}`
+              }
               amount1={getConditionalValue(
                 formatNumberTBMK(data?.position?.priceUpper || 0)
               )}
-              hideIcons
             />
           </div>
         </div>
@@ -408,7 +489,7 @@ export default function UniswapPositionCard({
                   statsData !== undefined) ||
                 undefined
               }
-              className="w-full group/stats px-3 md:px-2 flex flex-row justify-start items-stretch pt-3.5 pb-4 whitespace-nowrap overflow-auto relative"
+              className="w-full group/stats px-4 md:px-5 flex flex-row justify-start items-stretch pt-3.5 pb-4 whitespace-nowrap overflow-auto relative"
             >
               <StatColumn
                 title="TVL"
@@ -468,7 +549,6 @@ export default function UniswapPositionCard({
                         </div>
                       </div>
                     </div>
-
                     <BalanceColumn
                       ticker={statsData?.pools[0].token1.symbol}
                       value={getConditionalValueStats(
@@ -477,6 +557,17 @@ export default function UniswapPositionCard({
                     />
                   </div>
                 }
+              />
+              <StatColumn
+                title="APR (24H)"
+                value={getConditionalValueStats(
+                  `${formatNumberTBMK(
+                    (statsData?.pools[0].apr24h || 0) * 100
+                  )}%`
+                )}
+                valueClassName={getNumberColorClass(
+                  statsData?.pools[0].apr24h || 0
+                )}
               />
               <StatColumn
                 title="Fees (24H)"
@@ -669,30 +760,59 @@ function TickerTextAmount({
   );
 }
 
-function timeAgo(date: Date): string {
-  const now = new Date();
-  const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-  const formatNumberShort = (n: number) =>
-    n.toLocaleString("en-US", { maximumFractionDigits: 0 });
-  const formatNumber = (n: number) =>
-    n.toLocaleString("en-US", { maximumFractionDigits: 1 });
+function StatColumn({
+  title,
+  value,
+  valueClassName,
+}: {
+  title: string;
+  value: string | ReactNode;
+  valueClassName?: string;
+}) {
+  return (
+    <div className="px-3 md:px-4 lg:px-5 flex flex-col first-of-type:pl-0 last-of-type:pr-0">
+      <div className="flex flex-1 flex-col items-start gap-1.5 flex-shrink">
+        <p
+          className="shrink min-w-0 overflow-hidden overflow-ellipsis whitespace-nowrap text-xs md:text-sm font-medium text-muted-foreground leading-none md:leading-none
+          group-data-[is-pending]/stats:text-transparent group-data-[is-pending]/stats:animate-skeleton group-data-[is-pending]/stats:bg-muted-foreground group-data-[is-pending]/stats:rounded"
+        >
+          {title}
+        </p>
+        <div className="shrink min-w-0 flex-1 overflow-hidden flex flex-row items-center">
+          {typeof value !== "string" && value}
+          {typeof value === "string" && (
+            <p
+              data-is-node={typeof value !== "string" || undefined}
+              className={cn(
+                "shrink min-w-0 overflow-hidden overflow-ellipsis whitespace-nowrap text-base md:text-lg font-bold leading-none md:leading-none group-data-[is-pending]/stats:text-transparent group-data-[is-pending]/stats:animate-skeleton group-data-[is-pending]/stats:bg-foreground group-data-[is-pending]/stats:rounded md:group-data-[is-pending]/stats:rounded-md group-data-[is-loading-error]/stats:text-destructive",
+                valueClassName
+              )}
+            >
+              {typeof value === "string" ? value : "A"}
+            </p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
 
-  if (seconds < 60) return `${formatNumberShort(seconds)}s ago`;
-
-  const minutes = seconds / 60;
-  if (minutes < 60) return `${formatNumberShort(minutes)}m ago`;
-
-  const hours = minutes / 60;
-  if (hours < 24) return `${formatNumber(hours)}h ago`;
-
-  const days = hours / 24;
-  if (days < 30) return `${formatNumber(days)}d ago`;
-
-  const months = days / 30;
-  if (months < 12) return `${formatNumber(months)}M ago`;
-
-  const years = days / 365;
-  return `${formatNumber(years)}y ago`;
+function BalanceColumn({ ticker, value }: { ticker?: string; value: string }) {
+  return (
+    <div className="flex items-center gap-1 md:gap-1.25">
+      <div className="size-3.5 md:size-4 -my-1 bg-border rounded-full text-foreground p-0.5 group-data-[is-pending]/stats:animate-skeleton group-data-[is-pending]/stats:bg-foreground group-data-[is-loading-error]/stats:bg-destructive">
+        <CryptoIcon
+          className="size-full group-data-[is-pending]/stats:opacity-0 group-data-[is-loading-error]/stats:opacity-0"
+          ticker={ticker}
+        />
+      </div>
+      <p
+        className={`leading-none font-bold text-xs md:text-sm md:leading-none ${pendingClassesStats} ${errorClassesStats}`}
+      >
+        {value}
+      </p>
+    </div>
+  );
 }
 
 function NFTImageLink({
@@ -736,54 +856,28 @@ function NFTImageLink({
   );
 }
 
-function StatColumn({
-  title,
-  value,
-}: {
-  title: string;
-  value: string | ReactNode;
-}) {
-  return (
-    <div className="px-3 flex flex-col first-of-type:pl-1.5 last-of-type:pr-1.5 md:first-of-type:pl-3 md:last-of-type:pr-3">
-      <div className="flex flex-1 flex-col items-start gap-1.5 flex-shrink min-w-[4rem] md:min-w-[6rem]">
-        <p
-          className="shrink min-w-0 overflow-hidden overflow-ellipsis whitespace-nowrap text-xs md:text-sm font-medium text-muted-foreground leading-none md:leading-none
-          group-data-[is-pending]/stats:text-transparent group-data-[is-pending]/stats:animate-skeleton group-data-[is-pending]/stats:bg-muted-foreground group-data-[is-pending]/stats:rounded"
-        >
-          {title}
-        </p>
-        <div className="shrink min-w-0 flex-1 overflow-hidden flex flex-row items-center">
-          {typeof value !== "string" && value}
-          {typeof value === "string" && (
-            <p
-              data-is-node={typeof value !== "string" || undefined}
-              className={cn(
-                "shrink min-w-0 overflow-hidden overflow-ellipsis whitespace-nowrap text-base md:text-lg font-bold leading-none md:leading-none group-data-[is-pending]/stats:text-transparent group-data-[is-pending]/stats:animate-skeleton group-data-[is-pending]/stats:bg-foreground group-data-[is-pending]/stats:rounded md:group-data-[is-pending]/stats:rounded-md group-data-[is-loading-error]/stats:text-destructive"
-              )}
-            >
-              {typeof value === "string" ? value : "A"}
-            </p>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
+function timeAgo(date: Date): string {
+  const now = new Date();
+  const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+  const formatNumberShort = (n: number) =>
+    n.toLocaleString("en-US", { maximumFractionDigits: 0 });
+  const formatNumber = (n: number) =>
+    n.toLocaleString("en-US", { maximumFractionDigits: 1 });
 
-function BalanceColumn({ ticker, value }: { ticker?: string; value: string }) {
-  return (
-    <div className="flex items-center gap-1 md:gap-1.25">
-      <div className="size-3.5 md:size-4 -my-1 bg-border rounded-full text-foreground p-0.5 group-data-[is-pending]/stats:animate-skeleton group-data-[is-pending]/stats:bg-foreground group-data-[is-loading-error]/stats:bg-destructive">
-        <CryptoIcon
-          className="size-full group-data-[is-pending]/stats:opacity-0 group-data-[is-loading-error]/stats:opacity-0"
-          ticker={ticker}
-        />
-      </div>
-      <p
-        className={`leading-none font-bold text-xs md:text-sm md:leading-none ${pendingClassesStats} ${errorClassesStats}`}
-      >
-        {value}
-      </p>
-    </div>
-  );
+  if (seconds < 60) return `${formatNumberShort(seconds)}s ago`;
+
+  const minutes = seconds / 60;
+  if (minutes < 60) return `${formatNumberShort(minutes)}m ago`;
+
+  const hours = minutes / 60;
+  if (hours < 24) return `${formatNumber(hours)}h ago`;
+
+  const days = hours / 24;
+  if (days < 30) return `${formatNumber(days)}d ago`;
+
+  const months = days / 30;
+  if (months < 12) return `${formatNumber(months)}M ago`;
+
+  const years = days / 365;
+  return `${formatNumber(years)}y ago`;
 }

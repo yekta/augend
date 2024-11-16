@@ -14,7 +14,7 @@ import {
   UniswapNetworkSchema,
 } from "@/server/api/routers/uniswap/types";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
-import type { SearchFilterOpts } from "@gfxlabs/oku";
+import type { PositionPriceRange, SearchFilterOpts } from "@gfxlabs/oku";
 
 const isEthereumAddress = (address: string): boolean =>
   /^0x[a-fA-F0-9]{40}$/.test(address);
@@ -173,8 +173,6 @@ export const uniswapRouter = createTRPCRouter({
       const amountTotalUSD = Number(
         position.current_position_values.total_value_current_usd
       );
-      const ratio0 = amount0USD / amountTotalUSD;
-      const ratio1 = 1 - ratio0;
       const priceCurrent = Number(
         position.position_pool_data.current_pool_price
       );
@@ -182,35 +180,46 @@ export const uniswapRouter = createTRPCRouter({
         position.position_profit.uncollected_usd_fees / amountTotalUSD;
       const sinceCreatedAt = Date.now() - position.created_date;
       const yearInMs = 1000 * 60 * 60 * 24 * 365;
+      const { priceUpper, priceLower } = getCorrectPrices(
+        position.position_price_range
+      );
+      const amount0 = getDecimalAmount(
+        position.current_position_values.amount0_current,
+        position.position_pool_data.token0_decimals
+      );
+      const amount1 = getDecimalAmount(
+        position.current_position_values.amount1_current,
+        position.position_pool_data.token1_decimals
+      );
+      const uncollectedFees0 = getDecimalAmount(
+        position.current_fee_info.token0FeesUncollected,
+        position.position_pool_data.token0_decimals
+      );
+      const uncollectedFees1 = getDecimalAmount(
+        position.current_fee_info.token1FeesUncollected,
+        position.position_pool_data.token1_decimals
+      );
+      const token0Price = amount0USD / amount0;
+      const token1Price = amount1USD / amount1;
+      const uncollectedFees0USD = uncollectedFees0 * token0Price;
+      const uncollectedFees1USD = uncollectedFees1 * token1Price;
       const editedRes: TUniswapPositionResult = {
         position: {
           poolAddress: position.pool,
           nftUri,
-          amount0: getDecimalAmount(
-            position.current_position_values.amount0_current,
-            position.position_pool_data.token0_decimals
-          ),
-          amount1: getDecimalAmount(
-            position.current_position_values.amount1_current,
-            position.position_pool_data.token0_decimals
-          ),
+          amount0,
+          amount1,
           amount0USD,
           amount1USD,
           amountTotalUSD,
           apr: (feeRatio / sinceCreatedAt) * yearInMs,
-          ratio0,
-          ratio1,
-          priceLower: Number(position.position_price_range.lower_price),
-          priceUpper: Number(position.position_price_range.upper_price),
+          priceLower,
+          priceUpper,
           priceCurrent,
-          uncollectedFees0: getDecimalAmount(
-            position.current_fee_info.token0FeesUncollected,
-            position.position_pool_data.token0_decimals
-          ),
-          uncollectedFees1: getDecimalAmount(
-            position.current_fee_info.token1FeesUncollected,
-            position.position_pool_data.token1_decimals
-          ),
+          uncollectedFees0,
+          uncollectedFees1,
+          uncollectedFees0USD,
+          uncollectedFees1USD,
           uncollectedFeesTotalUSD:
             position.position_profit.uncollected_usd_fees,
           deposit0: getDecimalAmount(
@@ -343,4 +352,16 @@ function parseNftUri(uriBase64: string): string {
 
   const editedSvgBase64 = Buffer.from(editedSvg).toString("base64");
   return dataStr + editedSvgBase64;
+}
+
+function getCorrectPrices(priceRange: PositionPriceRange) {
+  const shouldInverse = priceRange.lower_price === "0.000000";
+  return {
+    priceLower: shouldInverse
+      ? 1 / Number(priceRange.inverse_lower_price)
+      : Number(priceRange.lower_price),
+    priceUpper: shouldInverse
+      ? 1 / Number(priceRange.inverse_upper_price)
+      : Number(priceRange.upper_price),
+  };
 }
