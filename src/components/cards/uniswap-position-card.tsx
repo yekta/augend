@@ -323,7 +323,11 @@ export default function UniswapPositionCard({
                 )}
                 titleWrapperClassName="pr-8"
                 chip={getConditionalValue(
-                  timeAgo(new Date(data?.position.createdAt || 1731679718000))
+                  timeAgo(new Date(data?.position.createdAt || 1731679718000)) +
+                    ` | $${formatNumberTBMK(
+                      data?.position.depositTotalUSD || 0,
+                      3
+                    )}`
                 )}
                 chipClassName={getNumberColorClass(0, true)}
                 ticker0={getConditionalValue(
@@ -860,7 +864,8 @@ function NFTImageLink({
     return (
       <div className={cn("h-36 group/link", className)}>
         <svg
-          className="h-full bg-muted-foreground group-data-[is-loading-error]/card:bg-destructive/50 rounded-lg md:rounded-lg lg:rounded-xl w-auto not-touch:group-hover/link:scale-105 group-active/link:scale-105 transition group-data-[is-pending]/card:animate-skeleton"
+          className="h-full bg-muted-foreground group-data-[is-loading-error]/card:bg-destructive/50 rounded-lg md:rounded-lg lg:rounded-xl w-auto
+          transition group-data-[is-pending]/card:animate-skeleton"
           viewBox="0 0 290 500"
           width="290"
           height="500"

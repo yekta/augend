@@ -56,6 +56,9 @@ export type TUniswapPositionResult = {
     uncollectedFeesTotalUSD: number;
     deposit0: number;
     deposit1: number;
+    deposit0USD: number;
+    deposit1USD: number;
+    depositTotalUSD: number;
     token0: TToken;
     token1: TToken;
     createdAt: number;

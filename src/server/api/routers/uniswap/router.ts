@@ -230,6 +230,12 @@ export const uniswapRouter = createTRPCRouter({
             position.total_deposit_amounts.total_deposit_amount1,
             position.position_pool_data.token1_decimals
           ),
+          deposit0USD:
+            position.position_events[0].past_values?.token0_value_past || 0,
+          deposit1USD:
+            position.position_events[0].past_values?.token1_value_past || 0,
+          depositTotalUSD:
+            position.position_events[0].past_values?.total_value_past || 0,
           token0: {
             id: position.position_pool_data.token0,
             symbol: position.position_pool_data.token0_symbol,
