@@ -116,13 +116,13 @@ export default function CryptoIcon({
         <text
           fill="currentColor"
           x="50%"
-          y="50%"
+          y="55%"
           dominantBaseline="middle"
           textAnchor="middle"
           className="font-extrabold"
-          fontSize={16}
+          fontSize={21}
         >
-          {ticker.slice(0, 1)}
+          {ticker.slice(0, 1).toUpperCase()}
         </text>
       </svg>
     );

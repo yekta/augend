@@ -592,7 +592,7 @@ function TickerTextAmount({
 }) {
   return (
     <div className="flex shrink min-w-0 flex-col gap-1.5 flex-1 text-xs md:text-sm leading-none md:leading-none">
-      <div className="min-h-[1rem] md:min-h-[1.125rem] flex flex-row items-center gap-1.25">
+      <div className="min-h-[1rem] md:min-h-[1.125rem] flex flex-row items-center gap-1 md:gap-1.25">
         {ticker !== undefined &&
           (hideIcons === undefined || hideIcons === false) && (
             <div
@@ -604,7 +604,7 @@ function TickerTextAmount({
               )}
             >
               <CryptoIcon
-                className="size-full bg-border rounded-full p-0.25 md:p-0.5 group-data-[is-pending]/card:hidden group-data-[is-loading-error]/card:hidden"
+                className="size-full bg-border rounded-full p-0.5 group-data-[is-pending]/card:hidden group-data-[is-loading-error]/card:hidden"
                 ticker={ticker}
               />
             </div>
@@ -750,8 +750,8 @@ function StatColumn({
 
 function BalanceColumn({ ticker, value }: { ticker?: string; value: string }) {
   return (
-    <div className="flex items-center gap-1">
-      <div className="size-3 md:size-3.5 -my-1 bg-foreground rounded-full text-background p-0.25 group-data-[is-pending]/stats:animate-skeleton group-data-[is-loading-error]/stats:bg-destructive">
+    <div className="flex items-center gap-1 md:gap-1.25">
+      <div className="size-3.5 md:size-4 -my-1 bg-border rounded-full text-foreground p-0.5 group-data-[is-pending]/stats:animate-skeleton group-data-[is-pending]/stats:bg-foreground group-data-[is-loading-error]/stats:bg-destructive">
         <CryptoIcon
           className="size-full group-data-[is-pending]/stats:opacity-0 group-data-[is-loading-error]/stats:opacity-0"
           ticker={ticker}
