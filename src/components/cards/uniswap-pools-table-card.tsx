@@ -210,12 +210,6 @@ export default function UniswapPoolsTableCard({
           a.original.token0.symbol.localeCompare(b.original.token0.symbol),
       },
       {
-        accessorKey: "price",
-        header: "Price",
-        cell: ({ row }) => `${formatNumberTBMK(row.original.price)}`,
-        sortingFn: (a, b) => a.original.price - b.original.price,
-      },
-      {
         accessorKey: "apr",
         header: "APR (24H)",
         cellClassName: ({ row }) => getNumberColorClass(row.original.apr24h),
@@ -228,6 +222,12 @@ export default function UniswapPoolsTableCard({
         cell: ({ row }) =>
           `${convertCurrency.symbol}${formatNumberTBMK(row.original.tvlUSD)}`,
         sortingFn: (a, b) => a.original.tvlUSD - b.original.tvlUSD,
+      },
+      {
+        accessorKey: "price",
+        header: "Price",
+        cell: ({ row }) => `${formatNumberTBMK(row.original.price)}`,
+        sortingFn: (a, b) => a.original.price - b.original.price,
       },
       {
         accessorKey: "volume24H",
