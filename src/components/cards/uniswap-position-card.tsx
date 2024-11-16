@@ -526,7 +526,7 @@ export default function UniswapPositionCard({
                     />
                     <div className="relative w-14 h-4 py-1.25 flex items-center justify-center group-data-[is-pending]/stats:animate-skeleton">
                       <div className="w-2px h-full bg-foreground rounded-full absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 group-data-[is-loading-error]/stats:bg-destructive" />
-                      <div className="w-full flex justify-start h-full rounded-full bg-success group-data-[is-pending]/stats:bg-foreground group-data-[is-loading-error]/stats:bg-destructive overflow-hidden relative ring-2 ring-background">
+                      <div className="w-full flex justify-start h-full rounded-full bg-destructive group-data-[is-pending]/stats:bg-foreground group-data-[is-loading-error]/stats:bg-destructive overflow-hidden relative ring-2 ring-background">
                         <div
                           style={{
                             transform: `translateX(${
@@ -535,7 +535,7 @@ export default function UniswapPositionCard({
                               100
                             }%)`,
                           }}
-                          className="w-full h-full transition bg-destructive group-data-[is-pending]/stats:bg-foreground group-data-[is-loading-error]/stats:bg-destructive"
+                          className="w-full h-full transition bg-success group-data-[is-pending]/stats:bg-foreground group-data-[is-loading-error]/stats:bg-destructive"
                         />
                         <div
                           data-is-full={
