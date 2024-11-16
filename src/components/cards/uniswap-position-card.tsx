@@ -412,8 +412,7 @@ export default function UniswapPositionCard({
                       (data?.position?.uncollectedFeesTotalUSD || 1)) *
                       100
                   ),
-                  3,
-                  true
+                  3
                 )}%`,
                 true
               )}
@@ -743,7 +742,7 @@ function TickerTextAmount({
   tickerIcon?: false | ReactNode;
 }) {
   return (
-    <div className="flex shrink min-w-0 flex-row items-center justify-between gap-1.5 md:gap-2 flex-1 text-xs md:text-sm leading-none md:leading-none">
+    <div className="flex shrink min-w-0 flex-row items-center justify-between gap-1.5 md:gap-2 flex-1 text-xs md:text-sm leading-none md:leading-none font-medium">
       <div className="flex flex-row items-center gap-1 md:gap-1.25 shrink min-w-0">
         {ticker !== undefined && tickerIcon !== false && (
           <div
