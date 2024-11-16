@@ -19,14 +19,8 @@ import {
 import { api } from "@/trpc/react";
 import { SortingState } from "@tanstack/react-table";
 import {
-  CircleArrowDownIcon,
-  CircleArrowLeftIcon,
-  CircleArrowRightIcon,
-  CircleArrowUpIcon,
   ExternalLinkIcon,
   TableIcon,
-  TrendingDownIcon,
-  TrendingUpIcon,
   TriangleAlertIcon,
   XIcon,
 } from "lucide-react";
