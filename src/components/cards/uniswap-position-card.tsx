@@ -541,8 +541,7 @@ export default function UniswapPositionCard({
                 title="Balance"
                 value={
                   <div className="flex flex-1 items-center gap-2">
-                    <BalanceTickerAndAmount
-                      ticker={statsData?.pools[0].token0.symbol}
+                    <BalanceAmount
                       value={getConditionalValueStats(
                         formatNumberTBMK(statsData?.pools[0].tvl0 || 0)
                       )}
@@ -583,8 +582,7 @@ export default function UniswapPositionCard({
                         </div>
                       </div>
                     </div>
-                    <BalanceTickerAndAmount
-                      ticker={statsData?.pools[0].token1.symbol}
+                    <BalanceAmount
                       value={getConditionalValueStats(
                         formatNumberTBMK(statsData?.pools[0].tvl1 || 0)
                       )}
@@ -815,7 +813,7 @@ function StatColumn({
 }) {
   return (
     <div className="px-3 md:px-4 lg:px-5 flex flex-col first-of-type:pl-0 last-of-type:pr-0">
-      <div className="flex flex-1 flex-col items-start gap-1.5 flex-shrink">
+      <div className="flex flex-1 flex-col items-start gap-1.5 md:gap-2 flex-shrink">
         <p
           className="shrink min-w-0 overflow-hidden overflow-ellipsis whitespace-nowrap text-xs md:text-sm font-medium text-muted-foreground leading-none md:leading-none
           group-data-[is-pending]/stats:text-transparent group-data-[is-pending]/stats:animate-skeleton group-data-[is-pending]/stats:bg-muted-foreground group-data-[is-pending]/stats:rounded"
@@ -841,27 +839,13 @@ function StatColumn({
   );
 }
 
-function BalanceTickerAndAmount({
-  ticker,
-  value,
-}: {
-  ticker?: string;
-  value: string;
-}) {
+function BalanceAmount({ value }: { value: string }) {
   return (
-    <div className="flex items-center gap-1.25">
-      <div className="size-3.5 md:size-4 -my-1 bg-foreground text-background rounded-full p-0.25 md:p-0.5 group-data-[is-pending]/stats:animate-skeleton group-data-[is-pending]/stats:bg-foreground group-data-[is-loading-error]/stats:bg-destructive">
-        <CryptoIcon
-          className="size-full group-data-[is-pending]/stats:opacity-0 group-data-[is-loading-error]/stats:opacity-0"
-          ticker={ticker}
-        />
-      </div>
-      <p
-        className={`leading-none font-bold text-xs md:text-sm md:leading-none ${pendingClassesStats} ${errorClassesStats}`}
-      >
-        {value}
-      </p>
-    </div>
+    <p
+      className={`leading-none font-bold text-base md:text-lg md:leading-none ${pendingClassesStats} ${errorClassesStats}`}
+    >
+      {value}
+    </p>
   );
 }
 
