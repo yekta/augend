@@ -504,9 +504,14 @@ export default function UniswapPositionCard({
                 )}
               />
               <StatColumn
-                title="Vol (24H)"
+                title="APR (24H)"
                 value={getConditionalValueStats(
-                  `$${formatNumberTBMK(statsData?.pools[0].volume24hUSD || 0)}`
+                  `${formatNumberTBMK(
+                    (statsData?.pools[0].apr24h || 0) * 100
+                  )}%`
+                )}
+                valueClassName={getNumberColorClass(
+                  statsData?.pools[0].apr24h || 0
                 )}
               />
               <StatColumn
@@ -565,14 +570,9 @@ export default function UniswapPositionCard({
                 }
               />
               <StatColumn
-                title="APR (24H)"
+                title="Vol (24H)"
                 value={getConditionalValueStats(
-                  `${formatNumberTBMK(
-                    (statsData?.pools[0].apr24h || 0) * 100
-                  )}%`
-                )}
-                valueClassName={getNumberColorClass(
-                  statsData?.pools[0].apr24h || 0
+                  `$${formatNumberTBMK(statsData?.pools[0].volume24hUSD || 0)}`
                 )}
               />
               <StatColumn
