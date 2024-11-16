@@ -85,6 +85,7 @@ const config: Config = {
         sm: "calc(var(--radius) - 4px)",
       },
       spacing: {
+        "2px": "2px",
         0.25: "0.0625rem",
         0.75: "0.1875rem",
         1.25: "0.3125rem",

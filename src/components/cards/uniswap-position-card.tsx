@@ -25,7 +25,7 @@ import {
   XIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { ReactNode, useMemo, useState } from "react";
 
 type TSwapData = TUniswapPoolSwapsResult["swaps"][number];
 
@@ -44,6 +44,15 @@ const swapsTableDataFallback: TSwapData[] = Array.from(
 const networkToAddressUrl: Record<TUniswapNetwork, (s: string) => string> = {
   ethereum: (address: string) => `https://etherscan.io/address/${address}`,
 };
+
+const pendingClasses =
+  "group-data-[is-pending]/card:text-transparent group-data-[is-pending]/card:animate-skeleton group-data-[is-pending]/card:bg-foreground group-data-[is-pending]/card:rounded";
+const errorClasses = "group-data-[is-loading-error]/card:text-destructive";
+
+const pendingClassesStats =
+  "group-data-[is-pending]/stats:text-transparent group-data-[is-pending]/stats:animate-skeleton group-data-[is-pending]/stats:bg-foreground group-data-[is-pending]/stats:rounded";
+const errorClassesStats =
+  "group-data-[is-loading-error]/stats:text-destructive";
 
 export default function UniswapPositionCard({
   id,
@@ -399,7 +408,7 @@ export default function UniswapPositionCard({
                   statsData !== undefined) ||
                 undefined
               }
-              className="w-full group/stats px-3 md:px-2 flex flex-row justify-start items-end pt-3.5 pb-4 whitespace-nowrap overflow-auto relative"
+              className="w-full group/stats px-3 md:px-2 flex flex-row justify-start items-stretch pt-3.5 pb-4 whitespace-nowrap overflow-auto relative"
             >
               <StatColumn
                 title="TVL"
@@ -412,6 +421,40 @@ export default function UniswapPositionCard({
                 value={getConditionalValueStats(
                   `$${formatNumberTBMK(statsData?.pools[0].volume24hUSD || 0)}`
                 )}
+              />
+              <StatColumn
+                title="Balance"
+                value={
+                  <div className="flex flex-1 items-center gap-2">
+                    <BalanceColumn
+                      ticker={statsData?.pools[0].token0.symbol}
+                      value={getConditionalValueStats(
+                        formatNumberTBMK(statsData?.pools[0].tvl0 || 0)
+                      )}
+                    />
+                    <div className="relative w-12 md:w-18 h-4 md:h-4.5 flex items-center justify-center group-data-[is-pending]/stats:animate-skeleton">
+                      <div className="w-2px h-full bg-foreground rounded-full absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 group-data-[is-loading-error]/stats:bg-destructive" />
+                      <div className="w-full h-1.75 md:h-2 rounded-full bg-success group-data-[is-pending]/stats:bg-foreground group-data-[is-loading-error]/stats:bg-destructive overflow-hidden relative ring-2 ring-background">
+                        <div
+                          style={{
+                            width: `calc(${
+                              ((statsData?.pools[0].tvl0USD || 1) /
+                                (statsData?.pools[0].tvlUSD || 2)) *
+                              100
+                            }% + 1px)`,
+                          }}
+                          className="h-full bg-destructive group-data-[is-pending]/stats:bg-foreground group-data-[is-loading-error]/stats:bg-destructive border-r-2 border-background"
+                        />
+                      </div>
+                    </div>
+                    <BalanceColumn
+                      ticker={statsData?.pools[0].token1.symbol}
+                      value={getConditionalValueStats(
+                        formatNumberTBMK(statsData?.pools[0].tvl1 || 0)
+                      )}
+                    />
+                  </div>
+                }
               />
               <StatColumn
                 title="Fees (24H)"
@@ -547,9 +590,6 @@ function TickerTextAmount({
   chip?: string;
   hideIcons?: boolean;
 }) {
-  const pendingClasses =
-    "group-data-[is-pending]/card:text-transparent group-data-[is-pending]/card:animate-skeleton group-data-[is-pending]/card:bg-foreground group-data-[is-pending]/card:rounded";
-  const errorClasses = "group-data-[is-loading-error]/card:text-destructive";
   return (
     <div className="flex shrink min-w-0 flex-col gap-1.5 flex-1 text-xs md:text-sm leading-none md:leading-none">
       <div className="min-h-[1rem] md:min-h-[1.125rem] flex flex-row items-center gap-1.25">
@@ -674,24 +714,54 @@ function NFTImageLink({
   );
 }
 
-function StatColumn({ title, value }: { title: string; value: string }) {
+function StatColumn({
+  title,
+  value,
+}: {
+  title: string;
+  value: string | ReactNode;
+}) {
   return (
-    <div className="px-3 first-of-type:pl-1.5 last-of-type:pr-1.5 md:first-of-type:pl-3 md:last-of-type:pr-3">
-      <div className="flex flex-col items-start gap-1.5 flex-shrink min-w-[5rem] md:min-w-[6rem]">
+    <div className="px-3 flex flex-col first-of-type:pl-1.5 last-of-type:pr-1.5 md:first-of-type:pl-3 md:last-of-type:pr-3">
+      <div className="flex flex-1 flex-col items-start gap-1.5 flex-shrink min-w-[4rem] md:min-w-[6rem]">
         <p
           className="shrink min-w-0 overflow-hidden overflow-ellipsis whitespace-nowrap text-xs md:text-sm font-medium text-muted-foreground leading-none md:leading-none
           group-data-[is-pending]/stats:text-transparent group-data-[is-pending]/stats:animate-skeleton group-data-[is-pending]/stats:bg-muted-foreground group-data-[is-pending]/stats:rounded"
         >
           {title}
         </p>
-        <p
-          className="shrink min-w-0 overflow-hidden overflow-ellipsis whitespace-nowrap text-base md:text-lg font-bold leading-none md:leading-none
-          group-data-[is-pending]/stats:text-transparent group-data-[is-pending]/stats:animate-skeleton group-data-[is-pending]/stats:bg-foreground group-data-[is-pending]/stats:rounded md:group-data-[is-pending]/stats:rounded-md
-          group-data-[is-loading-error]/stats:text-destructive"
-        >
-          {value}
-        </p>
+        <div className="shrink min-w-0 flex-1 overflow-hidden flex flex-row items-center">
+          {typeof value !== "string" && value}
+          {typeof value === "string" && (
+            <p
+              data-is-node={typeof value !== "string" || undefined}
+              className={cn(
+                "shrink min-w-0 overflow-hidden overflow-ellipsis whitespace-nowrap text-base md:text-lg font-bold leading-none md:leading-none group-data-[is-pending]/stats:text-transparent group-data-[is-pending]/stats:animate-skeleton group-data-[is-pending]/stats:bg-foreground group-data-[is-pending]/stats:rounded md:group-data-[is-pending]/stats:rounded-md group-data-[is-loading-error]/stats:text-destructive"
+              )}
+            >
+              {typeof value === "string" ? value : "A"}
+            </p>
+          )}
+        </div>
       </div>
+    </div>
+  );
+}
+
+function BalanceColumn({ ticker, value }: { ticker?: string; value: string }) {
+  return (
+    <div className="flex items-center gap-1">
+      <div className="size-3 md:size-3.5 -my-1 bg-foreground rounded-full text-background p-0.25 group-data-[is-pending]/stats:animate-skeleton group-data-[is-loading-error]/stats:bg-destructive">
+        <CryptoIcon
+          className="size-full group-data-[is-pending]/stats:opacity-0 group-data-[is-loading-error]/stats:opacity-0"
+          ticker={ticker}
+        />
+      </div>
+      <p
+        className={`leading-none font-bold text-xs md:text-sm md:leading-none ${pendingClassesStats} ${errorClassesStats}`}
+      >
+        {value}
+      </p>
     </div>
   );
 }

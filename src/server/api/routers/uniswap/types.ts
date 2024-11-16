@@ -25,6 +25,10 @@ export type TUniswapPoolsResult = {
     token0: TToken;
     token1: TToken;
     isTokensReversed: boolean;
+    tvl0: number;
+    tvl1: number;
+    tvl0USD: number;
+    tvl1USD: number;
   }[];
 };
 

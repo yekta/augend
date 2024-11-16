@@ -1,7 +1,6 @@
 import CardWrapper from "@/components/cards/card-wrapper";
 import Indicator from "@/components/cards/indicator";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
 import React, { ReactNode } from "react";
 
 export default function ThreeLineCard({
@@ -41,8 +40,6 @@ export default function ThreeLineCard({
   href?: string;
   children?: React.ReactNode;
 }) {
-  const Comp = href ? Link : "div";
-
   const conditionalValue = (v: string | ReactNode | undefined) => {
     return isPending ? "Loading" : v !== undefined ? v : "Error";
   };

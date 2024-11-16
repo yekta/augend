@@ -31,6 +31,10 @@ const dataFallback: TUniswapPoolsResult = {
   pools: Array.from({ length: 100 }, (_, i) => ({
     address: "0xcbcdf9626bc03e24f779434178a73a0b4bad62ed",
     tvlUSD: 12345678,
+    tvl0: 12345678,
+    tvl1: 12345678,
+    tvl0USD: 12345678,
+    tvl1USD: 12345678,
     price: 1345,
     apr24h: 1,
     feeTier: 0.3,

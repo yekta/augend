@@ -94,6 +94,10 @@ export const uniswapRouter = createTRPCRouter({
               return {
                 address: pool.address,
                 tvlUSD: pool.tvl_usd,
+                tvl0: pool.t0_tvl,
+                tvl1: pool.t1_tvl,
+                tvl0USD: pool.t0_tvl_usd,
+                tvl1USD: pool.t1_tvl_usd,
                 price: pool.last_price,
                 apr24h: (fees24hUSD / pool.tvl_usd) * 365,
                 feeTier,
