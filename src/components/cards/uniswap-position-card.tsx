@@ -338,9 +338,11 @@ export default function UniswapPositionCard({
                 )}
                 amount0Chip={getConditionalValue(
                   formatNumberTBMK(
-                    ((data?.position?.amount0USD || 0) /
-                      (data?.position?.amountTotalUSD || 1)) *
-                      100,
+                    Math.ceil(
+                      ((data?.position?.amount0USD || 0) /
+                        (data?.position?.amountTotalUSD || 1)) *
+                        100
+                    ),
                     3
                   ) + "%"
                 )}
@@ -350,10 +352,12 @@ export default function UniswapPositionCard({
                 )}
                 amount1Chip={getConditionalValue(
                   formatNumberTBMK(
-                    (((data?.position?.amountTotalUSD || 0) -
-                      (data?.position?.amount0USD || 1)) /
-                      (data?.position?.amountTotalUSD || 1)) *
-                      100,
+                    Math.floor(
+                      (((data?.position?.amountTotalUSD || 0) -
+                        (data?.position?.amount0USD || 1)) /
+                        (data?.position?.amountTotalUSD || 1)) *
+                        100
+                    ),
                     3
                   ) + "%"
                 )}
@@ -378,27 +382,31 @@ export default function UniswapPositionCard({
               amount0={getConditionalValue(
                 formatNumberTBMK(data?.position?.uncollectedFees0 || 0)
               )}
-              /* amount0Chip={getConditionalValue(
+              amount0Chip={getConditionalValue(
                 `${formatNumberTBMK(
-                  ((data?.position?.uncollectedFees0USD || 0.5) /
-                    (data?.position?.uncollectedFeesTotalUSD || 1)) *
-                    100,
+                  Math.ceil(
+                    ((data?.position?.uncollectedFees0USD || 0.5) /
+                      (data?.position?.uncollectedFeesTotalUSD || 1)) *
+                      100
+                  ),
                   3
                 )}%`
-              )} */
+              )}
               ticker1={getConditionalValue(data?.position.token1.symbol)}
               amount1={getConditionalValue(
                 formatNumberTBMK(data?.position?.uncollectedFees1 || 0)
               )}
-              /* amount1Chip={getConditionalValue(
+              amount1Chip={getConditionalValue(
                 `${formatNumberTBMK(
-                  (((data?.position?.uncollectedFeesTotalUSD || 1) -
-                    (data?.position?.uncollectedFees0USD || 0.5)) /
-                    (data?.position?.uncollectedFeesTotalUSD || 1)) *
-                    100,
+                  Math.floor(
+                    (((data?.position?.uncollectedFeesTotalUSD || 1) -
+                      (data?.position?.uncollectedFees0USD || 0.5)) /
+                      (data?.position?.uncollectedFeesTotalUSD || 1)) *
+                      100
+                  ),
                   3
                 )}%`
-              )} */
+              )}
             />
             {/* Prices */}
             <Section
@@ -413,10 +421,12 @@ export default function UniswapPositionCard({
                   ? "text-destructive"
                   : ""
               }
-              ticker0Icon={
-                <CircleArrowLeftIcon className="size-full text-muted-foreground group-data-[is-pending]/card:hidden group-data-[is-loading-error]/card:hidden" />
-              }
-              ticker0={`${getConditionalValue(
+              ticker0Icon={false}
+              ticker0={"Min"}
+              amount0={getConditionalValue(
+                formatNumberTBMK(data?.position?.priceLower || 0)
+              )}
+              amount0Chip={`${getConditionalValue(
                 `${
                   data?.position?.priceCurrent ||
                   100 >= (data?.position?.priceLower || 50)
@@ -424,23 +434,24 @@ export default function UniswapPositionCard({
                     : "+"
                 }` +
                   formatNumberTBMK(
-                    Math.abs(
-                      (((data?.position?.priceCurrent || 100) -
-                        (data?.position?.priceLower || 50)) /
-                        (data?.position?.priceCurrent || 100)) *
-                        100
+                    Math.round(
+                      Math.abs(
+                        (((data?.position?.priceCurrent || 100) -
+                          (data?.position?.priceLower || 50)) /
+                          (data?.position?.priceCurrent || 100)) *
+                          100
+                      )
                     ),
                     3
                   ) +
                   "%"
               )}`}
-              amount0={getConditionalValue(
-                formatNumberTBMK(data?.position?.priceLower || 0)
+              ticker1Icon={false}
+              ticker1={"Max"}
+              amount1={getConditionalValue(
+                formatNumberTBMK(data?.position?.priceUpper || 0)
               )}
-              ticker1Icon={
-                <CircleArrowRightIcon className="size-full text-muted-foreground group-data-[is-pending]/card:hidden group-data-[is-loading-error]/card:hidden" />
-              }
-              ticker1={`${getConditionalValue(
+              amount1Chip={`${getConditionalValue(
                 `${
                   (data?.position?.priceUpper || 100) >=
                   (data?.position?.priceCurrent || 50)
@@ -448,17 +459,16 @@ export default function UniswapPositionCard({
                     : "-"
                 }` +
                   formatNumberTBMK(
-                    (((data?.position?.priceUpper || 100) -
-                      (data?.position?.priceCurrent || 50)) /
-                      (data?.position?.priceCurrent || 100)) *
-                      100,
+                    Math.round(
+                      (((data?.position?.priceUpper || 100) -
+                        (data?.position?.priceCurrent || 50)) /
+                        (data?.position?.priceCurrent || 100)) *
+                        100
+                    ),
                     3
                   ) +
                   "%"
               )}`}
-              amount1={getConditionalValue(
-                formatNumberTBMK(data?.position?.priceUpper || 0)
-              )}
             />
           </div>
         </div>
@@ -689,7 +699,7 @@ function Section({
           </p>
         )}
       </div>
-      <div className="flex flex-row gap-3 border rounded-lg px-3 py-2.5 md:px-4 md:py-3">
+      <div className="flex flex-col gap-2 border rounded-lg px-2.75 py-2.5 md:px-3.5 md:py-3">
         <TickerTextAmount
           ticker={ticker0}
           amount={amount0}
@@ -719,9 +729,9 @@ function TickerTextAmount({
   tickerIcon?: false | ReactNode;
 }) {
   return (
-    <div className="flex shrink min-w-0 flex-col gap-1.5 flex-1 text-xs md:text-sm leading-none md:leading-none">
-      <div className="min-h-[1rem] md:min-h-[1.125rem] flex flex-row items-center gap-1 md:gap-1.25">
-        {ticker !== undefined && (
+    <div className="flex shrink min-w-0 flex-row items-center justify-between gap-1 md:gap-1.5 flex-1 text-xs md:text-sm leading-none md:leading-none">
+      <div className="flex flex-row items-center gap-1 md:gap-1.25 shrink min-w-0">
+        {ticker !== undefined && tickerIcon !== false && (
           <div
             className={cn(
               "size-3.5 md:size-4 rounded-full shrink-0",
@@ -742,7 +752,7 @@ function TickerTextAmount({
         )}
         <p
           className={cn(
-            "whitespace-nowrap text-muted-foreground max-w-full overflow-hidden overflow-ellipsis",
+            "whitespace-nowrap shrink min-w-0 text-muted-foreground max-w-full overflow-hidden overflow-ellipsis",
             pendingClasses,
             "group-data-[is-pending]/card:bg-muted-foreground",
             errorClasses
@@ -750,11 +760,14 @@ function TickerTextAmount({
         >
           {ticker}
         </p>
+        {tickerIcon === false && (
+          <div className="shrink-0 size-3.5 md:size-4" />
+        )}
       </div>
-      <div className="flex items-center gap-2 max-w-full overflow-hidden overflow-ellipsis">
+      <div className="flex flex-row items-center gap-1.5 md:gap-2 max-w-full font-mono shrink min-w-0 overflow-hidden">
         <p
           className={cn(
-            "font-semibold whitespace-nowrap max-w-full overflow-hidden overflow-ellipsis",
+            "font-semibold whitespace-nowrap max-w-full overflow-hidden overflow-ellipsis shrink min-w-0",
             pendingClasses,
             errorClasses
           )}
