@@ -276,22 +276,22 @@ export default function UniswapPositionCard({
     ];
   }, [data, swapsData, swapsIsPending]);
 
-  function getConditionalValue<T>(value: T) {
-    if (isPending) return "Loading";
+  function getConditionalValue<T>(value: T, short = false) {
+    if (isPending) return short ? "Load" : "Loading";
     if (data && value !== undefined) return value;
-    return "Error";
+    return short ? "Error" : "Err";
   }
 
-  function getConditionalValueSwaps<T>(value: T) {
-    if (swapsIsPending) return "Loading";
+  function getConditionalValueSwaps<T>(value: T, short = false) {
+    if (swapsIsPending) return short ? "Load" : "Loading";
     if (swapsData && value !== undefined) return value;
-    return "Error";
+    return short ? "Error" : "Err";
   }
 
-  function getConditionalValueStats<T>(value: T) {
-    if (statsIsPending) return "Loading";
+  function getConditionalValueStats<T>(value: T, short = false) {
+    if (statsIsPending) return short ? "Load" : "Loading";
     if (statsData && value !== undefined) return value;
-    return "Error";
+    return short ? "Error" : "Err";
   }
 
   return (
@@ -332,9 +332,13 @@ export default function UniswapPositionCard({
                   timeAgo(new Date(data?.position.createdAt || 1731679718000))
                 )}
                 chipClassName={getNumberColorClass(0, true)}
-                ticker0={getConditionalValue(data?.position.token0.symbol)}
+                ticker0={getConditionalValue(
+                  data?.position.token0.symbol,
+                  true
+                )}
                 amount0={getConditionalValue(
-                  formatNumberTBMK(data?.position?.amount0 || 0)
+                  formatNumberTBMK(data?.position?.amount0 || 0),
+                  true
                 )}
                 amount0Chip={getConditionalValue(
                   formatNumberTBMK(
@@ -344,11 +348,16 @@ export default function UniswapPositionCard({
                         100
                     ),
                     3
-                  ) + "%"
+                  ) + "%",
+                  true
                 )}
-                ticker1={getConditionalValue(data?.position.token1.symbol)}
+                ticker1={getConditionalValue(
+                  data?.position.token1.symbol,
+                  true
+                )}
                 amount1={getConditionalValue(
-                  formatNumberTBMK(data?.position?.amount1 || 0)
+                  formatNumberTBMK(data?.position?.amount1 || 0),
+                  true
                 )}
                 amount1Chip={getConditionalValue(
                   formatNumberTBMK(
@@ -359,7 +368,8 @@ export default function UniswapPositionCard({
                         100
                     ),
                     3
-                  ) + "%"
+                  ) + "%",
+                  true
                 )}
               />
             </div>
@@ -372,15 +382,17 @@ export default function UniswapPositionCard({
                 )}`
               )}
               chip={getConditionalValue(
-                `${formatNumberTBMK((data?.position.apr || 0) * 100, 3)}%`
+                `${formatNumberTBMK((data?.position.apr || 0) * 100, 3)}%`,
+                true
               )}
               chipClassName={getNumberColorClass(
                 data?.position?.apr || 0,
                 true
               )}
-              ticker0={getConditionalValue(data?.position.token0.symbol)}
+              ticker0={getConditionalValue(data?.position.token0.symbol, true)}
               amount0={getConditionalValue(
-                formatNumberTBMK(data?.position?.uncollectedFees0 || 0)
+                formatNumberTBMK(data?.position?.uncollectedFees0 || 0),
+                true
               )}
               amount0Chip={getConditionalValue(
                 `${formatNumberTBMK(
@@ -390,11 +402,13 @@ export default function UniswapPositionCard({
                       100
                   ),
                   3
-                )}%`
+                )}%`,
+                true
               )}
-              ticker1={getConditionalValue(data?.position.token1.symbol)}
+              ticker1={getConditionalValue(data?.position.token1.symbol, true)}
               amount1={getConditionalValue(
-                formatNumberTBMK(data?.position?.uncollectedFees1 || 0)
+                formatNumberTBMK(data?.position?.uncollectedFees1 || 0),
+                true
               )}
               amount1Chip={getConditionalValue(
                 `${formatNumberTBMK(
@@ -404,8 +418,10 @@ export default function UniswapPositionCard({
                       (data?.position?.uncollectedFeesTotalUSD || 1)) *
                       100
                   ),
-                  3
-                )}%`
+                  3,
+                  true
+                )}%`,
+                true
               )}
             />
             {/* Prices */}
@@ -424,7 +440,8 @@ export default function UniswapPositionCard({
               ticker0Icon={false}
               ticker0={"Min"}
               amount0={getConditionalValue(
-                formatNumberTBMK(data?.position?.priceLower || 0)
+                formatNumberTBMK(data?.position?.priceLower || 0),
+                true
               )}
               amount0Chip={`${getConditionalValue(
                 `${
@@ -444,12 +461,14 @@ export default function UniswapPositionCard({
                     ),
                     3
                   ) +
-                  "%"
+                  "%",
+                true
               )}`}
               ticker1Icon={false}
               ticker1={"Max"}
               amount1={getConditionalValue(
-                formatNumberTBMK(data?.position?.priceUpper || 0)
+                formatNumberTBMK(data?.position?.priceUpper || 0),
+                true
               )}
               amount1Chip={`${getConditionalValue(
                 `${
@@ -467,7 +486,8 @@ export default function UniswapPositionCard({
                     ),
                     3
                   ) +
-                  "%"
+                  "%",
+                true
               )}`}
             />
           </div>
