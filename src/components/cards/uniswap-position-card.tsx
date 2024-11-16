@@ -432,7 +432,7 @@ export default function UniswapPositionCard({
                         formatNumberTBMK(statsData?.pools[0].tvl0 || 0)
                       )}
                     />
-                    <div className="relative w-12 md:w-18 h-4 md:h-4.5 flex items-center justify-center group-data-[is-pending]/stats:animate-skeleton">
+                    <div className="relative w-14 md:w-18 h-4 md:h-4.5 flex items-center justify-center group-data-[is-pending]/stats:animate-skeleton">
                       <div className="w-2px h-full bg-foreground rounded-full absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 group-data-[is-loading-error]/stats:bg-destructive" />
                       <div className="w-full h-1.75 md:h-2 rounded-full bg-success group-data-[is-pending]/stats:bg-foreground group-data-[is-loading-error]/stats:bg-destructive overflow-hidden relative ring-2 ring-background">
                         <div
