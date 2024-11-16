@@ -545,7 +545,8 @@ export default function UniswapPositionCard({
                       className={`leading-none font-bold text-base md:text-lg md:leading-none ${pendingClassesStats} ${errorClassesStats}`}
                     >
                       {getConditionalValueStats(
-                        formatNumberTBMK(statsData?.pools[0].tvl0 || 0)
+                        formatNumberTBMK(statsData?.pools[0].tvl0 || 0),
+                        true
                       )}
                     </p>
                     <div className="relative w-14 h-4 py-1.25 flex items-center justify-center group-data-[is-pending]/stats:animate-skeleton">
@@ -588,7 +589,8 @@ export default function UniswapPositionCard({
                       className={`leading-none font-bold text-base md:text-lg md:leading-none ${pendingClassesStats} ${errorClassesStats}`}
                     >
                       {getConditionalValueStats(
-                        formatNumberTBMK(statsData?.pools[0].tvl1 || 0)
+                        formatNumberTBMK(statsData?.pools[0].tvl1 || 0),
+                        true
                       )}
                     </p>
                   </div>
