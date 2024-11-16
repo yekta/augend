@@ -432,9 +432,9 @@ export default function UniswapPositionCard({
                         formatNumberTBMK(statsData?.pools[0].tvl0 || 0)
                       )}
                     />
-                    <div className="relative w-14 h-3.75 flex items-center justify-center group-data-[is-pending]/stats:animate-skeleton">
+                    <div className="relative w-14 h-4 py-1.25 flex items-center justify-center group-data-[is-pending]/stats:animate-skeleton">
                       <div className="w-2px h-full bg-foreground rounded-full absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 group-data-[is-loading-error]/stats:bg-destructive" />
-                      <div className="w-full h-1.5 rounded-full bg-success group-data-[is-pending]/stats:bg-foreground group-data-[is-loading-error]/stats:bg-destructive overflow-hidden relative ring-2 ring-background">
+                      <div className="w-full flex justify-start h-full rounded-full bg-success group-data-[is-pending]/stats:bg-foreground group-data-[is-loading-error]/stats:bg-destructive overflow-hidden relative ring-2 ring-background">
                         <div
                           style={{
                             width: `calc(${
@@ -443,10 +443,32 @@ export default function UniswapPositionCard({
                               100
                             }% + 1px)`,
                           }}
-                          className="h-full bg-destructive group-data-[is-pending]/stats:bg-foreground group-data-[is-loading-error]/stats:bg-destructive border-r-2 border-background"
+                          className="max-w-full h-full bg-destructive group-data-[is-pending]/stats:bg-foreground group-data-[is-loading-error]/stats:bg-destructive"
                         />
+                        <div
+                          data-is-full={
+                            (statsData?.pools[0].tvl0USD || 0) >=
+                              (statsData?.pools[0].tvlUSD || 1) * 0.98 ||
+                            undefined
+                          }
+                          className="w-full overflow-hidden absolute h-full"
+                        >
+                          <div
+                            style={{
+                              transform: `translateX(${
+                                ((statsData?.pools[0].tvl0USD || 1) /
+                                  (statsData?.pools[0].tvlUSD || 2)) *
+                                100
+                              }%)`,
+                            }}
+                            className="w-full flex items-center justify-center h-full absolute -left-1/2 data-[is-full]:opacity-0"
+                          >
+                            <div className="w-2px h-full bg-background" />
+                          </div>
+                        </div>
                       </div>
                     </div>
+
                     <BalanceColumn
                       ticker={statsData?.pools[0].token1.symbol}
                       value={getConditionalValueStats(
