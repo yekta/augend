@@ -19,8 +19,14 @@ import {
 import { api } from "@/trpc/react";
 import { SortingState } from "@tanstack/react-table";
 import {
+  CircleArrowDownIcon,
+  CircleArrowLeftIcon,
+  CircleArrowRightIcon,
+  CircleArrowUpIcon,
   ExternalLinkIcon,
   TableIcon,
+  TrendingDownIcon,
+  TrendingUpIcon,
   TriangleAlertIcon,
   XIcon,
 } from "lucide-react";
@@ -321,6 +327,7 @@ export default function UniswapPositionCard({
                 title={getConditionalValue(
                   `$${formatNumberTBMK(data?.position?.amountTotalUSD || 0)}`
                 )}
+                titleWrapperClassName="pr-8"
                 chip={getConditionalValue(
                   timeAgo(new Date(data?.position.createdAt || 1731679718000))
                 )}
@@ -395,7 +402,6 @@ export default function UniswapPositionCard({
             />
             {/* Prices */}
             <Section
-              hideIcons
               className="w-1/2 mt-1.5 lg:mt-0 lg:w-1/3"
               title={getConditionalValue(
                 `${formatNumberTBMK(data?.position?.priceCurrent || 0)}`
@@ -407,49 +413,49 @@ export default function UniswapPositionCard({
                   ? "text-destructive"
                   : ""
               }
-              ticker0={
-                "Min" +
-                ` | ${getConditionalValue(
-                  `${
-                    data?.position?.priceCurrent ||
-                    100 >= (data?.position?.priceLower || 50)
-                      ? "-"
-                      : "+"
-                  }` +
-                    formatNumberTBMK(
-                      Math.abs(
-                        (((data?.position?.priceCurrent || 100) -
-                          (data?.position?.priceLower || 50)) /
-                          (data?.position?.priceCurrent || 100)) *
-                          100
-                      ),
-                      3
-                    ) +
-                    "%"
-                )}`
+              ticker0Icon={
+                <CircleArrowLeftIcon className="size-full text-muted-foreground group-data-[is-pending]/card:hidden group-data-[is-loading-error]/card:hidden" />
               }
+              ticker0={`${getConditionalValue(
+                `${
+                  data?.position?.priceCurrent ||
+                  100 >= (data?.position?.priceLower || 50)
+                    ? "-"
+                    : "+"
+                }` +
+                  formatNumberTBMK(
+                    Math.abs(
+                      (((data?.position?.priceCurrent || 100) -
+                        (data?.position?.priceLower || 50)) /
+                        (data?.position?.priceCurrent || 100)) *
+                        100
+                    ),
+                    3
+                  ) +
+                  "%"
+              )}`}
               amount0={getConditionalValue(
                 formatNumberTBMK(data?.position?.priceLower || 0)
               )}
-              ticker1={
-                "Max" +
-                ` | ${getConditionalValue(
-                  `${
-                    (data?.position?.priceUpper || 100) >=
-                    (data?.position?.priceCurrent || 50)
-                      ? "+"
-                      : "-"
-                  }` +
-                    formatNumberTBMK(
-                      (((data?.position?.priceUpper || 100) -
-                        (data?.position?.priceCurrent || 50)) /
-                        (data?.position?.priceCurrent || 100)) *
-                        100,
-                      3
-                    ) +
-                    "%"
-                )}`
+              ticker1Icon={
+                <CircleArrowRightIcon className="size-full text-muted-foreground group-data-[is-pending]/card:hidden group-data-[is-loading-error]/card:hidden" />
               }
+              ticker1={`${getConditionalValue(
+                `${
+                  (data?.position?.priceUpper || 100) >=
+                  (data?.position?.priceCurrent || 50)
+                    ? "+"
+                    : "-"
+                }` +
+                  formatNumberTBMK(
+                    (((data?.position?.priceUpper || 100) -
+                      (data?.position?.priceCurrent || 50)) /
+                      (data?.position?.priceCurrent || 100)) *
+                      100,
+                    3
+                  ) +
+                  "%"
+              )}`}
               amount1={getConditionalValue(
                 formatNumberTBMK(data?.position?.priceUpper || 0)
               )}
@@ -620,10 +626,12 @@ function Section({
   ticker1,
   amount1,
   amount1Chip,
-  hideIcons,
+  ticker0Icon,
+  ticker1Icon,
   className,
   titleClassName,
   chipClassName,
+  titleWrapperClassName,
 }: {
   title: string;
   chip?: string;
@@ -633,10 +641,12 @@ function Section({
   ticker1?: string;
   amount1: string;
   amount1Chip?: string;
-  hideIcons?: boolean;
+  ticker0Icon?: false | ReactNode;
+  ticker1Icon?: false | ReactNode;
   className?: string;
   titleClassName?: string;
   chipClassName?: string;
+  titleWrapperClassName?: string;
 }) {
   const pendingClasses =
     "group-data-[is-pending]/card:text-transparent group-data-[is-pending]/card:animate-skeleton group-data-[is-pending]/card:bg-foreground";
@@ -648,7 +658,12 @@ function Section({
         className
       )}
     >
-      <div className="flex flex-row items-center gap-2 pl-1 pr-5">
+      <div
+        className={cn(
+          "flex flex-row items-center gap-2 px-1",
+          titleWrapperClassName
+        )}
+      >
         <p
           className={cn(
             "shrink min-w-0 whitespace-nowrap overflow-hidden overflow-ellipsis font-bold text-xl md:text-2xl leading-none md:leading-none",
@@ -679,13 +694,13 @@ function Section({
           ticker={ticker0}
           amount={amount0}
           chip={amount0Chip}
-          hideIcons={hideIcons}
+          tickerIcon={ticker0Icon}
         />
         <TickerTextAmount
           ticker={ticker1}
           amount={amount1}
           chip={amount1Chip}
-          hideIcons={hideIcons}
+          tickerIcon={ticker1Icon}
         />
       </div>
     </div>
@@ -696,32 +711,35 @@ function TickerTextAmount({
   ticker,
   amount,
   chip,
-  hideIcons,
+  tickerIcon,
 }: {
   ticker?: string;
   amount: string;
   chip?: string;
-  hideIcons?: boolean;
+  tickerIcon?: false | ReactNode;
 }) {
   return (
     <div className="flex shrink min-w-0 flex-col gap-1.5 flex-1 text-xs md:text-sm leading-none md:leading-none">
       <div className="min-h-[1rem] md:min-h-[1.125rem] flex flex-row items-center gap-1 md:gap-1.25">
-        {ticker !== undefined &&
-          (hideIcons === undefined || hideIcons === false) && (
-            <div
-              className={cn(
-                "size-3.5 md:size-4 rounded-full shrink-0",
-                pendingClasses,
-                "group-data-[is-loading-error]/card:bg-destructive",
-                "group-data-[is-pending]/card:rounded-full"
-              )}
-            >
+        {ticker !== undefined && (
+          <div
+            className={cn(
+              "size-3.5 md:size-4 rounded-full shrink-0",
+              pendingClasses,
+              "group-data-[is-loading-error]/card:bg-destructive",
+              "group-data-[is-pending]/card:rounded-full"
+            )}
+          >
+            {tickerIcon !== undefined ? (
+              tickerIcon
+            ) : (
               <CryptoIcon
                 className="size-full bg-border rounded-full p-0.5 group-data-[is-pending]/card:hidden group-data-[is-loading-error]/card:hidden"
                 ticker={ticker}
               />
-            </div>
-          )}
+            )}
+          </div>
+        )}
         <p
           className={cn(
             "whitespace-nowrap text-muted-foreground max-w-full overflow-hidden overflow-ellipsis",
