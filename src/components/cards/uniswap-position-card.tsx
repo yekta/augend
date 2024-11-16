@@ -437,13 +437,13 @@ export default function UniswapPositionCard({
                       <div className="w-full flex justify-start h-full rounded-full bg-success group-data-[is-pending]/stats:bg-foreground group-data-[is-loading-error]/stats:bg-destructive overflow-hidden relative ring-2 ring-background">
                         <div
                           style={{
-                            width: `calc(${
+                            transform: `translateX(${
                               ((statsData?.pools[0].tvl0USD || 1) /
                                 (statsData?.pools[0].tvlUSD || 2)) *
                               100
-                            }% + 1px)`,
+                            }%)`,
                           }}
-                          className="max-w-full h-full bg-destructive group-data-[is-pending]/stats:bg-foreground group-data-[is-loading-error]/stats:bg-destructive"
+                          className="w-full h-full transition bg-destructive group-data-[is-pending]/stats:bg-foreground group-data-[is-loading-error]/stats:bg-destructive"
                         />
                         <div
                           data-is-full={
@@ -461,7 +461,7 @@ export default function UniswapPositionCard({
                                 100
                               }%)`,
                             }}
-                            className="w-full flex items-center justify-center h-full absolute -left-1/2 data-[is-full]:opacity-0"
+                            className="w-full transition flex items-center justify-center h-full absolute -left-1/2 data-[is-full]:opacity-0"
                           >
                             <div className="w-2px h-full bg-background" />
                           </div>
