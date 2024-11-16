@@ -541,7 +541,7 @@ export default function UniswapPositionCard({
                 title="Balance"
                 value={
                   <div className="flex flex-1 items-center gap-2">
-                    <BalanceColumn
+                    <BalanceTickerAndAmount
                       ticker={statsData?.pools[0].token0.symbol}
                       value={getConditionalValueStats(
                         formatNumberTBMK(statsData?.pools[0].tvl0 || 0)
@@ -583,7 +583,7 @@ export default function UniswapPositionCard({
                         </div>
                       </div>
                     </div>
-                    <BalanceColumn
+                    <BalanceTickerAndAmount
                       ticker={statsData?.pools[0].token1.symbol}
                       value={getConditionalValueStats(
                         formatNumberTBMK(statsData?.pools[0].tvl1 || 0)
@@ -743,7 +743,7 @@ function TickerTextAmount({
 }) {
   return (
     <div className="flex shrink min-w-0 flex-row items-center justify-between gap-1.5 md:gap-2 flex-1 text-xs md:text-sm leading-none md:leading-none font-medium">
-      <div className="flex flex-row items-center gap-1 md:gap-1.25 shrink min-w-0">
+      <div className="flex flex-row items-center gap-1.25 shrink min-w-0">
         {ticker !== undefined && tickerIcon !== false && (
           <div
             className={cn(
@@ -841,9 +841,15 @@ function StatColumn({
   );
 }
 
-function BalanceColumn({ ticker, value }: { ticker?: string; value: string }) {
+function BalanceTickerAndAmount({
+  ticker,
+  value,
+}: {
+  ticker?: string;
+  value: string;
+}) {
   return (
-    <div className="flex items-center gap-1 md:gap-1.25">
+    <div className="flex items-center gap-1.25">
       <div className="size-3.5 md:size-4 -my-1 bg-foreground text-background rounded-full p-0.25 md:p-0.5 group-data-[is-pending]/stats:animate-skeleton group-data-[is-pending]/stats:bg-foreground group-data-[is-loading-error]/stats:bg-destructive">
         <CryptoIcon
           className="size-full group-data-[is-pending]/stats:opacity-0 group-data-[is-loading-error]/stats:opacity-0"
