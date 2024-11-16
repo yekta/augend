@@ -50,7 +50,7 @@ const pendingClasses =
 const errorClasses = "group-data-[is-loading-error]/card:text-destructive";
 
 const pendingClassesStats =
-  "group-data-[is-pending]/stats:text-transparent group-data-[is-pending]/stats:animate-skeleton group-data-[is-pending]/stats:bg-foreground group-data-[is-pending]/stats:rounded";
+  "group-data-[is-pending]/stats:text-transparent group-data-[is-pending]/stats:animate-skeleton group-data-[is-pending]/stats:bg-foreground group-data-[is-pending]/stats:rounded-md";
 const errorClassesStats =
   "group-data-[is-loading-error]/stats:text-destructive";
 
@@ -832,7 +832,9 @@ function StatColumn({
             <p
               data-is-node={typeof value !== "string" || undefined}
               className={cn(
-                "shrink min-w-0 overflow-hidden overflow-ellipsis whitespace-nowrap text-base md:text-lg font-bold leading-none md:leading-none group-data-[is-pending]/stats:text-transparent group-data-[is-pending]/stats:animate-skeleton group-data-[is-pending]/stats:bg-foreground group-data-[is-pending]/stats:rounded md:group-data-[is-pending]/stats:rounded-md group-data-[is-loading-error]/stats:text-destructive",
+                "shrink min-w-0 overflow-hidden overflow-ellipsis whitespace-nowrap text-base md:text-lg font-bold leading-none md:leading-none",
+                pendingClassesStats,
+                errorClassesStats,
                 valueClassName
               )}
             >
