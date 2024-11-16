@@ -218,7 +218,7 @@ export default function UniswapPoolsTableCard({
       },
       {
         accessorKey: "apr",
-        header: "APR (24H)",
+        header: "APR 24H",
         cellClassName: ({ row }) => getNumberColorClass(row.original.apr24h),
         cell: ({ row }) => `${formatNumberTBMK(row.original.apr24h * 100)}%`,
         sortingFn: (a, b) => a.original.apr24h - b.original.apr24h,
@@ -231,7 +231,7 @@ export default function UniswapPoolsTableCard({
       },
       {
         accessorKey: "volume24H",
-        header: "Vol (24H)",
+        header: "Vol 24H",
         cell: ({ row }) =>
           `${convertCurrency.symbol}${formatNumberTBMK(
             row.original.volume24hUSD
@@ -240,7 +240,7 @@ export default function UniswapPoolsTableCard({
       },
       {
         accessorKey: "volume7D",
-        header: "Vol (7D)",
+        header: "Vol 7D",
         cell: ({ row }) =>
           `${convertCurrency.symbol}${formatNumberTBMK(
             row.original.volume7dUSD
