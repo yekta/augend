@@ -734,7 +734,7 @@ function TickerTextAmount({
               tickerIcon
             ) : (
               <CryptoIcon
-                className="size-full bg-border rounded-full p-0.5 group-data-[is-pending]/card:hidden group-data-[is-loading-error]/card:hidden"
+                className="size-full bg-muted-foreground text-background rounded-full p-0.25 md:p-0.5 group-data-[is-pending]/card:hidden group-data-[is-loading-error]/card:hidden"
                 ticker={ticker}
               />
             )}
@@ -818,7 +818,7 @@ function StatColumn({
 function BalanceColumn({ ticker, value }: { ticker?: string; value: string }) {
   return (
     <div className="flex items-center gap-1 md:gap-1.25">
-      <div className="size-3.5 md:size-4 -my-1 bg-border rounded-full text-foreground p-0.5 group-data-[is-pending]/stats:animate-skeleton group-data-[is-pending]/stats:bg-foreground group-data-[is-loading-error]/stats:bg-destructive">
+      <div className="size-3.5 md:size-4 -my-1 bg-foreground text-background rounded-full p-0.25 md:p-0.5 group-data-[is-pending]/stats:animate-skeleton group-data-[is-pending]/stats:bg-foreground group-data-[is-loading-error]/stats:bg-destructive">
         <CryptoIcon
           className="size-full group-data-[is-pending]/stats:opacity-0 group-data-[is-loading-error]/stats:opacity-0"
           ticker={ticker}
