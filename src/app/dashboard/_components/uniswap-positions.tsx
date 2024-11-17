@@ -1,11 +1,12 @@
 import UniswapPositionCard from "@/components/cards/uniswap-position-card";
 import {
-  TUniswapNetwork,
-  UniswapNetworkSchema,
-} from "@/trpc/api/routers/uniswap/types";
+  EthereumNetworkSchema,
+  TEthereumNetwork,
+} from "@/trpc/api/routers/ethereum/types";
+
 import React from "react";
 
-const items: { id: number; network: TUniswapNetwork }[] = (
+const items: { id: number; network: TEthereumNetwork }[] = (
   process.env.UNISWAP_POSITIONS || ""
 )
   .split(",")
@@ -13,7 +14,7 @@ const items: { id: number; network: TUniswapNetwork }[] = (
     const [network, id] = i.split(":");
     return {
       id: Number(id),
-      network: UniswapNetworkSchema.parse(network),
+      network: EthereumNetworkSchema.parse(network),
     };
   });
 

@@ -1,7 +1,10 @@
 "use client";
 
 import CardWrapper from "@/components/cards/card-wrapper";
-import { getNumberColorClass } from "@/components/cards/helpers";
+import {
+  ethereumNetworkExplorer,
+  getNumberColorClass,
+} from "@/components/cards/helpers";
 import Indicator from "@/components/cards/indicator";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import AsyncDataTable, {
@@ -14,10 +17,8 @@ import { timeAgo } from "@/lib/helpers";
 import { useConditionalValue } from "@/lib/hooks/useConditionalValue";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
-import {
-  TUniswapNetwork,
-  TUniswapPoolSwapsResult,
-} from "@/trpc/api/routers/uniswap/types";
+import { TUniswapPoolSwapsResult } from "@/trpc/api/routers/uniswap/types";
+import { TEthereumNetwork } from "@/trpc/api/routers/ethereum/types";
 import { api } from "@/trpc/setup/react";
 import { SortingState } from "@tanstack/react-table";
 import {
@@ -43,11 +44,6 @@ const swapsTableDataFallback: TSwapData[] = Array.from(
   })
 );
 
-const networkToAddressUrl: Record<TUniswapNetwork, (s: string) => string> = {
-  ethereum: (address: string) => `https://etherscan.io/address/${address}`,
-  polygon: (address: string) => `https://polygonscan.com/address/${address}`,
-};
-
 const pendingClasses =
   "group-data-[is-pending]/card:text-transparent group-data-[is-pending]/card:animate-skeleton group-data-[is-pending]/card:bg-foreground group-data-[is-pending]/card:rounded";
 const errorClasses = "group-data-[is-loading-error]/card:text-destructive";
@@ -63,7 +59,7 @@ export default function UniswapPositionCard({
   className,
 }: {
   id: number;
-  network: TUniswapNetwork;
+  network: TEthereumNetwork;
   className?: string;
 }) {
   const { data, isPending, isError, isLoadingError, isRefetching } =
@@ -155,7 +151,7 @@ export default function UniswapPositionCard({
         headerAlignment: "start",
         isPinnedLeft: true,
         sortDescFirst: true,
-        cell: ({ row }) => timeAgo(new Date(row.original.timestamp)),
+        cell: ({ row }) => timeAgo(row.original.timestamp),
         cellParagraphClassName:
           "text-muted-foreground group-data-[is-pending]/table:bg-muted-foreground",
         sortingFn: (rowA, rowB, _columnId) => {
@@ -240,7 +236,9 @@ export default function UniswapPositionCard({
           const Comp = isPending ? "div" : swapsData ? Link : "div";
           return (
             <Comp
-              href={networkToAddressUrl[network](row.original.traderAddress)}
+              href={ethereumNetworkExplorer[network].address(
+                row.original.traderAddress
+              )}
               target="_blank"
               className="w-full font-mono text-xs md:text-sm leading-none md:leading-none font-medium py-3.25 md:py-3.5 gap-1 flex items-center justify-end pl-2 pr-4 md:pr-5 group/link group-data-[is-loading-error]/table:text-destructive"
             >
@@ -317,7 +315,8 @@ export default function UniswapPositionCard({
                 titleWrapperClassName="pr-8"
                 chip={[
                   conditionalValue(
-                    timeAgo(new Date(data?.position.createdAt || 1731679718000))
+                    timeAgo(data?.position.createdAt || 1731679718000, true),
+                    true
                   ),
                   conditionalValue(
                     `$${formatNumberTBMK(

@@ -1,8 +1,10 @@
 "use client";
 
 import CardWrapper from "@/components/cards/card-wrapper";
+import { ethereumNetworkExplorer } from "@/components/cards/helpers";
 import Indicator from "@/components/cards/indicator";
-import { defaultQueryOptions } from "@/lib/constants";
+import CryptoIcon from "@/components/icons/crypto-icon";
+import { defaultLocale, defaultQueryOptions } from "@/lib/constants";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
 import { TEthereumNetwork } from "@/trpc/api/routers/ethereum/types";
@@ -27,7 +29,7 @@ export default function EthereumGasCard({
       {
         network,
       },
-      defaultQueryOptions.normal
+      defaultQueryOptions.fast
     );
 
   return (
@@ -38,8 +40,21 @@ export default function EthereumGasCard({
         (!isPending && !isLoadingError && data !== undefined) || undefined
       }
       className={className}
+      href={data ? ethereumNetworkExplorer[network].gasTracker : undefined}
     >
-      <div className="w-full px-2 py-2 flex flex-wrap shrink min-w-0 items-center justify-center flex-row rounded-xl border leading-none font-semibold relative">
+      <div
+        className="w-full px-2 py-2.5 flex flex-wrap shrink min-w-0 items-center justify-center flex-row rounded-xl border leading-none font-semibold relative
+        not-touch:group-data-[has-data]/card:group-hover/card:bg-background-secondary group-data-[has-data]/card:group-active/card:bg-background-secondary"
+      >
+        <div className="flex -mt-0.5 md:mt-0 w-full md:w-auto items-center justify-center overflow-hidden">
+          <IconAndText
+            text={
+              data ? `${data.block.toLocaleString(defaultLocale)}` : undefined
+            }
+            Icon={() => <CryptoIcon ticker="ETH" className="size-full" />}
+            isPending={isPending}
+          />
+        </div>
         <div className="flex flex-wrap shrink min-w-0 overflow-hidden items-center justify-center">
           <IconAndText
             text={data ? `${formatNumberTBMK(data.gwei, 3, true)}` : undefined}
@@ -101,13 +116,13 @@ function IconAndText({
   return (
     <div
       className={cn(
-        "shrink min-w-0 font-mono px-3 md:px-6 py-2 flex justify-start items-center gap-1.25 md:gap-1.5",
+        "shrink min-w-0 font-mono px-3 md:px-5 py-2 flex justify-start items-center gap-1.25 md:gap-1.5",
         "group-data-[is-loading-error]/card:text-destructive",
         className
       )}
     >
       <div
-        className="size-4 md:size-4.5 shrink-0
+        className="size-4 md:size-4.5 shrink-0 -my-1
         group-data-[is-pending]/card:bg-foreground group-data-[is-pending]/card:animate-skeleton group-data-[is-pending]/card:rounded-full
         group-data-[is-loading-error]/card:bg-destructive group-data-[is-loading-error]/card:rounded-full"
       >

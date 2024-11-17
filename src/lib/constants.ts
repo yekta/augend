@@ -1,3 +1,5 @@
+export const defaultLocale: Intl.LocalesArgument = "en-US";
+
 const refetchInterval = {
   slow: 30_000,
   normal: 20_000,

@@ -11,7 +11,7 @@ import { defaultQueryOptions } from "@/lib/constants";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
 import {
-  TUniswapNetwork,
+  TEthereumNetwork,
   TUniswapPoolsResult,
 } from "@/trpc/api/routers/uniswap/types";
 import { api } from "@/trpc/setup/react";
@@ -67,7 +67,7 @@ export default function UniswapPoolsTableCard({
 }: {
   className?: string;
 }) {
-  const [network, setNetwork] = useState<TUniswapNetwork>("ethereum");
+  const [network, setNetwork] = useState<TEthereumNetwork>("ethereum");
 
   const [page, setPage] = useState<TAsyncDataTablePage>({
     min: 1,

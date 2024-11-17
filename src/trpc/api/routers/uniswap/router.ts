@@ -1,18 +1,20 @@
 import { z } from "zod";
 
 import {
+  EthereumAddressSchema,
+  EthereumNetworkSchema,
+} from "@/trpc/api/routers/ethereum/types";
+import {
   getUniswapPositionManager,
   uniswapOkuUrl,
 } from "@/trpc/api/routers/uniswap/constants";
 import {
-  EthereumAddressSchema,
   TUniswapPoolsResult,
   TUniswapPoolsResultRaw,
   TUniswapPoolSwapsResult,
   TUniswapPoolSwapsResultRaw,
   TUniswapPositionResult,
   TUniswapPositionResultRaw,
-  UniswapNetworkSchema,
 } from "@/trpc/api/routers/uniswap/types";
 import { createTRPCRouter, publicProcedure } from "@/trpc/api/trpc";
 import type { PositionPriceRange, SearchFilterOpts } from "@gfxlabs/oku";
@@ -22,7 +24,7 @@ export const uniswapRouter = createTRPCRouter({
     .input(
       z.object({
         page: z.number().int().positive().default(1),
-        network: UniswapNetworkSchema.optional().default("ethereum"),
+        network: EthereumNetworkSchema.optional().default("ethereum"),
         limit: z.number().int().positive().min(1).max(200).default(200),
         searchAddress: EthereumAddressSchema.optional(),
         errorOnUnmatchingSearchResult: z.boolean().optional().default(false),
@@ -121,7 +123,7 @@ export const uniswapRouter = createTRPCRouter({
     .input(
       z.object({
         id: z.number(),
-        network: UniswapNetworkSchema.optional().default("ethereum"),
+        network: EthereumNetworkSchema.optional().default("ethereum"),
       })
     )
     .query(async ({ input: { id, network } }) => {
@@ -249,7 +251,7 @@ export const uniswapRouter = createTRPCRouter({
   getSwaps: publicProcedure
     .input(
       z.object({
-        network: UniswapNetworkSchema.optional().default("ethereum"),
+        network: EthereumNetworkSchema.optional().default("ethereum"),
         poolAddress: z.string(),
         page: z.number().int().positive().default(1),
       })
