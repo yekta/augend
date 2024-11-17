@@ -3,11 +3,12 @@ import Indicator from "@/components/cards/indicator";
 import { defaultQueryOptions } from "@/lib/constants";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
-import { TAvailableExchange } from "@/server/api/routers/exchange/types";
-import { TOrderBook } from "@/server/api/routers/exchange/types";
+import {
+  TAvailableExchange,
+  TOrderBook,
+} from "@/server/api/routers/exchange/types";
 import { api } from "@/trpc/react";
 import { ChartNoAxesCombinedIcon } from "lucide-react";
-import Link from "next/link";
 
 const lines = 10;
 const placeholderData: TOrderBook = {
