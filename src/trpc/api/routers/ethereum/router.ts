@@ -1,4 +1,5 @@
-import { cmcApiUrl, cmcFetchOptions } from "@/trpc/api/routers/cmc/constants";
+import { cmcApiUrl } from "@/trpc/api/routers/cmc/constants";
+import { cmcFetchOptions } from "@/trpc/api/routers/cmc/secrets";
 import { TCmcGetCryptosResult } from "@/trpc/api/routers/cmc/types";
 import {
   ethereumNetworks,

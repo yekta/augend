@@ -1,10 +1,8 @@
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "@/trpc/api/trpc";
-import {
-  coinGeckoApiUrl,
-  coinGeckoFetchOptions,
-} from "@/trpc/api/routers/coin-gecko/constants";
+import { coinGeckoApiUrl } from "@/trpc/api/routers/coin-gecko/constants";
+import { coinGeckoFetchOptions } from "@/trpc/api/routers/coin-gecko/secrets";
 
 export const coinGeckoRouter = createTRPCRouter({
   getCoinList: publicProcedure

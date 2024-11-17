@@ -1,3 +1,7 @@
+import {
+  binanceApiKey,
+  binanceApiSecret,
+} from "@/trpc/api/routers/exchange/secrets";
 import { TAvailableExchange } from "@/trpc/api/routers/exchange/types";
 import ccxt, { Exchange } from "ccxt";
 
@@ -8,10 +12,10 @@ export function getExchangeInstance(exchange: TAvailableExchange): Exchange {
   if (exchange === "OKX") return new ccxt.okx();
   if (exchange === "Kraken") return new ccxt.kraken();
   return new ccxt.binance(
-    process.env.BINANCE_API_KEY && process.env.BINANCE_SECRET
+    binanceApiKey && binanceApiSecret
       ? {
-          apiKey: process.env.BINANCE_API_KEY,
-          secret: process.env.BINANCE_SECRET,
+          apiKey: binanceApiKey,
+          secret: binanceApiSecret,
         }
       : undefined
   );

@@ -1,11 +1,12 @@
 import { z } from "zod";
 
-import { cmcApiUrl, cmcFetchOptions } from "@/trpc/api/routers/cmc/constants";
+import { cmcApiUrl } from "@/trpc/api/routers/cmc/constants";
 import { createTRPCRouter, publicProcedure } from "@/trpc/api/trpc";
 import {
   TCmcGetCryptosResult,
   TCmcGetCryptosResultEdited,
 } from "@/trpc/api/routers/cmc/types";
+import { cmcFetchOptions } from "@/trpc/api/routers/cmc/secrets";
 
 export const cmcRouter = createTRPCRouter({
   getCryptoInfos: publicProcedure
