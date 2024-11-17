@@ -101,13 +101,13 @@ function IconAndText({
   return (
     <div
       className={cn(
-        "w-21 md:w-32 max-w-full md:max-w-full px-2 py-2 flex justify-start items-center gap-1 md:gap-1.5",
+        "shrink min-w-0 font-mono px-3 md:px-6 py-2 flex justify-start items-center gap-1.25 md:gap-1.5",
         "group-data-[is-loading-error]/card:text-destructive",
         className
       )}
     >
       <div
-        className="size-4 md:size-5 shrink-0
+        className="size-4 md:size-4.5 shrink-0
         group-data-[is-pending]/card:bg-foreground group-data-[is-pending]/card:animate-skeleton group-data-[is-pending]/card:rounded-full
         group-data-[is-loading-error]/card:bg-destructive group-data-[is-loading-error]/card:rounded-full"
       >
