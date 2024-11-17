@@ -3,6 +3,7 @@
 import CardWrapper from "@/components/cards/card-wrapper";
 import Indicator from "@/components/cards/indicator";
 import { defaultQueryOptions } from "@/lib/constants";
+import { useConditionalValue } from "@/lib/hooks/useConditionalValue";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
 import { getExplorerUrl } from "@/server/api/routers/nano-banano/helpers";
@@ -64,13 +65,10 @@ export default function WBanCard({ className }: { className?: string }) {
   const skeletonSmallParagraphClasses =
     "group-data-[is-pending]:text-transparent group-data-[is-pending]:bg-muted-foreground group-data-[is-pending]:rounded-sm group-data-[is-pending]:animate-skeleton";
 
-  const getConditionalNumber = (v: number | undefined) => {
-    return isPending
-      ? "Loading"
-      : v !== undefined
-        ? formatNumberTBMK(v)
-        : "Error";
-  };
+  const conditionalValue = useConditionalValue({
+    isPending,
+    data: banBalanceData,
+  });
 
   return (
     <CardWrapper className={cn("w-full", className)}>
@@ -125,7 +123,9 @@ export default function WBanCard({ className }: { className?: string }) {
                       "leading-none md:leading-none"
                     )}
                   >
-                    {getConditionalNumber(coldWallet?.balance)}
+                    {conditionalValue(
+                      formatNumberTBMK(coldWallet?.balance || 1)
+                    )}
                   </p>
                   <p
                     className={cn(
@@ -133,7 +133,9 @@ export default function WBanCard({ className }: { className?: string }) {
                       "leading-none md:leading-none"
                     )}
                   >
-                    {getConditionalNumber(coldWallet?.receivable)}
+                    {conditionalValue(
+                      formatNumberTBMK(coldWallet?.receivable || 1)
+                    )}
                   </p>
                 </div>
               </Link>
@@ -154,7 +156,9 @@ export default function WBanCard({ className }: { className?: string }) {
                       "leading-none md:leading-none"
                     )}
                   >
-                    {getConditionalNumber(hotWallet?.balance)}
+                    {conditionalValue(
+                      formatNumberTBMK(hotWallet?.balance || 1)
+                    )}
                   </p>
                   <p
                     className={cn(
@@ -162,7 +166,9 @@ export default function WBanCard({ className }: { className?: string }) {
                       "leading-none md:leading-none"
                     )}
                   >
-                    {getConditionalNumber(hotWallet?.receivable)}
+                    {conditionalValue(
+                      formatNumberTBMK(hotWallet?.receivable || 1)
+                    )}
                   </p>
                 </div>
               </Link>
@@ -196,7 +202,9 @@ export default function WBanCard({ className }: { className?: string }) {
                       "leading-none md:leading-none"
                     )}
                   >
-                    {getConditionalNumber(pendingWithdrawalAmount)}
+                    {conditionalValue(
+                      formatNumberTBMK(pendingWithdrawalAmount || 1)
+                    )}
                   </p>
                 </div>
               </div>

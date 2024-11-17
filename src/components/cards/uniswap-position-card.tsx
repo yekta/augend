@@ -10,6 +10,8 @@ import AsyncDataTable, {
 } from "@/components/ui/async-data-table";
 import { Button } from "@/components/ui/button";
 import { defaultQueryOptions } from "@/lib/constants";
+import { timeAgo } from "@/lib/helpers";
+import { useConditionalValue } from "@/lib/hooks/useConditionalValue";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
 import {
@@ -253,9 +255,7 @@ export default function UniswapPositionCard({
                 group-data-[is-pending]/table:text-transparent group-data-[is-pending]/table:animate-skeleton group-data-[is-pending]/table:bg-foreground
                 group-data-[is-pending]/table:rounded"
               >
-                {getConditionalValueSwaps(
-                  row.original.traderAddress.slice(0, 6)
-                )}
+                {conditionalValueSwaps(row.original.traderAddress.slice(0, 6))}
               </p>
             </Comp>
           );
@@ -270,23 +270,15 @@ export default function UniswapPositionCard({
     ];
   }, [data, swapsData, swapsIsPending]);
 
-  function getConditionalValue<T>(value: T, short = false) {
-    if (isPending) return short ? "Load" : "Loading";
-    if (data && value !== undefined) return value;
-    return short ? "Error" : "Err";
-  }
-
-  function getConditionalValueSwaps<T>(value: T, short = false) {
-    if (swapsIsPending) return short ? "Load" : "Loading";
-    if (swapsData && value !== undefined) return value;
-    return short ? "Error" : "Err";
-  }
-
-  function getConditionalValueStats<T>(value: T, short = false) {
-    if (statsIsPending) return short ? "Load" : "Loading";
-    if (statsData && value !== undefined) return value;
-    return short ? "Error" : "Err";
-  }
+  const conditionalValue = useConditionalValue({ isPending, data });
+  const conditionalValueSwaps = useConditionalValue({
+    isPending: swapsIsPending,
+    data: swapsData,
+  });
+  const conditionalValueStats = useConditionalValue({
+    isPending: statsIsPending,
+    data: statsData,
+  });
 
   return (
     <CardWrapper
@@ -318,11 +310,11 @@ export default function UniswapPositionCard({
               {/* Balance */}
               <Section
                 className="flex-1 overflow-hidden"
-                title={getConditionalValue(
+                title={conditionalValue(
                   `$${formatNumberTBMK(data?.position?.amountTotalUSD || 0)}`
                 )}
                 titleWrapperClassName="pr-8"
-                chip={getConditionalValue(
+                chip={conditionalValue(
                   timeAgo(new Date(data?.position.createdAt || 1731679718000)) +
                     ` | $${formatNumberTBMK(
                       data?.position.depositTotalUSD || 0,
@@ -330,15 +322,12 @@ export default function UniswapPositionCard({
                     )}`
                 )}
                 chipClassName={getNumberColorClass(0, true)}
-                ticker0={getConditionalValue(
-                  data?.position.token0.symbol,
-                  true
-                )}
-                amount0={getConditionalValue(
+                ticker0={conditionalValue(data?.position.token0.symbol, true)}
+                amount0={conditionalValue(
                   formatNumberTBMK(data?.position?.amount0 || 0),
                   true
                 )}
-                amount0Chip={getConditionalValue(
+                amount0Chip={conditionalValue(
                   formatNumberTBMK(
                     Math.ceil(
                       ((data?.position?.amount0USD || 0) /
@@ -349,15 +338,12 @@ export default function UniswapPositionCard({
                   ) + "%",
                   true
                 )}
-                ticker1={getConditionalValue(
-                  data?.position.token1.symbol,
-                  true
-                )}
-                amount1={getConditionalValue(
+                ticker1={conditionalValue(data?.position.token1.symbol, true)}
+                amount1={conditionalValue(
                   formatNumberTBMK(data?.position?.amount1 || 0),
                   true
                 )}
-                amount1Chip={getConditionalValue(
+                amount1Chip={conditionalValue(
                   formatNumberTBMK(
                     Math.floor(
                       (((data?.position?.amountTotalUSD || 0) -
@@ -374,12 +360,12 @@ export default function UniswapPositionCard({
             {/* Fees */}
             <Section
               className="w-1/2 mt-1.5 lg:mt-0 lg:w-1/3"
-              title={getConditionalValue(
+              title={conditionalValue(
                 `$${formatNumberTBMK(
                   data?.position?.uncollectedFeesTotalUSD || 0
                 )}`
               )}
-              chip={getConditionalValue(
+              chip={conditionalValue(
                 `${formatNumberTBMK((data?.position.apr || 0) * 100, 3)}%`,
                 true
               )}
@@ -387,12 +373,12 @@ export default function UniswapPositionCard({
                 data?.position?.apr || 0,
                 true
               )}
-              ticker0={getConditionalValue(data?.position.token0.symbol, true)}
-              amount0={getConditionalValue(
+              ticker0={conditionalValue(data?.position.token0.symbol, true)}
+              amount0={conditionalValue(
                 formatNumberTBMK(data?.position?.uncollectedFees0 || 0),
                 true
               )}
-              amount0Chip={getConditionalValue(
+              amount0Chip={conditionalValue(
                 `${formatNumberTBMK(
                   Math.ceil(
                     ((data?.position?.uncollectedFees0USD || 0.5) /
@@ -403,12 +389,12 @@ export default function UniswapPositionCard({
                 )}%`,
                 true
               )}
-              ticker1={getConditionalValue(data?.position.token1.symbol, true)}
-              amount1={getConditionalValue(
+              ticker1={conditionalValue(data?.position.token1.symbol, true)}
+              amount1={conditionalValue(
                 formatNumberTBMK(data?.position?.uncollectedFees1 || 0),
                 true
               )}
-              amount1Chip={getConditionalValue(
+              amount1Chip={conditionalValue(
                 `${formatNumberTBMK(
                   Math.floor(
                     (((data?.position?.uncollectedFeesTotalUSD || 1) -
@@ -424,7 +410,7 @@ export default function UniswapPositionCard({
             {/* Prices */}
             <Section
               className="w-1/2 mt-1.5 lg:mt-0 lg:w-1/3"
-              title={getConditionalValue(
+              title={conditionalValue(
                 `${formatNumberTBMK(data?.position?.priceCurrent || 0)}`
               )}
               titleClassName={
@@ -436,11 +422,11 @@ export default function UniswapPositionCard({
               }
               ticker0Icon={false}
               ticker0={"Min"}
-              amount0={getConditionalValue(
+              amount0={conditionalValue(
                 formatNumberTBMK(data?.position?.priceLower || 0),
                 true
               )}
-              amount0Chip={`${getConditionalValue(
+              amount0Chip={`${conditionalValue(
                 `${
                   data?.position?.priceCurrent ||
                   100 >= (data?.position?.priceLower || 50)
@@ -463,11 +449,11 @@ export default function UniswapPositionCard({
               )}`}
               ticker1Icon={false}
               ticker1={"Max"}
-              amount1={getConditionalValue(
+              amount1={conditionalValue(
                 formatNumberTBMK(data?.position?.priceUpper || 0),
                 true
               )}
-              amount1Chip={`${getConditionalValue(
+              amount1Chip={`${conditionalValue(
                 `${
                   (data?.position?.priceUpper || 100) >=
                   (data?.position?.priceCurrent || 50)
@@ -526,13 +512,13 @@ export default function UniswapPositionCard({
             >
               <StatColumn
                 title="TVL"
-                value={getConditionalValueStats(
+                value={conditionalValueStats(
                   `$${formatNumberTBMK(statsData?.pools[0].tvlUSD || 0)}`
                 )}
               />
               <StatColumn
                 title="APR 24H"
-                value={getConditionalValueStats(
+                value={conditionalValueStats(
                   `${formatNumberTBMK(
                     (statsData?.pools[0].apr24h || 0) * 100
                   )}%`
@@ -548,7 +534,7 @@ export default function UniswapPositionCard({
                     <p
                       className={`leading-none font-bold text-base md:text-lg md:leading-none ${pendingClassesStats} ${errorClassesStats}`}
                     >
-                      {getConditionalValueStats(
+                      {conditionalValueStats(
                         formatNumberTBMK(statsData?.pools[0].tvl0 || 0),
                         true
                       )}
@@ -592,7 +578,7 @@ export default function UniswapPositionCard({
                     <p
                       className={`leading-none font-bold text-base md:text-lg md:leading-none ${pendingClassesStats} ${errorClassesStats}`}
                     >
-                      {getConditionalValueStats(
+                      {conditionalValueStats(
                         formatNumberTBMK(statsData?.pools[0].tvl1 || 0),
                         true
                       )}
@@ -602,13 +588,13 @@ export default function UniswapPositionCard({
               />
               <StatColumn
                 title="Vol 24H"
-                value={getConditionalValueStats(
+                value={conditionalValueStats(
                   `$${formatNumberTBMK(statsData?.pools[0].volume24hUSD || 0)}`
                 )}
               />
               <StatColumn
                 title="Fees 24H"
-                value={getConditionalValueStats(
+                value={conditionalValueStats(
                   `$${formatNumberTBMK(statsData?.pools[0].fees24hUSD || 0)}`
                 )}
               />
@@ -891,30 +877,4 @@ function NFTImageLink({
       />
     </Link>
   );
-}
-
-function timeAgo(date: Date): string {
-  const now = new Date();
-  const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-  const formatNumberShort = (n: number) =>
-    n.toLocaleString("en-US", { maximumFractionDigits: 0 });
-  const formatNumber = (n: number) =>
-    n.toLocaleString("en-US", { maximumFractionDigits: 1 });
-
-  if (seconds < 60) return `${formatNumberShort(seconds)}s ago`;
-
-  const minutes = seconds / 60;
-  if (minutes < 60) return `${formatNumberShort(minutes)}m ago`;
-
-  const hours = minutes / 60;
-  if (hours < 24) return `${formatNumber(hours)}h ago`;
-
-  const days = hours / 24;
-  if (days < 30) return `${formatNumber(days)}d ago`;
-
-  const months = days / 30;
-  if (months < 12) return `${formatNumber(months)}M ago`;
-
-  const years = days / 365;
-  return `${formatNumber(years)}y ago`;
 }
