@@ -6,7 +6,6 @@ import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
 import { AppRouterOutputs } from "@/trpc/api/root";
 import { ArrowDownIcon, ArrowRightIcon, ArrowUpIcon } from "lucide-react";
-import Link from "next/link";
 
 export default function MiniCryptoCard({
   data,
