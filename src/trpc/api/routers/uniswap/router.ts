@@ -343,12 +343,18 @@ function parseNftUri(uriBase64: string): string {
     /<rect\s+(?:[^>]*width="\d+(?:px)?"\s*[^>]*height="\d+(?:px)?"|[^>]*height="\d+(?:px)?"\s*[^>]*width="\d+(?:px)?")[^>]*\/>\s*<path\s+[^>]*stroke-linecap="round"[^>]*d="[^"]+"\s*[^>]*\/>\s*<circle\s+[^>]*style="[^"]*transform[^"]+"\s*[^>]*\/>/gi;
   const rectStrokePattern =
     /<rect[\s\n]+(?=[^>]*?fill="rgba\(0,0,0,0\)")(?=[^>]*?stroke="rgba\(255,255,255,0\.2\)")[^>]*?\/>/gi;
+  /* const whiteCircleRegex = /<circle[^>]*fill="white"[^>]*>/g;
+  const whitePathRegex = /<path[^>]*fill="white"[^>]*>/g;
+  const pathWithStrokeRegex = /<path[^>]*stroke="[^"]*"[^>]*>/g; */
   const regexes = [
     animateTagRegex,
     textPathRegex,
     chipRegex,
     rectPattern,
     rectStrokePattern,
+    /* whiteCircleRegex,
+    whitePathRegex,
+    pathWithStrokeRegex, */
   ];
 
   const baseURI = uriBase64.split(",")[1] || uriBase64;

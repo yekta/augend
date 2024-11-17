@@ -313,17 +313,44 @@ export default function UniswapPositionCard({
                   `$${formatNumberTBMK(data?.position?.amountTotalUSD || 0)}`
                 )}
                 titleWrapperClassName="pr-8"
-                chip={conditionalValue(
-                  `$${formatNumberTBMK(data?.position.depositTotalUSD || 0, 3)}`
-                )}
-                chipClassName={
+                chip={[
+                  conditionalValue(
+                    `$${formatNumberTBMK(
+                      Math.abs(
+                        (data?.position.amountTotalUSD || 0) +
+                          (data?.position.uncollectedFeesTotalUSD || 0) -
+                          (data?.position.depositTotalUSD || 0)
+                      ),
+                      3
+                    )}`,
+                    true
+                  ),
+                  conditionalValue(
+                    `$${formatNumberTBMK(
+                      Math.abs(
+                        (data?.position.amountTotalUSD || 0) -
+                          (data?.position.depositTotalUSD || 0)
+                      ),
+                      3
+                    )}`,
+                    true
+                  ),
+                ]}
+                chipClassName={[
+                  data
+                    ? data.position.depositTotalUSD >
+                      data.position.amountTotalUSD +
+                        data.position.uncollectedFeesTotalUSD
+                      ? getNumberColorClass("negative", true)
+                      : getNumberColorClass("positive", true)
+                    : undefined,
                   data
                     ? data.position.depositTotalUSD >
                       data.position.amountTotalUSD
                       ? getNumberColorClass("negative", true)
                       : getNumberColorClass("positive", true)
-                    : undefined
-                }
+                    : undefined,
+                ]}
                 ticker0={conditionalValue(data?.position.token0.symbol, true)}
                 amount0={conditionalValue(
                   formatNumberTBMK(data?.position?.amount0 || 0),
@@ -691,7 +718,7 @@ function Section({
   ticker1Icon?: false | ReactNode;
   className?: string;
   titleClassName?: string;
-  chipClassName?: string | string[];
+  chipClassName?: string | (string | undefined)[];
   titleWrapperClassName?: string;
 }) {
   const pendingClasses =
@@ -912,7 +939,7 @@ function NFTImageLink({
           className="h-full w-auto filter"
           src={uri}
         />
-        <div className="w-full px-1 pb-1 flex items-center justify-center absolute left-1/2 -translate-x-1/2 bottom-0">
+        <div className="w-full px-1 pb-1 flex flex-col gap-1 items-center justify-center absolute left-1/2 -translate-x-1/2 bottom-0">
           <p
             className={cn(
               "w-full text-foreground font-medium whitespace-nowrap shrink min-w-0 overflow-hidden overflow-ellipsis text-xs text-center md:text-sm leading-none md:leading-none px-1.5 py-1 rounded-md",
