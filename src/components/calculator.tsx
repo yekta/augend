@@ -6,8 +6,8 @@ import NanoIcon from "@/components/icons/nano-icon";
 import { Input } from "@/components/ui/input";
 import { defaultQueryOptions } from "@/lib/constants";
 import { cn } from "@/lib/utils";
-import { TCurrencyForLiraTicker } from "@/server/api/routers/turkish-lira/helpers";
-import { api } from "@/trpc/react";
+import { TCurrencyForLiraTicker } from "@/trpc/api/routers/turkish-lira/helpers";
+import { api } from "@/trpc/setup/react";
 import React, { ReactNode, useEffect, useRef } from "react";
 
 type TCurrency = {

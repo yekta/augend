@@ -6,12 +6,9 @@ import { defaultQueryOptions } from "@/lib/constants";
 import { useConditionalValue } from "@/lib/hooks/useConditionalValue";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
-import { getExplorerUrl } from "@/server/api/routers/nano-banano/helpers";
-import {
-  TWbanIcon,
-  wbanNetworkObjects,
-} from "@/server/api/routers/wban/helpers";
-import { api } from "@/trpc/react";
+import { getExplorerUrl } from "@/trpc/api/routers/nano-banano/helpers";
+import { TWbanIcon, wbanNetworkObjects } from "@/trpc/api/routers/wban/helpers";
+import { api } from "@/trpc/setup/react";
 import { Flame, Hourglass, Snowflake } from "lucide-react";
 import Link from "next/link";
 

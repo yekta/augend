@@ -1,15 +1,15 @@
-import { cmcApiUrl, cmcFetchOptions } from "@/server/api/routers/cmc/constants";
-import { TCmcGetCryptosResult } from "@/server/api/routers/cmc/types";
+import { cmcApiUrl, cmcFetchOptions } from "@/trpc/api/routers/cmc/constants";
+import { TCmcGetCryptosResult } from "@/trpc/api/routers/cmc/types";
 import {
   etherscanApiUrl,
   networkToChainId,
-} from "@/server/api/routers/ethereum/constants";
-import { etherscanApiKey } from "@/server/api/routers/ethereum/secrets";
+} from "@/trpc/api/routers/ethereum/constants";
+import { etherscanApiKey } from "@/trpc/api/routers/ethereum/secrets";
 import {
   EthereumNetworkSchema,
   TGasInfoResultRaw,
-} from "@/server/api/routers/ethereum/types";
-import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
+} from "@/trpc/api/routers/ethereum/types";
+import { createTRPCRouter, publicProcedure } from "@/trpc/api/trpc";
 import { z } from "zod";
 
 const baseGasLimit = 21_000;

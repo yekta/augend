@@ -1,4 +1,4 @@
-import { TRPCReactProvider } from "@/trpc/react";
+import { TRPCReactProvider } from "@/trpc/setup/react";
 import React from "react";
 
 import ClerkProvider from "@/components/providers/clerk-provider";

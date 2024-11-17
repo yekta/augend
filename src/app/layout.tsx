@@ -1,6 +1,6 @@
 import Navbar from "@/components/navbar";
 import Providers from "@/components/providers/providers";
-import { HydrateClient } from "@/trpc/server";
+import { HydrateClient } from "@/trpc/setup/server";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";

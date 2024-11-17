@@ -3,7 +3,7 @@ import { z } from "zod";
 import {
   getUniswapPositionManager,
   uniswapOkuUrl,
-} from "@/server/api/routers/uniswap/constants";
+} from "@/trpc/api/routers/uniswap/constants";
 import {
   EthereumAddressSchema,
   TUniswapPoolsResult,
@@ -13,8 +13,8 @@ import {
   TUniswapPositionResult,
   TUniswapPositionResultRaw,
   UniswapNetworkSchema,
-} from "@/server/api/routers/uniswap/types";
-import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
+} from "@/trpc/api/routers/uniswap/types";
+import { createTRPCRouter, publicProcedure } from "@/trpc/api/trpc";
 import type { PositionPriceRange, SearchFilterOpts } from "@gfxlabs/oku";
 
 export const uniswapRouter = createTRPCRouter({

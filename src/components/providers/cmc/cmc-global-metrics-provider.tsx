@@ -5,8 +5,8 @@ import {
   TConvertCurrency,
 } from "@/components/providers/cmc/constants";
 import { defaultQueryOptions } from "@/lib/constants";
-import { AppRouterOutputs, AppRouterQueryResult } from "@/server/api/root";
-import { api } from "@/trpc/react";
+import { AppRouterOutputs, AppRouterQueryResult } from "@/trpc/api/root";
+import { api } from "@/trpc/setup/react";
 import React, { createContext, ReactNode, useContext } from "react";
 
 const CmcGlobalMetricsContext = createContext<TCmcGlobalMetricsContext | null>(

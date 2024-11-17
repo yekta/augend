@@ -5,8 +5,8 @@ import Indicator from "@/components/cards/indicator";
 import { defaultQueryOptions } from "@/lib/constants";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
-import { TEthereumNetwork } from "@/server/api/routers/ethereum/types";
-import { api } from "@/trpc/react";
+import { TEthereumNetwork } from "@/trpc/api/routers/ethereum/types";
+import { api } from "@/trpc/setup/react";
 import {
   ArrowRightLeftIcon,
   FuelIcon,

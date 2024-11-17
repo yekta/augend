@@ -1,4 +1,4 @@
-import { TAvailableExchange } from "@/server/api/routers/exchange/types";
+import { TAvailableExchange } from "@/trpc/api/routers/exchange/types";
 import ccxt, { Exchange } from "ccxt";
 
 export function getExchangeInstance(exchange: TAvailableExchange): Exchange {

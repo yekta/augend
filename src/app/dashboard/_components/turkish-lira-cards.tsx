@@ -9,8 +9,8 @@ import {
   CurrencyForLiraTickerEnum,
   getCurrencyUrl,
   TCurrencyForLira,
-} from "@/server/api/routers/turkish-lira/helpers";
-import { api } from "@/trpc/react";
+} from "@/trpc/api/routers/turkish-lira/helpers";
+import { api } from "@/trpc/setup/react";
 
 export const items: TCurrencyForLira[] = (
   cleanEnvVar(process.env.NEXT_PUBLIC_ADMIN_TURKISH_LIRA_CARDS) || ""

@@ -2,8 +2,8 @@ import {
   getPendingWithdrawal,
   TWbanNetwork,
   wbanNetworkObjects,
-} from "@/server/api/routers/wban/helpers";
-import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
+} from "@/trpc/api/routers/wban/helpers";
+import { createTRPCRouter, publicProcedure } from "@/trpc/api/trpc";
 
 export const wbanRouter = createTRPCRouter({
   getPendingWithdrawals: publicProcedure.query(async () => {

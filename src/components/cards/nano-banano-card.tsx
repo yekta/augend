@@ -2,13 +2,13 @@
 
 import ThreeLineCard from "@/components/cards/three-line-card";
 import { formatNumberTBMK } from "@/lib/number-formatters";
-import { AppRouterOutputs } from "@/server/api/root";
+import { AppRouterOutputs } from "@/trpc/api/root";
 import {
   getAvatarUrl,
   getExplorerUrl,
   isNano,
-} from "@/server/api/routers/nano-banano/helpers";
-import { TNanoBananoAccount } from "@/server/api/routers/nano-banano/types";
+} from "@/trpc/api/routers/nano-banano/helpers";
+import { TNanoBananoAccount } from "@/trpc/api/routers/nano-banano/types";
 
 export default function NanoBananoCard({
   data,

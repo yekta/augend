@@ -4,7 +4,7 @@ import CryptoIcon from "@/components/icons/crypto-icon";
 import { getCmcUrl } from "@/lib/get-cmc-url";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
-import { AppRouterOutputs } from "@/server/api/root";
+import { AppRouterOutputs } from "@/trpc/api/root";
 import { ArrowDownIcon, ArrowRightIcon, ArrowUpIcon } from "lucide-react";
 import Link from "next/link";
 

@@ -3,8 +3,8 @@ import {
   CurrencyForLiraTickerEnum,
   tcmbApi,
   TCurrencyForLiraTicker,
-} from "@/server/api/routers/turkish-lira/helpers";
-import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
+} from "@/trpc/api/routers/turkish-lira/helpers";
+import { createTRPCRouter, publicProcedure } from "@/trpc/api/trpc";
 import { XMLParser } from "fast-xml-parser";
 
 const parser = new XMLParser();

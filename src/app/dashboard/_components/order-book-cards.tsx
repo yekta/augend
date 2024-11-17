@@ -8,7 +8,7 @@ import { formatNumberTBMK } from "@/lib/number-formatters";
 import {
   ExchangeSchema,
   TAvailableExchange,
-} from "@/server/api/routers/exchange/types";
+} from "@/trpc/api/routers/exchange/types";
 
 const lines = 10;
 const priceFormatters: Record<string, (i: number) => string> = {

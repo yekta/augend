@@ -3,18 +3,18 @@ import { z } from "zod";
 import {
   bananoApiUrl,
   nanoApiUrl,
-} from "@/server/api/routers/nano-banano/constants";
+} from "@/trpc/api/routers/nano-banano/constants";
 import {
   isBan,
   isNano,
   rawToBanOrNano,
-} from "@/server/api/routers/nano-banano/helpers";
+} from "@/trpc/api/routers/nano-banano/helpers";
 import {
   AccountSchema,
   TNanoBananoBalanceResponse,
   TNanoBananoResult,
-} from "@/server/api/routers/nano-banano/types";
-import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
+} from "@/trpc/api/routers/nano-banano/types";
+import { createTRPCRouter, publicProcedure } from "@/trpc/api/trpc";
 
 export const nanoBananoRouter = createTRPCRouter({
   getBalances: publicProcedure

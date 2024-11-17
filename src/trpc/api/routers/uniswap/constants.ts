@@ -1,8 +1,8 @@
 import { abi as uniswapPositionManagerABI } from "@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json";
 import { ethers } from "ethers";
 
-import { infuraApiKey } from "@/server/api/routers/uniswap/secrets";
-import { TUniswapNetwork } from "@/server/api/routers/uniswap/types";
+import { infuraApiKey } from "@/trpc/api/routers/uniswap/secrets";
+import { TUniswapNetwork } from "@/trpc/api/routers/uniswap/types";
 
 const providers: Record<TUniswapNetwork, ethers.JsonRpcProvider> = {
   ethereum: new ethers.InfuraProvider("mainnet", infuraApiKey),

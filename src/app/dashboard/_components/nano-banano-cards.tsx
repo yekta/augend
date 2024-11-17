@@ -3,8 +3,8 @@
 import NanoBananoCard from "@/components/cards/nano-banano-card";
 import { defaultQueryOptions } from "@/lib/constants";
 import { cleanEnvVar } from "@/lib/helpers";
-import { TNanoBananoAccount } from "@/server/api/routers/nano-banano/types";
-import { api } from "@/trpc/react";
+import { TNanoBananoAccount } from "@/trpc/api/routers/nano-banano/types";
+import { api } from "@/trpc/setup/react";
 
 export const items: TNanoBananoAccount[] = (
   cleanEnvVar(process.env.NEXT_PUBLIC_ADMIN_NANO_BANANO_CARDS) || ""

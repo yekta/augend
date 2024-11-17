@@ -8,7 +8,7 @@ import AsyncDataTable, {
 import { defaultQueryOptions } from "@/lib/constants";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
-import { api } from "@/trpc/react";
+import { api } from "@/trpc/setup/react";
 import { RowData, SortingState } from "@tanstack/react-table";
 import { ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";

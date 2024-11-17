@@ -1,12 +1,12 @@
-import { cmcRouter } from "@/server/api/routers/cmc/router";
-import { coinGeckoRouter } from "@/server/api/routers/coin-gecko/router";
-import { ethereumRouter } from "@/server/api/routers/ethereum/router";
-import { exchangeRouter } from "@/server/api/routers/exchange/router";
-import { nanoBananoRouter } from "@/server/api/routers/nano-banano/router";
-import { turkishLiraRouter } from "@/server/api/routers/turkish-lira/router";
-import { uniswapRouter } from "@/server/api/routers/uniswap/router";
-import { wbanRouter } from "@/server/api/routers/wban/router";
-import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
+import { cmcRouter } from "@/trpc/api/routers/cmc/router";
+import { coinGeckoRouter } from "@/trpc/api/routers/coin-gecko/router";
+import { ethereumRouter } from "@/trpc/api/routers/ethereum/router";
+import { exchangeRouter } from "@/trpc/api/routers/exchange/router";
+import { nanoBananoRouter } from "@/trpc/api/routers/nano-banano/router";
+import { turkishLiraRouter } from "@/trpc/api/routers/turkish-lira/router";
+import { uniswapRouter } from "@/trpc/api/routers/uniswap/router";
+import { wbanRouter } from "@/trpc/api/routers/wban/router";
+import { createCallerFactory, createTRPCRouter } from "@/trpc/api/trpc";
 import {
   inferReactQueryProcedureOptions,
   TRPCClientErrorLike,

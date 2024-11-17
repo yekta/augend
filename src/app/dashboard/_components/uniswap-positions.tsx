@@ -2,7 +2,7 @@ import UniswapPositionCard from "@/components/cards/uniswap-position-card";
 import {
   TUniswapNetwork,
   UniswapNetworkSchema,
-} from "@/server/api/routers/uniswap/types";
+} from "@/trpc/api/routers/uniswap/types";
 import React from "react";
 
 const items: { id: number; network: TUniswapNetwork }[] = (

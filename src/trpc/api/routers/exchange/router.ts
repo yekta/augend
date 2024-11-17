@@ -1,12 +1,12 @@
 import { z } from "zod";
 
-import { getExchangeInstance } from "@/server/api/routers/exchange/helpers";
+import { getExchangeInstance } from "@/trpc/api/routers/exchange/helpers";
 import {
   ExchangeSchema,
   TOHLCVResult,
   TOrderBook,
-} from "@/server/api/routers/exchange/types";
-import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
+} from "@/trpc/api/routers/exchange/types";
+import { createTRPCRouter, publicProcedure } from "@/trpc/api/trpc";
 import { OHLCV, OrderBook, Ticker } from "ccxt";
 
 const OrderbookInputSchema = z.object({

@@ -17,8 +17,8 @@ import { cn } from "@/lib/utils";
 import {
   TUniswapNetwork,
   TUniswapPoolSwapsResult,
-} from "@/server/api/routers/uniswap/types";
-import { api } from "@/trpc/react";
+} from "@/trpc/api/routers/uniswap/types";
+import { api } from "@/trpc/setup/react";
 import { SortingState } from "@tanstack/react-table";
 import {
   ExternalLinkIcon,
