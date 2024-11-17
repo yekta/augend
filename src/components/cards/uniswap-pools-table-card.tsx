@@ -184,23 +184,25 @@ export default function UniswapPoolsTableCard({
                           : "ERR"}
                     </p>
                   </div>
-                  <p
-                    className={`whitespace-nowrap leading-none max-w-full overflow-hidden overflow-ellipsis ${pendingClassName}`}
-                  >
-                    {isPending
-                      ? "Load"
-                      : data
-                        ? row.original.token1.symbol
-                        : "ERR"}
-                  </p>
+                  <div className="max-w-full flex flex-row items-center gap-2 overflow-hidden">
+                    <p
+                      className={`whitespace-nowrap leading-none max-w-full overflow-hidden overflow-ellipsis ${pendingClassName}`}
+                    >
+                      {isPending
+                        ? "Load"
+                        : data
+                          ? row.original.token1.symbol
+                          : "ERR"}
+                    </p>
+                    <ExternalLinkIcon
+                      className="opacity-0 shrink-0 -ml-0.5 origin-bottom-left scale-50 pointer-events-none size-3 md:size-4 -my-1 transition
+                      not-touch:group-data-[has-data]/table:group-hover/link:opacity-100 not-touch:group-data-[has-data]/table:group-hover/link:scale-100
+                      group-data-[has-data]/table:group-active/link:opacity-100 group-data-[has-data]/table:group-active/link:scale-100
+                      "
+                    />
+                  </div>
                 </div>
               </div>
-              <ExternalLinkIcon
-                className="opacity-0 shrink-0 -ml-0.5 origin-bottom-left scale-50 pointer-events-none size-3 md:size-4 -my-1 transition
-                not-touch:group-data-[has-data]/table:group-hover/link:opacity-100 not-touch:group-data-[has-data]/table:group-hover/link:scale-100
-                group-data-[has-data]/table:group-active/link:opacity-100 group-data-[has-data]/table:group-active/link:scale-100
-                "
-              />
             </Component>
           );
         },
