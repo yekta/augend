@@ -4,6 +4,7 @@ import CardWrapper from "@/components/cards/card-wrapper";
 import Indicator from "@/components/cards/indicator";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import { defaultLocale, defaultQueryOptions } from "@/lib/constants";
+import { useConditionalValue } from "@/lib/hooks/useConditionalValue";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
 import { ethereumNetworks } from "@/trpc/api/routers/ethereum/constants";
@@ -32,6 +33,12 @@ export default function EthereumGasCard({
       defaultQueryOptions.fast
     );
 
+  const conditionalValue = useConditionalValue({
+    isPending,
+    data,
+    loadingText: "10,000,000",
+    loadingTextShort: "10.0",
+  });
   return (
     <CardWrapper
       data-is-loading-error={(isLoadingError && true) || undefined}
@@ -48,47 +55,46 @@ export default function EthereumGasCard({
       >
         <div className="flex -mt-0.5 md:mt-0 w-full md:w-auto items-center justify-center overflow-hidden">
           <IconAndText
-            text={
-              data ? `${data.block.toLocaleString(defaultLocale)}` : undefined
-            }
+            text={conditionalValue(
+              `${(data?.block || 10_000_000).toLocaleString(defaultLocale)}`
+            )}
             Icon={() => <CryptoIcon ticker="ETH" className="size-full" />}
-            isPending={isPending}
           />
         </div>
         <div className="flex flex-wrap shrink min-w-0 overflow-hidden items-center justify-center">
           <IconAndText
-            text={data ? `${formatNumberTBMK(data.gwei, 3, true)}` : undefined}
+            text={conditionalValue(
+              `${formatNumberTBMK(data?.gwei || 1, 3, true)}`,
+              true
+            )}
             Icon={FuelIcon}
-            isPending={isPending}
           />
           <IconAndText
-            text={
-              data ? `$${formatNumberTBMK(data.sendUsd, 3, true)}` : undefined
-            }
+            text={conditionalValue(
+              `$${formatNumberTBMK(data?.sendUsd || 1, 3, true)}`,
+              true
+            )}
             Icon={SendIcon}
-            isPending={isPending}
           />
         </div>
         <div className="flex flex-wrap shrink min-w-0 overflow-hidden items-center justify-center">
           <IconAndText
-            text={
-              data ? `$${formatNumberTBMK(data.swapUsd, 3, true)}` : undefined
-            }
+            text={conditionalValue(
+              `$${formatNumberTBMK(data?.swapUsd || 1, 3, true)}`,
+              true
+            )}
             Icon={ArrowRightLeftIcon}
-            isPending={isPending}
           />
           <IconAndText
-            text={
-              data
-                ? `$${formatNumberTBMK(
-                    data.uniswapV3PositionCreationUsd,
-                    3,
-                    true
-                  )}`
-                : undefined
-            }
+            text={conditionalValue(
+              `$${formatNumberTBMK(
+                data?.uniswapV3PositionCreationUsd || 1,
+                3,
+                true
+              )}`,
+              true
+            )}
             Icon={DropletIcon}
-            isPending={isPending}
           />
         </div>
         <Indicator
@@ -105,12 +111,10 @@ export default function EthereumGasCard({
 function IconAndText({
   Icon,
   text,
-  isPending,
   className,
 }: {
   Icon: ElementType;
-  text?: string;
-  isPending: boolean;
+  text: string;
   className?: string;
 }) {
   return (
@@ -130,9 +134,10 @@ function IconAndText({
       </div>
       <p
         className="shrink text-sm md:text-base md:leading-none leading-none min-w-0 overflow-hidden overflow-ellipsis whitespace-nowrap
-        group-data-[is-pending]/card:bg-foreground group-data-[is-pending]/card:animate-skeleton group-data-[is-pending]/card:rounded"
+        group-data-[is-pending]/card:bg-foreground group-data-[is-pending]/card:animate-skeleton group-data-[is-pending]/card:rounded
+        group-data-[is-loading-error]/card:text-destructive"
       >
-        {isPending ? "Load" : text !== undefined ? text : "Err"}
+        {text}
       </p>
     </div>
   );
