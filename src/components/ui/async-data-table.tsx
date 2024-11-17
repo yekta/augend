@@ -23,7 +23,6 @@ import {
   getCoreRowModel,
   getSortedRowModel,
   HeaderContext,
-  RowData,
   SortDirection,
   SortingState,
   useReactTable,
@@ -49,12 +48,6 @@ export type TAsyncDataTableColumnDef<T> = ColumnDef<T> & {
     | ((props: CellContext<T, unknown>) => string);
   headerClassName?: string;
 };
-
-declare module "@tanstack/react-table" {
-  interface ColumnMeta<TData extends RowData, TValue> {
-    width: string;
-  }
-}
 
 export default function AsyncDataTable<T>({
   columnDefs,
@@ -151,6 +144,7 @@ export default function AsyncDataTable<T>({
                     onClick={header.column.getToggleSortingHandler()}
                     style={{
                       ...getCommonPinningStyles(header.column),
+                      // @ts-ignore
                       width: header.column.columnDef.meta?.width,
                     }}
                     className={cn(
@@ -184,6 +178,7 @@ export default function AsyncDataTable<T>({
                     key={cell.id}
                     style={{
                       ...getCommonPinningStyles(cell.column),
+                      // @ts-ignore
                       width: cell.column.columnDef.meta?.width,
                     }}
                     className={cn(
