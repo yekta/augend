@@ -43,9 +43,7 @@ export default function EthereumGasCard({
     <CardWrapper
       data-is-loading-error={(isLoadingError && true) || undefined}
       data-is-pending={(isPending && true) || undefined}
-      data-has-data={
-        (!isPending && !isLoadingError && data !== undefined) || undefined
-      }
+      data-has-data={(data !== undefined && true) || undefined}
       className={className}
       href={data ? ethereumNetworks[network].gasTracker : undefined}
     >
