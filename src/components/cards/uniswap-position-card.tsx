@@ -915,7 +915,7 @@ function NFTImageLink({
         <div className="w-full px-1 pb-1 flex items-center justify-center absolute left-1/2 -translate-x-1/2 bottom-0">
           <p
             className={cn(
-              "w-full text-foreground font-medium whitespace-nowrap shrink min-w-0 overflow-hidden overflow-ellipsis text-xs text-center md:text-sm leading-none md:leading-none px-1.5 py-0.75 md:py-1 rounded-md",
+              "w-full text-foreground font-medium whitespace-nowrap shrink min-w-0 overflow-hidden overflow-ellipsis text-xs text-center md:text-sm leading-none md:leading-none px-1.5 py-1 rounded-md",
               "bg-background/75"
             )}
           >
