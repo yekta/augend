@@ -2,7 +2,7 @@ import { isAdmin } from "@/lib/is-admin";
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
-const isProtectedRoute = createRouteMatcher(["/", "/dashboard(.*)"]);
+const isProtectedRoute = createRouteMatcher(["/", "/main(.*)"]);
 const siteUrl = process.env.SITE_URL || "http://localhost:3000";
 
 function redirectToPublicHome() {
@@ -26,7 +26,7 @@ export default clerkMiddleware(async (auth, req) => {
     }
 
     if (isPrivateHome) {
-      return NextResponse.redirect(new URL("/dashboard", siteUrl));
+      return NextResponse.redirect(new URL("/main", siteUrl));
     }
   }
 });

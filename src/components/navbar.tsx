@@ -21,7 +21,7 @@ type TRoute = {
 
 const routes: TRoute[] = [
   {
-    href: `/dashboard`,
+    href: `/main`,
     label: "Dashboard",
     Icon: LucideLayoutDashboard,
   },
