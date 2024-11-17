@@ -117,7 +117,7 @@ function IconAndText({
         className="shrink text-sm md:text-base md:leading-none leading-none min-w-0 overflow-hidden overflow-ellipsis whitespace-nowrap
         group-data-[is-pending]/card:bg-foreground group-data-[is-pending]/card:animate-skeleton group-data-[is-pending]/card:rounded"
       >
-        {isPending ? "Loading" : text !== undefined ? text : "Error"}
+        {isPending ? "Load" : text !== undefined ? text : "Err"}
       </p>
     </div>
   );
