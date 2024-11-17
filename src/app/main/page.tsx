@@ -17,8 +17,8 @@ import CmcGlobalMetricsProvider from "@/components/providers/cmc/cmc-global-metr
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: `Dashboard | YDashboard`,
-  description: "Dashboard",
+  title: `Main | YDashboard`,
+  description: "Main dashboard.",
 };
 
 export default async function Page() {

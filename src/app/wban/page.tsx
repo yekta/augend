@@ -12,7 +12,7 @@ import CmcGlobalMetricsProvider from "@/components/providers/cmc/cmc-global-metr
 
 export const metadata: Metadata = {
   title: "wBAN | YDashboard",
-  description: "Dashboard",
+  description: "wBAN dashboard.",
 };
 
 export default async function Page() {

@@ -3,7 +3,7 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Calculator | YDashboard",
-  description: "Dashboard",
+  description: "Calculator dashboard.",
 };
 
 export default async function Page() {
