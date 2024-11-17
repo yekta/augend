@@ -19,7 +19,12 @@ import { TEthereumNetwork } from "@/trpc/api/routers/ethereum/types";
 import { api } from "@/trpc/setup/react";
 import { SortingState } from "@tanstack/react-table";
 import {
+  CalendarArrowUpIcon,
+  ChartCandlestickIcon,
+  ChartColumnIcon,
+  ClockIcon,
   ExternalLinkIcon,
+  HandCoinsIcon,
   TableIcon,
   TriangleAlertIcon,
   XIcon,
@@ -312,41 +317,51 @@ export default function UniswapPositionCard({
                 title={conditionalValue(
                   `$${formatNumberTBMK(data?.position?.amountTotalUSD || 0)}`
                 )}
-                titleWrapperClassName="pr-8"
+                titleWrapperClassName="pr-8 lg:pr-1"
                 chip={[
-                  conditionalValue(
-                    `$${formatNumberTBMK(
-                      Math.abs(
-                        (data?.position.amountTotalUSD || 0) +
-                          (data?.position.uncollectedFeesTotalUSD || 0) -
-                          (data?.position.depositTotalUSD || 0)
-                      ),
-                      3
-                    )}`,
-                    true
-                  ),
-                  conditionalValue(
-                    `$${formatNumberTBMK(
-                      Math.abs(
-                        (data?.position.amountTotalUSD || 0) -
-                          (data?.position.depositTotalUSD || 0)
-                      ),
-                      3
-                    )}`,
-                    true
-                  ),
+                  <div className="flex items-center gap-1 min-w-0 overflow-hidden shrink">
+                    <ChartColumnIcon className="size-3 md:size-3.5 -my-1 shrink-0" />
+                    <p className="shrink min-w-0 overflow-hidden overflow-ellipsis">
+                      {conditionalValue(
+                        `$${formatNumberTBMK(
+                          Math.abs(
+                            (data?.position.amountTotalUSD || 0) -
+                              (data?.position.depositTotalUSD || 0)
+                          ),
+                          3
+                        )}`,
+                        true
+                      )}
+                    </p>
+                  </div>,
+                  <div className="flex items-center gap-1 min-w-0 overflow-hidden shrink">
+                    <HandCoinsIcon className="size-3 md:size-3.5 -my-1 shrink-0" />
+                    <p className="shrink min-w-0 overflow-hidden overflow-ellipsis">
+                      {conditionalValue(
+                        `$${formatNumberTBMK(
+                          Math.abs(
+                            (data?.position.amountTotalUSD || 0) +
+                              (data?.position.uncollectedFeesTotalUSD || 0) -
+                              (data?.position.depositTotalUSD || 0)
+                          ),
+                          3
+                        )}`,
+                        true
+                      )}
+                    </p>
+                  </div>,
                 ]}
                 chipClassName={[
                   data
                     ? data.position.depositTotalUSD >
-                      data.position.amountTotalUSD +
-                        data.position.uncollectedFeesTotalUSD
+                      data.position.amountTotalUSD
                       ? getNumberColorClass("negative", true)
                       : getNumberColorClass("positive", true)
                     : undefined,
                   data
                     ? data.position.depositTotalUSD >
-                      data.position.amountTotalUSD
+                      data.position.amountTotalUSD +
+                        data.position.uncollectedFeesTotalUSD
                       ? getNumberColorClass("negative", true)
                       : getNumberColorClass("positive", true)
                     : undefined,
@@ -394,10 +409,20 @@ export default function UniswapPositionCard({
                   data?.position?.uncollectedFeesTotalUSD || 0
                 )}`
               )}
-              chip={conditionalValue(
-                `${formatNumberTBMK((data?.position.apr || 0) * 100, 3)}%`,
-                true
-              )}
+              chip={
+                <div className="flex items-center gap-1 min-w-0 overflow-hidden shrink">
+                  <CalendarArrowUpIcon className="size-3 md:size-3.5 -my-1 shrink-0" />
+                  <p className="shrink min-w-0 overflow-hidden overflow-ellipsis">
+                    {conditionalValue(
+                      `${formatNumberTBMK(
+                        (data?.position.apr || 0) * 100,
+                        3
+                      )}%`,
+                      true
+                    )}
+                  </p>
+                </div>
+              }
               chipClassName={getNumberColorClass(
                 data?.position?.apr || 0,
                 true
@@ -442,6 +467,7 @@ export default function UniswapPositionCard({
               title={conditionalValue(
                 `${formatNumberTBMK(data?.position?.priceCurrent || 0)}`
               )}
+              titleWrapperClassName="lg:pr-8"
               titleClassName={
                 data &&
                 (data.position.priceCurrent > data.position.priceUpper ||
@@ -707,7 +733,7 @@ function Section({
   titleWrapperClassName,
 }: {
   title: string;
-  chip?: string | string[];
+  chip?: string | ReactNode | (string | ReactNode)[];
   ticker0?: string;
   amount0: string;
   amount0Chip?: string;
@@ -750,25 +776,25 @@ function Section({
         </p>
         {chip && (
           <div className="flex items-center justify-start min-w-0 overflow-hidden gap-1">
-            {(typeof chip === "string" ? [chip] : chip).map((c, i) => (
-              <p
-                key={i}
-                className={cn(
-                  "font-medium whitespace-nowrap shrink min-w-0 overflow-hidden overflow-ellipsis text-xs text-center md:text-sm leading-none md:leading-none px-1.5 py-1 md:py-1.25 rounded-md",
-                  pendingClasses,
-                  "group-data-[is-pending]/card:bg-muted-foreground/36",
-                  errorClasses,
-                  getNumberColorClass(0, true),
-                  chipClassName === undefined
-                    ? chipClassName
-                    : typeof chipClassName === "string"
-                      ? chipClassName
-                      : chipClassName[i]
-                )}
-              >
-                {c}
-              </p>
-            ))}
+            {(Array.isArray(chip) ? chip : [chip]).map((c, i) => {
+              return (
+                <div
+                  key={i}
+                  className={cn(
+                    "font-medium whitespace-nowrap shrink min-w-0 overflow-hidden overflow-ellipsis text-xs text-center md:text-sm leading-none md:leading-none px-1.5 py-1 md:py-1.25 rounded-md",
+                    pendingClasses,
+                    "group-data-[is-pending]/card:bg-muted-foreground/36",
+                    errorClasses,
+                    getNumberColorClass(0, true),
+                    Array.isArray(chipClassName)
+                      ? chipClassName[i]
+                      : chipClassName
+                  )}
+                >
+                  {c}
+                </div>
+              );
+            })}
           </div>
         )}
       </div>
@@ -939,15 +965,16 @@ function NFTImageLink({
           className="h-full w-auto filter"
           src={uri}
         />
-        <div className="w-full px-1 pb-1 flex flex-col gap-1 items-center justify-center absolute left-1/2 -translate-x-1/2 bottom-0">
-          <p
-            className={cn(
-              "w-full text-white font-medium whitespace-nowrap shrink min-w-0 overflow-hidden overflow-ellipsis text-xs text-center md:text-sm leading-none md:leading-none px-1.5 py-1 rounded-md",
-              "bg-black/60"
-            )}
-          >
-            {timeAgo(createdAt, true)}
-          </p>
+        <div className="w-full px-1 pb-1 flex gap-1 items-center justify-center absolute left-1/2 -translate-x-1/2 bottom-0">
+          <div className="w-full flex justify-center items-center gap-1 text-white bg-black/60 px-1.5 py-1 rounded-md">
+            <p
+              className={cn(
+                "font-medium whitespace-nowrap shrink min-w-0 overflow-hidden overflow-ellipsis text-xs text-center md:text-sm leading-none md:leading-none"
+              )}
+            >
+              {timeAgo(createdAt, true)}
+            </p>
+          </div>
         </div>
       </div>
       <ExternalLinkIcon
