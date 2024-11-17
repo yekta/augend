@@ -10,10 +10,8 @@ import AsyncDataTable, {
 import { defaultQueryOptions } from "@/lib/constants";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
-import {
-  TEthereumNetwork,
-  TUniswapPoolsResult,
-} from "@/trpc/api/routers/uniswap/types";
+import { TEthereumNetwork } from "@/trpc/api/routers/ethereum/types";
+import { TUniswapPoolsResult } from "@/trpc/api/routers/uniswap/types";
 import { api } from "@/trpc/setup/react";
 import { RowData, SortingState } from "@tanstack/react-table";
 import { ExternalLinkIcon } from "lucide-react";
