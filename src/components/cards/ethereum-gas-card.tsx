@@ -27,7 +27,7 @@ export default function EthereumGasCard({
       {
         network,
       },
-      defaultQueryOptions.fast
+      defaultQueryOptions.normal
     );
 
   return (
