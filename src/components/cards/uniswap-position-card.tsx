@@ -566,7 +566,7 @@ export default function UniswapPositionCard({
                               100
                             }%)`,
                           }}
-                          className="w-full h-full transition bg-success group-data-[is-pending]/stats:bg-foreground group-data-[is-loading-error]/stats:bg-destructive"
+                          className="w-full h-full transition-transform bg-success group-data-[is-pending]/stats:bg-foreground group-data-[is-loading-error]/stats:bg-destructive"
                         />
                         <div
                           data-is-full={
@@ -584,7 +584,7 @@ export default function UniswapPositionCard({
                                 100
                               }%)`,
                             }}
-                            className="w-full transition flex items-center justify-center h-full absolute -left-1/2 data-[is-full]:opacity-0"
+                            className="w-full transition-transform flex items-center justify-center h-full absolute -left-1/2 data-[is-full]:opacity-0"
                           >
                             <div className="w-2px h-full bg-background" />
                           </div>
