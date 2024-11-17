@@ -10,20 +10,3 @@ export function getNumberColorClass(n: number, hasBg = false) {
   else if (n >= 1) className = `text-chart-3${hasBg ? " bg-chart-3/12" : ""}`;
   return className;
 }
-
-export const ethereumNetworkExplorer: Record<
-  TEthereumNetwork,
-  {
-    address: (s: string) => string;
-    gasTracker: string;
-  }
-> = {
-  ethereum: {
-    address: (address: string) => `https://etherscan.io/address/${address}`,
-    gasTracker: "https://etherscan.io/gastracker",
-  },
-  polygon: {
-    address: (address: string) => `https://polygonscan.com/address/${address}`,
-    gasTracker: "https://polygonscan.com/gastracker",
-  },
-};

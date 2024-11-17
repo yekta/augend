@@ -1,12 +1,12 @@
 "use client";
 
 import CardWrapper from "@/components/cards/card-wrapper";
-import { ethereumNetworkExplorer } from "@/components/cards/helpers";
 import Indicator from "@/components/cards/indicator";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import { defaultLocale, defaultQueryOptions } from "@/lib/constants";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
+import { ethereumNetworks } from "@/trpc/api/routers/ethereum/constants";
 import { TEthereumNetwork } from "@/trpc/api/routers/ethereum/types";
 import { api } from "@/trpc/setup/react";
 import {
@@ -40,7 +40,7 @@ export default function EthereumGasCard({
         (!isPending && !isLoadingError && data !== undefined) || undefined
       }
       className={className}
-      href={data ? ethereumNetworkExplorer[network].gasTracker : undefined}
+      href={data ? ethereumNetworks[network].gasTracker : undefined}
     >
       <div
         className="w-full px-2 py-2.5 flex flex-wrap shrink min-w-0 items-center justify-center flex-row rounded-xl border leading-none font-semibold relative

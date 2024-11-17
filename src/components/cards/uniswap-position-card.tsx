@@ -1,10 +1,7 @@
 "use client";
 
 import CardWrapper from "@/components/cards/card-wrapper";
-import {
-  ethereumNetworkExplorer,
-  getNumberColorClass,
-} from "@/components/cards/helpers";
+import { getNumberColorClass } from "@/components/cards/helpers";
 import Indicator from "@/components/cards/indicator";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import AsyncDataTable, {
@@ -29,6 +26,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { ReactNode, useMemo, useState } from "react";
+import { ethereumNetworks } from "@/trpc/api/routers/ethereum/constants";
 
 type TSwapData = TUniswapPoolSwapsResult["swaps"][number];
 
@@ -236,7 +234,7 @@ export default function UniswapPositionCard({
           const Comp = isPending ? "div" : swapsData ? Link : "div";
           return (
             <Comp
-              href={ethereumNetworkExplorer[network].address(
+              href={ethereumNetworks[network].address(
                 row.original.traderAddress
               )}
               target="_blank"

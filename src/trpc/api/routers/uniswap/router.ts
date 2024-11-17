@@ -6,7 +6,7 @@ import {
 } from "@/trpc/api/routers/ethereum/types";
 import {
   getUniswapPositionManager,
-  uniswapOkuUrl,
+  uniswapOkuApiUrl,
 } from "@/trpc/api/routers/uniswap/constants";
 import {
   TUniswapPoolsResult,
@@ -41,7 +41,7 @@ export const uniswapRouter = createTRPCRouter({
         },
       }) => {
         const endpoint = searchAddress ? "searchPoolsByAddress" : "topPools";
-        const url = `${uniswapOkuUrl}/${network}/cush/${endpoint}`;
+        const url = `${uniswapOkuApiUrl}/${network}/cush/${endpoint}`;
         let body: { params: (SearchFilterOpts | string)[] } = {
           params: [
             {
@@ -128,7 +128,7 @@ export const uniswapRouter = createTRPCRouter({
     )
     .query(async ({ input: { id, network } }) => {
       const positionManager = getUniswapPositionManager(network);
-      const url = `${uniswapOkuUrl}/${network}/cush/analyticsPosition`;
+      const url = `${uniswapOkuApiUrl}/${network}/cush/analyticsPosition`;
       const body = {
         params: [
           {
@@ -258,8 +258,8 @@ export const uniswapRouter = createTRPCRouter({
     )
     .query(async ({ input: { network, poolAddress, page } }) => {
       const limit = 100;
-      const url = `${uniswapOkuUrl}/${network}/cush/poolSwaps`;
-      const poolUrl = `${uniswapOkuUrl}/${network}/cush/searchPoolsByAddress`;
+      const url = `${uniswapOkuApiUrl}/${network}/cush/poolSwaps`;
+      const poolUrl = `${uniswapOkuApiUrl}/${network}/cush/searchPoolsByAddress`;
       const body = {
         params: [poolAddress, limit, page - 1, false],
       };

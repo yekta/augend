@@ -1,8 +1,8 @@
 import { cmcApiUrl, cmcFetchOptions } from "@/trpc/api/routers/cmc/constants";
 import { TCmcGetCryptosResult } from "@/trpc/api/routers/cmc/types";
 import {
+  ethereumNetworks,
   etherscanApiUrl,
-  networkToChainId,
 } from "@/trpc/api/routers/ethereum/constants";
 import { etherscanApiKey } from "@/trpc/api/routers/ethereum/secrets";
 import {
@@ -26,7 +26,7 @@ export const ethereumRouter = createTRPCRouter({
       })
     )
     .query(async ({ input: { network } }) => {
-      const chainId = networkToChainId[network];
+      const chainId = ethereumNetworks[network].id;
       const url = `${etherscanApiUrl}/v2/api?chainid=${chainId}&module=gastracker&action=gasoracle&apikey=${etherscanApiKey}`;
       const ethUsdUrl = `${cmcApiUrl}/v2/cryptocurrency/quotes/latest?symbol=ETH&convert=USD`;
 
