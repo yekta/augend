@@ -23,6 +23,7 @@ import {
   getCoreRowModel,
   getSortedRowModel,
   HeaderContext,
+  RowData,
   SortDirection,
   SortingState,
   useReactTable,
@@ -48,6 +49,12 @@ export type TAsyncDataTableColumnDef<T> = ColumnDef<T> & {
     | ((props: CellContext<T, unknown>) => string);
   headerClassName?: string;
 };
+
+declare module "@tanstack/react-table" {
+  interface ColumnMeta<TData extends RowData, TValue> {
+    width: string;
+  }
+}
 
 export default function AsyncDataTable<T>({
   columnDefs,

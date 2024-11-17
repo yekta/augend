@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
 import { TEthereumNetwork } from "@/trpc/api/routers/ethereum/types";
 import { TUniswapPoolsResult } from "@/trpc/api/routers/uniswap/types";
 import { api } from "@/trpc/setup/react";
-import { RowData, SortingState } from "@tanstack/react-table";
+import { SortingState } from "@tanstack/react-table";
 import { ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
@@ -53,12 +53,6 @@ const dataFallback: TUniswapPoolsResult = {
     isTokensReversed: false,
   })),
 };
-
-declare module "@tanstack/react-table" {
-  interface ColumnMeta<TData extends RowData, TValue> {
-    width: string;
-  }
-}
 
 export default function UniswapPoolsTableCard({
   className,
@@ -213,7 +207,10 @@ export default function UniswapPoolsTableCard({
         accessorKey: "tvl",
         header: "TVL",
         cell: ({ row }) =>
-          `${convertCurrency.symbol}${formatNumberTBMK(row.original.tvlUSD)}`,
+          `${convertCurrency.symbol}${formatNumberTBMK(
+            row.original.tvlUSD,
+            3
+          )}`,
         sortingFn: (a, b) => a.original.tvlUSD - b.original.tvlUSD,
       },
       {
@@ -234,7 +231,8 @@ export default function UniswapPoolsTableCard({
         header: "Vol 24H",
         cell: ({ row }) =>
           `${convertCurrency.symbol}${formatNumberTBMK(
-            row.original.volume24hUSD
+            row.original.volume24hUSD,
+            3
           )}`,
         sortingFn: (a, b) => a.original.volume24hUSD - b.original.volume24hUSD,
       },
@@ -243,7 +241,8 @@ export default function UniswapPoolsTableCard({
         header: "Vol 7D",
         cell: ({ row }) =>
           `${convertCurrency.symbol}${formatNumberTBMK(
-            row.original.volume7dUSD
+            row.original.volume7dUSD,
+            3
           )}`,
         sortingFn: (a, b) => a.original.volume7dUSD - b.original.volume7dUSD,
       },

@@ -123,7 +123,7 @@ export default function MiniCryptoCard({
               {isPending
                 ? "Loading"
                 : marketCap !== undefined
-                  ? `${priceSymbol}${formatNumberTBMK(marketCap)}`
+                  ? `${priceSymbol}${formatNumberTBMK(marketCap, 3)}`
                   : "Error"}
             </p>
           </div>

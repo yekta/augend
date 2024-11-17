@@ -546,7 +546,7 @@ export default function UniswapPositionCard({
                 value={conditionalValueStats(
                   `$${formatNumberTBMK(
                     statsData?.pools[0].tvlUSD || 0,
-                    4,
+                    3,
                     true
                   )}`
                 )}
@@ -556,7 +556,7 @@ export default function UniswapPositionCard({
                 value={conditionalValueStats(
                   `${formatNumberTBMK(
                     (statsData?.pools[0].apr24h || 0) * 100,
-                    4,
+                    3,
                     true
                   )}%`
                 )}
@@ -575,7 +575,7 @@ export default function UniswapPositionCard({
                       {conditionalValueStats(
                         formatNumberTBMK(
                           statsData?.pools[0].tvl0 || 0,
-                          4,
+                          3,
                           true
                         ),
                         true
@@ -625,7 +625,7 @@ export default function UniswapPositionCard({
                       {conditionalValueStats(
                         formatNumberTBMK(
                           statsData?.pools[0].tvl1 || 0,
-                          4,
+                          3,
                           true
                         ),
                         true
@@ -639,7 +639,7 @@ export default function UniswapPositionCard({
                 value={conditionalValueStats(
                   `$${formatNumberTBMK(
                     statsData?.pools[0].volume24hUSD || 0,
-                    4,
+                    3,
                     true
                   )}`
                 )}
@@ -649,7 +649,7 @@ export default function UniswapPositionCard({
                 value={conditionalValueStats(
                   `$${formatNumberTBMK(
                     statsData?.pools[0].fees24hUSD || 0,
-                    4,
+                    3,
                     true
                   )}`
                 )}

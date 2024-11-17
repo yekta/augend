@@ -9,7 +9,7 @@ import { defaultQueryOptions } from "@/lib/constants";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
 import { api } from "@/trpc/setup/react";
-import { RowData, SortingState } from "@tanstack/react-table";
+import { SortingState } from "@tanstack/react-table";
 import { ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
@@ -44,12 +44,6 @@ const dataFallback: TData[] = Array.from({ length: 100 }, (_, i) => ({
   marketCap: 123456,
   volume: 123456,
 }));
-
-declare module "@tanstack/react-table" {
-  interface ColumnMeta<TData extends RowData, TValue> {
-    width: string;
-  }
-}
 
 export default function CoinTableCard({ className }: { className?: string }) {
   const [page, setPage] = useState<TAsyncDataTablePage>({
@@ -145,14 +139,18 @@ export default function CoinTableCard({ className }: { className?: string }) {
         header: "MC",
         cell: ({ row }) =>
           `${convertCurrency.symbol}${formatNumberTBMK(
-            row.original.marketCap
+            row.original.marketCap,
+            3
           )}`,
       },
       {
         accessorKey: "volume",
         header: "Vol",
         cell: ({ row }) =>
-          `${convertCurrency.symbol}${formatNumberTBMK(row.original.volume)}`,
+          `${convertCurrency.symbol}${formatNumberTBMK(
+            row.original.volume,
+            3
+          )}`,
       },
     ];
   }, [data, isPending, isError, isLoadingError]);

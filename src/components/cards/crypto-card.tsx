@@ -95,7 +95,8 @@ export default function CryptoCard({ config }: { config: TCrypto }) {
             <p className="shrink min-w-0 overflow-hidden overflow-ellipsis">
               {convertCurrency.symbol}
               {formatNumberTBMK(
-                data[config.ticker].quote[convertCurrency.ticker].market_cap
+                data[config.ticker].quote[convertCurrency.ticker].market_cap,
+                3
               )}
             </p>
             <p>•</p>
