@@ -543,6 +543,7 @@ export default function UniswapPositionCard({
                 title="Balance"
                 value={
                   <div className="flex flex-1 items-center gap-2">
+                    {/* Balance token0 */}
                     <p
                       className={`leading-none font-bold text-base md:text-lg md:leading-none ${pendingClassesStats} ${errorClassesStats}`}
                     >
@@ -555,7 +556,8 @@ export default function UniswapPositionCard({
                         true
                       )}
                     </p>
-                    <div className="relative w-14 h-4 py-1.25 flex items-center justify-center group-data-[is-pending]/stats:animate-skeleton">
+                    {/* Balance bar */}
+                    <div className="relative w-14 h-3.75 py-1.25 flex items-center justify-center group-data-[is-pending]/stats:animate-skeleton">
                       <div className="w-2px h-full bg-foreground rounded-full absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 group-data-[is-loading-error]/stats:bg-destructive" />
                       <div className="w-full flex justify-start h-full rounded-full bg-destructive group-data-[is-pending]/stats:bg-foreground group-data-[is-loading-error]/stats:bg-destructive overflow-hidden relative ring-2 ring-background">
                         <div
@@ -591,6 +593,7 @@ export default function UniswapPositionCard({
                         </div>
                       </div>
                     </div>
+                    {/* Balance token1 */}
                     <p
                       className={`leading-none font-bold text-base md:text-lg md:leading-none ${pendingClassesStats} ${errorClassesStats}`}
                     >
