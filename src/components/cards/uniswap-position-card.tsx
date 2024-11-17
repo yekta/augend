@@ -314,14 +314,17 @@ export default function UniswapPositionCard({
                   `$${formatNumberTBMK(data?.position?.amountTotalUSD || 0)}`
                 )}
                 titleWrapperClassName="pr-8"
-                chip={conditionalValue(
-                  timeAgo(new Date(data?.position.createdAt || 1731679718000)) +
-                    ` | $${formatNumberTBMK(
+                chip={[
+                  conditionalValue(
+                    `$${formatNumberTBMK(
                       data?.position.depositTotalUSD || 0,
                       3
                     )}`
-                )}
-                chipClassName={getNumberColorClass(0, true)}
+                  ),
+                  conditionalValue(
+                    timeAgo(new Date(data?.position.createdAt || 1731679718000))
+                  ),
+                ]}
                 ticker0={conditionalValue(data?.position.token0.symbol, true)}
                 amount0={conditionalValue(
                   formatNumberTBMK(data?.position?.amount0 || 0),
@@ -651,7 +654,7 @@ function Section({
   titleWrapperClassName,
 }: {
   title: string;
-  chip?: string;
+  chip?: string | string[];
   ticker0?: string;
   amount0: string;
   amount0Chip?: string;
@@ -662,7 +665,7 @@ function Section({
   ticker1Icon?: false | ReactNode;
   className?: string;
   titleClassName?: string;
-  chipClassName?: string;
+  chipClassName?: string | string[];
   titleWrapperClassName?: string;
 }) {
   const pendingClasses =
@@ -693,17 +696,26 @@ function Section({
           {title}
         </p>
         {chip && (
-          <p
-            className={cn(
-              "font-medium whitespace-nowrap shrink min-w-0 overflow-hidden overflow-ellipsis text-xs text-center md:text-sm leading-none md:leading-none text-foreground/80 bg-foreground/8 px-1.5 py-1 md:py-1.25 rounded-md",
-              pendingClasses,
-              "group-data-[is-pending]/card:bg-muted-foreground/36",
-              errorClasses,
-              chipClassName
-            )}
-          >
-            {chip}
-          </p>
+          <div className="flex items-center justify-start min-w-0 overflow-hidden gap-1">
+            {(typeof chip === "string" ? [chip] : chip).map((c, i) => (
+              <p
+                key={i}
+                className={cn(
+                  "font-medium whitespace-nowrap shrink min-w-0 overflow-hidden overflow-ellipsis text-xs text-center md:text-sm leading-none md:leading-none text-foreground/80 bg-foreground/8 px-1.5 py-1 md:py-1.25 rounded-md",
+                  pendingClasses,
+                  "group-data-[is-pending]/card:bg-muted-foreground/36",
+                  errorClasses,
+                  chipClassName === undefined
+                    ? chipClassName
+                    : typeof chipClassName === "string"
+                      ? chipClassName
+                      : chipClassName[i]
+                )}
+              >
+                {c}
+              </p>
+            ))}
+          </div>
         )}
       </div>
       <div className="flex flex-col gap-2 border rounded-lg px-2.75 py-2.5 md:px-3.5 md:py-3">
