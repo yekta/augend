@@ -519,14 +519,20 @@ export default function UniswapPositionCard({
               <StatColumn
                 title="TVL"
                 value={conditionalValueStats(
-                  `$${formatNumberTBMK(statsData?.pools[0].tvlUSD || 0)}`
+                  `$${formatNumberTBMK(
+                    statsData?.pools[0].tvlUSD || 0,
+                    4,
+                    true
+                  )}`
                 )}
               />
               <StatColumn
                 title="APR 24H"
                 value={conditionalValueStats(
                   `${formatNumberTBMK(
-                    (statsData?.pools[0].apr24h || 0) * 100
+                    (statsData?.pools[0].apr24h || 0) * 100,
+                    4,
+                    true
                   )}%`
                 )}
                 valueClassName={getNumberColorClass(
@@ -541,7 +547,11 @@ export default function UniswapPositionCard({
                       className={`leading-none font-bold text-base md:text-lg md:leading-none ${pendingClassesStats} ${errorClassesStats}`}
                     >
                       {conditionalValueStats(
-                        formatNumberTBMK(statsData?.pools[0].tvl0 || 0),
+                        formatNumberTBMK(
+                          statsData?.pools[0].tvl0 || 0,
+                          4,
+                          true
+                        ),
                         true
                       )}
                     </p>
@@ -585,7 +595,11 @@ export default function UniswapPositionCard({
                       className={`leading-none font-bold text-base md:text-lg md:leading-none ${pendingClassesStats} ${errorClassesStats}`}
                     >
                       {conditionalValueStats(
-                        formatNumberTBMK(statsData?.pools[0].tvl1 || 0),
+                        formatNumberTBMK(
+                          statsData?.pools[0].tvl1 || 0,
+                          4,
+                          true
+                        ),
                         true
                       )}
                     </p>
@@ -595,13 +609,21 @@ export default function UniswapPositionCard({
               <StatColumn
                 title="Vol 24H"
                 value={conditionalValueStats(
-                  `$${formatNumberTBMK(statsData?.pools[0].volume24hUSD || 0)}`
+                  `$${formatNumberTBMK(
+                    statsData?.pools[0].volume24hUSD || 0,
+                    4,
+                    true
+                  )}`
                 )}
               />
               <StatColumn
                 title="Fees 24H"
                 value={conditionalValueStats(
-                  `$${formatNumberTBMK(statsData?.pools[0].fees24hUSD || 0)}`
+                  `$${formatNumberTBMK(
+                    statsData?.pools[0].fees24hUSD || 0,
+                    4,
+                    true
+                  )}`
                 )}
               />
               <Indicator
@@ -831,7 +853,7 @@ function StatColumn({
         >
           {title}
         </p>
-        <div className="shrink min-w-0 flex-1 overflow-hidden flex flex-row items-center">
+        <div className="font-mono shrink min-w-0 flex-1 overflow-hidden flex flex-row items-center">
           {typeof value !== "string" && value}
           {typeof value === "string" && (
             <p
