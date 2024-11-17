@@ -1,8 +1,15 @@
 import type { AnalyticsPosition, PoolSummary, Swap } from "@gfxlabs/oku";
 import { z } from "zod";
 
-export const UniswapNetworkSchema = z.enum(["ethereum"]);
+export const UniswapNetworkSchema = z.enum(["ethereum", "polygon"]);
 export type TUniswapNetwork = z.infer<typeof UniswapNetworkSchema>;
+
+const isEthereumAddress = (address: string): boolean =>
+  /^0x[a-fA-F0-9]{40}$/.test(address);
+
+export const EthereumAddressSchema = z.string().refine(isEthereumAddress, {
+  message: "Invalid Ethereum address",
+});
 
 export type TUniswapPoolsResultRaw = {
   result: {

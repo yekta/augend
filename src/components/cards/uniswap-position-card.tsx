@@ -45,6 +45,7 @@ const swapsTableDataFallback: TSwapData[] = Array.from(
 
 const networkToAddressUrl: Record<TUniswapNetwork, (s: string) => string> = {
   ethereum: (address: string) => `https://etherscan.io/address/${address}`,
+  polygon: (address: string) => `https://polygonscan.com/address/${address}`,
 };
 
 const pendingClasses =
@@ -316,13 +317,13 @@ export default function UniswapPositionCard({
                 titleWrapperClassName="pr-8"
                 chip={[
                   conditionalValue(
+                    timeAgo(new Date(data?.position.createdAt || 1731679718000))
+                  ),
+                  conditionalValue(
                     `$${formatNumberTBMK(
                       data?.position.depositTotalUSD || 0,
                       3
                     )}`
-                  ),
-                  conditionalValue(
-                    timeAgo(new Date(data?.position.createdAt || 1731679718000))
                   ),
                 ]}
                 ticker0={conditionalValue(data?.position.token0.symbol, true)}
@@ -465,10 +466,12 @@ export default function UniswapPositionCard({
                 }` +
                   formatNumberTBMK(
                     Math.round(
-                      (((data?.position?.priceUpper || 100) -
-                        (data?.position?.priceCurrent || 50)) /
-                        (data?.position?.priceCurrent || 100)) *
-                        100
+                      Math.abs(
+                        (((data?.position?.priceUpper || 100) -
+                          (data?.position?.priceCurrent || 50)) /
+                          (data?.position?.priceCurrent || 100)) *
+                          100
+                      )
                     ),
                     3
                   ) +
@@ -701,10 +704,11 @@ function Section({
               <p
                 key={i}
                 className={cn(
-                  "font-medium whitespace-nowrap shrink min-w-0 overflow-hidden overflow-ellipsis text-xs text-center md:text-sm leading-none md:leading-none text-foreground/80 bg-foreground/8 px-1.5 py-1 md:py-1.25 rounded-md",
+                  "font-medium whitespace-nowrap shrink min-w-0 overflow-hidden overflow-ellipsis text-xs text-center md:text-sm leading-none md:leading-none px-1.5 py-1 md:py-1.25 rounded-md",
                   pendingClasses,
                   "group-data-[is-pending]/card:bg-muted-foreground/36",
                   errorClasses,
+                  getNumberColorClass(0, true),
                   chipClassName === undefined
                     ? chipClassName
                     : typeof chipClassName === "string"
@@ -769,19 +773,18 @@ function TickerTextAmount({
             )}
           </div>
         )}
-        <p
-          className={cn(
-            "whitespace-nowrap shrink min-w-0 text-muted-foreground max-w-full overflow-hidden overflow-ellipsis",
-            pendingClasses,
-            "group-data-[is-pending]/card:bg-muted-foreground",
-            errorClasses
-          )}
-        >
-          {ticker}
-        </p>
-        {tickerIcon === false && (
-          <div className="shrink-0 size-3.5 md:size-4" />
-        )}
+        <div className="shrink min-w-0 h-3.5 md:h-4 overflow-hidden flex items-center">
+          <p
+            className={cn(
+              "whitespace-nowrap shrink min-w-0 text-muted-foreground max-w-full overflow-hidden overflow-ellipsis",
+              pendingClasses,
+              "group-data-[is-pending]/card:bg-muted-foreground",
+              errorClasses
+            )}
+          >
+            {ticker}
+          </p>
+        </div>
       </div>
       <div className="flex flex-row items-center gap-1.5 md:gap-2 max-w-full font-mono shrink min-w-0 overflow-hidden">
         <p

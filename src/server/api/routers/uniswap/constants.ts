@@ -6,6 +6,7 @@ import { TUniswapNetwork } from "@/server/api/routers/uniswap/types";
 
 const providers: Record<TUniswapNetwork, ethers.JsonRpcProvider> = {
   ethereum: new ethers.InfuraProvider("mainnet", infuraApiKey),
+  polygon: new ethers.InfuraProvider("matic", infuraApiKey),
 };
 
 export const uniswapPositionManagerAddress =

@@ -5,6 +5,7 @@ import {
   uniswapOkuUrl,
 } from "@/server/api/routers/uniswap/constants";
 import {
+  EthereumAddressSchema,
   TUniswapPoolsResult,
   TUniswapPoolsResultRaw,
   TUniswapPoolSwapsResult,
@@ -16,9 +17,6 @@ import {
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import type { PositionPriceRange, SearchFilterOpts } from "@gfxlabs/oku";
 
-const isEthereumAddress = (address: string): boolean =>
-  /^0x[a-fA-F0-9]{40}$/.test(address);
-
 export const uniswapRouter = createTRPCRouter({
   getPools: publicProcedure
     .input(
@@ -26,12 +24,7 @@ export const uniswapRouter = createTRPCRouter({
         page: z.number().int().positive().default(1),
         network: UniswapNetworkSchema.optional().default("ethereum"),
         limit: z.number().int().positive().min(1).max(200).default(200),
-        searchAddress: z
-          .string()
-          .refine(isEthereumAddress, {
-            message: "Invalid Ethereum address",
-          })
-          .optional(),
+        searchAddress: EthereumAddressSchema.optional(),
         errorOnUnmatchingSearchResult: z.boolean().optional().default(false),
       })
     )
@@ -68,9 +61,11 @@ export const uniswapRouter = createTRPCRouter({
           },
           body: JSON.stringify(body),
         });
+
         if (!res.ok) {
           throw new Error(`${res.status}: Failed to fetch Uniswap pools`);
         }
+
         const resJson: TUniswapPoolsResultRaw = await res.json();
         if (resJson.error) {
           throw new Error(resJson.error.message);
@@ -87,7 +82,7 @@ export const uniswapRouter = createTRPCRouter({
 
         const editedRes: TUniswapPoolsResult = {
           pools: resJson.result.pools
-            .filter((p) => p.t0_volume_usd > 1000)
+            .filter((p) => (searchAddress ? true : p.t0_volume_usd > 1000))
             .map((pool) => {
               const feeTier = pool.fee / 1_000_000;
               const fees24hUSD = pool.total_fees_usd;
