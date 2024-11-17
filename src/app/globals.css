@@ -29,7 +29,7 @@ body {
     --accent-foreground: 0 0% 9%;
     --destructive: 0 84% 30%;
     --destructive-foreground: 250 50% 93%;
-    --success: 130 84% 20%;
+    --success: 130 85% 20%;
     --success-foreground: 250 50% 93%;
     --shadow: 0 0% 0%;
     --border: 250 25% 88%;
@@ -70,9 +70,9 @@ body {
     --muted-foreground: 250 8% 60%;
     --accent: 250 25% 14%;
     --accent-foreground: 250 50% 93%;
-    --destructive: 0 90% 70%;
+    --destructive: 0 88% 72%;
     --destructive-foreground: 250 50% 93%;
-    --success: 130 80% 70%;
+    --success: 130 55% 60%;
     --success-foreground: 250 50% 93%;
     --shadow: 250 25% 4%;
     --border: 250 25% 14%;

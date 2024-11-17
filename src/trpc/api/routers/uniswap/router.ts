@@ -334,11 +334,22 @@ function getDecimalAmount(amount: string, decimals: number) {
 }
 
 function parseNftUri(uriBase64: string): string {
-  const animateTagRegex = /<animate.*?"(.*?)"[^\>]+>/g;
-  /<g style="transform:translate\(226px, 392px\)"(.*?)<\/g><\/g>/g;
-  const textPathRegex = /<textPath.*?href="#(.*?)".*?>(.*?)<\/textPath>/g;
-
-  const regexes = [animateTagRegex, textPathRegex];
+  const animateTagRegex = /<animate.*?"(.*?)"[^\>]+>/gi;
+  /<g style="transform:translate\(226px, 392px\)"(.*?)<\/g><\/g>/gi;
+  const textPathRegex = /<textPath.*?href="#(.*?)".*?>(.*?)<\/textPath>/gi;
+  const chipRegex =
+    /<g[^>]*>\s*<rect[^>]+\/>\s*<text[^>]+>\s*<tspan[^>]+>[^<]*<\/tspan>[^<]*<\/text><\/g>/gi;
+  const rectPattern =
+    /<rect\s+(?:[^>]*width="\d+(?:px)?"\s*[^>]*height="\d+(?:px)?"|[^>]*height="\d+(?:px)?"\s*[^>]*width="\d+(?:px)?")[^>]*\/>\s*<path\s+[^>]*stroke-linecap="round"[^>]*d="[^"]+"\s*[^>]*\/>\s*<circle\s+[^>]*style="[^"]*transform[^"]+"\s*[^>]*\/>/gi;
+  const rectStrokePattern =
+    /<rect[\s\n]+(?=[^>]*?fill="rgba\(0,0,0,0\)")(?=[^>]*?stroke="rgba\(255,255,255,0\.2\)")[^>]*?\/>/gi;
+  const regexes = [
+    animateTagRegex,
+    textPathRegex,
+    chipRegex,
+    rectPattern,
+    rectStrokePattern,
+  ];
 
   const baseURI = uriBase64.split(",")[1] || uriBase64;
   const uriUTF8 = Buffer.from(baseURI, "base64").toString("utf8");

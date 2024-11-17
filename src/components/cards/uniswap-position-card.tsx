@@ -296,6 +296,7 @@ export default function UniswapPositionCard({
             href={href || "placeholder"}
             uri={data?.position.nftUri}
             className="h-36 px-4 py-3.25 -mr-4 hidden lg:block"
+            createdAt={data?.position.createdAt || 1731679718000}
           />
           <div className="flex-1 flex flex-row flex-wrap items-end p-1.5 md:p-2 lg:p-3 min-w-0">
             <div className="w-full overflow-hidden mt-0.5 md:mt-0 lg:w-1/3 flex flex-row items-center justify-start">
@@ -303,6 +304,7 @@ export default function UniswapPositionCard({
                 href={href || "placeholder"}
                 className="h-28 shrink-0 md:h-32 px-2 md:px-2 py-1.5 lg:hidden"
                 uri={data?.position.nftUri}
+                createdAt={data?.position.createdAt || 1731679718000}
               />
               {/* Balance */}
               <Section
@@ -311,18 +313,17 @@ export default function UniswapPositionCard({
                   `$${formatNumberTBMK(data?.position?.amountTotalUSD || 0)}`
                 )}
                 titleWrapperClassName="pr-8"
-                chip={[
-                  conditionalValue(
-                    timeAgo(data?.position.createdAt || 1731679718000, true),
-                    true
-                  ),
-                  conditionalValue(
-                    `$${formatNumberTBMK(
-                      data?.position.depositTotalUSD || 0,
-                      3
-                    )}`
-                  ),
-                ]}
+                chip={conditionalValue(
+                  `$${formatNumberTBMK(data?.position.depositTotalUSD || 0, 3)}`
+                )}
+                chipClassName={
+                  data
+                    ? data.position.depositTotalUSD >
+                      data.position.amountTotalUSD
+                      ? getNumberColorClass("negative", true)
+                      : getNumberColorClass("positive", true)
+                    : undefined
+                }
                 ticker0={conditionalValue(data?.position.token0.symbol, true)}
                 amount0={conditionalValue(
                   formatNumberTBMK(data?.position?.amount0 || 0),
@@ -511,7 +512,7 @@ export default function UniswapPositionCard({
                   statsData !== undefined) ||
                 undefined
               }
-              className="w-full group/stats px-4 md:px-5 flex flex-row justify-start items-stretch pt-3.5 pb-4 whitespace-nowrap overflow-auto relative"
+              className="w-full group/stats px-4 md:px-5 flex flex-row justify-start items-stretch py-4 whitespace-nowrap overflow-auto relative"
             >
               <StatColumn
                 title="TVL"
@@ -878,14 +879,17 @@ function NFTImageLink({
   className,
   href,
   uri,
+  createdAt,
 }: {
   href: string;
   uri?: string;
   className?: string;
+  createdAt: number;
 }) {
+  const sharedClassName = "h-36 group/link";
   if (!uri)
     return (
-      <div className={cn("h-36 group/link", className)}>
+      <div className={cn(sharedClassName, className)}>
         <svg
           className="h-full bg-muted-foreground group-data-[is-loading-error]/card:bg-destructive/50 rounded-lg md:rounded-lg lg:rounded-xl w-auto
           transition group-data-[is-pending]/card:animate-skeleton"
@@ -899,14 +903,26 @@ function NFTImageLink({
     <Link
       target="_blank"
       href={href || "placeholder"}
-      className={cn("h-36 group/link relative overflow-hidden", className)}
+      className={cn("relative overflow-hidden", sharedClassName, className)}
     >
-      <img
-        width="290"
-        height="500"
-        className="h-full w-auto filter transition not-touch:group-hover/link:opacity-50 group-active/link:opacity-50"
-        src={uri}
-      />
+      <div className="h-full relative z-0 not-touch:group-hover/link:opacity-50 group-active/link:opacity-50 transition">
+        <img
+          width="290"
+          height="500"
+          className="h-full w-auto filter"
+          src={uri}
+        />
+        <div className="w-full px-1 pb-1 flex items-center justify-center absolute left-1/2 -translate-x-1/2 bottom-0">
+          <p
+            className={cn(
+              "w-full text-foreground font-medium whitespace-nowrap shrink min-w-0 overflow-hidden overflow-ellipsis text-xs text-center md:text-sm leading-none md:leading-none px-1.5 py-0.75 md:py-1 rounded-md",
+              "bg-background/75"
+            )}
+          >
+            {timeAgo(createdAt, true)}
+          </p>
+        </div>
+      </div>
       <ExternalLinkIcon
         className="absolute size-5 left-1/2 origin-bottom-left top-1/2 transition transform -translate-x-1/2 -translate-y-1/2 opacity-0 scale-50
         not-touch:group-hover/link:scale-100 not-touch:group-hover/link:opacity-100
