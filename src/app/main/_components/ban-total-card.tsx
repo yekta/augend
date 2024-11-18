@@ -52,9 +52,9 @@ export default function BanTotalCard() {
       ? selectedResults.reduce((acc, cur) => acc + cur.balance, 0)
       : undefined;
   const banUsd =
-    cmcData !== undefined ? cmcData["BAN"].quote["USD"].price : undefined;
+    cmcData !== undefined ? cmcData["4704"].quote["USD"].price : undefined;
   const btcUsd =
-    cmcData !== undefined ? cmcData["BTC"].quote["USD"].price : undefined;
+    cmcData !== undefined ? cmcData["1"].quote["USD"].price : undefined;
   const turkishLiraUsd =
     turkishLiraData !== undefined ? turkishLiraData["USD"].buy : undefined;
 

@@ -12,14 +12,13 @@ export const cmcRouter = createTRPCRouter({
   getCryptoInfos: publicProcedure
     .input(
       z.object({
-        symbols: z.array(z.string()),
+        ids: z.array(z.number()),
         convert: z.string(),
       })
     )
-    .query(async ({ input: { symbols, convert } }) => {
-      const symbolsStr = symbols.join(",");
-      const url = `${cmcApiUrl}/v2/cryptocurrency/quotes/latest?symbol=${symbolsStr}&convert=${convert}`;
-
+    .query(async ({ input: { ids, convert } }) => {
+      const idsStr = ids.join(",");
+      const url = `${cmcApiUrl}/v2/cryptocurrency/quotes/latest?id=${idsStr}&convert=${convert}`;
       const response = await fetch(url, cmcFetchOptions);
       if (!response.ok) throw new Error("Failed to fetch CMC data");
 
@@ -27,7 +26,7 @@ export const cmcRouter = createTRPCRouter({
 
       let editedResult: TCmcGetCryptosResultEdited = {};
       for (const key in result.data) {
-        editedResult[key] = result.data[key][0];
+        editedResult[key] = result.data[key];
       }
 
       return editedResult;

@@ -6,7 +6,15 @@ import { cleanEnvVar } from "@/lib/helpers";
 
 export const items = (
   cleanEnvVar(process.env.NEXT_PUBLIC_ADMIN_MINI_CRYPTO_CARDS) || ""
-).split(",");
+)
+  .split(",")
+  .map((i) => {
+    const [ticker, id] = i.split(":");
+    return {
+      ticker,
+      id: parseInt(id),
+    };
+  });
 
 export default function MiniCryptoCards() {
   const { data, isPending, isRefetching, isError, isLoadingError } =
@@ -17,8 +25,8 @@ export default function MiniCryptoCards() {
       <div className="w-full flex flex-wrap">
         {items.map((item) => (
           <MiniCryptoCard
-            key={item}
-            data={data?.[item]}
+            key={item.id}
+            data={data?.[item.id]}
             isError={isError}
             isLoadingError={isLoadingError}
             isPending={isPending}

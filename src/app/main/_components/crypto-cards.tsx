@@ -7,9 +7,13 @@ export const items: TCrypto[] = (
   cleanEnvVar(process.env.NEXT_PUBLIC_ADMIN_CRYPTO_CARDS) || ""
 )
   .split(",")
-  .map((i) => ({
-    ticker: i,
-  }));
+  .map((i) => {
+    const [ticker, id] = i.split(":");
+    return {
+      ticker,
+      id: parseInt(id),
+    };
+  });
 
 export default function CryptoCards() {
   return (

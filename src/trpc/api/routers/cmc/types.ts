@@ -25,7 +25,7 @@ export type TCmcGetCryptosResult = {
           last_updated: string;
         };
       };
-    }[];
+    };
   };
 };
 

@@ -12,6 +12,7 @@ import React, { ReactNode, useEffect, useRef } from "react";
 
 type TCurrency = {
   ticker: string;
+  id: number;
   symbol: string | ReactNode;
   isCrypto?: boolean;
   maxDecimals?: number;
@@ -20,45 +21,53 @@ type TCurrency = {
 const currencies: TCurrency[] = [
   {
     ticker: "BTC",
+    id: 1,
     symbol: "₿",
     isCrypto: true,
     maxDecimals: 6,
   },
   {
     ticker: "ETH",
+    id: 1027,
     symbol: "Ξ",
     isCrypto: true,
     maxDecimals: 4,
   },
   {
     ticker: "XNO",
+    id: 1567,
     symbol: <NanoIcon className="size-6 -ml-1.25" />,
     isCrypto: true,
     maxDecimals: 2,
   },
   {
     ticker: "BAN",
+    id: 4704,
     symbol: <BananoIcon className="size-6 -ml-1.25" />,
     isCrypto: true,
     maxDecimals: 0,
   },
   {
     ticker: "GBP",
+    id: -3,
     symbol: "£",
     maxDecimals: 2,
   },
   {
     ticker: "EUR",
+    id: -2,
     symbol: "€",
     maxDecimals: 2,
   },
   {
     ticker: "USD",
+    id: -1,
     symbol: "$",
     maxDecimals: 2,
   },
   {
     ticker: "TRY",
+    id: 0,
     symbol: "₺",
     maxDecimals: 2,
   },
@@ -80,7 +89,7 @@ export default function Calculator({ className }: { className?: string }) {
   } = api.cmc.getCryptoInfos.useQuery(
     {
       convert: "USD",
-      symbols: currencies.filter((c) => c.isCrypto).map((c) => c.ticker),
+      ids: currencies.filter((c) => c.isCrypto).map((c) => c.id),
     },
     defaultQueryOptions.normal
   );
@@ -131,13 +140,14 @@ export default function Calculator({ className }: { className?: string }) {
     const otherInputs = inputRefs.current.filter((i) => i !== input);
 
     const selfTicker = input.getAttribute("data-ticker");
-    if (!selfTicker) return;
-    const selfIsCrypto = currencies.find((c) => c.ticker === selfTicker)
-      ?.isCrypto;
+    const selfIdStr = input.getAttribute("data-id");
+    if (!selfTicker || !selfIdStr) return;
+    const selfId = parseInt(selfIdStr);
+    const selfIsCrypto = currencies.find((c) => c.id === selfId)?.isCrypto;
     const usdTry = liraData.USD.buy;
     const selfIsLira = selfTicker === "TRY";
     const selfUsdPrice = selfIsCrypto
-      ? cryptoData[selfTicker].quote["USD"].price
+      ? cryptoData[selfId].quote["USD"].price
       : selfIsLira
         ? 1 / liraData.USD.buy
         : liraData[selfTicker as TCurrencyForLiraTicker].buy / usdTry;
@@ -145,13 +155,15 @@ export default function Calculator({ className }: { className?: string }) {
     otherInputs.forEach((i) => {
       if (!i) return;
       const targetTicker = i.getAttribute("data-ticker");
-      if (!targetTicker) return;
+      const targetIdStr = i.getAttribute("data-id");
+      if (!targetTicker || !targetIdStr) return;
+      const targetId = parseInt(targetIdStr);
 
       const targetIsCrypto = currencies.find((c) => c.ticker === targetTicker)
         ?.isCrypto;
 
       if (targetIsCrypto) {
-        const targetUsdPrice = cryptoData?.[targetTicker].quote["USD"].price;
+        const targetUsdPrice = cryptoData?.[targetId].quote["USD"].price;
         if (!targetUsdPrice) return;
         const inputValue = valueNumber * (selfUsdPrice / targetUsdPrice);
         if (isNaN(inputValue)) {
@@ -209,6 +221,7 @@ export default function Calculator({ className }: { className?: string }) {
               }}
               onInput={onInput}
               data-ticker={c.ticker}
+              data-id={c.id}
               className="text-xl pl-11 py-2.5 h-auto font-semibold rounded-xl"
             />
             <p className="absolute left-4 top-1/2 text-xl transform -translate-y-1/2 font-semibold">

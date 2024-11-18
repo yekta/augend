@@ -2,7 +2,10 @@
 
 import CryptoCard, { TCrypto } from "@/components/cards/crypto-card";
 
-export const items: TCrypto[] = [{ ticker: "BAN" }, { ticker: "BTC" }];
+export const items: TCrypto[] = [
+  { ticker: "BAN", id: 4704 },
+  { ticker: "BTC", id: 1 },
+];
 
 export default function CryptoCards() {
   return (
