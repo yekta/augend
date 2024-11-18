@@ -7,7 +7,6 @@ import { linearInterpolation } from "@/lib/helpers";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
 import { ArrowDownIcon, ArrowRightIcon, ArrowUpIcon } from "lucide-react";
-import Link from "next/link";
 
 export default function FearGreedIndexCard({
   className,
@@ -48,11 +47,29 @@ export default function FearGreedIndexCard({
         className="flex flex-1 flex-col justify-center items-center border rounded-xl px-3 py-1 text-center gap-3 group not-touch:group-hover/card:bg-background-secondary relative overflow-hidden
         group-active/card:bg-background-secondary"
       >
-        <div className="max-w-full items-center justify-center flex flex-col gap-2.5">
+        <div className="max-w-full items-center justify-center flex flex-col gap-1.5">
           <Gauge isPending={isPending} data={data} />
+          {/* Description */}
+          <div className="w-full flex items-center justify-center min-w-0 overflow-hidden">
+            <p
+              className="max-w-full font-semibold text-sm md:leading-none shrink min-w-0 text-center leading-none whitespace-nowrap overflow-hidden overflow-ellipsis text-foreground 
+              group-data-[is-pending]:bg-foreground group-data-[is-loading-error]:text-destructive group-data-[is-pending]:text-transparent group-data-[is-pending]:rounded-sm group-data-[is-pending]:animate-skeleton"
+            >
+              {isPending
+                ? "Loading"
+                : data
+                  ? data.fear_greed_index.value_classification
+                      .split(" ")
+                      .map(
+                        (word) => word.charAt(0).toUpperCase() + word.slice(1)
+                      )
+                      .join(" ")
+                  : "Error"}
+            </p>
+          </div>
           {/* Market cap */}
           <div className="w-full flex items-center justify-center gap-1 text-sm">
-            <p className="shrink font-bold min-w-0 overflow-hidden overflow-ellipsis text-center leading-none group-data-[is-pending]:font-normal group-data-[is-pending]:bg-foreground group-data-[is-loading-error]:text-destructive group-data-[is-pending]:text-transparent group-data-[is-pending]:rounded-sm group-data-[is-pending]:animate-skeleton">
+            <p className="shrink min-w-0 overflow-hidden overflow-ellipsis text-center leading-none group-data-[is-pending]:font-normal group-data-[is-pending]:bg-foreground group-data-[is-loading-error]:text-destructive group-data-[is-pending]:text-transparent group-data-[is-pending]:rounded-sm group-data-[is-pending]:animate-skeleton">
               {isPending
                 ? "Loading"
                 : data
@@ -117,14 +134,14 @@ function Gauge({
   const adjustedValue =
     value !== undefined ? Math.min(Math.max(0, value), 100) : 50;
   return (
-    <div className="w-22 max-w-full flex items-center justify-center relative z-0">
+    <div className="w-18 max-w-full flex items-center justify-center relative z-0">
       <div className="w-full h-full absolute left-0 top-0 z-0">
         <div className="w-full h-full absolute left-0 top-0 overflow-hidden">
           <div
             className="w-full aspect-square absolute left-0 top-0 rounded-full
-            bg-gradient-to-r from-index-fear via-index-neutral to-index-greed
-            group-data-[is-pending]:from-foreground group-data-[is-pending]:via-foreground group-data-[is-pending]:to-foreground group-data-[is-pending]:animate-skeleton
-            group-data-[is-loading-error]:from-destructive group-data-[is-loading-error]:via-destructive group-data-[is-loading-error]:to-destructive"
+              bg-gradient-to-r from-index-fear via-index-neutral to-index-greed
+              group-data-[is-pending]:from-foreground group-data-[is-pending]:via-foreground group-data-[is-pending]:to-foreground group-data-[is-pending]:animate-skeleton
+              group-data-[is-loading-error]:from-destructive group-data-[is-loading-error]:via-destructive group-data-[is-loading-error]:to-destructive"
           >
             <div
               style={{
@@ -179,34 +196,18 @@ function Gauge({
           </div>
         </div>
       </div>
-      {/* Value and description */}
-      <div className="max-w-full z-10 pt-3.75 flex items-center justify-center flex-col gap-0.5 overflow-hidden">
-        {/* Value */}
-        <div className="max-w-full px-4 flex items-center justify-center">
-          <p
-            className="shrink min-w-0 text-center font-bold text-2xl group-data-[is-pending]:bg-foreground leading-none whitespace-nowrap overflow-hidden overflow-ellipsis 
+      {/* Value */}
+      <div className="w-full z-10 px-3 pt-3.75 flex flex-col overflow-hidden">
+        <p
+          className="shrink min-w-0 text-center font-bold text-2xl group-data-[is-pending]:bg-foreground leading-none whitespace-nowrap overflow-hidden overflow-ellipsis 
             group-data-[is-loading-error]:text-destructive group-data-[is-pending]:text-transparent group-data-[is-pending]:rounded-md group-data-[is-pending]:animate-skeleton"
-          >
-            {isPending
-              ? "50"
-              : adjustedValue
-                ? formatNumberTBMK(adjustedValue, 3)
-                : "00"}
-          </p>
-        </div>
-        {/* Description */}
-        <div className="w-full px-3.5 flex items-center justify-center">
-          <p
-            className="max-w-full text-xs shrink min-w-0 text-center leading-none whitespace-nowrap overflow-hidden overflow-ellipsis text-foreground 
-            group-data-[is-pending]:bg-foreground group-data-[is-loading-error]:text-destructive group-data-[is-pending]:text-transparent group-data-[is-pending]:rounded-sm group-data-[is-pending]:animate-skeleton"
-          >
-            {isPending
-              ? "Loading"
-              : data
-                ? data.fear_greed_index.value_classification
-                : "Error"}
-          </p>
-        </div>
+        >
+          {isPending
+            ? "50"
+            : adjustedValue
+              ? formatNumberTBMK(adjustedValue, 3)
+              : "00"}
+        </p>
       </div>
     </div>
   );
