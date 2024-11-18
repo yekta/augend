@@ -29,7 +29,7 @@ export const ethereumRouter = createTRPCRouter({
     .query(async ({ input: { network } }) => {
       const chainId = ethereumNetworks[network].id;
       const url = `${etherscanApiUrl}/v2/api?chainid=${chainId}&module=gastracker&action=gasoracle&apikey=${etherscanApiKey}`;
-      const ethUsdUrl = `${cmcApiUrl}/v2/cryptocurrency/quotes/latest?symbol=ETH&convert=USD`;
+      const ethUsdUrl = `${cmcApiUrl}/v2/cryptocurrency/quotes/latest?id=1027&convert=USD`;
 
       const [response, ethUsdRes] = await Promise.all([
         fetch(url),
@@ -52,7 +52,7 @@ export const ethereumRouter = createTRPCRouter({
         throw new Error(`No result data in gas oracle data: ${data.message}`);
       }
 
-      const ethUsd = ethUsdResJson.data.ETH[0].quote.USD.price;
+      const ethUsd = ethUsdResJson.data[1027].quote.USD.price;
 
       const block = parseInt(data.result.LastBlock);
       const fastGwei = parseFloat(data.result.FastGasPrice);
