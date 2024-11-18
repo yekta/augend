@@ -35,7 +35,7 @@ const dataFallback: TUniswapPoolsResult = {
     tvl1USD: 12345678,
     price: 1345,
     apr24h: 1,
-    feeTier: 0.3,
+    feeTier: 0.01,
     fees24hUSD: 123456,
     fees7dUSD: 1234567,
     volume24hUSD: 12345678,
@@ -98,18 +98,6 @@ export default function UniswapPoolsTableCard({
           const pendingClassName =
             "group-data-[is-pending]/table:text-transparent group-data-[is-pending]/table:bg-foreground group-data-[is-pending]/table:rounded-sm group-data-[is-pending]/table:animate-skeleton group-data-[is-loading-error]/table:text-destructive";
 
-          let feeTierClassName = "text-foreground/80 bg-foreground/8";
-          const feeTierP = row.original.feeTier * 100;
-          if (feeTierP >= 1) feeTierClassName = "text-chart-4 bg-chart-4/8";
-          else if (feeTierP >= 0.3)
-            feeTierClassName = "text-chart-1 bg-chart-1/8";
-          else if (feeTierP >= 0.05)
-            feeTierClassName = "text-chart-3 bg-chart-3/8";
-          feeTierClassName = cn(
-            feeTierClassName,
-            "group-data-[is-pending]/table:bg-foreground/8 group-data-[is-pending]/table:text-transparent group-data-[is-pending]/table:rounded-sm group-data-[is-loading-error]/table:text-destructive group-data-[is-loading-error]/table:bg-destructive/8"
-          );
-
           const iconSizeClassName = "size-4.5 md:size-5.5";
           const PendingIcon = (
             <div
@@ -169,12 +157,21 @@ export default function UniswapPoolsTableCard({
                           : "ERR"}
                     </p>
                     <p
-                      className={`${feeTierClassName} shrink-0 font-medium px-1 py-0.75 rounded leading-none md:leading-none text-xxs md:text-xs`}
+                      className={`${getNumberColorClass(
+                        !isPending && data === undefined
+                          ? "negative"
+                          : row.original.feeTier,
+                        true,
+                        [1, 0.01, 0.003, 0.0005]
+                      )}
+                      group-data-[is-pending]/table:bg-muted-foreground/50 group-data-[is-pending]/table:text-transparent
+                      group-data-[is-pending]/table:animate-skeleton
+                      shrink-0 font-medium px-1 py-0.75 rounded leading-none md:leading-none text-xxs md:text-xs`}
                     >
                       {isPending
-                        ? "10%"
+                        ? "1%"
                         : data
-                          ? `${formatNumberTBMK(feeTierP)}%`
+                          ? `${formatNumberTBMK(row.original.feeTier * 100)}%`
                           : "ERR"}
                     </p>
                   </div>
