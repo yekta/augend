@@ -19,6 +19,9 @@ import { TEthereumNetwork } from "@/trpc/api/routers/ethereum/types";
 import { api } from "@/trpc/setup/react";
 import { SortingState } from "@tanstack/react-table";
 import {
+  ArrowDownIcon,
+  ArrowUp,
+  ArrowUpIcon,
   CalendarArrowUpIcon,
   ChartCandlestickIcon,
   ChartColumnIcon,
@@ -30,8 +33,17 @@ import {
   XIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { ReactNode, useMemo, useState } from "react";
+import {
+  ComponentType,
+  ElementType,
+  FC,
+  ReactNode,
+  SVGProps,
+  useMemo,
+  useState,
+} from "react";
 import { ethereumNetworks } from "@/trpc/api/routers/ethereum/constants";
+import { TSVGIcon } from "@/lib/types";
 
 type TSwapData = TUniswapPoolSwapsResult["swaps"][number];
 
@@ -318,54 +330,52 @@ export default function UniswapPositionCard({
                   `$${formatNumberTBMK(data?.position?.amountTotalUSD || 0)}`
                 )}
                 titleWrapperClassName="pr-8 lg:pr-1"
-                chip={[
-                  <div className="flex items-center gap-1 min-w-0 overflow-hidden shrink">
-                    <ChartColumnIcon className="size-3 md:size-3.5 -my-1 shrink-0" />
-                    <p className="shrink min-w-0 overflow-hidden overflow-ellipsis">
-                      {conditionalValue(
-                        `$${formatNumberTBMK(
-                          Math.abs(
-                            (data?.position.amountTotalUSD || 0) -
-                              (data?.position.depositTotalUSD || 0)
-                          ),
-                          3
-                        )}`,
-                        true
-                      )}
-                    </p>
-                  </div>,
-                  <div className="flex items-center gap-1 min-w-0 overflow-hidden shrink">
-                    <HandCoinsIcon className="size-3 md:size-3.5 -my-1 shrink-0" />
-                    <p className="shrink min-w-0 overflow-hidden overflow-ellipsis">
-                      {conditionalValue(
-                        `$${formatNumberTBMK(
-                          Math.abs(
-                            (data?.position.amountTotalUSD || 0) +
-                              (data?.position.uncollectedFeesTotalUSD || 0) -
-                              (data?.position.depositTotalUSD || 0)
-                          ),
-                          3
-                        )}`,
-                        true
-                      )}
-                    </p>
-                  </div>,
-                ]}
-                chipClassName={[
+                titleSecondary={conditionalValue(
+                  `$${formatNumberTBMK(
+                    Math.abs(
+                      (data?.position.amountTotalUSD || 0) +
+                        (data?.position.uncollectedFeesTotalUSD || 0) -
+                        (data?.position.depositTotalUSD || 0)
+                    ),
+                    3
+                  )}`,
+                  true
+                )}
+                titleSecondaryClassName={
+                  data
+                    ? data.position.depositTotalUSD >
+                      data.position.amountTotalUSD +
+                        data.position.uncollectedFeesTotalUSD
+                      ? getNumberColorClass("negative")
+                      : getNumberColorClass("positive")
+                    : undefined
+                }
+                TitleSecondaryIcon={
+                  data &&
+                  data.position.depositTotalUSD >
+                    data.position.amountTotalUSD +
+                      data.position.uncollectedFeesTotalUSD
+                    ? ArrowDownIcon
+                    : ArrowUpIcon
+                }
+                chip={conditionalValue(
+                  `$${formatNumberTBMK(
+                    Math.abs(
+                      (data?.position.amountTotalUSD || 0) -
+                        (data?.position.depositTotalUSD || 0)
+                    ),
+                    3
+                  )}`,
+                  true
+                )}
+                chipClassName={
                   data
                     ? data.position.depositTotalUSD >
                       data.position.amountTotalUSD
                       ? getNumberColorClass("negative", true)
                       : getNumberColorClass("positive", true)
-                    : undefined,
-                  data
-                    ? data.position.depositTotalUSD >
-                      data.position.amountTotalUSD +
-                        data.position.uncollectedFeesTotalUSD
-                      ? getNumberColorClass("negative", true)
-                      : getNumberColorClass("positive", true)
-                    : undefined,
-                ]}
+                    : undefined
+                }
                 ticker0={conditionalValue(data?.position.token0.symbol, true)}
                 amount0={conditionalValue(
                   formatNumberTBMK(data?.position?.amount0 || 0),
@@ -409,20 +419,10 @@ export default function UniswapPositionCard({
                   data?.position?.uncollectedFeesTotalUSD || 0
                 )}`
               )}
-              chip={
-                <div className="flex items-center gap-1 min-w-0 overflow-hidden shrink">
-                  <CalendarArrowUpIcon className="size-3 md:size-3.5 -my-1 shrink-0" />
-                  <p className="shrink min-w-0 overflow-hidden overflow-ellipsis">
-                    {conditionalValue(
-                      `${formatNumberTBMK(
-                        (data?.position.apr || 0) * 100,
-                        3
-                      )}%`,
-                      true
-                    )}
-                  </p>
-                </div>
-              }
+              chip={conditionalValue(
+                `${formatNumberTBMK((data?.position.apr || 0) * 100, 3)}%`,
+                true
+              )}
               chipClassName={getNumberColorClass(
                 data?.position?.apr || 0,
                 true
@@ -718,6 +718,8 @@ export default function UniswapPositionCard({
 
 function Section({
   title,
+  titleSecondary,
+  TitleSecondaryIcon = false,
   chip,
   ticker0,
   amount0,
@@ -729,10 +731,13 @@ function Section({
   ticker1Icon,
   className,
   titleClassName,
+  titleSecondaryClassName,
   chipClassName,
   titleWrapperClassName,
 }: {
   title: string;
+  titleSecondary?: string;
+  TitleSecondaryIcon?: false | FC<SVGProps<SVGSVGElement>>;
   chip?: string | ReactNode | (string | ReactNode)[];
   ticker0?: string;
   amount0: string;
@@ -744,6 +749,7 @@ function Section({
   ticker1Icon?: false | ReactNode;
   className?: string;
   titleClassName?: string;
+  titleSecondaryClassName?: string;
   chipClassName?: string | (string | undefined)[];
   titleWrapperClassName?: string;
 }) {
@@ -774,6 +780,29 @@ function Section({
         >
           {title}
         </p>
+        {titleSecondary && (
+          <div
+            className={cn(
+              "shrink min-w-0 flex items-center justify-start whitespace-nowrap overflow-hidden overflow-ellipsis font-bold text-lg md:text-xl leading-none md:leading-none",
+              pendingClasses,
+              errorClasses,
+              "group-data-[is-pending]/card:rounded-md",
+              titleSecondaryClassName
+            )}
+          >
+            {TitleSecondaryIcon !== false && (
+              <TitleSecondaryIcon
+                className={cn(
+                  "-ml-0.75 size-5.5 md:size-6 -my-2 shrink-0",
+                  titleSecondaryClassName
+                )}
+              />
+            )}
+            <p className="shrink min-w-0 overflow-hidden overflow-ellipsis">
+              {titleSecondary}
+            </p>
+          </div>
+        )}
         {chip && (
           <div className="flex items-center justify-start min-w-0 overflow-hidden gap-1">
             {(Array.isArray(chip) ? chip : [chip]).map((c, i) => {
