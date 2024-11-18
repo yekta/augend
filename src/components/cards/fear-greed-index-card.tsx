@@ -197,10 +197,10 @@ function Gauge({
         </div>
       </div>
       {/* Value */}
-      <div className="w-full z-10 px-3 pt-3.75 flex flex-col overflow-hidden">
+      <div className="w-full z-10 px-3 pt-3.75 flex items-center justify-center overflow-hidden">
         <p
           className="shrink min-w-0 text-center font-bold text-2xl group-data-[is-pending]:bg-foreground leading-none whitespace-nowrap overflow-hidden overflow-ellipsis 
-            group-data-[is-loading-error]:text-destructive group-data-[is-pending]:text-transparent group-data-[is-pending]:rounded-md group-data-[is-pending]:animate-skeleton"
+          group-data-[is-loading-error]:text-destructive group-data-[is-pending]:text-transparent group-data-[is-pending]:rounded-md group-data-[is-pending]:animate-skeleton"
         >
           {isPending
             ? "50"
