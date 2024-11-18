@@ -783,7 +783,7 @@ function Section({
         {titleSecondary && (
           <div
             className={cn(
-              "shrink min-w-0 flex items-center justify-start whitespace-nowrap overflow-hidden overflow-ellipsis font-bold text-lg md:text-xl leading-none md:leading-none",
+              "shrink min-w-0 flex items-center justify-start whitespace-nowrap overflow-hidden overflow-ellipsis font-bold text-xl md:text-2xl leading-none md:leading-none",
               pendingClasses,
               errorClasses,
               "group-data-[is-pending]/card:rounded-md",
