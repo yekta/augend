@@ -89,12 +89,6 @@ export default function UniswapPositionCard({
 
   const [isSwapsOpen, setIsSwapsOpen] = useState(false);
 
-  const [swapsPage, setSwapsPage] = useState<TAsyncDataTablePage>({
-    min: 1,
-    max: 5,
-    current: 1,
-  });
-
   const {
     data: swapsData,
     isPending: swapsIsPending,
@@ -105,7 +99,6 @@ export default function UniswapPositionCard({
     {
       network,
       poolAddress: data?.position.poolAddress || "",
-      page: swapsPage.current,
     },
     {
       ...defaultQueryOptions.fast,
@@ -574,7 +567,8 @@ export default function UniswapPositionCard({
                     statsData?.pools[0].tvlUSD || 0,
                     3,
                     true
-                  )}`
+                  )}`,
+                  true
                 )}
               />
               <StatColumn
@@ -584,7 +578,8 @@ export default function UniswapPositionCard({
                     (statsData?.pools[0].apr24h || 0) * 100,
                     3,
                     true
-                  )}%`
+                  )}%`,
+                  true
                 )}
                 valueClassName={getNumberColorClass(
                   statsData?.pools[0].apr24h || 0
@@ -667,7 +662,8 @@ export default function UniswapPositionCard({
                     statsData?.pools[0].volume24hUSD || 0,
                     3,
                     true
-                  )}`
+                  )}`,
+                  true
                 )}
               />
               <StatColumn
@@ -677,7 +673,8 @@ export default function UniswapPositionCard({
                     statsData?.pools[0].fees24hUSD || 0,
                     3,
                     true
-                  )}`
+                  )}`,
+                  true
                 )}
               />
               <Indicator
@@ -690,15 +687,13 @@ export default function UniswapPositionCard({
             {/* Table */}
             <div className="w-full flex flex-col">
               <AsyncDataTable
-                className="h-112 rounded-none border-t border-b-0 border-l-0 border-r-0 max-h-[calc((100svh-3rem)*0.5)]"
+                className="h-100 rounded-none rounded-b-xl border-t border-b-0 border-l-0 border-r-0 max-h-[calc((100svh-3rem)*0.5)]"
                 columnDefs={swapsColumnDefs}
                 data={swapsTableDataOrFallback}
                 isError={swapsIsError}
                 isPending={swapsIsPending}
                 isLoadingError={swapsIsLoadingError}
                 isRefetching={swapsIsRefetching}
-                page={swapsPage}
-                setPage={setSwapsPage}
                 sorting={swapsSorting}
                 setSorting={setSwapsSorting}
               />

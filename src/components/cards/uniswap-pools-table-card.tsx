@@ -69,10 +69,7 @@ export default function UniswapPoolsTableCard({
   ]);
 
   const { data, isLoadingError, isPending, isError, isRefetching } =
-    api.uniswap.getPools.useQuery(
-      { page: 1, network },
-      defaultQueryOptions.slow
-    );
+    api.uniswap.getPools.useQuery({ network }, defaultQueryOptions.slow);
 
   const dataOrFallback = useMemo(() => {
     if (!data) return dataFallback;

@@ -254,10 +254,10 @@ export const uniswapRouter = createTRPCRouter({
         network: EthereumNetworkSchema.optional().default("ethereum"),
         poolAddress: z.string(),
         page: z.number().int().positive().default(1),
+        limit: z.number().int().positive().min(1).max(500).default(500),
       })
     )
-    .query(async ({ input: { network, poolAddress, page } }) => {
-      const limit = 100;
+    .query(async ({ input: { network, poolAddress, page, limit } }) => {
       const url = `${uniswapOkuApiUrl}/${network}/cush/poolSwaps`;
       const poolUrl = `${uniswapOkuApiUrl}/${network}/cush/searchPoolsByAddress`;
       const body = {
