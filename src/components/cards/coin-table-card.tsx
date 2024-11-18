@@ -161,7 +161,7 @@ export default function CoinTableCard({ className }: { className?: string }) {
       className={cn("flex flex-col p-1 group/card w-full", className)}
     >
       <AsyncDataTable
-        className="h-167 max-h-[calc((100svh-3rem)*0.75)]"
+        className="h-167 max-h-[calc((100svh-3rem)*0.6)]"
         columnDefs={columnDefs}
         data={dataOrFallback}
         isError={isError}
