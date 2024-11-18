@@ -783,7 +783,7 @@ function Section({
         {titleSecondary && (
           <div
             className={cn(
-              "shrink min-w-0 flex items-center justify-start whitespace-nowrap overflow-hidden overflow-ellipsis font-medium text-xl md:text-2xl leading-none md:leading-none",
+              "shrink min-w-0 flex items-center justify-start whitespace-nowrap overflow-hidden overflow-ellipsis font-semibold text-lg md:text-xl leading-none md:leading-none",
               pendingClasses,
               errorClasses,
               "group-data-[is-pending]/card:rounded-md",
@@ -810,7 +810,7 @@ function Section({
                 <div
                   key={i}
                   className={cn(
-                    "font-medium whitespace-nowrap shrink min-w-0 overflow-hidden overflow-ellipsis text-xs text-center md:text-sm leading-none md:leading-none px-1.5 py-1 md:py-1.25 rounded-md",
+                    "font-semibold whitespace-nowrap shrink min-w-0 overflow-hidden overflow-ellipsis text-xs text-center md:text-sm leading-none md:leading-none px-1.5 py-1 md:py-1.25 rounded-md",
                     pendingClasses,
                     "group-data-[is-pending]/card:bg-muted-foreground/36",
                     errorClasses,
@@ -998,7 +998,7 @@ function NFTImageLink({
           <div className="w-full flex justify-center items-center gap-1 text-white bg-black/60 px-1.5 py-1 rounded-md">
             <p
               className={cn(
-                "font-medium whitespace-nowrap shrink min-w-0 overflow-hidden overflow-ellipsis text-xs text-center md:text-sm leading-none md:leading-none"
+                "font-semibold whitespace-nowrap shrink min-w-0 overflow-hidden overflow-ellipsis text-xs text-center md:text-sm leading-none md:leading-none"
               )}
             >
               {timeAgo(createdAt, true)}
