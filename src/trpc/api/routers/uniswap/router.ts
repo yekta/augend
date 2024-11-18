@@ -25,7 +25,7 @@ export const uniswapRouter = createTRPCRouter({
       z.object({
         page: z.number().int().positive().default(1),
         network: EthereumNetworkSchema.optional().default("ethereum"),
-        limit: z.number().int().positive().min(1).max(200).default(200),
+        limit: z.number().int().positive().min(1).max(1000).default(1000),
         searchAddress: EthereumAddressSchema.optional(),
         errorOnUnmatchingSearchResult: z.boolean().optional().default(false),
       })

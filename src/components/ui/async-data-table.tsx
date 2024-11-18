@@ -28,7 +28,14 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { ArrowDownIcon, ArrowRightIcon, ArrowUpIcon } from "lucide-react";
-import { CSSProperties, Dispatch, SetStateAction, useMemo } from "react";
+import { useVirtualizer } from "@tanstack/react-virtual";
+import {
+  CSSProperties,
+  Dispatch,
+  SetStateAction,
+  useMemo,
+  useRef,
+} from "react";
 
 export type TAsyncDataTablePage = {
   min: number;
@@ -43,6 +50,7 @@ export type TAsyncDataTableColumnDef<T> = ColumnDef<T> & {
   headerAlignment?: "start" | "end";
   cellType?: "regular" | "change" | "custom";
   cellClassName?: string | ((props: CellContext<T, unknown>) => string);
+  className?: string;
   cellParagraphClassName?:
     | string
     | ((props: CellContext<T, unknown>) => string);
@@ -68,8 +76,8 @@ export default function AsyncDataTable<T>({
   isRefetching: boolean;
   isError: boolean;
   isLoadingError: boolean;
-  page: TAsyncDataTablePage;
-  setPage: Dispatch<SetStateAction<TAsyncDataTablePage>>;
+  page?: TAsyncDataTablePage;
+  setPage?: Dispatch<SetStateAction<TAsyncDataTablePage>>;
   className?: string;
   sorting: SortingState;
   setSorting: Dispatch<SetStateAction<SortingState>>;
@@ -94,10 +102,11 @@ export default function AsyncDataTable<T>({
       });
 
       return {
+        ...columnDef,
         meta: {
           width: `${100 / columnDefs.length}%`,
+          className: columnDef.className,
         },
-        ...columnDef,
         header: headerFinal,
         cell: cellFinal,
       };
@@ -121,6 +130,22 @@ export default function AsyncDataTable<T>({
     enableColumnPinning: true,
   });
 
+  const { rows } = table.getRowModel();
+
+  const tableContainerRef = useRef<HTMLDivElement>(null);
+  const rowVirtualizer = useVirtualizer({
+    count: rows.length,
+    estimateSize: () => 33, //estimate row height for accurate scrollbar dragging
+    getScrollElement: () => tableContainerRef.current,
+    //measure dynamic row height, except in firefox because it measures table border height incorrectly
+    measureElement:
+      typeof window !== "undefined" &&
+      navigator.userAgent.indexOf("Firefox") === -1
+        ? (element) => element?.getBoundingClientRect().height
+        : undefined,
+    overscan: 5,
+  });
+
   return (
     <div
       data-is-loading-error={(isLoadingError && true) || undefined}
@@ -129,15 +154,18 @@ export default function AsyncDataTable<T>({
         (!isPending && !isLoadingError && data !== undefined) || undefined
       }
       className={cn(
-        "w-full h-128 flex flex-col text-sm justify-center items-center border rounded-xl gap-3 group/table relative overflow-hidden",
+        "w-full h-128 flex flex-col text-sm justify-center items-center border rounded-xl group/table relative overflow-hidden",
         className
       )}
     >
-      <div className="w-full h-full flex flex-col">
-        <Table>
-          <TableHeader className="bg-background sticky top-0 z-10">
+      <div
+        ref={tableContainerRef}
+        className="w-full flex-1 relative overflow-auto flex flex-col"
+      >
+        <Table className="grid">
+          <TableHeader className="grid bg-background sticky top-0 z-10">
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow borderless key={headerGroup.id}>
+              <TableRow borderless key={headerGroup.id} className="flex w-full">
                 {headerGroup.headers.map((header, i) => (
                   <TableHead
                     key={header.id}
@@ -145,16 +173,19 @@ export default function AsyncDataTable<T>({
                     style={{
                       ...getCommonPinningStyles(header.column),
                       // @ts-ignore
-                      width: header.column.columnDef.meta?.width,
+                      width: header.column.columnDef.meta.width,
                     }}
                     className={cn(
-                      "overflow-hidden",
+                      "flex overflow-hidden",
                       header.column.getCanSort() &&
                         "cursor-pointer not-touch:hover:bg-background-secondary active:bg-background-secondary",
-                      header.column.getIsPinned() && "bg-background"
+                      header.column.getIsPinned() && "bg-background",
+                      // @ts-ignore
+                      header.column.columnDef.meta?.className ||
+                        "min-w-22 md:min-w-32"
                     )}
                   >
-                    <div className="border-b overflow-hidden max-w-full">
+                    <div className="border-b overflow-hidden w-full">
                       {flexRender(
                         header.column.columnDef.header,
                         header.getContext()
@@ -165,38 +196,60 @@ export default function AsyncDataTable<T>({
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows.map((row, i) => (
-              <TableRow
-                borderless
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
-                className="group/row not-touch:group-data-[has-data]/table:hover:bg-background-secondary group-data-[has-data]/table:active:bg-background-secondary"
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell
-                    key={cell.id}
-                    style={{
-                      ...getCommonPinningStyles(cell.column),
-                      // @ts-ignore
-                      width: cell.column.columnDef.meta?.width,
-                    }}
-                    className={cn(
-                      "p-0 overflow-hidden",
-                      cell.column.getIsPinned() &&
-                        "bg-background not-touch:group-data-[has-data]/table:group-hover/row:bg-background-secondary group-data-[has-data]/table:group-active/row:bg-background-secondary"
-                    )}
-                  >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
+          <TableBody
+            style={{
+              height: `${rowVirtualizer.getTotalSize()}px`,
+            }}
+            className="grid relative"
+          >
+            {rowVirtualizer.getVirtualItems().map((virtualRow, i) => {
+              const row = rows[virtualRow.index];
+              return (
+                <TableRow
+                  style={{
+                    transform: `translateY(${virtualRow.start}px)`,
+                  }}
+                  data-index={virtualRow.index}
+                  ref={(node) => rowVirtualizer.measureElement(node)}
+                  borderless
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                  className="flex absolute w-full group/row not-touch:group-data-[has-data]/table:hover:bg-background-secondary group-data-[has-data]/table:active:bg-background-secondary"
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell
+                      style={{
+                        ...getCommonPinningStyles(cell.column),
+                        display: "flex",
+                        // @ts-ignore
+                        width: cell.column.columnDef.meta?.width,
+                      }}
+                      key={cell.id}
+                      className={cn(
+                        "p-0 overflow-hidden",
+                        cell.column.getIsPinned() &&
+                          "bg-background not-touch:group-data-[has-data]/table:group-hover/row:bg-background-secondary group-data-[has-data]/table:group-active/row:bg-background-secondary",
+                        // @ts-ignore
+                        cell.column.columnDef.meta?.className ||
+                          "min-w-22 md:min-w-32"
+                      )}
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
-        <div className="w-full border-t">
-          <Pagination>
-            <PaginationContent className="overflow-x-auto px-0.75 relative">
+      </div>
+      {page !== undefined && setPage !== undefined && (
+        <div className="w-full border-t flex relative z-0 overflow-y-hidden overflow-x-auto">
+          <Pagination className="mx-auto">
+            <PaginationContent className="px-0.75 relative">
               <div className="flex items-center justify-center relative">
                 {Array.from({ length: page.max - page.min + 1 }, (_, i) => {
                   const adjustedPage = i + page.min;
@@ -237,7 +290,7 @@ export default function AsyncDataTable<T>({
             </PaginationContent>
           </Pagination>
         </div>
-      </div>
+      )}
       <Indicator
         isError={isError}
         isPending={isPending}
@@ -357,7 +410,7 @@ const pendingClasses =
 const paddingLeft = "pl-2 md:pl-4";
 const paddingRight = "pr-2 md:pr-4";
 const paddingY = "py-3.5";
-const defaultColumnClasses = "w-22 md:w-32 ml-auto";
+const defaultColumnClasses = "ml-auto";
 
 function HeaderColumn({
   className,

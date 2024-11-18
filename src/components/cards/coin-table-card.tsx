@@ -82,6 +82,7 @@ export default function CoinTableCard({ className }: { className?: string }) {
       {
         accessorKey: "name",
         header: "Name",
+        className: "min-w-[8.5rem] md:min-w-[11rem]",
         headerAlignment: "start",
         isPinnedLeft: true,
         sortDescFirst: false,
@@ -211,7 +212,7 @@ function NameColumn({
             : "#"
       }
       className={cn(
-        `pl-4 md:pl-5 w-34 md:w-52 ${paddingRight} gap-2 md:gap-3 group/link py-3.5 flex flex-row items-center overflow-hidden`
+        `max-w-full pl-4 md:pl-5 ${paddingRight} gap-2 md:gap-3 group/link py-3.5 flex flex-row items-center overflow-hidden`
       )}
     >
       <div className="-ml-1 md:-ml-0.75 flex flex-col items-center justify-center gap-1.5">

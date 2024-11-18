@@ -61,11 +61,6 @@ export default function UniswapPoolsTableCard({
 }) {
   const [network, setNetwork] = useState<TEthereumNetwork>("ethereum");
 
-  const [page, setPage] = useState<TAsyncDataTablePage>({
-    min: 1,
-    max: 5,
-    current: 1,
-  });
   const [sorting, setSorting] = useState<SortingState>([
     {
       id: "apr",
@@ -75,7 +70,7 @@ export default function UniswapPoolsTableCard({
 
   const { data, isLoadingError, isPending, isError, isRefetching } =
     api.uniswap.getPools.useQuery(
-      { page: page.current, network },
+      { page: 1, network },
       defaultQueryOptions.slow
     );
 
@@ -88,8 +83,9 @@ export default function UniswapPoolsTableCard({
     return [
       {
         accessorKey: "name",
-        accessorFn: (row) => row.token0.symbol,
         header: "Name",
+        accessorFn: (row) => row.token0.symbol,
+        className: "min-w-[8.5rem] md:min-w-[11rem]",
         headerAlignment: "start",
         isPinnedLeft: true,
         sortDescFirst: false,
@@ -114,7 +110,7 @@ export default function UniswapPoolsTableCard({
             <Component
               target="_blank"
               href={`https://app.uniswap.org/explore/pools/${network}/${row.original.address}`}
-              className="group/link w-34 md:w-52 gap-2 md:gap-2.5 text-xs md:text-sm leading-none md:leading-none flex items-center justify-start pl-4 md:pl-5 py-3"
+              className="w-full group/link gap-2 md:gap-2.5 text-xs md:text-sm leading-none md:leading-none flex items-center justify-start pl-4 md:pl-5 py-3 pr-2 md:pr-4"
             >
               <div className="shrink min-w-0 gap-2 md:gap-2.5 flex flex-row items-center">
                 <div className="flex -ml-0.75 flex-col justify-center shrink-0">
@@ -256,8 +252,6 @@ export default function UniswapPoolsTableCard({
         isPending={isPending}
         isLoadingError={isLoadingError}
         isRefetching={isRefetching}
-        page={page}
-        setPage={setPage}
         sorting={sorting}
         setSorting={setSorting}
       />
