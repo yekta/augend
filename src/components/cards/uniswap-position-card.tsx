@@ -395,7 +395,6 @@ export default function UniswapPositionCard({
               title={conditionalValue(
                 `$${formatNumberTBMK(data?.position?.amountTotalUSD || 0)}`
               )}
-              titleWrapperClassName="pr-8 lg:pr-1"
               titleSecondary={conditionalValue(
                 `$${formatNumberTBMK(Math.abs(balancePnlUSD), 3)}`,
                 true
