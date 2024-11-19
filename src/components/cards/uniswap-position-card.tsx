@@ -287,6 +287,45 @@ export default function UniswapPositionCard({
     data: statsData,
   });
 
+  const totalUSD =
+    (data?.position?.amountTotalUSD || 1) +
+    (data?.position?.uncollectedFeesTotalUSD || 1);
+  const totalPnlUSD = totalUSD - (data?.position?.depositTotalUSD || 0);
+  const total0 =
+    (data?.position?.amount0 || 1) + (data?.position?.uncollectedFees0 || 1);
+  const total1 =
+    (data?.position?.amount1 || 0) + (data?.position?.uncollectedFees1 || 0);
+  const total0USD =
+    (data?.position?.amount0USD || 1) +
+    (data?.position?.uncollectedFees0USD || 1);
+  const total0Ratio = total0USD / totalUSD;
+
+  const balancePnlUSD =
+    (data?.position.amountTotalUSD || 1) -
+    (data?.position.depositTotalUSD || 1);
+  const balance0Ratio =
+    (data?.position?.amount0USD || 0) / (data?.position?.amountTotalUSD || 1);
+
+  const uncollectedFees0Ratio =
+    (data?.position?.uncollectedFees0USD || 1) /
+    (data?.position?.uncollectedFeesTotalUSD || 2);
+
+  const isOutOfRange = data
+    ? data.position.priceCurrent > data.position.priceUpper ||
+      data.position.priceCurrent < data.position.priceLower
+    : false;
+
+  const lowerPriceRequiredChangeRate =
+    -1 *
+    (((data?.position?.priceCurrent || 100) -
+      (data?.position?.priceLower || 50)) /
+      (data?.position?.priceCurrent || 100));
+
+  const upperPriceRequiredChangeRage =
+    ((data?.position?.priceUpper || 100) -
+      (data?.position?.priceCurrent || 50)) /
+    (data?.position?.priceCurrent || 100);
+
   return (
     <CardWrapper
       className={cn("w-full", className)}
@@ -305,108 +344,97 @@ export default function UniswapPositionCard({
           <NFTImageLink
             href={href || "placeholder"}
             uri={data?.position.nftUri}
-            className="h-36 px-4 py-3.25 -mr-4 hidden lg:block"
+            className="h-36 px-4 py-3.25 -mr-4 hidden xl:block"
             createdAt={data?.position.createdAt || 1731679718000}
           />
-          <div className="flex-1 flex flex-row flex-wrap items-end p-1.5 md:p-2 lg:p-3 min-w-0">
-            <div className="w-full overflow-hidden mt-0.5 md:mt-0 lg:w-1/3 flex flex-row items-center justify-start">
+          <div className="flex-1 flex flex-row flex-wrap items-center p-1.5 md:p-2 xl:p-3 min-w-0">
+            <div className="w-full overflow-hidden mt-0.5 md:mt-0 md:w-1/2 xl:w-1/4 flex flex-row items-center justify-start">
               <NFTImageLink
                 href={href || "placeholder"}
-                className="h-28 shrink-0 md:h-32 px-2 md:px-2 py-1.5 lg:hidden"
+                className="h-28 shrink-0 md:h-32 px-2 md:px-2 py-1.5 xl:hidden"
                 uri={data?.position.nftUri}
                 createdAt={data?.position.createdAt || 1731679718000}
               />
-              {/* Balance */}
+              {/* Total */}
               <Section
                 className="flex-1 overflow-hidden"
-                title={conditionalValue(
-                  `$${formatNumberTBMK(data?.position?.amountTotalUSD || 0)}`
-                )}
+                title={conditionalValue(`$${formatNumberTBMK(totalUSD)}`)}
                 titleWrapperClassName="pr-8 lg:pr-1"
                 titleSecondary={conditionalValue(
-                  `$${formatNumberTBMK(
-                    Math.abs(
-                      (data?.position.amountTotalUSD || 0) +
-                        (data?.position.uncollectedFeesTotalUSD || 0) -
-                        (data?.position.depositTotalUSD || 0)
-                    ),
-                    3
-                  )}`,
+                  `$${formatNumberTBMK(Math.abs(totalPnlUSD), 3)}`,
                   true
                 )}
                 titleSecondaryClassName={
                   data
-                    ? data.position.depositTotalUSD >
-                      data.position.amountTotalUSD +
-                        data.position.uncollectedFeesTotalUSD
+                    ? totalPnlUSD < 0
                       ? getNumberColorClass("negative")
                       : getNumberColorClass("positive")
                     : undefined
                 }
                 TitleSecondaryIcon={
-                  data &&
-                  data.position.depositTotalUSD >
-                    data.position.amountTotalUSD +
-                      data.position.uncollectedFeesTotalUSD
-                    ? ArrowDownIcon
-                    : ArrowUpIcon
-                }
-                chip={conditionalValue(
-                  `$${formatNumberTBMK(
-                    Math.abs(
-                      (data?.position.amountTotalUSD || 0) -
-                        (data?.position.depositTotalUSD || 0)
-                    ),
-                    3
-                  )}`,
-                  true
-                )}
-                chipClassName={
-                  data
-                    ? data.position.depositTotalUSD >
-                      data.position.amountTotalUSD
-                      ? getNumberColorClass("negative", true)
-                      : getNumberColorClass("positive", true)
-                    : undefined
+                  totalPnlUSD < 0 ? ArrowDownIcon : ArrowUpIcon
                 }
                 ticker0={conditionalValue(data?.position.token0.symbol, true)}
-                amount0={conditionalValue(
-                  formatNumberTBMK(data?.position?.amount0 || 0),
-                  true
-                )}
+                amount0={conditionalValue(formatNumberTBMK(total0), true)}
                 amount0Chip={conditionalValue(
-                  formatNumberTBMK(
-                    Math.ceil(
-                      ((data?.position?.amount0USD || 0) /
-                        (data?.position?.amountTotalUSD || 1)) *
-                        100
-                    ),
-                    3
-                  ) + "%",
+                  formatNumberTBMK(Math.round(total0Ratio * 100), 3) + "%",
                   true
                 )}
                 ticker1={conditionalValue(data?.position.token1.symbol, true)}
-                amount1={conditionalValue(
-                  formatNumberTBMK(data?.position?.amount1 || 0),
-                  true
-                )}
+                amount1={conditionalValue(formatNumberTBMK(total1), true)}
                 amount1Chip={conditionalValue(
-                  formatNumberTBMK(
-                    Math.floor(
-                      (((data?.position?.amountTotalUSD || 0) -
-                        (data?.position?.amount0USD || 1)) /
-                        (data?.position?.amountTotalUSD || 1)) *
-                        100
-                    ),
-                    3
-                  ) + "%",
+                  formatNumberTBMK(100 - Math.round(total0Ratio * 100), 3) +
+                    "%",
                   true
                 )}
               />
             </div>
+            {/* Balance */}
+            <Section
+              className="w-full mt-1.5 md:mt-0 md:w-1/2 xl:w-1/4"
+              title={conditionalValue(
+                `$${formatNumberTBMK(data?.position?.amountTotalUSD || 0)}`
+              )}
+              titleWrapperClassName="pr-8 lg:pr-1"
+              titleSecondary={conditionalValue(
+                `$${formatNumberTBMK(Math.abs(balancePnlUSD), 3)}`,
+                true
+              )}
+              titleSecondaryClassName={
+                data
+                  ? balancePnlUSD < 0
+                    ? getNumberColorClass("negative")
+                    : getNumberColorClass("positive")
+                  : undefined
+              }
+              TitleSecondaryIcon={
+                balancePnlUSD < 0 ? ArrowDownIcon : ArrowUpIcon
+              }
+              ticker0={conditionalValue(data?.position.token0.symbol, true)}
+              amount0={conditionalValue(
+                formatNumberTBMK(data?.position?.amount0 || 0),
+                true
+              )}
+              amount0Chip={conditionalValue(
+                formatNumberTBMK(Math.round(balance0Ratio * 100), 3) + "%",
+                true
+              )}
+              ticker1={conditionalValue(data?.position.token1.symbol, true)}
+              amount1={conditionalValue(
+                formatNumberTBMK(data?.position?.amount1 || 0),
+                true
+              )}
+              amount1Chip={conditionalValue(
+                formatNumberTBMK(
+                  Math.floor(100 - Math.round(balance0Ratio * 100)),
+                  3
+                ) + "%",
+                true
+              )}
+            />
             {/* Fees */}
             <Section
-              className="w-1/2 mt-1.5 lg:mt-0 lg:w-1/3"
+              className="w-1/2 mt-1.5 xl:mt-0 xl:w-1/4"
               title={conditionalValue(
                 `$${formatNumberTBMK(
                   data?.position?.uncollectedFeesTotalUSD || 0
@@ -427,11 +455,7 @@ export default function UniswapPositionCard({
               )}
               amount0Chip={conditionalValue(
                 `${formatNumberTBMK(
-                  Math.ceil(
-                    ((data?.position?.uncollectedFees0USD || 0.5) /
-                      (data?.position?.uncollectedFeesTotalUSD || 1)) *
-                      100
-                  ),
+                  Math.round(uncollectedFees0Ratio * 100),
                   3
                 )}%`,
                 true
@@ -443,12 +467,7 @@ export default function UniswapPositionCard({
               )}
               amount1Chip={conditionalValue(
                 `${formatNumberTBMK(
-                  Math.floor(
-                    (((data?.position?.uncollectedFeesTotalUSD || 1) -
-                      (data?.position?.uncollectedFees0USD || 0.5)) /
-                      (data?.position?.uncollectedFeesTotalUSD || 1)) *
-                      100
-                  ),
+                  Math.floor(100 - Math.round(uncollectedFees0Ratio * 100)),
                   3
                 )}%`,
                 true
@@ -456,18 +475,12 @@ export default function UniswapPositionCard({
             />
             {/* Prices */}
             <Section
-              className="w-1/2 mt-1.5 lg:mt-0 lg:w-1/3"
+              className="w-1/2 mt-1.5 xl:mt-0 xl:w-1/4"
               title={conditionalValue(
                 `${formatNumberTBMK(data?.position?.priceCurrent || 0)}`
               )}
               titleWrapperClassName="lg:pr-8"
-              titleClassName={
-                data &&
-                (data.position.priceCurrent > data.position.priceUpper ||
-                  data.position.priceCurrent < data.position.priceLower)
-                  ? "text-destructive"
-                  : ""
-              }
+              titleClassName={data && isOutOfRange ? "text-destructive" : ""}
               ticker0Icon={false}
               ticker0={"Min"}
               amount0={conditionalValue(
@@ -475,21 +488,9 @@ export default function UniswapPositionCard({
                 true
               )}
               amount0Chip={`${conditionalValue(
-                `${
-                  data?.position?.priceCurrent ||
-                  100 >= (data?.position?.priceLower || 50)
-                    ? "-"
-                    : "+"
-                }` +
+                `${lowerPriceRequiredChangeRate <= 0 ? "-" : "+"}` +
                   formatNumberTBMK(
-                    Math.round(
-                      Math.abs(
-                        (((data?.position?.priceCurrent || 100) -
-                          (data?.position?.priceLower || 50)) /
-                          (data?.position?.priceCurrent || 100)) *
-                          100
-                      )
-                    ),
+                    Math.abs(Math.round(lowerPriceRequiredChangeRate * 100)),
                     3
                   ) +
                   "%",
@@ -502,21 +503,9 @@ export default function UniswapPositionCard({
                 true
               )}
               amount1Chip={`${conditionalValue(
-                `${
-                  (data?.position?.priceUpper || 100) >=
-                  (data?.position?.priceCurrent || 50)
-                    ? "+"
-                    : "-"
-                }` +
+                `${upperPriceRequiredChangeRage >= 0 ? "+" : "-"}` +
                   formatNumberTBMK(
-                    Math.round(
-                      Math.abs(
-                        (((data?.position?.priceUpper || 100) -
-                          (data?.position?.priceCurrent || 50)) /
-                          (data?.position?.priceCurrent || 100)) *
-                          100
-                      )
-                    ),
+                    Math.round(Math.abs(upperPriceRequiredChangeRage * 100)),
                     3
                   ) +
                   "%",
@@ -754,7 +743,7 @@ function Section({
   return (
     <div
       className={cn(
-        "flex min-w-0 flex-col gap-3 p-1.5 md:p-2 lg:p-3",
+        "flex min-w-0 flex-col gap-3 p-1.5 md:p-2 xl:p-3",
         className
       )}
     >
