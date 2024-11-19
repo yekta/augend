@@ -344,14 +344,14 @@ export default function UniswapPositionCard({
           <NFTImageLink
             href={href || "placeholder"}
             uri={data?.position.nftUri}
-            className="h-35 p-3 -mr-3 hidden xl:block"
+            className="h-35 px-3 py-2.75 -mr-3 hidden xl:block"
             createdAt={data?.position.createdAt || 1731679718000}
           />
           <div className="flex-1 flex flex-row flex-wrap items-center p-1.5 md:p-2 xl:p-2.5 min-w-0">
             <div className="w-full overflow-hidden mt-0.5 md:mt-0 md:w-1/2 xl:w-1/4 flex flex-row items-center justify-start">
               <NFTImageLink
                 href={href || "placeholder"}
-                className="h-28 shrink-0 md:h-32 p-1.5 md:p-2 pr-1.75 md:pr-2.25 xl:hidden"
+                className="h-28 shrink-0 md:h-32 px-1.5 py-1 md:px-2 md:py-1.75 pr-1.75 md:pr-2.25 xl:hidden"
                 uri={data?.position.nftUri}
                 createdAt={data?.position.createdAt || 1731679718000}
               />
@@ -753,6 +753,7 @@ function Section({
   const pendingClasses =
     "group-data-[is-pending]/card:text-transparent group-data-[is-pending]/card:animate-skeleton group-data-[is-pending]/card:bg-foreground";
   const errorClasses = "group-data-[is-loading-error]/card:text-destructive";
+
   return (
     <div
       className={cn(
@@ -991,7 +992,7 @@ function NFTImageLink({
     >
       <div
         className="h-full relative z-0 not-touch:group-hover/link:opacity-50 group-active/link:opacity-50 transition 
-        rounded-[8px] md:rounded-[10px] border overflow-hidden"
+        rounded-[10px] border overflow-hidden"
       >
         <img
           width="290"
