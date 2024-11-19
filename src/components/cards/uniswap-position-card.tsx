@@ -344,14 +344,14 @@ export default function UniswapPositionCard({
           <NFTImageLink
             href={href || "placeholder"}
             uri={data?.position.nftUri}
-            className="h-36 px-4 py-3.25 -mr-4 hidden xl:block"
+            className="h-35 p-3 -mr-3 hidden xl:block"
             createdAt={data?.position.createdAt || 1731679718000}
           />
-          <div className="flex-1 flex flex-row flex-wrap items-center p-1.5 md:p-2 xl:p-3 min-w-0">
+          <div className="flex-1 flex flex-row flex-wrap items-center p-1.5 md:p-2 xl:p-2.5 min-w-0">
             <div className="w-full overflow-hidden mt-0.5 md:mt-0 md:w-1/2 xl:w-1/4 flex flex-row items-center justify-start">
               <NFTImageLink
                 href={href || "placeholder"}
-                className="h-28 shrink-0 md:h-32 px-2 md:px-2 py-1.5 xl:hidden"
+                className="h-28 shrink-0 md:h-32 p-1.5 md:p-2 pr-1.75 md:pr-2.25 xl:hidden"
                 uri={data?.position.nftUri}
                 createdAt={data?.position.createdAt || 1731679718000}
               />
@@ -743,7 +743,7 @@ function Section({
   return (
     <div
       className={cn(
-        "flex min-w-0 flex-col gap-3 p-1.5 md:p-2 xl:p-3",
+        "flex min-w-0 flex-col gap-3 p-1.5 md:p-2 xl:p-2.5",
         className
       )}
     >

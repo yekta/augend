@@ -111,6 +111,7 @@ const config: Config = {
         30: "7.5rem",
         31: "7.75rem",
         34: "8.5rem",
+        35: "8.75rem",
         37: "9.25rem",
         38: "9.5rem",
         100: "25rem",
