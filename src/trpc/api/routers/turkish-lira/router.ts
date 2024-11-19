@@ -1,6 +1,5 @@
 import {
   currenciesForLira,
-  CurrencyForLiraTickerEnum,
   tcmbApi,
   TCurrencyForLiraTicker,
 } from "@/trpc/api/routers/turkish-lira/helpers";

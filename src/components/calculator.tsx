@@ -8,7 +8,7 @@ import { defaultQueryOptions } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { TCurrencyForLiraTicker } from "@/trpc/api/routers/turkish-lira/helpers";
 import { api } from "@/trpc/setup/react";
-import React, { ReactNode, useEffect, useRef } from "react";
+import React, { ReactNode, useEffect, useRef, useState } from "react";
 
 type TCurrency = {
   ticker: string;
@@ -102,17 +102,24 @@ export default function Calculator({ className }: { className?: string }) {
     currencies.map(() => null)
   );
 
+  const [lastActiveInput, setLastActiveInput] =
+    useState<HTMLInputElement | null>(null);
+
   useEffect(() => {
     if (!liraData || !cryptoData) return;
-    let activeInput: HTMLInputElement | null = null;
+
     for (let i of inputRefs.current) {
       if (i && document.activeElement === i) {
-        activeInput = i;
-        break;
+        editOtherInputs(i);
+        return;
       }
     }
-    if (activeInput) {
-      editOtherInputs(activeInput);
+
+    for (let i of inputRefs.current) {
+      if (i && lastActiveInput === i) {
+        editOtherInputs(i);
+        return;
+      }
     }
   }, [liraData, cryptoData]);
 
@@ -219,6 +226,7 @@ export default function Calculator({ className }: { className?: string }) {
               ref={(e) => {
                 inputRefs.current[index] = e;
               }}
+              onFocus={(e) => setLastActiveInput(e.target)}
               onInput={onInput}
               data-ticker={c.ticker}
               data-id={c.id}
