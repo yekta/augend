@@ -990,7 +990,7 @@ function NFTImageLink({
       href={href || "placeholder"}
       className={cn("relative overflow-hidden", sharedClassName, className)}
     >
-      <div className="h-full relative z-0 not-touch:group-hover/link:opacity-50 group-active/link:opacity-50 transition">
+      <div className="h-full relative z-0 not-touch:group-hover/link:opacity-25 group-active/link:opacity-50 transition">
         <img
           width="290"
           height="500"
@@ -998,7 +998,7 @@ function NFTImageLink({
           src={uri}
         />
         <div
-          className="w-full bg-border pt-1 pb-1.5 absolute left-0 top-1/2 -translate-y-1/2
+          className="w-full bg-background/75 filter backdrop-blur pt-1 pb-1.5 absolute left-0 top-1/2 -translate-y-1/2
           items-start justify-center hidden group-data-[is-out-of-range]/card:flex"
         >
           <TriangleAlertIcon className="size-4.5 md:size-5 text-destructive" />
