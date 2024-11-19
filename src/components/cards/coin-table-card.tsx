@@ -212,7 +212,7 @@ function NameColumn({
             : "#"
       }
       className={cn(
-        `max-w-full pl-4 md:pl-5 ${paddingRight} gap-2 md:gap-3 group/link py-3.5 flex flex-row items-center overflow-hidden`
+        `w-full pl-4 md:pl-5 ${paddingRight} gap-2 md:gap-3 group/link py-3.5 flex flex-row items-center overflow-hidden`
       )}
     >
       <div className="-ml-1 md:-ml-0.75 flex flex-col items-center justify-center gap-1.5">
