@@ -990,10 +990,7 @@ function NFTImageLink({
       href={href || "placeholder"}
       className={cn("relative overflow-hidden", sharedClassName, className)}
     >
-      <div
-        className="h-full relative z-0 not-touch:group-hover/link:opacity-50 group-active/link:opacity-50 transition 
-        rounded-[10px] border overflow-hidden"
-      >
+      <div className="h-full relative z-0 not-touch:group-hover/link:opacity-50 group-active/link:opacity-50 transition">
         <img
           width="290"
           height="500"
