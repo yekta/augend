@@ -82,7 +82,7 @@ export default function UniswapPoolsTableCard({
         accessorKey: "name",
         header: "Name",
         accessorFn: (row) => row.token0.symbol,
-        className: "min-w-[8.5rem] md:min-w-[11rem]",
+        className: "min-w-[9.5rem] md:min-w-[11rem]",
         headerAlignment: "start",
         isPinnedLeft: true,
         sortDescFirst: false,
