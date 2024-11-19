@@ -430,6 +430,7 @@ function HeaderColumn({
   return (
     <div
       className={cn(
+        "w-full",
         `${paddingLeft} ${paddingRight} ${defaultColumnClasses} ${paddingY} flex items-center justify-end select-none gap-1`,
         className
       )}
@@ -475,6 +476,7 @@ function ChangeColumn({
       data-is-negative={isNegative ? true : undefined}
       data-is-positive={isPositive ? true : undefined}
       className={cn(
+        "w-full",
         `${paddingLeft} ${paddingRight} ${paddingY} ${defaultColumnClasses} text-xs md:text-sm md:leading-none break-words leading-none font-medium flex text-right overflow-hidden overflow-ellipsis items-center justify-end text-muted-foreground data-[is-loading-error]:text-destructive data-[is-negative]:text-destructive data-[is-positive]:text-success`,
         className
       )}
@@ -511,6 +513,7 @@ function RegularColumn({
   return (
     <div
       className={cn(
+        "w-full",
         `${paddingLeft} ${paddingRight} ${paddingY} ${defaultColumnClasses} text-xs md:text-sm md:leading-none font-medium flex items-center justify-end overflow-hidden`,
         className
       )}
