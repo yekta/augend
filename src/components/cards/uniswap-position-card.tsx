@@ -1003,18 +1003,14 @@ function NFTImageLink({
         >
           <TriangleAlertIcon className="size-4.5 md:size-5 text-destructive" />
         </div>
-        <div className="w-full flex flex-col gap-1 items-center justify-center absolute left-0 bottom-0">
-          <div className="w-full px-1 pb-1 flex gap-1 items-center justify-center">
-            <div className="w-full flex flex-col justify-center items-center gap-1 px-1.5 py-1 rounded-md text-white bg-black/60">
-              <p
-                className={cn(
-                  "font-medium whitespace-nowrap shrink min-w-0 overflow-hidden overflow-ellipsis text-xs text-center md:text-sm leading-none md:leading-none"
-                )}
-              >
-                {timeAgo(createdAt, true)}
-              </p>
-            </div>
-          </div>
+        <div className="w-full px-1 pb-1 flex gap-1 items-center justify-center absolute bottom-0 left-0">
+          <p
+            className={cn(
+              "w-full font-medium whitespace-nowrap shrink min-w-0 overflow-hidden overflow-ellipsis text-xs text-center md:text-sm leading-none md:leading-none px-1.5 py-1 rounded-md text-white bg-black/60"
+            )}
+          >
+            {timeAgo(createdAt, true)}
+          </p>
         </div>
       </div>
       <ExternalLinkIcon
