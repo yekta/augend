@@ -1000,20 +1000,24 @@ function NFTImageLink({
           className="h-full w-auto filter"
           src={uri}
         />
+
         <div
-          className="w-full h-full absolute left-0 top-0 pointer-events-none group-data-[is-out-of-range]/card:bg-gradient-to-t
-          group-data-[is-out-of-range]/card:from-destructive group-data-[is-out-of-range]/card:to-destructive/0
-          group-data-[is-out-of-range]/card:from-[20%] group-data-[is-out-of-range]/card:to-[60%]"
-        />
-        <div className="w-full px-1 py-1 flex gap-1 items-center justify-center absolute left-1/2 -translate-x-1/2 bottom-0">
-          <div className="w-full flex justify-center items-center gap-1 px-1.5 py-1 rounded-md text-white bg-black/60">
-            <p
-              className={cn(
-                "font-medium whitespace-nowrap shrink min-w-0 overflow-hidden overflow-ellipsis text-xs text-center md:text-sm leading-none md:leading-none"
-              )}
-            >
-              {timeAgo(createdAt, true)}
-            </p>
+          className="w-full bg-border pt-1 pb-1.5 absolute left-0 top-1/2 -translate-y-1/2
+          items-start justify-center hidden group-data-[is-out-of-range]/card:flex"
+        >
+          <TriangleAlertIcon className="size-4.5 md:size-5 text-destructive" />
+        </div>
+        <div className="w-full flex flex-col gap-1 items-center justify-center absolute left-0 bottom-0">
+          <div className="w-full px-1 pb-1 flex gap-1 items-center justify-center">
+            <div className="w-full flex flex-col justify-center items-center gap-1 px-1.5 py-1 rounded-md text-white bg-black/60">
+              <p
+                className={cn(
+                  "font-medium whitespace-nowrap shrink min-w-0 overflow-hidden overflow-ellipsis text-xs text-center md:text-sm leading-none md:leading-none"
+                )}
+              >
+                {timeAgo(createdAt, true)}
+              </p>
+            </div>
           </div>
         </div>
       </div>
