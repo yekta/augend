@@ -310,27 +310,27 @@ export default function UniswapPositionCard({
     (data?.position?.uncollectedFees0USD || 1) /
     (data?.position?.uncollectedFeesTotalUSD || 2);
 
-  const isOutOfRange = data
-    ? data.position.priceCurrent > data.position.priceUpper ||
-      data.position.priceCurrent < data.position.priceLower
-    : false;
-
   const lowerPriceRequiredChangeRate =
     -1 *
     (((data?.position?.priceCurrent || 100) -
       (data?.position?.priceLower || 50)) /
       (data?.position?.priceCurrent || 100));
 
-  const upperPriceRequiredChangeRage =
+  const upperPriceRequiredChangeRange =
     ((data?.position?.priceUpper || 100) -
       (data?.position?.priceCurrent || 50)) /
     (data?.position?.priceCurrent || 100);
+
+  const isOutOfRange = data
+    ? lowerPriceRequiredChangeRate > 0 || upperPriceRequiredChangeRange < 0
+    : false;
 
   return (
     <CardWrapper
       className={cn("w-full", className)}
       data-is-loading-error={(isLoadingError && true) || undefined}
       data-is-pending={(isPending && true) || undefined}
+      data-is-out-of-range={isOutOfRange || undefined}
       data-has-data={
         (!isPending && !isLoadingError && data !== undefined) || undefined
       }
@@ -496,6 +496,11 @@ export default function UniswapPositionCard({
                   "%",
                 true
               )}`}
+              amount0ChipClassName={
+                lowerPriceRequiredChangeRate > 0
+                  ? "text-destructive"
+                  : undefined
+              }
               ticker1Icon={false}
               ticker1={"Max"}
               amount1={conditionalValue(
@@ -503,14 +508,19 @@ export default function UniswapPositionCard({
                 true
               )}
               amount1Chip={`${conditionalValue(
-                `${upperPriceRequiredChangeRage >= 0 ? "+" : "-"}` +
+                `${upperPriceRequiredChangeRange >= 0 ? "+" : "-"}` +
                   formatNumberTBMK(
-                    Math.round(Math.abs(upperPriceRequiredChangeRage * 100)),
+                    Math.round(Math.abs(upperPriceRequiredChangeRange * 100)),
                     3
                   ) +
                   "%",
                 true
               )}`}
+              amount1ChipClassName={
+                upperPriceRequiredChangeRange < 0
+                  ? "text-destructive"
+                  : undefined
+              }
             />
           </div>
         </div>
@@ -708,9 +718,11 @@ function Section({
   ticker0,
   amount0,
   amount0Chip,
+  amount0ChipClassName,
   ticker1,
   amount1,
   amount1Chip,
+  amount1ChipClassName,
   ticker0Icon,
   ticker1Icon,
   className,
@@ -726,9 +738,11 @@ function Section({
   ticker0?: string;
   amount0: string;
   amount0Chip?: string;
+  amount0ChipClassName?: string;
   ticker1?: string;
   amount1: string;
   amount1Chip?: string;
+  amount1ChipClassName?: string;
   ticker0Icon?: false | ReactNode;
   ticker1Icon?: false | ReactNode;
   className?: string;
@@ -816,12 +830,14 @@ function Section({
           ticker={ticker0}
           amount={amount0}
           chip={amount0Chip}
+          chipClassName={amount0ChipClassName}
           tickerIcon={ticker0Icon}
         />
         <TickerTextAmount
           ticker={ticker1}
           amount={amount1}
           chip={amount1Chip}
+          chipClassName={amount1ChipClassName}
           tickerIcon={ticker1Icon}
         />
       </div>
@@ -833,11 +849,13 @@ function TickerTextAmount({
   ticker,
   amount,
   chip,
+  chipClassName,
   tickerIcon,
 }: {
   ticker?: string;
   amount: string;
   chip?: string;
+  chipClassName?: string;
   tickerIcon?: false | ReactNode;
 }) {
   return (
@@ -891,7 +909,8 @@ function TickerTextAmount({
               "text-muted-foreground whitespace-nowrap shrink min-w-0 max-w-full overflow-hidden overflow-ellipsis",
               pendingClasses,
               "group-data-[is-pending]/card:bg-muted-foreground",
-              errorClasses
+              errorClasses,
+              chipClassName
             )}
           >
             {chip}
@@ -971,15 +990,23 @@ function NFTImageLink({
       href={href || "placeholder"}
       className={cn("relative overflow-hidden", sharedClassName, className)}
     >
-      <div className="h-full relative z-0 not-touch:group-hover/link:opacity-50 group-active/link:opacity-50 transition">
+      <div
+        className="h-full relative z-0 not-touch:group-hover/link:opacity-50 group-active/link:opacity-50 transition 
+        rounded-[8px] md:rounded-[10px] border overflow-hidden"
+      >
         <img
           width="290"
           height="500"
           className="h-full w-auto filter"
           src={uri}
         />
-        <div className="w-full px-1 pb-1 flex gap-1 items-center justify-center absolute left-1/2 -translate-x-1/2 bottom-0">
-          <div className="w-full flex justify-center items-center gap-1 text-white bg-black/60 px-1.5 py-1 rounded-md">
+        <div
+          className="w-full h-full absolute left-0 top-0 pointer-events-none group-data-[is-out-of-range]/card:bg-gradient-to-t
+          group-data-[is-out-of-range]/card:from-destructive group-data-[is-out-of-range]/card:to-destructive/0
+          group-data-[is-out-of-range]/card:from-[20%] group-data-[is-out-of-range]/card:to-[60%]"
+        />
+        <div className="w-full px-1 py-1 flex gap-1 items-center justify-center absolute left-1/2 -translate-x-1/2 bottom-0">
+          <div className="w-full flex justify-center items-center gap-1 px-1.5 py-1 rounded-md text-white bg-black/60">
             <p
               className={cn(
                 "font-medium whitespace-nowrap shrink min-w-0 overflow-hidden overflow-ellipsis text-xs text-center md:text-sm leading-none md:leading-none"
