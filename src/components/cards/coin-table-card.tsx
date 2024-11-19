@@ -82,7 +82,7 @@ export default function CoinTableCard({ className }: { className?: string }) {
       {
         accessorKey: "name",
         header: "Name",
-        className: "min-w-[9.5rem] md:min-w-[11rem]",
+        className: "min-w-[9rem] md:min-w-[11rem]",
         headerAlignment: "start",
         isPinnedLeft: true,
         sortDescFirst: false,
