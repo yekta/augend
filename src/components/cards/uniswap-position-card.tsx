@@ -999,7 +999,6 @@ function NFTImageLink({
           className="h-full w-auto filter"
           src={uri}
         />
-
         <div
           className="w-full bg-border pt-1 pb-1.5 absolute left-0 top-1/2 -translate-y-1/2
           items-start justify-center hidden group-data-[is-out-of-range]/card:flex"
