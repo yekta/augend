@@ -11,21 +11,11 @@ const items: TOrderBookConfig[] = [
     exchange: "Coinex",
     ticker: "BANANO/USDT",
     limit: lines,
-    getUrl: (ticker: string) =>
-      `https://www.coinex.com/en/exchange/${ticker
-        .replaceAll("/", "-")
-        .toLowerCase()}`,
-    priceFormatter: (i: number) => formatNumberTBMK(i, 4, true),
   },
   {
     exchange: "Coinex",
     ticker: "BANANO/BTC",
     limit: lines,
-    getUrl: (ticker: string) =>
-      `https://www.coinex.com/en/exchange/${ticker
-        .replaceAll("/", "-")
-        .toLowerCase()}`,
-    priceFormatter: (i: number) => formatNumberTBMK(i * 1e8, 3, true),
   },
 ];
 
