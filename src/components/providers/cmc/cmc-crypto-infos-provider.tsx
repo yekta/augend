@@ -9,33 +9,19 @@ import { AppRouterOutputs, AppRouterQueryResult } from "@/trpc/api/root";
 import { api } from "@/trpc/setup/react";
 import React, { createContext, ReactNode, useContext } from "react";
 
-const cryptos: {
-  ticker: string;
+export type TCryptoDef = {
   id: number;
-}[] = process.env.NEXT_PUBLIC_CMC_CRYPTOS?.split(",").map((i) => {
-  const [ticker, id] = i.split(":");
-  return {
-    ticker,
-    id: parseInt(id),
-  };
-}) ?? [
-  {
-    ticker: "BTC",
-    id: 1,
-  },
-  {
-    ticker: "ETH",
-    id: 1027,
-  },
-];
+  ticker: string;
+};
 
 const CmcCryptoInfosContext = createContext<TCmcCryptoInfosContext | null>(
   null
 );
 
-export const CmcCryptoInfosProvider: React.FC<{ children: ReactNode }> = ({
-  children,
-}) => {
+export const CmcCryptoInfosProvider: React.FC<{
+  children: ReactNode;
+  cryptos: TCryptoDef[];
+}> = ({ children, cryptos }) => {
   const query = api.cmc.getCryptoInfos.useQuery(
     {
       convert: convertCurrency.ticker,

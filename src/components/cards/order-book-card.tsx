@@ -1,3 +1,5 @@
+"use client";
+
 import CardWrapper from "@/components/cards/card-wrapper";
 import Indicator from "@/components/ui/indicator";
 import { defaultQueryOptions } from "@/lib/constants";
@@ -46,8 +48,8 @@ export default function OrderBookCard({
       defaultQueryOptions.normal
     );
 
-  const priceFormatter = config.priceFormatter || formatNumberTBMK;
-  const amountFormatter = config.amountFormatter || formatNumberTBMK;
+  const priceFormatter = formatNumberTBMK;
+  const amountFormatter = formatNumberTBMK;
 
   const currentData: TOrderBook = isPending
     ? placeholderData
@@ -55,15 +57,22 @@ export default function OrderBookCard({
       ? limitData(data, lines)
       : placeholderData;
 
+  const href =
+    config.exchange === "Coinex"
+      ? `https://www.coinex.com/en/exchange/${config.ticker
+          .toLowerCase()
+          .replace("/", "-")}`
+      : undefined;
   return (
     <CardWrapper
-      href={config.getUrl(config.ticker)}
+      href={href}
       className={cn("w-full md:w-1/2 lg:w-1/3 xl:w-1/4", className)}
     >
       <div
         data-is-loading-error={(isLoadingError && true) || undefined}
         data-is-pending={(isPending && true) || undefined}
-        className="flex flex-col items-center border rounded-xl px-4 py-4.5 text-center gap-4 group not-touch:group-hover/card:bg-background-secondary group-active/card:bg-background-secondary transition text-sm relative"
+        data-has-href={href ? true : undefined}
+        className="flex flex-col items-center border rounded-xl px-4 py-4.5 text-center gap-4 group data-[has-href]:not-touch:group-hover/card:bg-background-secondary group-active/card:bg-background-secondary transition text-sm relative"
       >
         {/* Top */}
         <p className="font-semibold leading-none max-w-full text-foreground whitespace-nowrap overflow-hidden overflow-ellipsis group-data-[is-pending]:bg-foreground group-data-[is-pending]:text-transparent group-data-[is-pending]:rounded-sm group-data-[is-pending]:animate-skeleton">
@@ -214,7 +223,4 @@ export type TOrderBookConfig = {
   exchange: TAvailableExchange;
   ticker: string;
   limit: number;
-  getUrl: (ticker: string) => string;
-  priceFormatter?: (i: number) => string;
-  amountFormatter?: (i: number) => string;
 };

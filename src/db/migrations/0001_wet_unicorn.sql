@@ -1,0 +1,1 @@
+ALTER TABLE "dashboards" ADD COLUMN "x_order" integer DEFAULT 0 NOT NULL;
