@@ -1,3 +1,5 @@
+"use client";
+
 import { availableThemes, TTheme } from "@/components/providers/themes";
 import { Button } from "@/components/ui/button";
 import { MonitorSmartphoneIcon, MoonIcon, SunIcon } from "lucide-react";
@@ -18,11 +20,11 @@ export default function ThemeButton() {
         : SunIcon;
   return (
     <Button
-      className="p-2 rounded-full"
+      className="p-1.5 rounded-full"
       variant="outline"
       onClick={toggleTheme}
     >
-      <Icon className="size-6" />
+      <Icon className="size-5" />
     </Button>
   );
 }
