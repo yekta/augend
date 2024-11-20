@@ -99,7 +99,7 @@ export default function EthereumGasCard({
           isError={isError}
           isPending={isPending}
           isRefetching={isRefetching}
-          hasData={!isLoadingError && data !== undefined}
+          hasData={data !== undefined}
         />
       </div>
     </CardWrapper>
