@@ -1,6 +1,6 @@
 "use client";
 
-import Indicator from "@/components/cards/indicator";
+import Indicator from "@/components/ui/indicator";
 import BananoIcon from "@/components/icons/banano-icon";
 import NanoIcon from "@/components/icons/nano-icon";
 import { Input } from "@/components/ui/input";

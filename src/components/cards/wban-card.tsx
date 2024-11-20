@@ -1,7 +1,7 @@
 "use client";
 
 import CardWrapper from "@/components/cards/card-wrapper";
-import Indicator from "@/components/cards/indicator";
+import Indicator from "@/components/ui/indicator";
 import { defaultQueryOptions } from "@/lib/constants";
 import { useConditionalValue } from "@/lib/hooks/useConditionalValue";
 import { formatNumberTBMK } from "@/lib/number-formatters";
@@ -200,7 +200,11 @@ export default function WBanCard({ className }: { className?: string }) {
                     )}
                   >
                     {conditionalValue(
-                      formatNumberTBMK(pendingWithdrawalAmount || 1)
+                      formatNumberTBMK(
+                        pendingWithdrawalAmount !== undefined
+                          ? pendingWithdrawalAmount
+                          : 1
+                      )
                     )}
                   </p>
                 </div>

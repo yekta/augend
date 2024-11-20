@@ -1,7 +1,7 @@
 "use client";
 
 import CardWrapper from "@/components/cards/card-wrapper";
-import Indicator from "@/components/cards/indicator";
+import Indicator from "@/components/ui/indicator";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import { defaultLocale, defaultQueryOptions } from "@/lib/constants";
 import { useConditionalValue } from "@/lib/hooks/useConditionalValue";

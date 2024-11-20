@@ -1,7 +1,7 @@
 "use client";
 
 import CardWrapper from "@/components/cards/card-wrapper";
-import Indicator from "@/components/cards/indicator";
+import Indicator from "@/components/ui/indicator";
 import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
 import {
   Select,

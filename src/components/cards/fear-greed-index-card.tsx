@@ -1,7 +1,7 @@
 "use client";
 
 import CardWrapper from "@/components/cards/card-wrapper";
-import Indicator from "@/components/cards/indicator";
+import Indicator from "@/components/ui/indicator";
 import { useCmcGlobalMetrics } from "@/components/providers/cmc/cmc-global-metrics-provider";
 import { linearInterpolation } from "@/lib/helpers";
 import { formatNumberTBMK } from "@/lib/number-formatters";

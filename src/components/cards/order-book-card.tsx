@@ -1,5 +1,5 @@
 import CardWrapper from "@/components/cards/card-wrapper";
-import Indicator from "@/components/cards/indicator";
+import Indicator from "@/components/ui/indicator";
 import { defaultQueryOptions } from "@/lib/constants";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
@@ -187,9 +187,9 @@ export default function OrderBookCard({
         </div>
         <Indicator
           isError={isError}
-          hasData={data !== undefined}
           isPending={isPending}
           isRefetching={isRefetching}
+          hasData={data !== undefined}
         />
       </div>
     </CardWrapper>

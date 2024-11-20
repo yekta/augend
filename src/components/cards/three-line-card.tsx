@@ -1,5 +1,5 @@
 import CardWrapper from "@/components/cards/card-wrapper";
-import Indicator from "@/components/cards/indicator";
+import Indicator from "@/components/ui/indicator";
 import { cn } from "@/lib/utils";
 import React, { ReactNode } from "react";
 

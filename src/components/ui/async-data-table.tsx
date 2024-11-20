@@ -1,4 +1,4 @@
-import Indicator from "@/components/cards/indicator";
+import Indicator from "@/components/ui/indicator";
 import {
   Pagination,
   PaginationContent,

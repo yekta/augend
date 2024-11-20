@@ -2,7 +2,7 @@
 
 import CardWrapper from "@/components/cards/card-wrapper";
 import { getNumberColorClass } from "@/components/cards/helpers";
-import Indicator from "@/components/cards/indicator";
+import Indicator from "@/components/ui/indicator";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import AsyncDataTable, {
   TAsyncDataTableColumnDef,
@@ -288,38 +288,36 @@ export default function UniswapPositionCard({
   });
 
   const totalUSD =
-    (data?.position?.amountTotalUSD || 1) +
-    (data?.position?.uncollectedFeesTotalUSD || 1);
+    (data?.position?.amountTotalUSD || 0) +
+    (data?.position?.uncollectedFeesTotalUSD || 0);
   const totalPnlUSD = totalUSD - (data?.position?.depositTotalUSD || 0);
   const total0 =
-    (data?.position?.amount0 || 1) + (data?.position?.uncollectedFees0 || 1);
+    (data?.position?.amount0 || 0) + (data?.position?.uncollectedFees0 || 0);
   const total1 =
     (data?.position?.amount1 || 0) + (data?.position?.uncollectedFees1 || 0);
   const total0USD =
-    (data?.position?.amount0USD || 1) +
-    (data?.position?.uncollectedFees0USD || 1);
+    (data?.position?.amount0USD || 0) +
+    (data?.position?.uncollectedFees0USD || 0);
   const total0Ratio = total0USD / totalUSD;
 
   const balancePnlUSD =
-    (data?.position.amountTotalUSD || 1) -
-    (data?.position.depositTotalUSD || 1);
+    (data?.position.amountTotalUSD || 0) -
+    (data?.position.depositTotalUSD || 0);
   const balance0Ratio =
     (data?.position?.amount0USD || 0) / (data?.position?.amountTotalUSD || 1);
 
   const uncollectedFees0Ratio =
-    (data?.position?.uncollectedFees0USD || 1) /
-    (data?.position?.uncollectedFeesTotalUSD || 2);
+    (data?.position?.uncollectedFees0USD || 0) /
+    (data?.position?.uncollectedFeesTotalUSD || 1);
 
   const lowerPriceRequiredChangeRate =
     -1 *
-    (((data?.position?.priceCurrent || 100) -
-      (data?.position?.priceLower || 50)) /
-      (data?.position?.priceCurrent || 100));
+    (((data?.position?.priceCurrent || 0) - (data?.position?.priceLower || 0)) /
+      (data?.position?.priceCurrent || 1));
 
   const upperPriceRequiredChangeRange =
-    ((data?.position?.priceUpper || 100) -
-      (data?.position?.priceCurrent || 50)) /
-    (data?.position?.priceCurrent || 100);
+    ((data?.position?.priceUpper || 0) - (data?.position?.priceCurrent || 0)) /
+    (data?.position?.priceCurrent || 1);
 
   const isOutOfRange = data
     ? lowerPriceRequiredChangeRate > 0 || upperPriceRequiredChangeRange < 0
@@ -344,7 +342,7 @@ export default function UniswapPositionCard({
           <NFTImageLink
             href={href || "placeholder"}
             uri={data?.position.nftUri}
-            className="h-35 px-3 py-2.75 -mr-3 hidden xl:block"
+            className="h-35 px-3.5 py-3.25 -mr-3.5 hidden xl:block"
             createdAt={data?.position.createdAt || 1731679718000}
           />
           <div className="flex-1 flex flex-row flex-wrap items-center p-1.5 md:p-2 xl:p-2.5 min-w-0">
