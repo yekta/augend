@@ -200,9 +200,7 @@ export default function WBanCard({ className }: { className?: string }) {
                     )}
                   >
                     {conditionalValue(
-                      formatNumberTBMK(
-                        pendingWithdrawalAmount || 0
-                      )
+                      formatNumberTBMK(pendingWithdrawalAmount || 0)
                     )}
                   </p>
                 </div>
