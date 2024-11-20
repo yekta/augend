@@ -131,8 +131,7 @@ export default function OhlcvChartCard({
     [data]
   );
 
-  const priceFormatter =
-    config.priceFormatter || ((i) => formatNumberTBMK(i, 4, true));
+  const priceFormatter = (i: number) => formatNumberTBMK(i, 4, true);
   const currentPrice = dataOrFallback.metadata.currentPrice;
   const firstPrice = dataOrFallback.data[0][dataKey.y];
   const changeRate = ((firstPrice - currentPrice) / firstPrice) * -1;
@@ -509,7 +508,6 @@ function timestampFormatter(i: string, interval: string) {
 const OhclvChartConfigSchema = z.object({
   exchange: ExchangeSchema,
   ticker: z.string(),
-  priceFormatter: z.function().args(z.number()).returns(z.string()).optional(),
 });
 
 export type TOhlcvChartConfig = z.infer<typeof OhclvChartConfigSchema>;

@@ -28,6 +28,9 @@ import NanoBananoBalancesProvider from "@/components/providers/nano-banano-balan
 import { TNanoBananoAccount } from "@/trpc/api/routers/nano-banano/types";
 import NanoBananoCard from "@/components/cards/nano-banano-card";
 import EthereumGasCard from "@/components/cards/ethereum-gas-card";
+import OhlcvChartCard, {
+  TOhlcvChartConfig,
+} from "@/components/cards/ohlcv-chart-card";
 
 type TValuesEntry = { id: string; value: string };
 
@@ -133,6 +136,25 @@ export default async function Page({
             };
             return <OrderBookCard key={card.cards.id} config={config} />;
           }
+
+          if (
+            card.cards.cardTypeId === "d26b3d6f-b487-4354-8ffb-66eeb218faec"
+          ) {
+            const values = card.cards.values as TValuesEntry[];
+            if (!values) return null;
+            const exchange = values.find((v) => v.id === "exchange")?.value;
+            const tickerBase = values.find((v) => v.id === "ticker_base")
+              ?.value;
+            const tickerQuote = values.find((v) => v.id === "ticker_quote")
+              ?.value;
+            if (!exchange || !tickerBase || !tickerQuote) return null;
+            const config: TOhlcvChartConfig = {
+              exchange: exchange as TAvailableExchange,
+              ticker: `${tickerBase}/${tickerQuote}`,
+            };
+            return <OhlcvChartCard key={card.cards.id} config={config} />;
+          }
+
           if (
             card.cards.cardTypeId === "e41432be-474b-485e-81b8-c254e81c9de8"
           ) {

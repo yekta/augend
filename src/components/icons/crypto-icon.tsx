@@ -67,7 +67,7 @@ export default function CryptoIcon({
     );
   if (ticker === "ARB")
     return <NetworkArbitrumOne className={cn(defaultClasses, className)} />;
-  if (ticker === "MATIC")
+  if (ticker === "MATIC" || ticker === "polygon")
     return (
       <TokenMATIC variant={variant} className={cn(defaultClasses, className)} />
     );
@@ -75,7 +75,7 @@ export default function CryptoIcon({
     return (
       <TokenBNB variant={variant} className={cn(defaultClasses, className)} />
     );
-  if (ticker === "ETH" || ticker === "WETH")
+  if (ticker === "ETH" || ticker === "WETH" || ticker === "ethereum")
     return (
       <TokenETH variant={variant} className={cn(defaultClasses, className)} />
     );
