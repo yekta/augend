@@ -9,7 +9,7 @@ const lines = 10;
 const items: TOrderBookConfig[] = [
   {
     exchange: "Coinex",
-    ticker: "BAN/USDT",
+    ticker: "BANANO/USDT",
     limit: lines,
     getUrl: (ticker: string) =>
       `https://www.coinex.com/en/exchange/${ticker
@@ -19,7 +19,7 @@ const items: TOrderBookConfig[] = [
   },
   {
     exchange: "Coinex",
-    ticker: "BAN/BTC",
+    ticker: "BANANO/BTC",
     limit: lines,
     getUrl: (ticker: string) =>
       `https://www.coinex.com/en/exchange/${ticker

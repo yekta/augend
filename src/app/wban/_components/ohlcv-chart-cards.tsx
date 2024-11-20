@@ -8,11 +8,11 @@ import { formatNumberTBMK } from "@/lib/number-formatters";
 const items: TOhlcvChartConfig[] = [
   {
     exchange: "Coinex",
-    ticker: "BAN/USDT",
+    ticker: "BANANO/USDT",
   },
   {
     exchange: "Coinex",
-    ticker: "BAN/BTC",
+    ticker: "BANANO/BTC",
     priceFormatter: (i: number) => formatNumberTBMK(i * 1e8, 3, true),
   },
 ];

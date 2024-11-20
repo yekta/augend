@@ -8,7 +8,7 @@ import { formatNumberTBMK } from "@/lib/number-formatters";
 import { ExchangeSchema } from "@/trpc/api/routers/exchange/types";
 
 const priceFormatters: Record<string, (i: number) => string> = {
-  "BAN/BTC": (i: number) => formatNumberTBMK(i * 1e8, 3, true),
+  "BANANO/BTC": (i: number) => formatNumberTBMK(i * 1e8, 3, true),
 };
 const defaultFormatter = (i: number) => formatNumberTBMK(i, 4, true);
 

@@ -12,7 +12,7 @@ import {
 
 const lines = 10;
 const priceFormatters: Record<string, (i: number) => string> = {
-  "BAN/BTC": (i: number) => formatNumberTBMK(i * 1e8, 3, true),
+  "BANANO/BTC": (i: number) => formatNumberTBMK(i * 1e8, 3, true),
 };
 const getUrlFunctions: Partial<
   Record<TAvailableExchange, (ticker: string) => string>
