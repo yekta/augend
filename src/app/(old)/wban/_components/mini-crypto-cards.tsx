@@ -28,8 +28,8 @@ export default function MiniCryptoCards() {
   return (
     <>
       <div className="w-full flex flex-wrap">
-        {items.map((item) => (
-          <MiniCryptoCard id={item.id} />
+        {items.map((item, index) => (
+          <MiniCryptoCard key={`${item.id}-${index}`} id={item.id} />
         ))}
       </div>
     </>

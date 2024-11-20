@@ -48,7 +48,6 @@ export const nanoBananoRouter = createTRPCRouter({
 
       for (const account of accounts) {
         const address = account.address;
-        const isMine = account.isMine;
         const isNanoAddress = isNano(address);
         let balanceObj:
           | TNanoBananoBalanceResponse["balances"][string]
@@ -69,7 +68,6 @@ export const nanoBananoRouter = createTRPCRouter({
           balance: rawToBanOrNano(balanceObj.balance, isNanoAddress),
           pending: rawToBanOrNano(balanceObj.pending, isNanoAddress),
           receivable: rawToBanOrNano(balanceObj.receivable, isNanoAddress),
-          isMine,
         });
       }
       return results;

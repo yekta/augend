@@ -1,4 +1,5 @@
 import BanTotalCard from "@/app/(old)/main/_components/ban-total-card";
+import { nanoBananoAccounts } from "@/app/(old)/main/_components/constants";
 import CryptoCards from "@/app/(old)/main/_components/crypto-cards";
 import MiniCryptoCards from "@/app/(old)/main/_components/mini-crypto-cards";
 import NanoBananoCards from "@/app/(old)/main/_components/nano-banano-cards";
@@ -16,6 +17,9 @@ import CmcCryptoInfosProvider, {
   TCryptoDef,
 } from "@/components/providers/cmc/cmc-crypto-infos-provider";
 import CmcGlobalMetricsProvider from "@/components/providers/cmc/cmc-global-metrics-provider";
+import NanoBananoBalancesProvider from "@/components/providers/nano-banano-balance-provider";
+import { cleanEnvVar } from "@/lib/helpers";
+import { TNanoBananoAccount } from "@/trpc/api/routers/nano-banano/types";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -44,21 +48,23 @@ export default async function Page() {
     <>
       <CmcCryptoInfosProvider cryptos={cryptos}>
         <CmcGlobalMetricsProvider>
-          <DashboardWrapper>
-            <BanTotalCard />
-            <CryptoCards />
-            <FearGreedIndexCard />
-            <TurkishLiraCards />
-            <MiniCryptoCards />
-            <EthereumGasCard network="ethereum" />
-            <UniswapPositions />
-            <WBanCard />
-            <NanoBananoCards />
-            <OrderBookCards />
-            <OhlcvChartCards />
-            <CoinTableCard />
-            <UniswapPoolsTableCard />
-          </DashboardWrapper>
+          <NanoBananoBalancesProvider accounts={nanoBananoAccounts}>
+            <DashboardWrapper>
+              <BanTotalCard />
+              <CryptoCards />
+              <FearGreedIndexCard />
+              <TurkishLiraCards />
+              <MiniCryptoCards />
+              <EthereumGasCard network="ethereum" />
+              <UniswapPositions />
+              <WBanCard />
+              <NanoBananoCards />
+              <OrderBookCards />
+              <OhlcvChartCards />
+              <CoinTableCard />
+              <UniswapPoolsTableCard />
+            </DashboardWrapper>
+          </NanoBananoBalancesProvider>
         </CmcGlobalMetricsProvider>
       </CmcCryptoInfosProvider>
     </>

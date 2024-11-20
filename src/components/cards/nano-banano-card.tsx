@@ -1,8 +1,8 @@
 "use client";
 
 import ThreeLineCard from "@/components/cards/three-line-card";
+import { useNanoBananoBalances } from "@/components/providers/nano-banano-balance-provider";
 import { formatNumberTBMK } from "@/lib/number-formatters";
-import { AppRouterOutputs } from "@/trpc/api/root";
 import {
   getAvatarUrl,
   getExplorerUrl,
@@ -11,29 +11,29 @@ import {
 import { TNanoBananoAccount } from "@/trpc/api/routers/nano-banano/types";
 
 export default function NanoBananoCard({
-  data,
-  config,
-  isPending,
-  isRefetching,
-  isError,
-  isLoadingError,
+  account,
 }: {
-  data: AppRouterOutputs["nanoBanano"]["getBalances"][number] | undefined;
-  config: TNanoBananoAccount;
-  isPending: boolean;
-  isRefetching: boolean;
-  isError: boolean;
-  isLoadingError: boolean;
+  account: TNanoBananoAccount;
 }) {
-  const isNanoAddress = isNano(config.address);
+  const {
+    data: d,
+    isPending,
+    isRefetching,
+    isError,
+    isLoadingError,
+  } = useNanoBananoBalances();
+
+  const isNanoAddress = isNano(account.address);
+  const data = d?.find((d) => d.address === account.address);
+
   return (
     <>
       <ThreeLineCard
-        href={getExplorerUrl(config.address)}
+        href={getExplorerUrl(account.address)}
         className={isNanoAddress ? "text-nano" : "text-banano"}
         isPendingParagraphClassName={isNanoAddress ? "bg-nano" : "bg-banano"}
-        key={config.address}
-        top={data ? config.address.slice(-6) : undefined}
+        key={account.address}
+        top={data ? account.address.slice(-6) : undefined}
         classNameTop={data ? "px-6" : undefined}
         middle={data ? formatNumberTBMK(data.balance) : undefined}
         bottom={data ? formatNumberTBMK(data.receivable) : undefined}
@@ -47,7 +47,7 @@ export default function NanoBananoCard({
             width={512}
             height={512}
             className="size-8 absolute right-1 top-1 pointer-events-none"
-            src={getAvatarUrl(config.address)}
+            src={getAvatarUrl(account.address)}
           />
         )}
       </ThreeLineCard>

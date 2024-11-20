@@ -2,7 +2,6 @@ import { z } from "zod";
 
 export const AccountSchema = z.object({
   address: z.string(),
-  isMine: z.boolean(),
 });
 
 export type TNanoBananoAccount = z.infer<typeof AccountSchema>;
@@ -25,7 +24,6 @@ export type TNanoBananoResult = {
   balance: number;
   pending: number;
   receivable: number;
-  isMine: boolean;
 };
 
 export type TNanoBananoHistoryResult = {

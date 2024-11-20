@@ -11,6 +11,8 @@ import CmcCryptoInfosProvider, {
 } from "@/components/providers/cmc/cmc-crypto-infos-provider";
 import FearGreedIndexCard from "@/components/cards/fear-greed-index-card";
 import CmcGlobalMetricsProvider from "@/components/providers/cmc/cmc-global-metrics-provider";
+import NanoBananoBalancesProvider from "@/components/providers/nano-banano-balance-provider";
+import { nanoBananoAccounts } from "@/app/(old)/wban/_components/constants";
 
 const cryptos: TCryptoDef[] = process.env.NEXT_PUBLIC_CMC_CRYPTOS?.split(
   ","
@@ -38,15 +40,17 @@ export default async function Page() {
     <>
       <CmcCryptoInfosProvider cryptos={cryptos}>
         <CmcGlobalMetricsProvider>
-          <DashboardWrapper>
-            <NanoBananoCards />
-            <CryptoCards />
-            <FearGreedIndexCard />
-            <MiniCryptoCards />
-            <WBanCard />
-            <OrderBookCards />
-            <OhlcvChartCards />
-          </DashboardWrapper>
+          <NanoBananoBalancesProvider accounts={nanoBananoAccounts}>
+            <DashboardWrapper>
+              <NanoBananoCards />
+              <CryptoCards />
+              <FearGreedIndexCard />
+              <MiniCryptoCards />
+              <WBanCard />
+              <OrderBookCards />
+              <OhlcvChartCards />
+            </DashboardWrapper>
+          </NanoBananoBalancesProvider>
         </CmcGlobalMetricsProvider>
       </CmcCryptoInfosProvider>
     </>

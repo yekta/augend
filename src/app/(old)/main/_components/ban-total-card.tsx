@@ -1,8 +1,9 @@
 "use client";
 
-import { nbQueryInput } from "@/app/(old)/main/_components/nano-banano-cards";
+import { nanoBananoAccounts } from "@/app/(old)/main/_components/constants";
 import ThreeLineCard from "@/components/cards/three-line-card";
 import { useCmcCryptoInfos } from "@/components/providers/cmc/cmc-crypto-infos-provider";
+import { useNanoBananoBalances } from "@/components/providers/nano-banano-balance-provider";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { isNano } from "@/trpc/api/routers/nano-banano/helpers";
 import { api } from "@/trpc/setup/react";
@@ -22,9 +23,7 @@ export default function BanTotalCard() {
     isError: nbError,
     isLoadingError: nbLoadingError,
     isRefetching: nbRefetching,
-  } = api.nanoBanano.getBalances.useQuery(nbQueryInput, {
-    enabled: false,
-  });
+  } = useNanoBananoBalances();
 
   const {
     data: turkishLiraData,
@@ -44,7 +43,14 @@ export default function BanTotalCard() {
 
   const selectedResults =
     nbData !== undefined
-      ? nbData.filter((i) => i.isMine && !isNano(i.address))
+      ? nbData.filter((i) => {
+          const isNanoAddress = isNano(i.address);
+          if (isNanoAddress) return false;
+          const account = nanoBananoAccounts.find(
+            (a) => a.address === i.address
+          );
+          return account !== undefined && account.isMine;
+        })
       : undefined;
 
   const banTotal =

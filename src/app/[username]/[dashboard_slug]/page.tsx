@@ -24,6 +24,10 @@ import { ReactNode } from "react";
 import CmcCryptoInfosProvider from "@/components/providers/cmc/cmc-crypto-infos-provider";
 import UniswapPoolsTableCard from "@/components/cards/uniswap-pools-table-card";
 import CoinTableCard from "@/components/cards/coin-table-card";
+import NanoBananoBalancesProvider from "@/components/providers/nano-banano-balance-provider";
+import { TNanoBananoAccount } from "@/trpc/api/routers/nano-banano/types";
+import NanoBananoCard from "@/components/cards/nano-banano-card";
+import EthereumGasCard from "@/components/cards/ethereum-gas-card";
 
 type TValuesEntry = { id: string; value: string };
 
@@ -73,16 +77,31 @@ export default async function Page({
     )
     .map((c) => {
       const values = c.cards.values as TValuesEntry[];
-      if (!values) return null;
+      if (!values) return undefined;
       return values.find((v) => v.id === "coin_id")?.value;
     })
     .filter((v) => v !== undefined)
     .map((v) => Number(v));
 
+  const nanoBananoAccounts: TNanoBananoAccount[] = cards
+    .filter(
+      (c) =>
+        c.card_types.id === "7cc1d48b-2bb2-4d96-913c-75c706cdadc2" ||
+        c.card_types.id === "ed7b206d-d5cf-400e-912e-fa2a1bd46269"
+    )
+    .map((c) => {
+      const values = c.cards.values as TValuesEntry[];
+      if (!values) return undefined;
+      return values.find((v) => v.id === "address")?.value;
+    })
+    .filter((v) => v !== undefined)
+    .map((v) => ({ address: v }));
+
   return (
     <DashboardWrapper>
       <Providers
         cardTypeIds={cards.map((c) => c.cards.cardTypeId)}
+        nanoBananoAccounts={nanoBananoAccounts}
         coinIds={coinIds}
       >
         {cards.map((card) => {
@@ -166,6 +185,37 @@ export default async function Page({
             return <CoinTableCard key={card.cards.id} />;
           }
 
+          if (
+            card.cards.cardTypeId === "7cc1d48b-2bb2-4d96-913c-75c706cdadc2" ||
+            card.cards.cardTypeId === "ed7b206d-d5cf-400e-912e-fa2a1bd46269"
+          ) {
+            const values = card.cards.values as TValuesEntry[];
+            if (!values) return null;
+            const address = values.find((v) => v.id === "address")?.value;
+            if (!address) return null;
+            return (
+              <NanoBananoCard
+                key={card.cards.id}
+                account={{ address: address }}
+              />
+            );
+          }
+
+          if (
+            card.cards.cardTypeId === "acb68bf0-1611-47e1-8373-dde4ced587a8"
+          ) {
+            const values = card.cards.values as TValuesEntry[];
+            if (!values) return null;
+            const network = values.find((v) => v.id === "network")?.value;
+            if (!network) return null;
+            return (
+              <EthereumGasCard
+                key={card.cards.id}
+                network={network as TEthereumNetwork}
+              />
+            );
+          }
+
           return null;
         })}
       </Providers>
@@ -177,15 +227,27 @@ function Providers({
   cardTypeIds,
   coinIds,
   children,
+  nanoBananoAccounts,
 }: {
   cardTypeIds: string[];
   coinIds: number[];
   children: ReactNode;
+  nanoBananoAccounts: TNanoBananoAccount[];
 }) {
   let wrappedChildren = children;
   if (cardTypeIds.includes("5cb4cd0c-b5ca-4f46-b779-962f08a11ad8")) {
     wrappedChildren = (
       <CmcGlobalMetricsProvider>{wrappedChildren}</CmcGlobalMetricsProvider>
+    );
+  }
+  if (
+    cardTypeIds.includes("7cc1d48b-2bb2-4d96-913c-75c706cdadc2") ||
+    cardTypeIds.includes("ed7b206d-d5cf-400e-912e-fa2a1bd46269")
+  ) {
+    wrappedChildren = (
+      <NanoBananoBalancesProvider accounts={nanoBananoAccounts}>
+        {wrappedChildren}
+      </NanoBananoBalancesProvider>
     );
   }
   if (coinIds.length > 0) {
