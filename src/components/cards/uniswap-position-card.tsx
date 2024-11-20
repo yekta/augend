@@ -2,48 +2,32 @@
 
 import CardWrapper from "@/components/cards/card-wrapper";
 import { getNumberColorClass } from "@/components/cards/helpers";
-import Indicator from "@/components/ui/indicator";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import AsyncDataTable, {
   TAsyncDataTableColumnDef,
-  TAsyncDataTablePage,
 } from "@/components/ui/async-data-table";
 import { Button } from "@/components/ui/button";
+import Indicator from "@/components/ui/indicator";
 import { defaultQueryOptions } from "@/lib/constants";
 import { timeAgo } from "@/lib/helpers";
 import { useConditionalValue } from "@/lib/hooks/useConditionalValue";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
-import { TUniswapPoolSwapsResult } from "@/trpc/api/routers/uniswap/types";
+import { ethereumNetworks } from "@/trpc/api/routers/ethereum/constants";
 import { TEthereumNetwork } from "@/trpc/api/routers/ethereum/types";
+import { TUniswapPoolSwapsResult } from "@/trpc/api/routers/uniswap/types";
 import { api } from "@/trpc/setup/react";
 import { SortingState } from "@tanstack/react-table";
 import {
   ArrowDownIcon,
-  ArrowUp,
   ArrowUpIcon,
-  CalendarArrowUpIcon,
-  ChartCandlestickIcon,
-  ChartColumnIcon,
-  ClockIcon,
   ExternalLinkIcon,
-  HandCoinsIcon,
   TableIcon,
   TriangleAlertIcon,
   XIcon,
 } from "lucide-react";
 import Link from "next/link";
-import {
-  ComponentType,
-  ElementType,
-  FC,
-  ReactNode,
-  SVGProps,
-  useMemo,
-  useState,
-} from "react";
-import { ethereumNetworks } from "@/trpc/api/routers/ethereum/constants";
-import { TSVGIcon } from "@/lib/types";
+import { FC, ReactNode, SVGProps, useMemo, useState } from "react";
 
 type TSwapData = TUniswapPoolSwapsResult["swaps"][number];
 

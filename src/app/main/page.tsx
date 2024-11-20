@@ -12,7 +12,6 @@ import FearGreedIndexCard from "@/components/cards/fear-greed-index-card";
 import UniswapPoolsTableCard from "@/components/cards/uniswap-pools-table-card";
 import WBanCard from "@/components/cards/wban-card";
 import DashboardWrapper from "@/components/dashboard-wrapper";
-import Footer from "@/components/footer";
 import CmcCryptoInfosProvider from "@/components/providers/cmc/cmc-crypto-infos-provider";
 import CmcGlobalMetricsProvider from "@/components/providers/cmc/cmc-global-metrics-provider";
 import { Metadata } from "next";
@@ -41,7 +40,6 @@ export default async function Page() {
             <OhlcvChartCards />
             <CoinTableCard />
             <UniswapPoolsTableCard />
-            <Footer className="hidden" />
           </DashboardWrapper>
         </CmcGlobalMetricsProvider>
       </CmcCryptoInfosProvider>
