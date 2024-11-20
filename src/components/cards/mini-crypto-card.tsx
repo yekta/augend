@@ -1,27 +1,31 @@
+"use client";
+
 import CardWrapper from "@/components/cards/card-wrapper";
-import Indicator from "@/components/ui/indicator";
 import CryptoIcon from "@/components/icons/crypto-icon";
+import { useCmcCryptoInfos } from "@/components/providers/cmc/cmc-crypto-infos-provider";
+import Indicator from "@/components/ui/indicator";
 import { getCmcUrl } from "@/lib/get-cmc-url";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
-import { AppRouterOutputs } from "@/trpc/api/root";
 import { ArrowDownIcon, ArrowRightIcon, ArrowUpIcon } from "lucide-react";
 
 export default function MiniCryptoCard({
-  data,
-  isPending,
-  isRefetching,
-  isError,
-  isLoadingError,
+  id,
   className,
 }: {
-  data: AppRouterOutputs["cmc"]["getCryptoInfos"][number] | undefined;
-  isPending: boolean;
-  isRefetching: boolean;
-  isError: boolean;
-  isLoadingError: boolean;
+  id: number;
   className?: string;
 }) {
+  const {
+    data: d,
+    isError,
+    isLoadingError,
+    isPending,
+    isRefetching,
+  } = useCmcCryptoInfos();
+
+  const data = d?.[id];
+
   const priceSymbol = "$";
   const price = data?.quote.USD.price;
   const marketCap = data?.quote.USD.market_cap;

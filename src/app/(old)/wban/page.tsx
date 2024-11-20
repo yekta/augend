@@ -17,16 +17,13 @@ const cryptos: TCryptoDef[] = process.env.NEXT_PUBLIC_CMC_CRYPTOS?.split(
 ).map((i) => {
   const [ticker, id] = i.split(":");
   return {
-    ticker,
     id: parseInt(id),
   };
 }) ?? [
   {
-    ticker: "BTC",
     id: 1,
   },
   {
-    ticker: "ETH",
     id: 1027,
   },
 ];

@@ -2,16 +2,13 @@
 
 import CryptoCard, { TCrypto } from "@/components/cards/crypto-card";
 
-export const items: TCrypto[] = [
-  { ticker: "BAN", id: 4704 },
-  { ticker: "BTC", id: 1 },
-];
+export const items: TCrypto[] = [{ id: 4704 }, { id: 1 }];
 
 export default function CryptoCards() {
   return (
     <>
       {items.map((item, index) => {
-        return <CryptoCard key={item.ticker + index} config={item} />;
+        return <CryptoCard key={`${item.id}-${index}`} config={item} />;
       })}
     </>
   );

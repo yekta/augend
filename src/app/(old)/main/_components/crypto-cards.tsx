@@ -10,7 +10,6 @@ export const items: TCrypto[] = (
   .map((i) => {
     const [ticker, id] = i.split(":");
     return {
-      ticker,
       id: parseInt(id),
     };
   });
@@ -19,7 +18,7 @@ export default function CryptoCards() {
   return (
     <>
       {items.map((item, index) => {
-        return <CryptoCard key={item.ticker + index} config={item} />;
+        return <CryptoCard key={`${item.id}-${index}`} config={item} />;
       })}
     </>
   );

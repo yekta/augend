@@ -11,7 +11,6 @@ import React, { createContext, ReactNode, useContext } from "react";
 
 export type TCryptoDef = {
   id: number;
-  ticker: string;
 };
 
 const CmcCryptoInfosContext = createContext<TCmcCryptoInfosContext | null>(

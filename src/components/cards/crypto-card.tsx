@@ -8,16 +8,16 @@ import { formatNumberTBMK } from "@/lib/number-formatters";
 import { ArrowDownIcon, ArrowRightIcon, ArrowUpIcon } from "lucide-react";
 
 export type TCrypto = {
-  ticker: string;
   id: number;
   className?: string;
   isPendingParagraphClassName?: string;
-  formatter?: (i: number) => string;
 };
 
 export default function CryptoCard({ config }: { config: TCrypto }) {
+  const formatter = formatNumberTBMK;
+
   const {
-    data,
+    data: d,
     isPending,
     isRefetching,
     isError,
@@ -25,13 +25,13 @@ export default function CryptoCard({ config }: { config: TCrypto }) {
     convertCurrency,
   } = useCmcCryptoInfos();
 
-  const formatter = config.formatter || formatNumberTBMK;
+  const data = d?.[config.id];
 
-  const isChangeNegative = data?.[config.id]
-    ? data[config.id].quote[convertCurrency.ticker].percent_change_24h < 0
+  const isChangeNegative = data
+    ? data.quote[convertCurrency.ticker].percent_change_24h < 0
     : undefined;
-  const isChangePositive = data?.[config.id]
-    ? data[config.id].quote[convertCurrency.ticker].percent_change_24h > 0
+  const isChangePositive = data
+    ? data.quote[convertCurrency.ticker].percent_change_24h > 0
     : undefined;
   const ChangeIcon =
     isChangeNegative === true
@@ -42,16 +42,16 @@ export default function CryptoCard({ config }: { config: TCrypto }) {
 
   return (
     <ThreeLineCard
-      href={data?.[config.id] ? getCmcUrl(data[config.id].slug) : undefined}
+      href={data ? getCmcUrl(data.slug) : undefined}
       className={config.className}
       isPendingParagraphClassName={config.isPendingParagraphClassName}
       top={
-        data?.[config.id] ? (
+        data ? (
           <div className="min-w-0 shrink overflow-hidden max-w-full flex items-center justify-center gap-1.25">
             <div className="flex items-center gap-0.5 justify-start min-w-0 shrink overflow-hidden overflow-ellipsis">
-              <CryptoIcon className="size-4 -my-1" ticker={config.ticker} />
+              <CryptoIcon className="size-4 -my-1" ticker={data.symbol} />
               <p className="min-w-0 shrink overflow-hidden overflow-ellipsis">
-                {config.ticker}
+                {data.symbol}
               </p>
             </div>
             <div
@@ -59,16 +59,13 @@ export default function CryptoCard({ config }: { config: TCrypto }) {
               data-is-positive={isChangePositive ? true : undefined}
               className="flex shrink min-w-0 overflow-hidden overflow-ellipsis items-center justify-start text-muted-foreground group-data-[is-loading-error]:text-destructive data-[is-negative]:text-destructive data-[is-positive]:text-success"
             >
-              {data[config.id] && (
-                <ChangeIcon className="size-4 shrink-0 -my-0.5" />
-              )}
+              {data && <ChangeIcon className="size-4 shrink-0 -my-0.5" />}
               <p className="shrink min-w-0 overflow-hidden overflow-ellipsis">
                 {isPending
                   ? "Load"
                   : data
                     ? formatNumberTBMK(
-                        data[config.id].quote[convertCurrency.ticker]
-                          .percent_change_24h,
+                        data.quote[convertCurrency.ticker].percent_change_24h,
                         3,
                         false,
                         true
@@ -82,25 +79,25 @@ export default function CryptoCard({ config }: { config: TCrypto }) {
         )
       }
       middle={
-        data?.[config.id]
+        data
           ? `${convertCurrency.symbol}${formatter(
-              data[config.id].quote[convertCurrency.ticker].price
+              data.quote[convertCurrency.ticker].price
             )}`
           : undefined
       }
       bottom={
-        data?.[config.id] ? (
+        data ? (
           <div className="w-full flex items-center justify-center gap-1.25">
             <p className="shrink min-w-0 overflow-hidden overflow-ellipsis">
               {convertCurrency.symbol}
               {formatNumberTBMK(
-                data[config.id].quote[convertCurrency.ticker].market_cap,
+                data.quote[convertCurrency.ticker].market_cap,
                 3
               )}
             </p>
             <p>•</p>
             <p className="min-w-0 shrink overflow-hidden overflow-ellipsis">
-              #{data[config.id].cmc_rank}
+              #{data.cmc_rank}
             </p>
           </div>
         ) : undefined
