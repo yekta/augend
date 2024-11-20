@@ -4,13 +4,7 @@ import OhlcvChartCard, {
   TOhlcvChartConfig,
 } from "@/components/cards/ohlcv-chart-card";
 import { cleanEnvVar } from "@/lib/helpers";
-import { formatNumberTBMK } from "@/lib/number-formatters";
 import { ExchangeSchema } from "@/trpc/api/routers/exchange/types";
-
-const priceFormatters: Record<string, (i: number) => string> = {
-  "BANANO/BTC": (i: number) => formatNumberTBMK(i * 1e8, 3, true),
-};
-const defaultFormatter = (i: number) => formatNumberTBMK(i, 4, true);
 
 const items: TOhlcvChartConfig[] = (
   cleanEnvVar(process.env.NEXT_PUBLIC_ADMIN_OHLCV_CHART_CARDS) || ""
@@ -22,7 +16,6 @@ const items: TOhlcvChartConfig[] = (
     return {
       exchange: parsedExchange,
       ticker,
-      priceFormatter: priceFormatters[ticker] || defaultFormatter,
     };
   });
 

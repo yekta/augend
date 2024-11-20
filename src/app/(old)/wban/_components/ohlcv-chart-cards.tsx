@@ -3,7 +3,6 @@
 import OhlcvChartCard, {
   TOhlcvChartConfig,
 } from "@/components/cards/ohlcv-chart-card";
-import { formatNumberTBMK } from "@/lib/number-formatters";
 
 const items: TOhlcvChartConfig[] = [
   {
@@ -13,7 +12,6 @@ const items: TOhlcvChartConfig[] = [
   {
     exchange: "Coinex",
     ticker: "BANANO/BTC",
-    priceFormatter: (i: number) => formatNumberTBMK(i * 1e8, 3, true),
   },
 ];
 
