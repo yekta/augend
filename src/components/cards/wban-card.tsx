@@ -121,7 +121,7 @@ export default function WBanCard({ className }: { className?: string }) {
                     )}
                   >
                     {conditionalValue(
-                      formatNumberTBMK(coldWallet?.balance || 1)
+                      formatNumberTBMK(coldWallet?.balance || 0)
                     )}
                   </p>
                   <p
@@ -131,7 +131,7 @@ export default function WBanCard({ className }: { className?: string }) {
                     )}
                   >
                     {conditionalValue(
-                      formatNumberTBMK(coldWallet?.receivable || 1)
+                      formatNumberTBMK(coldWallet?.receivable || 0)
                     )}
                   </p>
                 </div>
@@ -154,7 +154,7 @@ export default function WBanCard({ className }: { className?: string }) {
                     )}
                   >
                     {conditionalValue(
-                      formatNumberTBMK(hotWallet?.balance || 1)
+                      formatNumberTBMK(hotWallet?.balance || 0)
                     )}
                   </p>
                   <p
@@ -164,7 +164,7 @@ export default function WBanCard({ className }: { className?: string }) {
                     )}
                   >
                     {conditionalValue(
-                      formatNumberTBMK(hotWallet?.receivable || 1)
+                      formatNumberTBMK(hotWallet?.receivable || 0)
                     )}
                   </p>
                 </div>
@@ -201,9 +201,7 @@ export default function WBanCard({ className }: { className?: string }) {
                   >
                     {conditionalValue(
                       formatNumberTBMK(
-                        pendingWithdrawalAmount !== undefined
-                          ? pendingWithdrawalAmount
-                          : 1
+                        pendingWithdrawalAmount || 0
                       )
                     )}
                   </p>
