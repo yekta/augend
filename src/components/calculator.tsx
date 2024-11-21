@@ -95,7 +95,7 @@ export default function Calculator({ className }: { className?: string }) {
     isRefetching: cryptoIsRefetching,
   } = api.cmc.getCryptoInfos.useQuery(
     {
-      convert: "USD",
+      convert: ["USD"],
       ids: currencies.filter((c) => c.isCrypto).map((c) => c.id),
     },
     defaultQueryOptions.normal
