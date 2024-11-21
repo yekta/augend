@@ -87,10 +87,10 @@ export default async function Page({ params }: Props) {
   }
 
   const { dashboard_slug } = await params;
-  const [cards] = await Promise.all([
+  const [cards, dashboard] = await Promise.all([
     getCards({ userId, dashboardSlug: dashboard_slug }),
+    getDashboard({ userId, dashboardSlug: dashboard_slug }),
   ]);
-  const dashboard = cards.length > 0 ? cards[0].dashboards : null;
 
   if (!dashboard) {
     const user = await getUser({ userId });
