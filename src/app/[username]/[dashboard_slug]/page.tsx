@@ -114,6 +114,8 @@ export default async function Page({ params }: Props) {
 
   if (!dashboard) {
     const user = await getUser({ userId });
+    console.log(`[dashboard_slug] | getUser | ${Date.now() - current}ms`);
+
     if (user === null) return notFound();
     return (
       <div className="w-full flex-1 flex flex-col items-center justify-center p-5 pb-[calc(5vh+1.5rem)] text-center break-words">
