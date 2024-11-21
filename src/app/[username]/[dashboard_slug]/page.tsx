@@ -1,4 +1,12 @@
-import { getCards, getDashboard, getUser } from "@/app/[username]/helpers";
+import {
+  componentRequiresNewLine,
+  isDev,
+} from "@/app/[username]/_lib/constants";
+import { getCards, getDashboard, getUser } from "@/app/[username]/_lib/helpers";
+import { TValuesEntry } from "@/app/[username]/_lib/types";
+import BananoTotalCard, {
+  bananoCmcId,
+} from "@/components/cards/banano-total-card";
 import CryptoCard from "@/components/cards/crypto-card";
 import CryptoTableCard from "@/components/cards/crypto-table-card";
 import EthereumGasCard from "@/components/cards/ethereum-gas-card";
@@ -18,8 +26,13 @@ import WBanSummaryCard from "@/components/cards/wban-summary-card";
 import DashboardWrapper from "@/components/dashboard-wrapper";
 import CmcCryptoInfosProvider from "@/components/providers/cmc/cmc-crypto-infos-provider";
 import CmcGlobalMetricsProvider from "@/components/providers/cmc/cmc-global-metrics-provider";
+import CurrencyPreferenceProvider, {
+  TCurrencyPreference,
+} from "@/components/providers/currency-preference-provider";
 import FiatCurrencyRateProvider from "@/components/providers/fiat-currency-rates-provider";
-import NanoBananoBalancesProvider from "@/components/providers/nano-banano-balance-provider";
+import NanoBananoBalancesProvider, {
+  TNanoBananoAccountFull,
+} from "@/components/providers/nano-banano-balance-provider";
 import { Button } from "@/components/ui/button";
 import { db } from "@/db/db";
 import { usersTable } from "@/db/schema";
@@ -34,14 +47,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ReactNode } from "react";
 
-type TValuesEntry = { id: string; value: string };
-
-const isDev = process.env.NODE_ENV === "development";
 type Props = {
   params: Promise<{ dashboard_slug: string }>;
 };
-
-const componentRequiresNewLine = ["orderbook", "ohlcv_chart"];
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { dashboard_slug } = await params;
@@ -59,17 +67,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     userId = uids[0].id;
   }
 
-  const dashboard = await getDashboard({
+  const dashboardObject = await getDashboard({
     userId,
     dashboardSlug: dashboard_slug,
   });
 
-  if (dashboard === null)
+  if (dashboardObject === null)
     return { title: `Not Found | ${siteTitle}`, description: "Not found." };
 
   return {
-    title: `${dashboard.dashboards.title} | ${dashboard.users.username} | ${siteTitle}`,
-    description: dashboard.dashboards.title,
+    title: `${dashboardObject.dashboard.title} | ${dashboardObject.user.username} | ${siteTitle}`,
+    description: dashboardObject.dashboard.title,
   };
 }
 
@@ -112,10 +120,10 @@ export default async function Page({ params }: Props) {
 
   const cryptoCurrencyIds = cards
     .filter(
-      (c) => c.card_types.id === "crypto" || c.card_types.id === "mini_crypto"
+      (c) => c.card_type.id === "crypto" || c.card_type.id === "mini_crypto"
     )
     .map((c) => {
-      const values = c.cards.values as TValuesEntry[];
+      const values = c.card.values as TValuesEntry[];
       if (!values) return undefined;
       return values.find((v) => v.id === "coin_id")?.value;
     })
@@ -123,9 +131,9 @@ export default async function Page({ params }: Props) {
     .map((v) => Number(v));
 
   const fiatCurrencyTickers = cards
-    .filter((c) => c.card_types.id === "fiat_currency")
+    .filter((c) => c.card_type.id === "fiat_currency")
     .map((c) => {
-      const values = c.cards.values as TValuesEntry[];
+      const values = c.card.values as TValuesEntry[];
       if (!values) return undefined;
       const base = values.find((v) => v.id === "ticker_base")?.value;
       const quote = values.find((v) => v.id === "ticker_quote")?.value;
@@ -135,55 +143,71 @@ export default async function Page({ params }: Props) {
     .filter((v) => v !== undefined)
     .map((v) => v as string);
 
-  const nanoBananoAccounts: TNanoBananoAccount[] = cards
+  const nanoBananoAccounts: TNanoBananoAccountFull[] = cards
     .filter(
       (c) =>
-        c.card_types.id === "nano_balance" ||
-        c.card_types.id === "banano_balance"
+        c.card_type.id === "nano_balance" || c.card_type.id === "banano_balance"
     )
     .map((c) => {
-      const values = c.cards.values as TValuesEntry[];
+      const values = c.card.values as TValuesEntry[];
       if (!values) return undefined;
-      return values.find((v) => v.id === "address")?.value;
+      const address = values.find((v) => v.id === "address")?.value;
+      const isOwner = values.find((v) => v.id === "is_owner")?.value;
+      if (!address || !isOwner) return undefined;
+      return {
+        address,
+        isOwner: isOwner === "true",
+      };
     })
-    .filter((v) => v !== undefined)
-    .map((v) => ({ address: v }));
+    .filter((v) => v !== undefined);
 
-  let cardsAndDividers: ((typeof cards)[number] | "divider")[] = [];
+  let cardObjectsAndDividers: ((typeof cards)[number] | "divider")[] = [];
 
   cards.forEach((card, index) => {
     const requiresNewLine = componentRequiresNewLine.includes(
-      card.card_types.id
+      card.card_type.id
     );
     const differentThanPrevious =
-      index !== 0 && cards[index - 1].card_types.id !== card.card_types.id;
+      index !== 0 && cards[index - 1].card_type.id !== card.card_type.id;
     if (requiresNewLine && differentThanPrevious) {
-      cardsAndDividers.push("divider");
+      cardObjectsAndDividers.push("divider");
     }
-    cardsAndDividers.push(card);
+    cardObjectsAndDividers.push(card);
   });
+
+  if (cards.length === 0) {
+    return <DashboardWrapper>Add a Card</DashboardWrapper>;
+  }
+
+  const cardObject = cards[0];
+  const currencyPreference: TCurrencyPreference = {
+    primary: cardObject.primary_currency,
+    secondary: cardObject.secondary_currency,
+    tertiary: cardObject.tertiary_currency,
+  };
 
   return (
     <DashboardWrapper>
       <Providers
-        cardTypeIds={cards.map((c) => c.cards.cardTypeId)}
+        cardTypeIds={cards.map((c) => c.card.cardTypeId)}
         nanoBananoAccounts={nanoBananoAccounts}
         cryptoCurrencyIds={cryptoCurrencyIds}
         fiatCurrencyTickers={fiatCurrencyTickers}
+        currencyPreference={currencyPreference}
       >
-        {cardsAndDividers.map((cardOrDivider, index) => {
-          if (cardOrDivider === "divider") {
+        {cardObjectsAndDividers.map((cardObjectOrDivider, index) => {
+          if (cardObjectOrDivider === "divider") {
             return <div key={`divider-${index}`} className="w-full" />;
           }
-          const card = cardOrDivider;
-          if (card.cards.cardTypeId === "fear_greed_index") {
-            return <FearGreedIndexCard key={card.cards.id} />;
+          const cardObject = cardObjectOrDivider;
+          if (cardObject.card.cardTypeId === "fear_greed_index") {
+            return <FearGreedIndexCard key={cardObject.card.id} />;
           }
-          if (card.cards.cardTypeId === "wban_summary") {
-            return <WBanSummaryCard key={card.cards.id} />;
+          if (cardObject.card.cardTypeId === "wban_summary") {
+            return <WBanSummaryCard key={cardObject.card.id} />;
           }
-          if (card.cards.cardTypeId === "orderbook") {
-            const values = card.cards.values as TValuesEntry[];
+          if (cardObject.card.cardTypeId === "orderbook") {
+            const values = cardObject.card.values as TValuesEntry[];
             if (!values) return null;
             const exchange = values.find((v) => v.id === "exchange")?.value;
             const tickerBase = values.find((v) => v.id === "ticker_base")
@@ -196,11 +220,11 @@ export default async function Page({ params }: Props) {
               limit: 10,
               ticker: `${tickerBase}/${tickerQuote}`,
             };
-            return <OrderBookCard key={card.cards.id} config={config} />;
+            return <OrderBookCard key={cardObject.card.id} config={config} />;
           }
 
-          if (card.cards.cardTypeId === "ohlcv_chart") {
-            const values = card.cards.values as TValuesEntry[];
+          if (cardObject.card.cardTypeId === "ohlcv_chart") {
+            const values = cardObject.card.values as TValuesEntry[];
             if (!values) return null;
             const exchange = values.find((v) => v.id === "exchange")?.value;
             const tickerBase = values.find((v) => v.id === "ticker_base")
@@ -212,11 +236,11 @@ export default async function Page({ params }: Props) {
               exchange: exchange as TAvailableExchange,
               ticker: `${tickerBase}/${tickerQuote}`,
             };
-            return <OhlcvChartCard key={card.cards.id} config={config} />;
+            return <OhlcvChartCard key={cardObject.card.id} config={config} />;
           }
 
-          if (card.cards.cardTypeId === "uniswap_position") {
-            const values = card.cards.values as TValuesEntry[];
+          if (cardObject.card.cardTypeId === "uniswap_position") {
+            const values = cardObject.card.values as TValuesEntry[];
             if (!values) return null;
             const network = values.find((v) => v.id === "network")?.value;
             const positionId = values.find((v) => v.id === "position_id")
@@ -224,80 +248,89 @@ export default async function Page({ params }: Props) {
             if (!network || !positionId) return null;
             return (
               <UniswapPositionCard
-                key={card.cards.id}
+                key={cardObject.card.id}
                 id={Number(positionId)}
                 network={network as TEthereumNetwork}
               />
             );
           }
 
-          if (card.cards.cardTypeId === "mini_crypto") {
-            const values = card.cards.values as TValuesEntry[];
-            if (!values) return null;
-            const coinId = values.find((v) => v.id === "coin_id")?.value;
-            if (!coinId) return null;
-            return <MiniCryptoCard key={card.cards.id} id={Number(coinId)} />;
-          }
-
-          if (card.cards.cardTypeId === "crypto") {
-            const values = card.cards.values as TValuesEntry[];
+          if (cardObject.card.cardTypeId === "mini_crypto") {
+            const values = cardObject.card.values as TValuesEntry[];
             if (!values) return null;
             const coinId = values.find((v) => v.id === "coin_id")?.value;
             if (!coinId) return null;
             return (
-              <CryptoCard key={card.cards.id} config={{ id: Number(coinId) }} />
+              <MiniCryptoCard key={cardObject.card.id} id={Number(coinId)} />
             );
           }
 
-          if (card.cards.cardTypeId === "fiat_currency") {
-            const values = card.cards.values as TValuesEntry[];
+          if (cardObject.card.cardTypeId === "crypto") {
+            const values = cardObject.card.values as TValuesEntry[];
+            if (!values) return null;
+            const coinId = values.find((v) => v.id === "coin_id")?.value;
+            if (!coinId) return null;
+            return (
+              <CryptoCard
+                key={cardObject.card.id}
+                config={{ id: Number(coinId) }}
+              />
+            );
+          }
+
+          if (cardObject.card.cardTypeId === "fiat_currency") {
+            const values = cardObject.card.values as TValuesEntry[];
             if (!values) return null;
             const base = values.find((v) => v.id === "ticker_base")?.value;
             const quote = values.find((v) => v.id === "ticker_quote")?.value;
             if (!base || !quote) return null;
             return (
               <FiatCurrencyCard
-                key={card.cards.id}
+                key={cardObject.card.id}
                 ticker={`${base}/${quote}`}
               />
             );
           }
 
-          if (card.cards.cardTypeId === "uniswap_pools_table") {
-            return <UniswapPoolsTableCard key={card.cards.id} />;
+          if (cardObject.card.cardTypeId === "uniswap_pools_table") {
+            return <UniswapPoolsTableCard key={cardObject.card.id} />;
           }
 
-          if (card.cards.cardTypeId === "crypto_table") {
-            return <CryptoTableCard key={card.cards.id} />;
+          if (cardObject.card.cardTypeId === "crypto_table") {
+            return <CryptoTableCard key={cardObject.card.id} />;
           }
 
           if (
-            card.cards.cardTypeId === "nano_balance" ||
-            card.cards.cardTypeId === "banano_balance"
+            cardObject.card.cardTypeId === "nano_balance" ||
+            cardObject.card.cardTypeId === "banano_balance"
           ) {
-            const values = card.cards.values as TValuesEntry[];
+            const values = cardObject.card.values as TValuesEntry[];
             if (!values) return null;
             const address = values.find((v) => v.id === "address")?.value;
             if (!address) return null;
             return (
               <NanoBananoCard
-                key={card.cards.id}
+                key={cardObject.card.id}
                 account={{ address: address }}
               />
             );
           }
 
-          if (card.cards.cardTypeId === "gas_tracker") {
-            const values = card.cards.values as TValuesEntry[];
+          if (cardObject.card.cardTypeId === "gas_tracker") {
+            const values = cardObject.card.values as TValuesEntry[];
             if (!values) return null;
             const network = values.find((v) => v.id === "network")?.value;
             if (!network) return null;
             return (
               <EthereumGasCard
-                key={card.cards.id}
+                key={cardObject.card.id}
                 network={network as TEthereumNetwork}
               />
             );
+          }
+
+          if (cardObject.card.cardTypeId === "banano_total") {
+            return <BananoTotalCard key={cardObject.card.id} />;
           }
 
           return null;
@@ -313,22 +346,51 @@ function Providers({
   fiatCurrencyTickers,
   children,
   nanoBananoAccounts,
+  currencyPreference,
 }: {
   cardTypeIds: string[];
   cryptoCurrencyIds: number[];
   fiatCurrencyTickers: string[];
   children: ReactNode;
-  nanoBananoAccounts: TNanoBananoAccount[];
+  nanoBananoAccounts: TNanoBananoAccountFull[];
+  currencyPreference: TCurrencyPreference;
 }) {
   let wrappedChildren = children;
+  if (
+    cardTypeIds.includes("fiat_currency") ||
+    cardTypeIds.includes("banano_total_balance")
+  ) {
+    wrappedChildren = (
+      <FiatCurrencyRateProvider tickers={fiatCurrencyTickers}>
+        {wrappedChildren}
+      </FiatCurrencyRateProvider>
+    );
+  }
   if (cardTypeIds.includes("fear_greed_index")) {
     wrappedChildren = (
       <CmcGlobalMetricsProvider>{wrappedChildren}</CmcGlobalMetricsProvider>
     );
   }
+
+  if (cryptoCurrencyIds.length > 0) {
+    let extraIds = [];
+    if (cardTypeIds.includes("banano_total")) {
+      extraIds.push(bananoCmcId);
+    }
+    let idsWithExtras = cryptoCurrencyIds;
+    extraIds.forEach(
+      (id) => !idsWithExtras.includes(id) && idsWithExtras.push(id)
+    );
+    wrappedChildren = (
+      <CmcCryptoInfosProvider cryptos={idsWithExtras.map((c) => ({ id: c }))}>
+        {wrappedChildren}
+      </CmcCryptoInfosProvider>
+    );
+  }
   if (
     cardTypeIds.includes("nano_balance") ||
-    cardTypeIds.includes("banano_balance")
+    cardTypeIds.includes("banano_balance") ||
+    cardTypeIds.includes("banano_total_balance")
   ) {
     wrappedChildren = (
       <NanoBananoBalancesProvider accounts={nanoBananoAccounts}>
@@ -336,21 +398,12 @@ function Providers({
       </NanoBananoBalancesProvider>
     );
   }
-  if (cardTypeIds.includes("fiat_currency")) {
-    wrappedChildren = (
-      <FiatCurrencyRateProvider tickers={fiatCurrencyTickers}>
-        {wrappedChildren}
-      </FiatCurrencyRateProvider>
-    );
-  }
-  if (cryptoCurrencyIds.length > 0) {
-    wrappedChildren = (
-      <CmcCryptoInfosProvider
-        cryptos={cryptoCurrencyIds.map((c) => ({ id: c }))}
-      >
-        {wrappedChildren}
-      </CmcCryptoInfosProvider>
-    );
-  }
+
+  // General wrappers
+  wrappedChildren = (
+    <CurrencyPreferenceProvider currencyPreference={currencyPreference}>
+      {wrappedChildren}
+    </CurrencyPreferenceProvider>
+  );
   return wrappedChildren;
 }

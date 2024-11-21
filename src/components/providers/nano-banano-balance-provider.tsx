@@ -11,11 +11,11 @@ const NanoBananoBalancesContext =
 
 export const NanoBananoBalancesProvider: React.FC<{
   children: ReactNode;
-  accounts: TNanoBananoAccount[];
+  accounts: TNanoBananoAccountFull[];
 }> = ({ children, accounts }) => {
   const query = api.nanoBanano.getBalances.useQuery(
     {
-      accounts,
+      accounts: accounts.map((i) => ({ address: i.address })),
     },
     defaultQueryOptions.slow
   );
@@ -23,6 +23,7 @@ export const NanoBananoBalancesProvider: React.FC<{
     <NanoBananoBalancesContext.Provider
       value={{
         ...query,
+        accounts,
       }}
     >
       {children}
@@ -44,4 +45,6 @@ export default NanoBananoBalancesProvider;
 
 type TNanoBananoBalancesContext = AppRouterQueryResult<
   AppRouterOutputs["nanoBanano"]["getBalances"]
-> & {};
+> & { accounts: TNanoBananoAccountFull[] };
+
+export type TNanoBananoAccountFull = TNanoBananoAccount & { isOwner: boolean };

@@ -57,6 +57,13 @@
       "when": 1732201544670,
       "tag": "0007_bouncy_doctor_octopus",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1732204423556,
+      "tag": "0008_goofy_ultragirl",
+      "breakpoints": true
     }
   ]
 }

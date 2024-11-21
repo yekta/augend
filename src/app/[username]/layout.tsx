@@ -1,4 +1,4 @@
-import { getUser } from "@/app/[username]/helpers";
+import { getUser } from "@/app/[username]/_lib/helpers";
 import Navbar, { TRoute } from "@/components/navbar";
 import { db } from "@/db/db";
 import { dashboardsTable, usersTable } from "@/db/schema";
@@ -32,8 +32,11 @@ export default async function UserLayout({
 
   if (user === null) return notFound();
 
-  const dashboards = await db
-    .select()
+  const dashboardObjects = await db
+    .select({
+      dashboard: dashboardsTable,
+      user: usersTable,
+    })
     .from(dashboardsTable)
     .where(eq(dashboardsTable.userId, userId))
     .innerJoin(usersTable, eq(dashboardsTable.userId, usersTable.id))
@@ -43,10 +46,10 @@ export default async function UserLayout({
       desc(dashboardsTable.id)
     );
 
-  const routes: TRoute[] = dashboards.map((d) => ({
-    href: `/${d.users.username}/${d.dashboards.slug}`,
-    icon: d.dashboards.icon,
-    label: d.dashboards.title,
+  const routes: TRoute[] = dashboardObjects.map((d) => ({
+    href: `/${d.user.username}/${d.dashboard.slug}`,
+    icon: d.dashboard.icon,
+    label: d.dashboard.title,
   }));
 
   return (

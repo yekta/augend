@@ -7,20 +7,16 @@ import { linearInterpolation } from "@/lib/helpers";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
 import { ArrowDownIcon, ArrowRightIcon, ArrowUpIcon } from "lucide-react";
+import { useCurrencyPreference } from "@/components/providers/currency-preference-provider";
 
 export default function FearGreedIndexCard({
   className,
 }: {
   className?: string;
 }) {
-  const {
-    data,
-    isPending,
-    isRefetching,
-    isError,
-    isLoadingError,
-    convertCurrency,
-  } = useCmcGlobalMetrics();
+  const convertCurrency = useCurrencyPreference().primary;
+  const { data, isPending, isRefetching, isError, isLoadingError } =
+    useCmcGlobalMetrics();
 
   const isMarketCapChangePositive = data
     ? data.total_market_cap_yesterday_percentage_change > 0

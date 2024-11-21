@@ -3,6 +3,7 @@
 import CardWrapper from "@/components/cards/card-wrapper";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import { useCmcCryptoInfos } from "@/components/providers/cmc/cmc-crypto-infos-provider";
+import { useCurrencyPreference } from "@/components/providers/currency-preference-provider";
 import Indicator from "@/components/ui/indicator";
 import { getCmcUrl } from "@/lib/get-cmc-url";
 import { formatNumberTBMK } from "@/lib/number-formatters";
@@ -16,6 +17,7 @@ export default function MiniCryptoCard({
   id: number;
   className?: string;
 }) {
+  const currencyPreference = useCurrencyPreference();
   const {
     data: d,
     isError,
@@ -25,18 +27,19 @@ export default function MiniCryptoCard({
   } = useCmcCryptoInfos();
 
   const data = d?.[id];
+  const convertCurrency = currencyPreference.primary;
 
-  const priceSymbol = "$";
-  const price = data?.quote.USD.price;
-  const marketCap = data?.quote.USD.market_cap;
+  const priceSymbol = convertCurrency.symbol;
+  const price = data?.quote[convertCurrency.ticker].price;
+  const marketCap = data?.quote[convertCurrency.ticker].market_cap;
   const rank = data?.cmc_rank;
   const ticker = data?.symbol;
   const slug = data?.slug;
   const isChangePositive = data
-    ? data.quote.USD.percent_change_24h > 0
+    ? data.quote[convertCurrency.ticker].percent_change_24h > 0
     : undefined;
   const isChangeNegative = data
-    ? data.quote.USD.percent_change_24h < 0
+    ? data.quote[convertCurrency.ticker].percent_change_24h < 0
     : undefined;
 
   const ChangeIcon =
@@ -89,7 +92,7 @@ export default function MiniCryptoCard({
                     ? "Load"
                     : data
                       ? formatNumberTBMK(
-                          data.quote.USD.percent_change_24h,
+                          data.quote[convertCurrency.ticker].percent_change_24h,
                           3,
                           false,
                           true

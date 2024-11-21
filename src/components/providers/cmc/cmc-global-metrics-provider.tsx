@@ -1,9 +1,6 @@
 "use client";
 
-import {
-  convertCurrency,
-  TConvertCurrency,
-} from "@/components/providers/cmc/constants";
+import { useCurrencyPreference } from "@/components/providers/currency-preference-provider";
 import { defaultQueryOptions } from "@/lib/constants";
 import { AppRouterOutputs, AppRouterQueryResult } from "@/trpc/api/root";
 import { api } from "@/trpc/setup/react";
@@ -16,9 +13,10 @@ const CmcGlobalMetricsContext = createContext<TCmcGlobalMetricsContext | null>(
 export const CmcGlobalMetricsProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
+  const currencyPreference = useCurrencyPreference();
   const query = api.cmc.getGlobalMetrics.useQuery(
     {
-      convert: convertCurrency.ticker,
+      convert: currencyPreference.primary.ticker,
     },
     defaultQueryOptions.slow
   );
@@ -26,7 +24,6 @@ export const CmcGlobalMetricsProvider: React.FC<{ children: ReactNode }> = ({
     <CmcGlobalMetricsContext.Provider
       value={{
         ...query,
-        convertCurrency,
       }}
     >
       {children}
@@ -48,6 +45,4 @@ export default CmcGlobalMetricsProvider;
 
 type TCmcGlobalMetricsContext = AppRouterQueryResult<
   AppRouterOutputs["cmc"]["getGlobalMetrics"]
-> & {
-  convertCurrency: TConvertCurrency;
-};
+> & {};

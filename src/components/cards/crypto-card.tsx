@@ -3,6 +3,7 @@
 import ThreeLineCard from "@/components/cards/three-line-card";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import { useCmcCryptoInfos } from "@/components/providers/cmc/cmc-crypto-infos-provider";
+import { useCurrencyPreference } from "@/components/providers/currency-preference-provider";
 import { getCmcUrl } from "@/lib/get-cmc-url";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { ArrowDownIcon, ArrowRightIcon, ArrowUpIcon } from "lucide-react";
@@ -14,18 +15,18 @@ export type TCrypto = {
 };
 
 export default function CryptoCard({ config }: { config: TCrypto }) {
+  const currencyPreference = useCurrencyPreference();
   const formatter = formatNumberTBMK;
-
   const {
     data: d,
     isPending,
     isRefetching,
     isError,
     isLoadingError,
-    convertCurrency,
   } = useCmcCryptoInfos();
 
   const data = d?.[config.id];
+  const convertCurrency = currencyPreference.primary;
 
   const isChangeNegative = data
     ? data.quote[convertCurrency.ticker].percent_change_24h < 0

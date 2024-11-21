@@ -1,9 +1,9 @@
 "use client";
 
 import {
-  convertCurrency,
-  TConvertCurrency,
-} from "@/components/providers/cmc/constants";
+  TDenominatorCurrency,
+  useCurrencyPreference,
+} from "@/components/providers/currency-preference-provider";
 import { defaultQueryOptions } from "@/lib/constants";
 import { AppRouterOutputs, AppRouterQueryResult } from "@/trpc/api/root";
 import { api } from "@/trpc/setup/react";
@@ -21,9 +21,10 @@ export const CmcCryptoInfosProvider: React.FC<{
   children: ReactNode;
   cryptos: TCryptoDef[];
 }> = ({ children, cryptos }) => {
+  const currencyPreference = useCurrencyPreference();
   const query = api.cmc.getCryptoInfos.useQuery(
     {
-      convert: convertCurrency.ticker,
+      convert: Object.values(currencyPreference).map((i) => i.ticker),
       ids: cryptos.map((i) => i.id),
     },
     defaultQueryOptions.slow
@@ -32,7 +33,6 @@ export const CmcCryptoInfosProvider: React.FC<{
     <CmcCryptoInfosContext.Provider
       value={{
         ...query,
-        convertCurrency,
       }}
     >
       {children}
@@ -54,6 +54,4 @@ export default CmcCryptoInfosProvider;
 
 type TCmcCryptoInfosContext = AppRouterQueryResult<
   AppRouterOutputs["cmc"]["getCryptoInfos"]
-> & {
-  convertCurrency: TConvertCurrency;
-};
+>;

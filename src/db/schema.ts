@@ -30,6 +30,7 @@ export const currenciesTable = pgTable(
     name: text("name").notNull(),
     ticker: text("ticker").notNull(),
     symbol: text("symbol").notNull(),
+    is_crypto: boolean("is_crypto").notNull().default(false),
     ...timestamps,
   },
   (table) => ({

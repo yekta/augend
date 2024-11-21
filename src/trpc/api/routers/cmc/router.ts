@@ -13,22 +13,45 @@ export const cmcRouter = createTRPCRouter({
     .input(
       z.object({
         ids: z.array(z.number()),
-        convert: z.string(),
+        convert: z.array(z.string()),
       })
     )
     .query(async ({ input: { ids, convert } }) => {
       const idsStr = ids.join(",");
-      const url = `${cmcApiUrl}/v2/cryptocurrency/quotes/latest?id=${idsStr}&convert=${convert}`;
-      const response = await fetch(url, cmcFetchOptions);
-      if (!response.ok) throw new Error("Failed to fetch CMC data");
+      const urls = convert.map(
+        (c) =>
+          `${cmcApiUrl}/v2/cryptocurrency/quotes/latest?id=${idsStr}&convert=${c}`
+      );
+      const responses = await Promise.all(
+        urls.map((url) => fetch(url, cmcFetchOptions))
+      );
 
-      const result: TCmcGetCryptosResult = await response.json();
+      const results: TCmcGetCryptosResult[] = await Promise.all(
+        responses.map((r) => r.json())
+      );
+
+      results.forEach((r) => {
+        if (!r.data) {
+          console.log(r);
+          throw new Error("Failed to fetch CMC crypto infos");
+        }
+      });
 
       let editedResult: TCmcGetCryptosResultEdited = {};
-      for (const key in result.data) {
-        editedResult[key] = result.data[key];
+      const firstResult = results[0];
+      for (const key in firstResult.data) {
+        const quoteObj: TCmcGetCryptosResultEdited[number]["quote"] = {};
+        for (const result of results) {
+          const quote = result.data[key].quote;
+          for (const currency in quote) {
+            quoteObj[currency] = quote[currency];
+          }
+        }
+        editedResult[key] = {
+          ...firstResult.data[key],
+          quote: quoteObj,
+        };
       }
-
       return editedResult;
     }),
   getGlobalMetrics: publicProcedure
