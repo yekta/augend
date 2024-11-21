@@ -33,7 +33,7 @@ export const useFiatCurrencyRates = () => {
   const context = useContext(FiatCurrencyRatesContext);
   if (!context) {
     throw new Error(
-      "FiatCurrencyRatesProvider is required for useFiatCurrencyRatess to work"
+      "FiatCurrencyRatesProvider is required for useFiatCurrencyRates to work"
     );
   }
   return context;

@@ -15,6 +15,20 @@
       "when": 1732221777516,
       "tag": "0001_tranquil_vengeance",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1732225039795,
+      "tag": "0002_pale_sentinel",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1732225070541,
+      "tag": "0003_pretty_cannonball",
+      "breakpoints": true
     }
   ]
 }

@@ -1,8 +1,5 @@
 "use client";
 
-import { defaultQueryOptions } from "@/lib/constants";
-import { AppRouterOutputs, AppRouterQueryResult } from "@/trpc/api/root";
-import { api } from "@/trpc/setup/react";
 import React, { createContext, ReactNode, useContext } from "react";
 
 export type TDenominatorCurrency = {
@@ -11,6 +8,8 @@ export type TDenominatorCurrency = {
   symbol: string;
   ticker: string;
   is_crypto: boolean;
+  coin_id: string | null;
+  max_decimals_preferred: number;
 };
 
 export type TCurrencyPreference = {

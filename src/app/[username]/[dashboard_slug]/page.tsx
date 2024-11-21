@@ -4,6 +4,7 @@ import {
 } from "@/app/[username]/_lib/constants";
 import { getCards, getDashboard, getUser } from "@/app/[username]/_lib/helpers";
 import { TValuesEntry } from "@/app/[username]/_lib/types";
+import Calculator from "@/components/calculator";
 import BananoTotalCard, {
   bananoCmcId,
 } from "@/components/cards/banano-total-card";
@@ -28,6 +29,7 @@ import CmcCryptoInfosProvider from "@/components/providers/cmc/cmc-crypto-infos-
 import CmcGlobalMetricsProvider from "@/components/providers/cmc/cmc-global-metrics-provider";
 import CurrencyPreferenceProvider, {
   TCurrencyPreference,
+  TDenominatorCurrency,
 } from "@/components/providers/currency-preference-provider";
 import FiatCurrencyRateProvider from "@/components/providers/fiat-currency-rates-provider";
 import NanoBananoBalancesProvider, {
@@ -35,12 +37,12 @@ import NanoBananoBalancesProvider, {
 } from "@/components/providers/nano-banano-balance-provider";
 import { Button } from "@/components/ui/button";
 import { db } from "@/db/db";
-import { usersTable } from "@/db/schema";
+import { currenciesTable, usersTable } from "@/db/schema";
 import { siteTitle } from "@/lib/constants";
 import { TEthereumNetwork } from "@/trpc/api/routers/ethereum/types";
 import { TAvailableExchange } from "@/trpc/api/routers/exchange/types";
 import { auth } from "@clerk/nextjs/server";
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -132,7 +134,7 @@ export default async function Page({ params }: Props) {
     );
   }
 
-  const cryptoCurrencyIds = cards
+  let cryptoCurrencyIds = cards
     .filter(
       (c) => c.card_type.id === "crypto" || c.card_type.id === "mini_crypto"
     )
@@ -144,7 +146,7 @@ export default async function Page({ params }: Props) {
     .filter((v) => v !== undefined)
     .map((v) => Number(v));
 
-  const fiatCurrencyTickers = cards
+  let fiatCurrencyTickers = cards
     .filter((c) => c.card_type.id === "fiat_currency")
     .map((c) => {
       const values = c.card.values as TValuesEntry[];
@@ -175,18 +177,32 @@ export default async function Page({ params }: Props) {
     })
     .filter((v) => v !== undefined);
 
+  let currencyIdsToFetch: string[] = [];
+
   let cardObjectsAndDividers: ((typeof cards)[number] | "divider")[] = [];
 
-  cards.forEach((card, index) => {
+  // General operations
+  cards.forEach((cardObj, index) => {
+    console.log("ID", cardObj.card.cardTypeId);
+    // Currency ids to fetch
+    if (cardObj.card.cardTypeId === "calculator") {
+      const values = cardObj.card.values as TValuesEntry[];
+      if (!values) return;
+      values.forEach((v) => {
+        if (v.id !== "currency_id") return;
+        currencyIdsToFetch.push(v.value);
+      });
+    }
+    // New line stuff
     const requiresNewLine = componentRequiresNewLine.includes(
-      card.card_type.id
+      cardObj.card_type.id
     );
     const differentThanPrevious =
-      index !== 0 && cards[index - 1].card_type.id !== card.card_type.id;
+      index !== 0 && cards[index - 1].card_type.id !== cardObj.card_type.id;
     if (requiresNewLine && differentThanPrevious) {
       cardObjectsAndDividers.push("divider");
     }
-    cardObjectsAndDividers.push(card);
+    cardObjectsAndDividers.push(cardObj);
   });
 
   if (cards.length === 0) {
@@ -199,6 +215,34 @@ export default async function Page({ params }: Props) {
     secondary: cardObject.secondary_currency,
     tertiary: cardObject.tertiary_currency,
   };
+
+  let denominatorCurrencies: TDenominatorCurrency[] | null = null;
+  if (currencyIdsToFetch.length > 0) {
+    const result = await db
+      .select({
+        id: currenciesTable.id,
+        name: currenciesTable.name,
+        symbol: currenciesTable.symbol,
+        ticker: currenciesTable.ticker,
+        is_crypto: currenciesTable.is_crypto,
+        coin_id: currenciesTable.coin_id,
+        max_decimals_preferred: currenciesTable.max_decimals_preferred,
+      })
+      .from(currenciesTable)
+      .where(inArray(currenciesTable.id, currencyIdsToFetch));
+    denominatorCurrencies = result;
+  }
+
+  if (denominatorCurrencies !== null && denominatorCurrencies.length > 1) {
+    for (const currency of denominatorCurrencies) {
+      if (
+        currency.is_crypto &&
+        !cryptoCurrencyIds.includes(Number(currency.coin_id))
+      ) {
+        cryptoCurrencyIds.push(Number(currency.coin_id));
+      }
+    }
+  }
 
   console.log("[dashboard_slug] | Total:", Date.now() - start);
 
@@ -221,6 +265,18 @@ export default async function Page({ params }: Props) {
           }
           if (cardObject.card.cardTypeId === "wban_summary") {
             return <WBanSummaryCard key={cardObject.card.id} />;
+          }
+          if (
+            cardObject.card.cardTypeId === "calculator" &&
+            denominatorCurrencies &&
+            denominatorCurrencies.length > 1
+          ) {
+            return (
+              <Calculator
+                key={cardObject.card.id}
+                currencies={denominatorCurrencies}
+              />
+            );
           }
           if (cardObject.card.cardTypeId === "orderbook") {
             const values = cardObject.card.values as TValuesEntry[];

@@ -1,109 +1,38 @@
 "use client";
 
+import { useCmcCryptoInfos } from "@/components/providers/cmc/cmc-crypto-infos-provider";
+import { TDenominatorCurrency } from "@/components/providers/currency-preference-provider";
+import { useFiatCurrencyRates } from "@/components/providers/fiat-currency-rates-provider";
 import Indicator from "@/components/ui/indicator";
-import BananoIcon from "@/components/icons/banano-icon";
-import NanoIcon from "@/components/icons/nano-icon";
 import { Input } from "@/components/ui/input";
-import { defaultQueryOptions } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { TCurrencyForLiraTicker } from "@/trpc/api/routers/fiat/helpers";
-import { api } from "@/trpc/setup/react";
-import React, { ReactNode, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-type TCurrency = {
-  ticker: string;
-  id: number;
-  symbol: string | ReactNode;
-  isCrypto?: boolean;
-  maxDecimals?: number;
-};
-
-const currencies: TCurrency[] = [
-  {
-    ticker: "BTC",
-    id: 1,
-    symbol: "₿",
-    isCrypto: true,
-    maxDecimals: 6,
-  },
-  {
-    ticker: "ETH",
-    id: 1027,
-    symbol: "Ξ",
-    isCrypto: true,
-    maxDecimals: 4,
-  },
-  {
-    ticker: "XNO",
-    id: 1567,
-    symbol: <NanoIcon className="size-6 -ml-1.25" />,
-    isCrypto: true,
-    maxDecimals: 2,
-  },
-  {
-    ticker: "BAN",
-    id: 4704,
-    symbol: <BananoIcon className="size-6 -ml-1.25" />,
-    isCrypto: true,
-    maxDecimals: 0,
-  },
-  {
-    ticker: "GBP",
-    id: -3,
-    symbol: "£",
-    maxDecimals: 2,
-  },
-  {
-    ticker: "EUR",
-    id: -2,
-    symbol: "€",
-    maxDecimals: 2,
-  },
-  {
-    ticker: "USD",
-    id: -1,
-    symbol: "$",
-    maxDecimals: 2,
-  },
-  {
-    ticker: "TRY",
-    id: 0,
-    symbol: "₺",
-    maxDecimals: 2,
-  },
-];
-
-export default function Calculator({ className }: { className?: string }) {
+export default function Calculator({
+  currencies,
+  className,
+}: {
+  currencies: TDenominatorCurrency[];
+  className?: string;
+}) {
   const {
-    data: liraData,
-    isError: liraIsError,
-    isPending: liraIsPending,
-    isRefetching: liraIsRefetching,
-  } = api.fiat.getRates.useQuery(
-    {
-      tickers: currencies
-        .filter((i) => i.isCrypto !== true && i.ticker !== "TRY")
-        .map((i) => `${i.ticker}/TRY`),
-    },
-    defaultQueryOptions.normal
-  );
+    data: fiatData,
+    isError: fiatIsError,
+    isPending: fiatIsPending,
+    isRefetching: fiatIsRefetching,
+  } = useFiatCurrencyRates();
 
   const {
     data: cryptoData,
     isError: cryptoIsError,
     isPending: cryptoIsPending,
     isRefetching: cryptoIsRefetching,
-  } = api.cmc.getCryptoInfos.useQuery(
-    {
-      convert: ["USD"],
-      ids: currencies.filter((c) => c.isCrypto).map((c) => c.id),
-    },
-    defaultQueryOptions.normal
-  );
+  } = useCmcCryptoInfos();
 
-  const isPending = liraIsPending || cryptoIsPending;
-  const isError = liraIsError || cryptoIsError;
-  const isRefetching = liraIsRefetching || cryptoIsRefetching;
+  const isPending = fiatIsPending || cryptoIsPending;
+  const isError = fiatIsError || cryptoIsError;
+  const isRefetching = fiatIsRefetching || cryptoIsRefetching;
 
   const inputRefs = useRef<(HTMLInputElement | null)[]>(
     currencies.map(() => null)
@@ -113,7 +42,7 @@ export default function Calculator({ className }: { className?: string }) {
     useState<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    if (!liraData || !cryptoData) return;
+    if (!fiatData || !cryptoData) return;
 
     for (let i of inputRefs.current) {
       if (i && document.activeElement === i) {
@@ -128,7 +57,7 @@ export default function Calculator({ className }: { className?: string }) {
         return;
       }
     }
-  }, [liraData, cryptoData]);
+  }, [fiatData, cryptoData]);
 
   function endsWithDotZeros(value: string) {
     return /\.0*$/.test(value);
@@ -141,7 +70,7 @@ export default function Calculator({ className }: { className?: string }) {
 
   function editOtherInputs(input: HTMLInputElement) {
     if (isPending) return;
-    if (!cryptoData || !liraData) return;
+    if (!cryptoData || !fiatData) return;
 
     let value = input.value;
     const valueCleaned = value.replaceAll(",", "");
@@ -154,17 +83,20 @@ export default function Calculator({ className }: { className?: string }) {
     const otherInputs = inputRefs.current.filter((i) => i !== input);
 
     const selfTicker = input.getAttribute("data-ticker");
-    const selfIdStr = input.getAttribute("data-id");
-    if (!selfTicker || !selfIdStr) return;
-    const selfId = parseInt(selfIdStr);
-    const selfIsCrypto = currencies.find((c) => c.id === selfId)?.isCrypto;
-    const usdTry = liraData["USD/TRY"].last;
+    let selfId = input.getAttribute("data-id");
+
+    if (!selfTicker || !selfId) return;
+    const selfIsCrypto = currencies.find((c) => c.id === selfId)?.is_crypto;
+    const selfCoinId = input.getAttribute("data-coin-id");
+    if (selfIsCrypto && selfCoinId === null) return;
+
+    const usdTry = fiatData["USD/TRY"].last;
     const selfIsLira = selfTicker === "TRY";
     const selfUsdPrice = selfIsCrypto
-      ? cryptoData[selfId].quote["USD"].price
+      ? cryptoData[selfCoinId!].quote["USD"].price
       : selfIsLira
-        ? 1 / liraData["USD/TRY"].last
-        : liraData[`${selfTicker as TCurrencyForLiraTicker}/TRY`].last / usdTry;
+        ? 1 / fiatData["USD/TRY"].last
+        : fiatData[`${selfTicker as TCurrencyForLiraTicker}/TRY`].last / usdTry;
 
     otherInputs.forEach((i) => {
       if (!i) return;
@@ -174,7 +106,7 @@ export default function Calculator({ className }: { className?: string }) {
       const targetId = parseInt(targetIdStr);
 
       const targetIsCrypto = currencies.find((c) => c.ticker === targetTicker)
-        ?.isCrypto;
+        ?.is_crypto;
 
       if (targetIsCrypto) {
         const targetUsdPrice = cryptoData?.[targetId].quote["USD"].price;
@@ -187,14 +119,14 @@ export default function Calculator({ className }: { className?: string }) {
         i.value = inputValue.toLocaleString("en-US", {
           maximumFractionDigits: currencies.find(
             (c) => c.ticker === targetTicker
-          )?.maxDecimals,
+          )?.max_decimals_preferred,
         });
         return;
       }
 
       const targetLiraPrice =
-        liraData[`${targetTicker as TCurrencyForLiraTicker}/TRY`]?.last || 1;
-      const usdLira = liraData["USD/TRY"].last;
+        fiatData[`${targetTicker as TCurrencyForLiraTicker}/TRY`]?.last || 1;
+      const usdLira = fiatData["USD/TRY"].last;
       const targetUsdPrice = targetLiraPrice / usdLira;
       const inputValue = valueNumber * (selfUsdPrice / targetUsdPrice);
       if (isNaN(inputValue)) {
@@ -203,7 +135,7 @@ export default function Calculator({ className }: { className?: string }) {
       }
       i.value = inputValue.toLocaleString("en-US", {
         maximumFractionDigits: currencies.find((c) => c.ticker === targetTicker)
-          ?.maxDecimals,
+          ?.max_decimals_preferred,
       });
       return;
     });
@@ -221,7 +153,7 @@ export default function Calculator({ className }: { className?: string }) {
         isRefetching={isRefetching}
         isError={isError}
         isPending={isPending}
-        hasData={liraData !== undefined && cryptoData !== undefined}
+        hasData={fiatData !== undefined && cryptoData !== undefined}
         showOnIsPending
         showOnHasData
         showOnError="all"
@@ -237,6 +169,7 @@ export default function Calculator({ className }: { className?: string }) {
               onInput={onInput}
               data-ticker={c.ticker}
               data-id={c.id}
+              data-coin-id={c.coin_id !== null ? c.coin_id : undefined}
               className="text-xl pl-11 py-2.5 h-auto font-semibold rounded-xl"
             />
             <p className="absolute left-4 top-1/2 text-xl transform -translate-y-1/2 font-semibold">

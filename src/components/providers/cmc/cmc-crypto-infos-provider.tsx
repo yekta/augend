@@ -1,9 +1,6 @@
 "use client";
 
-import {
-  TDenominatorCurrency,
-  useCurrencyPreference,
-} from "@/components/providers/currency-preference-provider";
+import { useCurrencyPreference } from "@/components/providers/currency-preference-provider";
 import { defaultQueryOptions } from "@/lib/constants";
 import { AppRouterOutputs, AppRouterQueryResult } from "@/trpc/api/root";
 import { api } from "@/trpc/setup/react";
