@@ -23,6 +23,20 @@ const timestamps = {
   deletedAt: timestamp("deleted_at"),
 };
 
+export const currenciesTable = pgTable(
+  "currencies",
+  {
+    id: uuid("id").primaryKey(),
+    name: text("name").notNull(),
+    ticker: text("ticker").notNull(),
+    symbol: text("symbol").notNull(),
+    ...timestamps,
+  },
+  (table) => ({
+    uniqueTicker: unique("unique_ticker").on(table.ticker),
+  })
+);
+
 export const usersTable = pgTable(
   "users",
   {
@@ -32,6 +46,18 @@ export const usersTable = pgTable(
     username: varchar("username", { ...shortText })
       .notNull()
       .unique(),
+    primaryCurrencyId: uuid("primary_currency_id")
+      .notNull()
+      .default("81260265-7335-4d20-9064-0357e75690d6")
+      .references(() => currenciesTable.id),
+    secondaryCurrencyId: uuid("secondary_currency_id")
+      .notNull()
+      .default("d11e7514-5c8e-423d-bc94-efa24bf0f423")
+      .references(() => currenciesTable.id),
+    tertiaryCurrencyId: uuid("tertiary_currency_id")
+      .notNull()
+      .default("9710ede3-9d6e-4c3f-8c1f-3664263e4a8e")
+      .references(() => currenciesTable.id),
     ...timestamps,
   },
   (table) => ({
