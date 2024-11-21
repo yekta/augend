@@ -4,7 +4,7 @@ import {
 } from "@/app/[username]/_lib/constants";
 import { getCards, getDashboard, getUser } from "@/app/[username]/_lib/helpers";
 import { TValuesEntry } from "@/app/[username]/_lib/types";
-import Calculator from "@/components/calculator";
+import Calculator from "@/components/cards/calculator-card";
 import BananoTotalCard, {
   bananoCmcId,
 } from "@/components/cards/banano-total-card";
@@ -241,7 +241,7 @@ export default async function Page({ params }: Props) {
   console.log("[dashboard_slug] | Total:", Date.now() - start);
 
   return (
-    <DashboardWrapper>
+    <DashboardWrapper centerItems={cardObjectsAndDividers.length < 2}>
       <Providers
         cardTypeIds={cards.map((c) => c.card.cardTypeId)}
         nanoBananoAccounts={nanoBananoAccounts}
@@ -264,10 +264,18 @@ export default async function Page({ params }: Props) {
             denominatorCurrencies &&
             denominatorCurrencies.length > 1
           ) {
+            const values = cardObject.card.values as TValuesEntry[];
+            if (!values) return null;
+            const ids = values
+              .filter((v) => v.id === "currency_id")
+              .map((v) => v.value);
+            const selectedCurrencies = denominatorCurrencies
+              .filter((c) => ids.includes(c.id))
+              .sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id));
             return (
               <Calculator
                 key={cardObject.card.id}
-                currencies={denominatorCurrencies}
+                currencies={selectedCurrencies}
               />
             );
           }
@@ -429,7 +437,8 @@ function Providers({
   let wrappedChildren = children;
   if (
     cardTypeIds.includes("fiat_currency") ||
-    cardTypeIds.includes("banano_total_balance")
+    cardTypeIds.includes("banano_total_balance") ||
+    cardTypeIds.includes("calculator")
   ) {
     wrappedChildren = (
       <FiatCurrencyRateProvider>{wrappedChildren}</FiatCurrencyRateProvider>

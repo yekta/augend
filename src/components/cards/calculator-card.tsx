@@ -1,13 +1,20 @@
 "use client";
 
+import CardWrapper from "@/components/cards/card-wrapper";
+import BananoIcon from "@/components/icons/banano-icon";
+import NanoIcon from "@/components/icons/nano-icon";
 import { useCmcCryptoInfos } from "@/components/providers/cmc/cmc-crypto-infos-provider";
 import { TDenominatorCurrency } from "@/components/providers/currency-preference-provider";
 import { useFiatCurrencyRates } from "@/components/providers/fiat-currency-rates-provider";
 import Indicator from "@/components/ui/indicator";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { TCurrencyForLiraTicker } from "@/trpc/api/routers/fiat/helpers";
-import React, { useEffect, useRef, useState } from "react";
+import React, { ReactNode, useEffect, useRef, useState } from "react";
+
+const tickerToIcon: Record<string, ReactNode> = {
+  XNO: <NanoIcon className="size-6 -ml-1.25" />,
+  BAN: <BananoIcon className="size-6 -ml-1.25" />,
+};
 
 export default function Calculator({
   currencies,
@@ -90,26 +97,27 @@ export default function Calculator({
     const selfCoinId = input.getAttribute("data-coin-id");
     if (selfIsCrypto && selfCoinId === null) return;
 
-    const usdTry = fiatData["USD/TRY"].last;
-    const selfIsLira = selfTicker === "TRY";
+    const selfIsUsd = selfTicker === "USD";
     const selfUsdPrice = selfIsCrypto
       ? cryptoData[selfCoinId!].quote["USD"].price
-      : selfIsLira
-        ? 1 / fiatData["USD/TRY"].last
-        : fiatData[`${selfTicker as TCurrencyForLiraTicker}/TRY`].last / usdTry;
+      : selfIsUsd
+        ? 1
+        : fiatData["USD"][selfTicker].buy;
 
     otherInputs.forEach((i) => {
       if (!i) return;
       const targetTicker = i.getAttribute("data-ticker");
-      const targetIdStr = i.getAttribute("data-id");
-      if (!targetTicker || !targetIdStr) return;
-      const targetId = parseInt(targetIdStr);
+      const targetId = i.getAttribute("data-id");
+      if (!targetTicker || !targetId) return;
 
+      const targetCoinIdStr = i.getAttribute("data-coin-id");
       const targetIsCrypto = currencies.find((c) => c.ticker === targetTicker)
         ?.is_crypto;
 
       if (targetIsCrypto) {
-        const targetUsdPrice = cryptoData?.[targetId].quote["USD"].price;
+        if (!targetCoinIdStr) return;
+        const targetCoinId = parseInt(targetCoinIdStr);
+        const targetUsdPrice = cryptoData?.[targetCoinId].quote["USD"].price;
         if (!targetUsdPrice) return;
         const inputValue = valueNumber * (selfUsdPrice / targetUsdPrice);
         if (isNaN(inputValue)) {
@@ -124,10 +132,7 @@ export default function Calculator({
         return;
       }
 
-      const targetLiraPrice =
-        fiatData[`${targetTicker as TCurrencyForLiraTicker}/TRY`]?.last || 1;
-      const usdLira = fiatData["USD/TRY"].last;
-      const targetUsdPrice = targetLiraPrice / usdLira;
+      const targetUsdPrice = fiatData["USD"][targetTicker].buy;
       const inputValue = valueNumber * (selfUsdPrice / targetUsdPrice);
       if (isNaN(inputValue)) {
         i.value = "";
@@ -141,43 +146,46 @@ export default function Calculator({
     });
   }
   return (
-    <div
-      id="calculator"
-      className={cn(
-        "w-full sm:max-w-xs flex flex-col gap-2 relative",
-        className
-      )}
-    >
-      <Indicator
-        className="relative p-0.5 ml-auto"
-        isRefetching={isRefetching}
-        isError={isError}
-        isPending={isPending}
-        hasData={fiatData !== undefined && cryptoData !== undefined}
-        showOnIsPending
-        showOnHasData
-        showOnError="all"
-      />
-      {currencies.map((c, index) => {
-        return (
-          <div key={c.ticker} className="w-full relative">
-            <Input
-              ref={(e) => {
-                inputRefs.current[index] = e;
-              }}
-              onFocus={(e) => setLastActiveInput(e.target)}
-              onInput={onInput}
-              data-ticker={c.ticker}
-              data-id={c.id}
-              data-coin-id={c.coin_id !== null ? c.coin_id : undefined}
-              className="text-xl pl-11 py-2.5 h-auto font-semibold rounded-xl"
-            />
-            <p className="absolute left-4 top-1/2 text-xl transform -translate-y-1/2 font-semibold">
-              {c.symbol}
-            </p>
-          </div>
-        );
-      })}
-    </div>
+    <CardWrapper className="w-full md:w-1/2 lg:w-1/4">
+      <div
+        id="calculator"
+        className={cn(
+          "w-full border rounded-xl p-4 flex flex-col gap-2 relative",
+          className
+        )}
+      >
+        {currencies.map((c, index) => {
+          const Icon = tickerToIcon[c.ticker];
+          return (
+            <div key={c.ticker} className="w-full relative">
+              <Input
+                ref={(e) => {
+                  inputRefs.current[index] = e;
+                }}
+                onFocus={(e) => setLastActiveInput(e.target)}
+                onInput={onInput}
+                data-ticker={c.ticker}
+                data-id={c.id}
+                data-coin-id={c.coin_id !== null ? c.coin_id : undefined}
+                className="text-xl pl-11 py-2.5 h-auto font-semibold rounded-lg"
+              />
+
+              <div className="absolute left-4 top-1/2 text-xl transform -translate-y-1/2 font-semibold">
+                {Icon || c.symbol}
+              </div>
+            </div>
+          );
+        })}
+        <Indicator
+          isRefetching={isRefetching}
+          isError={isError}
+          isPending={isPending}
+          hasData={fiatData !== undefined && cryptoData !== undefined}
+          showOnIsPending
+          showOnHasData
+          showOnError="all"
+        />
+      </div>
+    </CardWrapper>
   );
 }
