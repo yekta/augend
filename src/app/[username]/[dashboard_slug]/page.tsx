@@ -39,7 +39,6 @@ import { usersTable } from "@/db/schema";
 import { siteTitle } from "@/lib/constants";
 import { TEthereumNetwork } from "@/trpc/api/routers/ethereum/types";
 import { TAvailableExchange } from "@/trpc/api/routers/exchange/types";
-import { TNanoBananoAccount } from "@/trpc/api/routers/nano-banano/types";
 import { auth } from "@clerk/nextjs/server";
 import { eq } from "drizzle-orm";
 import { Metadata } from "next";
@@ -82,8 +81,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function Page({ params }: Props) {
+  const start = Date.now();
+  let current = Date.now();
   const { userId: userIdRaw } = await auth();
   if (!userIdRaw) return notFound();
+  console.log("[dashboard_slug] | Auth:", Date.now() - current);
+  current = Date.now();
 
   let userId = userIdRaw;
   if (isDev) {
@@ -93,12 +96,20 @@ export default async function Page({ params }: Props) {
       .where(eq(usersTable.devId, userId));
     userId = uids[0].id;
   }
+  console.log("[dashboard_slug] | isDev:", Date.now() - current);
+  current = Date.now();
 
   const { dashboard_slug } = await params;
   const [cards, dashboard] = await Promise.all([
     getCards({ userId, dashboardSlug: dashboard_slug }),
     getDashboard({ userId, dashboardSlug: dashboard_slug }),
   ]);
+
+  console.log(
+    "[dashboard_slug] | getCards and getDashboard:",
+    Date.now() - current
+  );
+  current = Date.now();
 
   if (!dashboard) {
     const user = await getUser({ userId });
@@ -185,6 +196,8 @@ export default async function Page({ params }: Props) {
     secondary: cardObject.secondary_currency,
     tertiary: cardObject.tertiary_currency,
   };
+
+  console.log("[dashboard_slug] | Total:", Date.now() - start);
 
   return (
     <DashboardWrapper>
