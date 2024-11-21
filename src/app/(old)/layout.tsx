@@ -24,11 +24,11 @@ export default async function OldLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="w-full flex flex-col min-h-[100svh]">
+    <>
       <Navbar routes={routes} />
       <div className="h-13 hidden md:block" />
       {children}
       <div className="h-13 block md:hidden" />
-    </div>
+    </>
   );
 }

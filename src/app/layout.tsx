@@ -31,7 +31,11 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased break-words`}
       >
         <Providers>
-          <HydrateClient>{children}</HydrateClient>
+          <HydrateClient>
+            <div className="w-full flex flex-col min-h-[100svh]">
+              {children}
+            </div>
+          </HydrateClient>
         </Providers>
       </body>
     </html>

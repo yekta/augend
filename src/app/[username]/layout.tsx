@@ -3,6 +3,7 @@ import { db } from "@/db/db";
 import { dashboardsTable, usersTable } from "@/db/schema";
 import { auth } from "@clerk/nextjs/server";
 import { asc, desc, eq } from "drizzle-orm";
+import { notFound } from "next/navigation";
 
 const isDev = process.env.NODE_ENV === "development";
 
@@ -15,7 +16,7 @@ export default async function UserLayout({
 }>) {
   const { username } = await params;
   const { userId: userIdRaw } = await auth();
-  if (!userIdRaw) return <div>Not found!</div>;
+  if (!userIdRaw) return notFound();
 
   const users = await db
     .select()
@@ -31,8 +32,7 @@ export default async function UserLayout({
     userId = uids[0].id;
   }
 
-  if (users.length === 0 || users[0].id !== userId)
-    return <div>Not found...</div>;
+  if (users.length === 0 || users[0].id !== userId) return notFound();
 
   const dashboards = await db
     .select()
@@ -52,11 +52,11 @@ export default async function UserLayout({
   }));
 
   return (
-    <div className="w-full flex flex-col min-h-[100svh]">
+    <>
       <Navbar routes={routes} />
       <div className="h-13 hidden md:block" />
       {children}
       <div className="h-13 block md:hidden" />
-    </div>
+    </>
   );
 }

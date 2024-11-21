@@ -31,6 +31,7 @@ import EthereumGasCard from "@/components/cards/ethereum-gas-card";
 import OhlcvChartCard, {
   TOhlcvChartConfig,
 } from "@/components/cards/ohlcv-chart-card";
+import { notFound } from "next/navigation";
 
 type TValuesEntry = { id: string; value: string };
 
@@ -47,7 +48,7 @@ export default async function Page({
   params: Promise<{ dashboard_slug: string }>;
 }) {
   const { userId: userIdRaw } = await auth();
-  if (!userIdRaw) return <div>No user</div>;
+  if (!userIdRaw) return notFound();
 
   let userId = userIdRaw;
   if (isDev) {
