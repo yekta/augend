@@ -41,6 +41,8 @@ type Props = {
   params: Promise<{ dashboard_slug: string }>;
 };
 
+const componentRequiresNewLine = ["orderbook", "ohlcv_chart"];
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { dashboard_slug } = await params;
 
@@ -136,6 +138,20 @@ export default async function Page({ params }: Props) {
     .filter((v) => v !== undefined)
     .map((v) => ({ address: v }));
 
+  let cardsAndDividers: ((typeof cards)[number] | "divider")[] = [];
+
+  cards.forEach((card, index) => {
+    const requiresNewLine = componentRequiresNewLine.includes(
+      card.card_types.id
+    );
+    const differentThanPrevious =
+      index !== 0 && cards[index - 1].card_types.id !== card.card_types.id;
+    if (requiresNewLine && differentThanPrevious) {
+      cardsAndDividers.push("divider");
+    }
+    cardsAndDividers.push(card);
+  });
+
   return (
     <DashboardWrapper>
       <Providers
@@ -143,7 +159,11 @@ export default async function Page({ params }: Props) {
         nanoBananoAccounts={nanoBananoAccounts}
         coinIds={coinIds}
       >
-        {cards.map((card) => {
+        {cardsAndDividers.map((cardOrDivider, index) => {
+          if (cardOrDivider === "divider") {
+            return <div key={`divider-${index}`} className="w-full" />;
+          }
+          const card = cardOrDivider;
           if (card.cards.cardTypeId === "fear_greed_index") {
             return <FearGreedIndexCard key={card.cards.id} />;
           }
