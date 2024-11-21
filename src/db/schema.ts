@@ -8,6 +8,7 @@ import {
   integer,
   boolean,
   varchar,
+  index,
 } from "drizzle-orm/pg-core";
 import { z } from "zod";
 
@@ -22,15 +23,23 @@ const timestamps = {
   deletedAt: timestamp("deleted_at"),
 };
 
-export const usersTable = pgTable("users", {
-  id: text("id").primaryKey(),
-  devId: text("dev_id").unique().notNull(),
-  email: text("email").notNull(),
-  username: varchar("username", { ...shortText })
-    .notNull()
-    .unique(),
-  ...timestamps,
-});
+export const usersTable = pgTable(
+  "users",
+  {
+    id: text("id").primaryKey(),
+    devId: text("dev_id").unique().notNull(),
+    email: text("email").notNull(),
+    username: varchar("username", { ...shortText })
+      .notNull()
+      .unique(),
+    ...timestamps,
+  },
+  (table) => ({
+    emailIdx: index("email_idx").on(table.email),
+    usernameIdx: index("username_idx").on(table.username),
+    devIdIdx: index("dev_id_idx").on(table.devId),
+  })
+);
 
 export const cardTypesTable = pgTable("card_types", {
   id: varchar("id", { ...shortText }).primaryKey(),
@@ -60,21 +69,29 @@ export const dashboardsTable = pgTable(
       table.userId,
       table.slug
     ),
+    userIdIdx: index("user_id_idx").on(table.userId),
   })
 );
 
-export const cardsTable = pgTable("cards", {
-  id: uuid("id").primaryKey(),
-  xOrder: integer("x_order").notNull().default(0),
-  cardTypeId: varchar("card_type_id", { ...shortText })
-    .notNull()
-    .references(() => cardTypesTable.id),
-  dashboardId: uuid("dashboard_id")
-    .notNull()
-    .references(() => dashboardsTable.id),
-  values: jsonb("values"),
-  ...timestamps,
-});
+export const cardsTable = pgTable(
+  "cards",
+  {
+    id: uuid("id").primaryKey(),
+    xOrder: integer("x_order").notNull().default(0),
+    cardTypeId: varchar("card_type_id", { ...shortText })
+      .notNull()
+      .references(() => cardTypesTable.id),
+    dashboardId: uuid("dashboard_id")
+      .notNull()
+      .references(() => dashboardsTable.id),
+    values: jsonb("values"),
+    ...timestamps,
+  },
+  (table) => ({
+    dashboardIdIdx: index("dashboard_id_idx").on(table.dashboardId),
+    cardTypeIdIdx: index("card_type_id_idx").on(table.cardTypeId),
+  })
+);
 
 export const CardTypesInputTypeEnum = z.enum(["string", "number", "boolean"]);
 export const CardTypesInputsElementSchema = z.object({
