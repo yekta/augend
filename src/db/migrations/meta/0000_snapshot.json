@@ -1,5 +1,5 @@
 {
-  "id": "5a9f6919-ab0a-4802-9ae3-27be19a30cba",
+  "id": "1ff30a11-ef72-4103-ac53-f70cd49f0d00",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -10,7 +10,7 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "uuid",
+          "type": "varchar(32)",
           "primaryKey": true,
           "notNull": true
         },
@@ -56,7 +56,10 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
     },
     "public.cards": {
       "name": "cards",
@@ -77,7 +80,7 @@
         },
         "card_type_id": {
           "name": "card_type_id",
-          "type": "uuid",
+          "type": "varchar(32)",
           "primaryKey": false,
           "notNull": true
         },
@@ -114,7 +117,38 @@
           "notNull": false
         }
       },
-      "indexes": {},
+      "indexes": {
+        "dashboard_id_idx": {
+          "name": "dashboard_id_idx",
+          "columns": [
+            {
+              "expression": "dashboard_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "card_type_id_idx": {
+          "name": "card_type_id_idx",
+          "columns": [
+            {
+              "expression": "card_type_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {
         "cards_card_type_id_card_types_id_fk": {
           "name": "cards_card_type_id_card_types_id_fk",
@@ -144,7 +178,93 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.currencies": {
+      "name": "currencies",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ticker": {
+          "name": "ticker",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "symbol": {
+          "name": "symbol",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_crypto": {
+          "name": "is_crypto",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "coin_id": {
+          "name": "coin_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "unique_ticker": {
+          "name": "unique_ticker",
+          "nullsNotDistinct": false,
+          "columns": [
+            "ticker"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "crypto_must_have_coin_id": {
+          "name": "crypto_must_have_coin_id",
+          "value": "(NOT \"is_crypto\" OR \"coin_id\" IS NOT NULL)"
+        }
+      },
+      "isRLSEnabled": false
     },
     "public.dashboards": {
       "name": "dashboards",
@@ -171,7 +291,7 @@
         },
         "title": {
           "name": "title",
-          "type": "text",
+          "type": "varchar(32)",
           "primaryKey": false,
           "notNull": true
         },
@@ -222,7 +342,23 @@
           "notNull": false
         }
       },
-      "indexes": {},
+      "indexes": {
+        "user_id_idx": {
+          "name": "user_id_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {
         "dashboards_user_id_users_id_fk": {
           "name": "dashboards_user_id_users_id_fk",
@@ -248,7 +384,10 @@
             "slug"
           ]
         }
-      }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
     },
     "public.users": {
       "name": "users",
@@ -274,9 +413,30 @@
         },
         "username": {
           "name": "username",
-          "type": "text",
+          "type": "varchar(32)",
           "primaryKey": false,
           "notNull": true
+        },
+        "primary_currency_id": {
+          "name": "primary_currency_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'81260265-7335-4d20-9064-0357e75690d6'"
+        },
+        "secondary_currency_id": {
+          "name": "secondary_currency_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'d11e7514-5c8e-423d-bc94-efa24bf0f423'"
+        },
+        "tertiary_currency_id": {
+          "name": "tertiary_currency_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'9710ede3-9d6e-4c3f-8c1f-3664263e4a8e'"
         },
         "created_at": {
           "name": "created_at",
@@ -299,8 +459,94 @@
           "notNull": false
         }
       },
-      "indexes": {},
-      "foreignKeys": {},
+      "indexes": {
+        "email_idx": {
+          "name": "email_idx",
+          "columns": [
+            {
+              "expression": "email",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "username_idx": {
+          "name": "username_idx",
+          "columns": [
+            {
+              "expression": "username",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "dev_id_idx": {
+          "name": "dev_id_idx",
+          "columns": [
+            {
+              "expression": "dev_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "users_primary_currency_id_currencies_id_fk": {
+          "name": "users_primary_currency_id_currencies_id_fk",
+          "tableFrom": "users",
+          "tableTo": "currencies",
+          "columnsFrom": [
+            "primary_currency_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "users_secondary_currency_id_currencies_id_fk": {
+          "name": "users_secondary_currency_id_currencies_id_fk",
+          "tableFrom": "users",
+          "tableTo": "currencies",
+          "columnsFrom": [
+            "secondary_currency_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "users_tertiary_currency_id_currencies_id_fk": {
+          "name": "users_tertiary_currency_id_currencies_id_fk",
+          "tableFrom": "users",
+          "tableTo": "currencies",
+          "columnsFrom": [
+            "tertiary_currency_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "users_dev_id_unique": {
@@ -317,11 +563,18 @@
             "username"
           ]
         }
-      }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
     }
   },
   "enums": {},
   "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
   "_meta": {
     "columns": {},
     "schemas": {},

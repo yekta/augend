@@ -1,1 +1,0 @@
-ALTER TABLE "currencies" ADD COLUMN "is_crypto" boolean DEFAULT false NOT NULL;
