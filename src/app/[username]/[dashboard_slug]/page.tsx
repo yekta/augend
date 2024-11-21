@@ -85,7 +85,8 @@ export default async function Page({ params }: Props) {
   let current = Date.now();
   const { userId: userIdRaw } = await auth();
   if (!userIdRaw) return notFound();
-  console.log("[dashboard_slug] | Auth:", Date.now() - current);
+
+  console.log(`[dashboard_slug] | Auth | ${Date.now() - current}ms`);
   current = Date.now();
 
   let userId = userIdRaw;
@@ -96,7 +97,8 @@ export default async function Page({ params }: Props) {
       .where(eq(usersTable.devId, userId));
     userId = uids[0].id;
   }
-  console.log("[dashboard_slug] | isDev:", Date.now() - current);
+
+  console.log(`[dashboard_slug] | isDev | ${Date.now() - current}ms`);
   current = Date.now();
 
   const { dashboard_slug } = await params;
@@ -106,8 +108,7 @@ export default async function Page({ params }: Props) {
   ]);
 
   console.log(
-    "[dashboard_slug] | getCards and getDashboard:",
-    Date.now() - current
+    `[dashboard_slug] | getCards and getDashboard | ${Date.now() - current}ms`
   );
   current = Date.now();
 
