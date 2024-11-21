@@ -104,6 +104,11 @@ export const dashboardsTable = pgTable(
       table.slug
     ),
     userIdIdx: index("user_id_idx").on(table.userId),
+    slugIdx: index("slug_idx").on(table.slug),
+    userIdAndSlugIdx: index("user_id_and_slug_idx").on(
+      table.userId,
+      table.slug
+    ),
   })
 );
 
