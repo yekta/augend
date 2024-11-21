@@ -18,8 +18,6 @@ import CmcCryptoInfosProvider, {
 } from "@/components/providers/cmc/cmc-crypto-infos-provider";
 import CmcGlobalMetricsProvider from "@/components/providers/cmc/cmc-global-metrics-provider";
 import NanoBananoBalancesProvider from "@/components/providers/nano-banano-balance-provider";
-import { cleanEnvVar } from "@/lib/helpers";
-import { TNanoBananoAccount } from "@/trpc/api/routers/nano-banano/types";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
