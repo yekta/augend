@@ -1,7 +1,8 @@
+import { siteTitle } from "@/lib/constants";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Home | YDashboard",
+  title: `Home | ${siteTitle}`,
   description: "Home.",
 };
 

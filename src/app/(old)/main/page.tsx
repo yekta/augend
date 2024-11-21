@@ -18,10 +18,11 @@ import CmcCryptoInfosProvider, {
 } from "@/components/providers/cmc/cmc-crypto-infos-provider";
 import CmcGlobalMetricsProvider from "@/components/providers/cmc/cmc-global-metrics-provider";
 import NanoBananoBalancesProvider from "@/components/providers/nano-banano-balance-provider";
+import { siteTitle } from "@/lib/constants";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: `Main | YDashboard`,
+  title: `Main | ${siteTitle}`,
   description: "Main dashboard.",
 };
 

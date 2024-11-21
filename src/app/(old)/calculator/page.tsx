@@ -1,8 +1,9 @@
 import Calculator from "@/components/calculator";
+import { siteTitle } from "@/lib/constants";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Calculator | YDashboard",
+  title: `Calculator | ${siteTitle}`,
   description: "Calculator dashboard.",
 };
 

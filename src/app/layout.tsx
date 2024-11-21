@@ -3,6 +3,7 @@ import { HydrateClient } from "@/trpc/setup/server";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { siteDescription, siteTitle } from "@/lib/constants";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -16,8 +17,8 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "YDashboard",
-  description: "YDashboard.",
+  title: siteTitle,
+  description: siteDescription,
 };
 
 export default async function RootLayout({

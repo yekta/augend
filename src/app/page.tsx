@@ -1,8 +1,9 @@
+import { siteDescription, siteTitle } from "@/lib/constants";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "YDashboard",
-  description: "YDashboard.",
+  title: siteTitle,
+  description: siteDescription,
 };
 
 export default function Home() {

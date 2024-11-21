@@ -17,3 +17,6 @@ export const defaultQueryOptions = {
     refetchInterval: refetchInterval.fast,
   },
 };
+
+export const siteTitle = "YDashboard";
+export const siteDescription = "YDashboard.";

@@ -13,6 +13,7 @@ import FearGreedIndexCard from "@/components/cards/fear-greed-index-card";
 import CmcGlobalMetricsProvider from "@/components/providers/cmc/cmc-global-metrics-provider";
 import NanoBananoBalancesProvider from "@/components/providers/nano-banano-balance-provider";
 import { nanoBananoAccounts } from "@/app/(old)/wban/_components/constants";
+import { siteTitle } from "@/lib/constants";
 
 const cryptos: TCryptoDef[] = process.env.NEXT_PUBLIC_CMC_CRYPTOS?.split(
   ","
@@ -31,7 +32,7 @@ const cryptos: TCryptoDef[] = process.env.NEXT_PUBLIC_CMC_CRYPTOS?.split(
 ];
 
 export const metadata: Metadata = {
-  title: "wBAN | YDashboard",
+  title: `wBAN | ${siteTitle}`,
   description: "wBAN dashboard.",
 };
 

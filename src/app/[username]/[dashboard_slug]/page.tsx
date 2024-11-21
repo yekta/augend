@@ -1,13 +1,22 @@
+import CryptoCard from "@/components/cards/crypto-card";
+import CryptoTableCard from "@/components/cards/crypto-table-card";
+import EthereumGasCard from "@/components/cards/ethereum-gas-card";
 import FearGreedIndexCard from "@/components/cards/fear-greed-index-card";
 import MiniCryptoCard from "@/components/cards/mini-crypto-card";
-import CryptoCard from "@/components/cards/crypto-card";
+import NanoBananoCard from "@/components/cards/nano-banano-card";
+import OhlcvChartCard, {
+  TOhlcvChartConfig,
+} from "@/components/cards/ohlcv-chart-card";
 import OrderBookCard, {
   TOrderBookConfig,
 } from "@/components/cards/order-book-card";
+import UniswapPoolsTableCard from "@/components/cards/uniswap-pools-table-card";
 import UniswapPositionCard from "@/components/cards/uniswap-position-card";
 import WBanSummaryCard from "@/components/cards/wban-summary-card";
 import DashboardWrapper from "@/components/dashboard-wrapper";
+import CmcCryptoInfosProvider from "@/components/providers/cmc/cmc-crypto-infos-provider";
 import CmcGlobalMetricsProvider from "@/components/providers/cmc/cmc-global-metrics-provider";
+import NanoBananoBalancesProvider from "@/components/providers/nano-banano-balance-provider";
 import { db } from "@/db/db";
 import {
   cardsTable,
@@ -15,38 +24,62 @@ import {
   dashboardsTable,
   usersTable,
 } from "@/db/schema";
+import { siteTitle } from "@/lib/constants";
 import { TEthereumNetwork } from "@/trpc/api/routers/ethereum/types";
 import { TAvailableExchange } from "@/trpc/api/routers/exchange/types";
+import { TNanoBananoAccount } from "@/trpc/api/routers/nano-banano/types";
 import { auth } from "@clerk/nextjs/server";
 import { and, asc, desc, eq } from "drizzle-orm";
 import { Metadata } from "next";
-import { ReactNode } from "react";
-import CmcCryptoInfosProvider from "@/components/providers/cmc/cmc-crypto-infos-provider";
-import UniswapPoolsTableCard from "@/components/cards/uniswap-pools-table-card";
-import CryptoTableCard from "@/components/cards/crypto-table-card";
-import NanoBananoBalancesProvider from "@/components/providers/nano-banano-balance-provider";
-import { TNanoBananoAccount } from "@/trpc/api/routers/nano-banano/types";
-import NanoBananoCard from "@/components/cards/nano-banano-card";
-import EthereumGasCard from "@/components/cards/ethereum-gas-card";
-import OhlcvChartCard, {
-  TOhlcvChartConfig,
-} from "@/components/cards/ohlcv-chart-card";
 import { notFound } from "next/navigation";
+import { ReactNode } from "react";
 
 type TValuesEntry = { id: string; value: string };
 
 const isDev = process.env.NODE_ENV === "development";
-
-export const metadata: Metadata = {
-  title: `Dashboard | YDashboard`,
-  description: "Dashboard.",
+type Props = {
+  params: Promise<{ dashboard_slug: string }>;
 };
 
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ dashboard_slug: string }>;
-}) {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { dashboard_slug } = await params;
+
+  const { userId: userIdRaw } = await auth();
+  if (!userIdRaw)
+    return { title: `Not Found | ${siteTitle}`, description: "Not found." };
+
+  let userId = userIdRaw;
+  if (isDev) {
+    const uids = await db
+      .select()
+      .from(usersTable)
+      .where(eq(usersTable.devId, userId));
+    userId = uids[0].id;
+  }
+
+  const dashboards = await db
+    .select()
+    .from(dashboardsTable)
+    .where(
+      and(
+        eq(dashboardsTable.slug, dashboard_slug),
+        eq(dashboardsTable.userId, userId)
+      )
+    )
+    .innerJoin(usersTable, eq(dashboardsTable.userId, usersTable.id));
+
+  if (dashboards.length === 0)
+    return { title: `Not Found | ${siteTitle}`, description: "Not found." };
+
+  const dashboard = dashboards[0];
+
+  return {
+    title: `${dashboard.dashboards.title} | ${dashboard.users.username} | ${siteTitle}`,
+    description: dashboard.dashboards.title,
+  };
+}
+
+export default async function Page({ params }: Props) {
   const { userId: userIdRaw } = await auth();
   if (!userIdRaw) return notFound();
 
