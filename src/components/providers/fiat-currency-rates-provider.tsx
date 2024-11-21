@@ -10,14 +10,8 @@ const FiatCurrencyRatesContext =
 
 export const FiatCurrencyRatesProvider: React.FC<{
   children: ReactNode;
-  tickers: string[];
-}> = ({ children, tickers }) => {
-  const query = api.fiat.getRates.useQuery(
-    {
-      tickers,
-    },
-    defaultQueryOptions.slow
-  );
+}> = ({ children }) => {
+  const query = api.fiat.getRates.useQuery(undefined, defaultQueryOptions.slow);
   return (
     <FiatCurrencyRatesContext.Provider
       value={{

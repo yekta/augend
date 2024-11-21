@@ -4,41 +4,20 @@ import ThreeLineCard from "@/components/cards/three-line-card";
 import { useFiatCurrencyRates } from "@/components/providers/fiat-currency-rates-provider";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 
-type TFiatCurrency = {
-  symbol: string;
+type TCurrency = {
+  id: string;
   name: string;
-  slug: string;
   ticker: string;
+  symbol: string;
 };
 
-const currencies: Record<string, TFiatCurrency> = {
-  USD: {
-    symbol: "$",
-    name: "US Dollar",
-    slug: "usd",
-    ticker: "USD",
-  },
-  EUR: {
-    symbol: "€",
-    name: "Euro",
-    slug: "eur",
-    ticker: "EUR",
-  },
-  GBP: {
-    symbol: "£",
-    name: "British Pound",
-    slug: "gbp",
-    ticker: "GBP",
-  },
-  TRY: {
-    symbol: "₺",
-    name: "Turkish Lira",
-    slug: "try",
-    ticker: "TRY",
-  },
-};
-
-export default function FiatCurrencyCard({ ticker }: { ticker: string }) {
+export default function FiatCurrencyCard({
+  baseCurrency,
+  quoteCurrency,
+}: {
+  baseCurrency: TCurrency;
+  quoteCurrency: TCurrency;
+}) {
   const {
     data: d,
     isError,
@@ -47,19 +26,18 @@ export default function FiatCurrencyCard({ ticker }: { ticker: string }) {
     isRefetching,
   } = useFiatCurrencyRates();
 
-  const [baseTicker, quoteTicker] = ticker.split("/");
-  const data = d?.[ticker] || undefined;
-
-  const baseCurrency = currencies[baseTicker];
-  const quoteCurrency = currencies[quoteTicker];
+  const baseInUsd = d?.USD?.[baseCurrency.ticker]?.buy;
+  const quoteInUsd = d?.USD?.[quoteCurrency.ticker]?.buy;
+  const baseInQuote =
+    baseInUsd && quoteInUsd ? baseInUsd / quoteInUsd : undefined;
+  const hasData = baseInQuote !== undefined;
 
   return (
     <ThreeLineCard
-      key={ticker}
       top={`${baseCurrency.symbol} ${baseCurrency.ticker}`}
       middle={
-        data
-          ? `${quoteCurrency.symbol}${formatNumberTBMK(data.last)}`
+        baseInQuote
+          ? `${quoteCurrency.symbol}${formatNumberTBMK(baseInQuote)}`
           : undefined
       }
       bottom={`${baseCurrency.symbol} ${baseCurrency.ticker}`}

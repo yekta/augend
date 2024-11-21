@@ -146,19 +146,6 @@ export default async function Page({ params }: Props) {
     .filter((v) => v !== undefined)
     .map((v) => Number(v));
 
-  let fiatCurrencyTickers = cards
-    .filter((c) => c.card_type.id === "fiat_currency")
-    .map((c) => {
-      const values = c.card.values as TValuesEntry[];
-      if (!values) return undefined;
-      const base = values.find((v) => v.id === "ticker_base")?.value;
-      const quote = values.find((v) => v.id === "ticker_quote")?.value;
-      if (!base || !quote) return undefined;
-      return `${base}/${quote}`;
-    })
-    .filter((v) => v !== undefined)
-    .map((v) => v as string);
-
   const nanoBananoAccounts: TNanoBananoAccountFull[] = cards
     .filter(
       (c) =>
@@ -183,13 +170,20 @@ export default async function Page({ params }: Props) {
 
   // General operations
   cards.forEach((cardObj, index) => {
-    console.log("ID", cardObj.card.cardTypeId);
     // Currency ids to fetch
     if (cardObj.card.cardTypeId === "calculator") {
       const values = cardObj.card.values as TValuesEntry[];
       if (!values) return;
       values.forEach((v) => {
         if (v.id !== "currency_id") return;
+        currencyIdsToFetch.push(v.value);
+      });
+    }
+    if (cardObj.card.cardTypeId === "fiat_currency") {
+      const values = cardObj.card.values as TValuesEntry[];
+      if (!values) return;
+      values.forEach((v) => {
+        if (v.id !== "base_id" && v.id !== "quote_id") return;
         currencyIdsToFetch.push(v.value);
       });
     }
@@ -252,7 +246,6 @@ export default async function Page({ params }: Props) {
         cardTypeIds={cards.map((c) => c.card.cardTypeId)}
         nanoBananoAccounts={nanoBananoAccounts}
         cryptoCurrencyIds={cryptoCurrencyIds}
-        fiatCurrencyTickers={fiatCurrencyTickers}
         currencyPreference={currencyPreference}
       >
         {cardObjectsAndDividers.map((cardObjectOrDivider, index) => {
@@ -353,13 +346,23 @@ export default async function Page({ params }: Props) {
           if (cardObject.card.cardTypeId === "fiat_currency") {
             const values = cardObject.card.values as TValuesEntry[];
             if (!values) return null;
-            const base = values.find((v) => v.id === "ticker_base")?.value;
-            const quote = values.find((v) => v.id === "ticker_quote")?.value;
-            if (!base || !quote) return null;
+            console.log(values);
+            const baseId = values.find((v) => v.id === "base_id")?.value;
+            const quoteId = values.find((v) => v.id === "quote_id")?.value;
+            if (!baseId || !quoteId) return null;
+            const baseCurrency = denominatorCurrencies?.find(
+              (c) => c.id === baseId
+            );
+            const quoteCurrency = denominatorCurrencies?.find(
+              (c) => c.id === quoteId
+            );
+            console.log(baseCurrency, quoteCurrency);
+            if (!baseCurrency || !quoteCurrency) return null;
             return (
               <FiatCurrencyCard
                 key={cardObject.card.id}
-                ticker={`${base}/${quote}`}
+                baseCurrency={baseCurrency}
+                quoteCurrency={quoteCurrency}
               />
             );
           }
@@ -415,14 +418,12 @@ export default async function Page({ params }: Props) {
 function Providers({
   cardTypeIds,
   cryptoCurrencyIds,
-  fiatCurrencyTickers,
   children,
   nanoBananoAccounts,
   currencyPreference,
 }: {
   cardTypeIds: string[];
   cryptoCurrencyIds: number[];
-  fiatCurrencyTickers: string[];
   children: ReactNode;
   nanoBananoAccounts: TNanoBananoAccountFull[];
   currencyPreference: TCurrencyPreference;
@@ -433,9 +434,7 @@ function Providers({
     cardTypeIds.includes("banano_total_balance")
   ) {
     wrappedChildren = (
-      <FiatCurrencyRateProvider tickers={fiatCurrencyTickers}>
-        {wrappedChildren}
-      </FiatCurrencyRateProvider>
+      <FiatCurrencyRateProvider>{wrappedChildren}</FiatCurrencyRateProvider>
     );
   }
   if (cardTypeIds.includes("fear_greed_index")) {
