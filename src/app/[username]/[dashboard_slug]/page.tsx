@@ -1,3 +1,4 @@
+import { getCards, getDashboard, getUser } from "@/app/[username]/helpers";
 import CryptoCard from "@/components/cards/crypto-card";
 import CryptoTableCard from "@/components/cards/crypto-table-card";
 import EthereumGasCard from "@/components/cards/ethereum-gas-card";
@@ -19,20 +20,17 @@ import CmcCryptoInfosProvider from "@/components/providers/cmc/cmc-crypto-infos-
 import CmcGlobalMetricsProvider from "@/components/providers/cmc/cmc-global-metrics-provider";
 import FiatCurrencyRateProvider from "@/components/providers/fiat-currency-rates-provider";
 import NanoBananoBalancesProvider from "@/components/providers/nano-banano-balance-provider";
+import { Button } from "@/components/ui/button";
 import { db } from "@/db/db";
-import {
-  cardsTable,
-  cardTypesTable,
-  dashboardsTable,
-  usersTable,
-} from "@/db/schema";
+import { usersTable } from "@/db/schema";
 import { siteTitle } from "@/lib/constants";
 import { TEthereumNetwork } from "@/trpc/api/routers/ethereum/types";
 import { TAvailableExchange } from "@/trpc/api/routers/exchange/types";
 import { TNanoBananoAccount } from "@/trpc/api/routers/nano-banano/types";
 import { auth } from "@clerk/nextjs/server";
-import { and, asc, desc, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ReactNode } from "react";
 
@@ -61,21 +59,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     userId = uids[0].id;
   }
 
-  const dashboards = await db
-    .select()
-    .from(dashboardsTable)
-    .where(
-      and(
-        eq(dashboardsTable.slug, dashboard_slug),
-        eq(dashboardsTable.userId, userId)
-      )
-    )
-    .innerJoin(usersTable, eq(dashboardsTable.userId, usersTable.id));
+  const dashboard = await getDashboard({
+    userId,
+    dashboardSlug: dashboard_slug,
+  });
 
-  if (dashboards.length === 0)
+  if (dashboard === null)
     return { title: `Not Found | ${siteTitle}`, description: "Not found." };
-
-  const dashboard = dashboards[0];
 
   return {
     title: `${dashboard.dashboards.title} | ${dashboard.users.username} | ${siteTitle}`,
@@ -97,22 +87,28 @@ export default async function Page({ params }: Props) {
   }
 
   const { dashboard_slug } = await params;
-  const cards = await db
-    .select()
-    .from(cardsTable)
-    .innerJoin(dashboardsTable, eq(cardsTable.dashboardId, dashboardsTable.id))
-    .innerJoin(cardTypesTable, eq(cardsTable.cardTypeId, cardTypesTable.id))
-    .where(
-      and(
-        eq(dashboardsTable.slug, dashboard_slug),
-        eq(dashboardsTable.userId, userId)
-      )
-    )
-    .orderBy(
-      asc(cardsTable.xOrder),
-      desc(cardsTable.updatedAt),
-      desc(cardsTable.id)
+  const [cards] = await Promise.all([
+    getCards({ userId, dashboardSlug: dashboard_slug }),
+  ]);
+  const dashboard = cards.length > 0 ? cards[0].dashboards : null;
+
+  if (!dashboard) {
+    const user = await getUser({ userId });
+    if (user === null) return notFound();
+    return (
+      <div className="w-full flex-1 flex flex-col items-center justify-center p-5 pb-[calc(5vh+1.5rem)] text-center break-words">
+        <h1 className="font-bold text-8xl max-w-full">404</h1>
+        <h1 className="text-muted-foreground text-xl max-w-full">
+          This dashboard doesn't exist.
+        </h1>
+        <Button asChild>
+          <Link href={`/${user.username}/main`} className="mt-8 max-w-full">
+            Return Home
+          </Link>
+        </Button>
+      </div>
     );
+  }
 
   const cryptoCurrencyIds = cards
     .filter(

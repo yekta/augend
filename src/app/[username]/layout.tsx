@@ -1,3 +1,4 @@
+import { getUser } from "@/app/[username]/helpers";
 import Navbar, { TRoute } from "@/components/navbar";
 import { db } from "@/db/db";
 import { dashboardsTable, usersTable } from "@/db/schema";
@@ -18,10 +19,7 @@ export default async function UserLayout({
   const { userId: userIdRaw } = await auth();
   if (!userIdRaw) return notFound();
 
-  const users = await db
-    .select()
-    .from(usersTable)
-    .where(eq(usersTable.username, username));
+  const user = await getUser({ username });
 
   let userId = userIdRaw;
   if (isDev) {
@@ -32,7 +30,7 @@ export default async function UserLayout({
     userId = uids[0].id;
   }
 
-  if (users.length === 0 || users[0].id !== userId) return notFound();
+  if (user === null) return notFound();
 
   const dashboards = await db
     .select()
