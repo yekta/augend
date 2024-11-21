@@ -7,11 +7,11 @@ import OhlcvChartCards from "@/app/(old)/main/_components/ohlcv-chart-cards";
 import OrderBookCards from "@/app/(old)/main/_components/order-book-cards";
 import TurkishLiraCards from "@/app/(old)/main/_components/turkish-lira-cards";
 import UniswapPositions from "@/app/(old)/main/_components/uniswap-positions";
-import CoinTableCard from "@/components/cards/coin-table-card";
+import CryptoTableCard from "@/components/cards/crypto-table-card";
 import EthereumGasCard from "@/components/cards/ethereum-gas-card";
 import FearGreedIndexCard from "@/components/cards/fear-greed-index-card";
 import UniswapPoolsTableCard from "@/components/cards/uniswap-pools-table-card";
-import WBanCard from "@/components/cards/wban-card";
+import WBanSummaryCard from "@/components/cards/wban-summary-card";
 import DashboardWrapper from "@/components/dashboard-wrapper";
 import CmcCryptoInfosProvider, {
   TCryptoDef,
@@ -57,11 +57,11 @@ export default async function Page() {
               <MiniCryptoCards />
               <EthereumGasCard network="ethereum" />
               <UniswapPositions />
-              <WBanCard />
+              <WBanSummaryCard />
               <NanoBananoCards />
               <OrderBookCards />
               <OhlcvChartCards />
-              <CoinTableCard />
+              <CryptoTableCard />
               <UniswapPoolsTableCard />
             </DashboardWrapper>
           </NanoBananoBalancesProvider>

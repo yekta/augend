@@ -45,7 +45,7 @@ const dataFallback: TData[] = Array.from({ length: 100 }, (_, i) => ({
   volume: 123456,
 }));
 
-export default function CoinTableCard({ className }: { className?: string }) {
+export default function CryptoTableCard({ className }: { className?: string }) {
   const [page, setPage] = useState<TAsyncDataTablePage>({
     min: 1,
     max: 5,

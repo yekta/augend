@@ -1,7 +1,7 @@
 import CryptoCards from "@/app/(old)/wban/_components/crypto-cards";
 import OrderBookCards from "@/app/(old)/wban/_components/order-book-cards";
 import NanoBananoCards from "@/app/(old)/wban/_components/nano-banano-cards";
-import WBanCard from "@/components/cards/wban-card";
+import WBanSummaryCard from "@/components/cards/wban-summary-card";
 import DashboardWrapper from "@/components/dashboard-wrapper";
 import { Metadata } from "next";
 import OhlcvChartCards from "@/app/(old)/wban/_components/ohlcv-chart-cards";
@@ -46,7 +46,7 @@ export default async function Page() {
               <CryptoCards />
               <FearGreedIndexCard />
               <MiniCryptoCards />
-              <WBanCard />
+              <WBanSummaryCard />
               <OrderBookCards />
               <OhlcvChartCards />
             </DashboardWrapper>

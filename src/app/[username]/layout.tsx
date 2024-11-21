@@ -2,7 +2,7 @@ import Navbar, { TRoute } from "@/components/navbar";
 import { db } from "@/db/db";
 import { dashboardsTable, usersTable } from "@/db/schema";
 import { auth } from "@clerk/nextjs/server";
-import { eq } from "drizzle-orm";
+import { asc, desc, eq } from "drizzle-orm";
 
 const isDev = process.env.NODE_ENV === "development";
 
@@ -38,7 +38,12 @@ export default async function UserLayout({
     .select()
     .from(dashboardsTable)
     .where(eq(dashboardsTable.userId, userId))
-    .innerJoin(usersTable, eq(dashboardsTable.userId, usersTable.id));
+    .innerJoin(usersTable, eq(dashboardsTable.userId, usersTable.id))
+    .orderBy(
+      asc(dashboardsTable.xOrder),
+      desc(dashboardsTable.updatedAt),
+      desc(dashboardsTable.id)
+    );
 
   const routes: TRoute[] = dashboards.map((d) => ({
     href: `/${d.users.username}/${d.dashboards.slug}`,

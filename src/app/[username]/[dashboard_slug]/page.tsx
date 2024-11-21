@@ -5,7 +5,7 @@ import OrderBookCard, {
   TOrderBookConfig,
 } from "@/components/cards/order-book-card";
 import UniswapPositionCard from "@/components/cards/uniswap-position-card";
-import WBanCard from "@/components/cards/wban-card";
+import WBanSummaryCard from "@/components/cards/wban-summary-card";
 import DashboardWrapper from "@/components/dashboard-wrapper";
 import CmcGlobalMetricsProvider from "@/components/providers/cmc/cmc-global-metrics-provider";
 import { db } from "@/db/db";
@@ -23,7 +23,7 @@ import { Metadata } from "next";
 import { ReactNode } from "react";
 import CmcCryptoInfosProvider from "@/components/providers/cmc/cmc-crypto-infos-provider";
 import UniswapPoolsTableCard from "@/components/cards/uniswap-pools-table-card";
-import CoinTableCard from "@/components/cards/coin-table-card";
+import CryptoTableCard from "@/components/cards/crypto-table-card";
 import NanoBananoBalancesProvider from "@/components/providers/nano-banano-balance-provider";
 import { TNanoBananoAccount } from "@/trpc/api/routers/nano-banano/types";
 import NanoBananoCard from "@/components/cards/nano-banano-card";
@@ -70,7 +70,11 @@ export default async function Page({
         eq(dashboardsTable.userId, userId)
       )
     )
-    .orderBy(asc(cardsTable.xOrder), desc(cardsTable.updatedAt));
+    .orderBy(
+      asc(cardsTable.xOrder),
+      desc(cardsTable.updatedAt),
+      desc(cardsTable.id)
+    );
 
   const coinIds = cards
     .filter(
@@ -109,8 +113,8 @@ export default async function Page({
           if (card.cards.cardTypeId === "fear_greed_index") {
             return <FearGreedIndexCard key={card.cards.id} />;
           }
-          if (card.cards.cardTypeId === "wban") {
-            return <WBanCard key={card.cards.id} />;
+          if (card.cards.cardTypeId === "wban_summary") {
+            return <WBanSummaryCard key={card.cards.id} />;
           }
           if (card.cards.cardTypeId === "orderbook") {
             const values = card.cards.values as TValuesEntry[];
@@ -183,8 +187,8 @@ export default async function Page({
             return <UniswapPoolsTableCard key={card.cards.id} />;
           }
 
-          if (card.cards.cardTypeId === "coin_table") {
-            return <CoinTableCard key={card.cards.id} />;
+          if (card.cards.cardTypeId === "crypto_table") {
+            return <CryptoTableCard key={card.cards.id} />;
           }
 
           if (

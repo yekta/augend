@@ -25,7 +25,7 @@ export const wbanBalanceQueryInput = {
   ],
 };
 
-export default function WBanCard({ className }: { className?: string }) {
+export default function WBanSummaryCard({ className }: { className?: string }) {
   const {
     data: banBalanceData,
     isError: isBanBalanceError,
