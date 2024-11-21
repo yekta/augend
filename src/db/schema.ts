@@ -1,3 +1,4 @@
+import { sql } from "drizzle-orm";
 import {
   jsonb,
   pgTable,
@@ -9,6 +10,7 @@ import {
   boolean,
   varchar,
   index,
+  check,
 } from "drizzle-orm/pg-core";
 import { z } from "zod";
 
@@ -31,10 +33,15 @@ export const currenciesTable = pgTable(
     ticker: text("ticker").notNull(),
     symbol: text("symbol").notNull(),
     is_crypto: boolean("is_crypto").notNull().default(false),
+    coin_id: text("coin_id"),
     ...timestamps,
   },
   (table) => ({
     uniqueTicker: unique("unique_ticker").on(table.ticker),
+    cryptoMustHaveCoinId: check(
+      "crypto_must_have_coin_id",
+      sql`(NOT "is_crypto" OR "coin_id" IS NOT NULL)`
+    ),
   })
 );
 
