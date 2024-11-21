@@ -7,8 +7,11 @@ import {
   uuid,
   integer,
   boolean,
+  varchar,
 } from "drizzle-orm/pg-core";
 import { z } from "zod";
+
+const shortText = { length: 32 };
 
 const timestamps = {
   createdAt: timestamp("created_at").notNull().defaultNow(),
@@ -23,12 +26,14 @@ export const usersTable = pgTable("users", {
   id: text("id").primaryKey(),
   devId: text("dev_id").unique().notNull(),
   email: text("email").notNull(),
-  username: text("username").notNull().unique(),
+  username: varchar("username", { ...shortText })
+    .notNull()
+    .unique(),
   ...timestamps,
 });
 
 export const cardTypesTable = pgTable("card_types", {
-  id: text("id").primaryKey(),
+  id: varchar("id", { ...shortText }).primaryKey(),
   title: text("title").notNull(),
   description: text("description").notNull(),
   inputs: jsonb("inputs"),
@@ -43,7 +48,7 @@ export const dashboardsTable = pgTable(
     userId: text("user_id")
       .notNull()
       .references(() => usersTable.id),
-    title: text("title").notNull(),
+    title: varchar("title", { ...shortText }).notNull(),
     slug: text("slug").notNull(),
     icon: text("icon").notNull(),
     isMain: boolean("is_main").notNull().default(false),
@@ -61,7 +66,7 @@ export const dashboardsTable = pgTable(
 export const cardsTable = pgTable("cards", {
   id: uuid("id").primaryKey(),
   xOrder: integer("x_order").notNull().default(0),
-  cardTypeId: text("card_type_id")
+  cardTypeId: varchar("card_type_id", { ...shortText })
     .notNull()
     .references(() => cardTypesTable.id),
   dashboardId: uuid("dashboard_id")
