@@ -6,7 +6,7 @@ import NanoIcon from "@/components/icons/nano-icon";
 import { Input } from "@/components/ui/input";
 import { defaultQueryOptions } from "@/lib/constants";
 import { cn } from "@/lib/utils";
-import { TCurrencyForLiraTicker } from "@/trpc/api/routers/turkish-lira/helpers";
+import { TCurrencyForLiraTicker } from "@/trpc/api/routers/fiat/helpers";
 import { api } from "@/trpc/setup/react";
 import React, { ReactNode, useEffect, useRef, useState } from "react";
 
@@ -79,7 +79,14 @@ export default function Calculator({ className }: { className?: string }) {
     isError: liraIsError,
     isPending: liraIsPending,
     isRefetching: liraIsRefetching,
-  } = api.turkishLira.getRates.useQuery(undefined, defaultQueryOptions.normal);
+  } = api.fiat.getRates.useQuery(
+    {
+      tickers: currencies
+        .filter((i) => i.isCrypto !== true && i.ticker !== "TRY")
+        .map((i) => `${i.ticker}/TRY`),
+    },
+    defaultQueryOptions.normal
+  );
 
   const {
     data: cryptoData,
@@ -151,13 +158,13 @@ export default function Calculator({ className }: { className?: string }) {
     if (!selfTicker || !selfIdStr) return;
     const selfId = parseInt(selfIdStr);
     const selfIsCrypto = currencies.find((c) => c.id === selfId)?.isCrypto;
-    const usdTry = liraData.USD.buy;
+    const usdTry = liraData["USD/TRY"].last;
     const selfIsLira = selfTicker === "TRY";
     const selfUsdPrice = selfIsCrypto
       ? cryptoData[selfId].quote["USD"].price
       : selfIsLira
-        ? 1 / liraData.USD.buy
-        : liraData[selfTicker as TCurrencyForLiraTicker].buy / usdTry;
+        ? 1 / liraData["USD/TRY"].last
+        : liraData[`${selfTicker as TCurrencyForLiraTicker}/TRY`].last / usdTry;
 
     otherInputs.forEach((i) => {
       if (!i) return;
@@ -186,8 +193,8 @@ export default function Calculator({ className }: { className?: string }) {
       }
 
       const targetLiraPrice =
-        liraData[targetTicker as TCurrencyForLiraTicker]?.buy || 1;
-      const usdLira = liraData.USD.buy;
+        liraData[`${targetTicker as TCurrencyForLiraTicker}/TRY`]?.last || 1;
+      const usdLira = liraData["USD/TRY"].last;
       const targetUsdPrice = targetLiraPrice / usdLira;
       const inputValue = valueNumber * (selfUsdPrice / targetUsdPrice);
       if (isNaN(inputValue)) {

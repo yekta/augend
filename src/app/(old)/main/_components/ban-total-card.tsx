@@ -31,9 +31,12 @@ export default function BanTotalCard() {
     isError: turkishLiraError,
     isLoadingError: turkishLiraLoadingError,
     isRefetching: turkishLiraRefetching,
-  } = api.turkishLira.getRates.useQuery(undefined, {
-    enabled: false,
-  });
+  } = api.fiat.getRates.useQuery(
+    { tickers: ["USD/TRY", "EUR/TRY", "GBP/TRY"] },
+    {
+      enabled: false,
+    }
+  );
 
   const isPending = cmcPending || nbPending || turkishLiraPending;
   const isError = cmcError || nbError || turkishLiraError;
@@ -62,7 +65,7 @@ export default function BanTotalCard() {
   const btcUsd =
     cmcData !== undefined ? cmcData["1"].quote["USD"].price : undefined;
   const turkishLiraUsd =
-    turkishLiraData !== undefined ? turkishLiraData["USD"].buy : undefined;
+    turkishLiraData !== undefined ? turkishLiraData["USD/TRY"].last : undefined;
 
   const usdTotal =
     banTotal !== undefined && banUsd !== undefined

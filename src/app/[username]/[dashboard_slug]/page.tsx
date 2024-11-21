@@ -2,6 +2,7 @@ import CryptoCard from "@/components/cards/crypto-card";
 import CryptoTableCard from "@/components/cards/crypto-table-card";
 import EthereumGasCard from "@/components/cards/ethereum-gas-card";
 import FearGreedIndexCard from "@/components/cards/fear-greed-index-card";
+import FiatCurrencyCard from "@/components/cards/fiat-currency-card";
 import MiniCryptoCard from "@/components/cards/mini-crypto-card";
 import NanoBananoCard from "@/components/cards/nano-banano-card";
 import OhlcvChartCard, {
@@ -16,6 +17,7 @@ import WBanSummaryCard from "@/components/cards/wban-summary-card";
 import DashboardWrapper from "@/components/dashboard-wrapper";
 import CmcCryptoInfosProvider from "@/components/providers/cmc/cmc-crypto-infos-provider";
 import CmcGlobalMetricsProvider from "@/components/providers/cmc/cmc-global-metrics-provider";
+import FiatCurrencyRateProvider from "@/components/providers/fiat-currency-rates-provider";
 import NanoBananoBalancesProvider from "@/components/providers/nano-banano-balance-provider";
 import { db } from "@/db/db";
 import {
@@ -112,7 +114,7 @@ export default async function Page({ params }: Props) {
       desc(cardsTable.id)
     );
 
-  const coinIds = cards
+  const cryptoCurrencyIds = cards
     .filter(
       (c) => c.card_types.id === "crypto" || c.card_types.id === "mini_crypto"
     )
@@ -123,6 +125,19 @@ export default async function Page({ params }: Props) {
     })
     .filter((v) => v !== undefined)
     .map((v) => Number(v));
+
+  const fiatCurrencyTickers = cards
+    .filter((c) => c.card_types.id === "fiat_currency")
+    .map((c) => {
+      const values = c.cards.values as TValuesEntry[];
+      if (!values) return undefined;
+      const base = values.find((v) => v.id === "ticker_base")?.value;
+      const quote = values.find((v) => v.id === "ticker_quote")?.value;
+      if (!base || !quote) return undefined;
+      return `${base}/${quote}`;
+    })
+    .filter((v) => v !== undefined)
+    .map((v) => v as string);
 
   const nanoBananoAccounts: TNanoBananoAccount[] = cards
     .filter(
@@ -157,7 +172,8 @@ export default async function Page({ params }: Props) {
       <Providers
         cardTypeIds={cards.map((c) => c.cards.cardTypeId)}
         nanoBananoAccounts={nanoBananoAccounts}
-        coinIds={coinIds}
+        cryptoCurrencyIds={cryptoCurrencyIds}
+        fiatCurrencyTickers={fiatCurrencyTickers}
       >
         {cardsAndDividers.map((cardOrDivider, index) => {
           if (cardOrDivider === "divider") {
@@ -237,6 +253,20 @@ export default async function Page({ params }: Props) {
             );
           }
 
+          if (card.cards.cardTypeId === "fiat_currency") {
+            const values = card.cards.values as TValuesEntry[];
+            if (!values) return null;
+            const base = values.find((v) => v.id === "ticker_base")?.value;
+            const quote = values.find((v) => v.id === "ticker_quote")?.value;
+            if (!base || !quote) return null;
+            return (
+              <FiatCurrencyCard
+                key={card.cards.id}
+                ticker={`${base}/${quote}`}
+              />
+            );
+          }
+
           if (card.cards.cardTypeId === "uniswap_pools_table") {
             return <UniswapPoolsTableCard key={card.cards.id} />;
           }
@@ -283,12 +313,14 @@ export default async function Page({ params }: Props) {
 
 function Providers({
   cardTypeIds,
-  coinIds,
+  cryptoCurrencyIds,
+  fiatCurrencyTickers,
   children,
   nanoBananoAccounts,
 }: {
   cardTypeIds: string[];
-  coinIds: number[];
+  cryptoCurrencyIds: number[];
+  fiatCurrencyTickers: string[];
   children: ReactNode;
   nanoBananoAccounts: TNanoBananoAccount[];
 }) {
@@ -308,9 +340,18 @@ function Providers({
       </NanoBananoBalancesProvider>
     );
   }
-  if (coinIds.length > 0) {
+  if (cardTypeIds.includes("fiat_currency")) {
     wrappedChildren = (
-      <CmcCryptoInfosProvider cryptos={coinIds.map((c) => ({ id: c }))}>
+      <FiatCurrencyRateProvider tickers={fiatCurrencyTickers}>
+        {wrappedChildren}
+      </FiatCurrencyRateProvider>
+    );
+  }
+  if (cryptoCurrencyIds.length > 0) {
+    wrappedChildren = (
+      <CmcCryptoInfosProvider
+        cryptos={cryptoCurrencyIds.map((c) => ({ id: c }))}
+      >
         {wrappedChildren}
       </CmcCryptoInfosProvider>
     );

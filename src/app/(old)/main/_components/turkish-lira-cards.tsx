@@ -9,7 +9,7 @@ import {
   CurrencyForLiraTickerEnum,
   getCurrencyUrl,
   TCurrencyForLira,
-} from "@/trpc/api/routers/turkish-lira/helpers";
+} from "@/trpc/api/routers/fiat/helpers";
 import { api } from "@/trpc/setup/react";
 
 export const items: TCurrencyForLira[] = (
@@ -35,7 +35,10 @@ const convertCurrencySymbol = "₺";
 
 export default function TurkishLiraCards() {
   const { data, isError, isLoadingError, isPending, isRefetching } =
-    api.turkishLira.getRates.useQuery(undefined, defaultQueryOptions.normal);
+    api.fiat.getRates.useQuery(
+      { tickers: items.map((i) => `${i.ticker}/TRY`) },
+      defaultQueryOptions.normal
+    );
 
   return (
     <>
@@ -48,7 +51,7 @@ export default function TurkishLiraCards() {
             middle={
               data
                 ? `${convertCurrencySymbol}${formatNumberTBMK(
-                    data[item.ticker].buy
+                    data[`${item.ticker}/TRY`].last
                   )}`
                 : undefined
             }
