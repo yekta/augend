@@ -30,7 +30,6 @@ export default function FiatCurrencyCard({
   const quoteInUsd = d?.USD?.[quoteCurrency.ticker]?.buy;
   const baseInQuote =
     baseInUsd && quoteInUsd ? baseInUsd / quoteInUsd : undefined;
-  const hasData = baseInQuote !== undefined;
 
   return (
     <ThreeLineCard

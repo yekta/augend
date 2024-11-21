@@ -346,7 +346,6 @@ export default async function Page({ params }: Props) {
           if (cardObject.card.cardTypeId === "fiat_currency") {
             const values = cardObject.card.values as TValuesEntry[];
             if (!values) return null;
-            console.log(values);
             const baseId = values.find((v) => v.id === "base_id")?.value;
             const quoteId = values.find((v) => v.id === "quote_id")?.value;
             if (!baseId || !quoteId) return null;
@@ -356,7 +355,6 @@ export default async function Page({ params }: Props) {
             const quoteCurrency = denominatorCurrencies?.find(
               (c) => c.id === quoteId
             );
-            console.log(baseCurrency, quoteCurrency);
             if (!baseCurrency || !quoteCurrency) return null;
             return (
               <FiatCurrencyCard
