@@ -1,1 +1,0 @@
-ALTER TABLE "dashboards" ADD COLUMN "is_main" boolean DEFAULT false NOT NULL;

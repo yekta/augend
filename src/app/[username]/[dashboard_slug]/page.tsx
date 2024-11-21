@@ -74,9 +74,7 @@ export default async function Page({
 
   const coinIds = cards
     .filter(
-      (c) =>
-        c.card_types.id === "00b12252-1b14-4159-b68b-e9de98ae3a36" ||
-        c.card_types.id === "24aed53e-e47f-4d73-9783-468b1938e88c"
+      (c) => c.card_types.id === "crypto" || c.card_types.id === "mini_crypto"
     )
     .map((c) => {
       const values = c.cards.values as TValuesEntry[];
@@ -89,8 +87,8 @@ export default async function Page({
   const nanoBananoAccounts: TNanoBananoAccount[] = cards
     .filter(
       (c) =>
-        c.card_types.id === "7cc1d48b-2bb2-4d96-913c-75c706cdadc2" ||
-        c.card_types.id === "ed7b206d-d5cf-400e-912e-fa2a1bd46269"
+        c.card_types.id === "nano_balance" ||
+        c.card_types.id === "banano_balance"
     )
     .map((c) => {
       const values = c.cards.values as TValuesEntry[];
@@ -108,19 +106,13 @@ export default async function Page({
         coinIds={coinIds}
       >
         {cards.map((card) => {
-          if (
-            card.cards.cardTypeId === "5cb4cd0c-b5ca-4f46-b779-962f08a11ad8"
-          ) {
+          if (card.cards.cardTypeId === "fear_greed_index") {
             return <FearGreedIndexCard key={card.cards.id} />;
           }
-          if (
-            card.cards.cardTypeId === "bf1ccfde-06c3-46b7-b64e-50abc4bbf85b"
-          ) {
+          if (card.cards.cardTypeId === "wban") {
             return <WBanCard key={card.cards.id} />;
           }
-          if (
-            card.cards.cardTypeId === "b9d7670f-84aa-400d-8050-58a6d6329174"
-          ) {
+          if (card.cards.cardTypeId === "orderbook") {
             const values = card.cards.values as TValuesEntry[];
             if (!values) return null;
             const exchange = values.find((v) => v.id === "exchange")?.value;
@@ -137,9 +129,7 @@ export default async function Page({
             return <OrderBookCard key={card.cards.id} config={config} />;
           }
 
-          if (
-            card.cards.cardTypeId === "d26b3d6f-b487-4354-8ffb-66eeb218faec"
-          ) {
+          if (card.cards.cardTypeId === "ohlcv_chart") {
             const values = card.cards.values as TValuesEntry[];
             if (!values) return null;
             const exchange = values.find((v) => v.id === "exchange")?.value;
@@ -155,9 +145,7 @@ export default async function Page({
             return <OhlcvChartCard key={card.cards.id} config={config} />;
           }
 
-          if (
-            card.cards.cardTypeId === "e41432be-474b-485e-81b8-c254e81c9de8"
-          ) {
+          if (card.cards.cardTypeId === "uniswap_position") {
             const values = card.cards.values as TValuesEntry[];
             if (!values) return null;
             const network = values.find((v) => v.id === "network")?.value;
@@ -173,9 +161,7 @@ export default async function Page({
             );
           }
 
-          if (
-            card.cards.cardTypeId === "00b12252-1b14-4159-b68b-e9de98ae3a36"
-          ) {
+          if (card.cards.cardTypeId === "mini_crypto") {
             const values = card.cards.values as TValuesEntry[];
             if (!values) return null;
             const coinId = values.find((v) => v.id === "coin_id")?.value;
@@ -183,9 +169,7 @@ export default async function Page({
             return <MiniCryptoCard key={card.cards.id} id={Number(coinId)} />;
           }
 
-          if (
-            card.cards.cardTypeId === "24aed53e-e47f-4d73-9783-468b1938e88c"
-          ) {
+          if (card.cards.cardTypeId === "crypto") {
             const values = card.cards.values as TValuesEntry[];
             if (!values) return null;
             const coinId = values.find((v) => v.id === "coin_id")?.value;
@@ -195,21 +179,17 @@ export default async function Page({
             );
           }
 
-          if (
-            card.cards.cardTypeId === "494f907f-d37a-4b50-866b-4237230a9b38"
-          ) {
+          if (card.cards.cardTypeId === "uniswap_pools_table") {
             return <UniswapPoolsTableCard key={card.cards.id} />;
           }
 
-          if (
-            card.cards.cardTypeId === "f0dfdb1f-4362-46d9-bec2-f1439d1347ea"
-          ) {
+          if (card.cards.cardTypeId === "coin_table") {
             return <CoinTableCard key={card.cards.id} />;
           }
 
           if (
-            card.cards.cardTypeId === "7cc1d48b-2bb2-4d96-913c-75c706cdadc2" ||
-            card.cards.cardTypeId === "ed7b206d-d5cf-400e-912e-fa2a1bd46269"
+            card.cards.cardTypeId === "nano_balance" ||
+            card.cards.cardTypeId === "banano_balance"
           ) {
             const values = card.cards.values as TValuesEntry[];
             if (!values) return null;
@@ -223,9 +203,7 @@ export default async function Page({
             );
           }
 
-          if (
-            card.cards.cardTypeId === "acb68bf0-1611-47e1-8373-dde4ced587a8"
-          ) {
+          if (card.cards.cardTypeId === "gas_tracker") {
             const values = card.cards.values as TValuesEntry[];
             if (!values) return null;
             const network = values.find((v) => v.id === "network")?.value;
@@ -257,14 +235,14 @@ function Providers({
   nanoBananoAccounts: TNanoBananoAccount[];
 }) {
   let wrappedChildren = children;
-  if (cardTypeIds.includes("5cb4cd0c-b5ca-4f46-b779-962f08a11ad8")) {
+  if (cardTypeIds.includes("fear_greed_index")) {
     wrappedChildren = (
       <CmcGlobalMetricsProvider>{wrappedChildren}</CmcGlobalMetricsProvider>
     );
   }
   if (
-    cardTypeIds.includes("7cc1d48b-2bb2-4d96-913c-75c706cdadc2") ||
-    cardTypeIds.includes("ed7b206d-d5cf-400e-912e-fa2a1bd46269")
+    cardTypeIds.includes("nano_balance") ||
+    cardTypeIds.includes("banano_balance")
   ) {
     wrappedChildren = (
       <NanoBananoBalancesProvider accounts={nanoBananoAccounts}>

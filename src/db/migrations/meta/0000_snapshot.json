@@ -1,5 +1,5 @@
 {
-  "id": "93a7673b-88e1-41d2-a211-95ee7230d554",
+  "id": "5a9f6919-ab0a-4802-9ae3-27be19a30cba",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -56,10 +56,7 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
+      "uniqueConstraints": {}
     },
     "public.cards": {
       "name": "cards",
@@ -70,6 +67,13 @@
           "type": "uuid",
           "primaryKey": true,
           "notNull": true
+        },
+        "x_order": {
+          "name": "x_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
         },
         "card_type_id": {
           "name": "card_type_id",
@@ -140,10 +144,7 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
+      "uniqueConstraints": {}
     },
     "public.dashboards": {
       "name": "dashboards",
@@ -154,6 +155,13 @@
           "type": "uuid",
           "primaryKey": true,
           "notNull": true
+        },
+        "x_order": {
+          "name": "x_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
         },
         "user_id": {
           "name": "user_id",
@@ -178,6 +186,20 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "is_main": {
+          "name": "is_main",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "is_public": {
+          "name": "is_public",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
         },
         "created_at": {
           "name": "created_at",
@@ -226,10 +248,7 @@
             "slug"
           ]
         }
-      },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
+      }
     },
     "public.users": {
       "name": "users",
@@ -239,6 +258,12 @@
           "name": "id",
           "type": "text",
           "primaryKey": true,
+          "notNull": true
+        },
+        "dev_id": {
+          "name": "dev_id",
+          "type": "text",
+          "primaryKey": false,
           "notNull": true
         },
         "email": {
@@ -278,6 +303,13 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
+        "users_dev_id_unique": {
+          "name": "users_dev_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "dev_id"
+          ]
+        },
         "users_username_unique": {
           "name": "users_username_unique",
           "nullsNotDistinct": false,
@@ -285,18 +317,11 @@
             "username"
           ]
         }
-      },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
+      }
     }
   },
   "enums": {},
   "schemas": {},
-  "sequences": {},
-  "roles": {},
-  "policies": {},
-  "views": {},
   "_meta": {
     "columns": {},
     "schemas": {},

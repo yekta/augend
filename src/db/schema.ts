@@ -28,7 +28,7 @@ export const usersTable = pgTable("users", {
 });
 
 export const cardTypesTable = pgTable("card_types", {
-  id: uuid("id").primaryKey(),
+  id: text("id").primaryKey(),
   title: text("title").notNull(),
   description: text("description").notNull(),
   inputs: jsonb("inputs"),
@@ -61,7 +61,7 @@ export const dashboardsTable = pgTable(
 export const cardsTable = pgTable("cards", {
   id: uuid("id").primaryKey(),
   xOrder: integer("x_order").notNull().default(0),
-  cardTypeId: uuid("card_type_id")
+  cardTypeId: text("card_type_id")
     .notNull()
     .references(() => cardTypesTable.id),
   dashboardId: uuid("dashboard_id")

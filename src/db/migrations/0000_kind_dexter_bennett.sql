@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS "card_types" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "cards" (
 	"id" uuid PRIMARY KEY NOT NULL,
+	"x_order" integer DEFAULT 0 NOT NULL,
 	"card_type_id" uuid NOT NULL,
 	"dashboard_id" uuid NOT NULL,
 	"values" jsonb,
@@ -20,10 +21,13 @@ CREATE TABLE IF NOT EXISTS "cards" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "dashboards" (
 	"id" uuid PRIMARY KEY NOT NULL,
+	"x_order" integer DEFAULT 0 NOT NULL,
 	"user_id" text NOT NULL,
 	"title" text NOT NULL,
 	"slug" text NOT NULL,
 	"icon" text NOT NULL,
+	"is_main" boolean DEFAULT false NOT NULL,
+	"is_public" boolean DEFAULT false NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL,
 	"deleted_at" timestamp,
@@ -32,11 +36,13 @@ CREATE TABLE IF NOT EXISTS "dashboards" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "users" (
 	"id" text PRIMARY KEY NOT NULL,
+	"dev_id" text NOT NULL,
 	"email" text NOT NULL,
 	"username" text NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL,
 	"deleted_at" timestamp,
+	CONSTRAINT "users_dev_id_unique" UNIQUE("dev_id"),
 	CONSTRAINT "users_username_unique" UNIQUE("username")
 );
 --> statement-breakpoint

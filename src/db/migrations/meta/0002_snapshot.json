@@ -1,6 +1,6 @@
 {
-  "id": "93ba2ec1-6a8c-4154-8808-637f97f663d3",
-  "prevId": "f766e57c-40c3-4e52-9cec-0dd1aedc495b",
+  "id": "4eb5ae2c-cdb2-4086-96bf-e254e515c5b8",
+  "prevId": "fba0eefd-cf75-4a90-a7fa-e0b7b176076b",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -10,7 +10,7 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "uuid",
+          "type": "text",
           "primaryKey": true,
           "notNull": true
         },
@@ -80,7 +80,7 @@
         },
         "card_type_id": {
           "name": "card_type_id",
-          "type": "uuid",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
@@ -193,6 +193,13 @@
           "primaryKey": false,
           "notNull": true
         },
+        "is_main": {
+          "name": "is_main",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
         "is_public": {
           "name": "is_public",
           "type": "boolean",
@@ -262,6 +269,12 @@
           "primaryKey": true,
           "notNull": true
         },
+        "dev_id": {
+          "name": "dev_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
         "email": {
           "name": "email",
           "type": "text",
@@ -299,6 +312,13 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
+        "users_dev_id_unique": {
+          "name": "users_dev_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "dev_id"
+          ]
+        },
         "users_username_unique": {
           "name": "users_username_unique",
           "nullsNotDistinct": false,
