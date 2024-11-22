@@ -3,6 +3,7 @@ import { type NextRequest } from "next/server";
 
 import { appRouter } from "@/trpc/api/root";
 import { createTRPCContext } from "@/trpc/api/trpc";
+import { getAuth } from "@clerk/nextjs/server";
 
 /**
  * This wraps the `createTRPCContext` helper and provides the required context for the tRPC API when
@@ -11,6 +12,7 @@ import { createTRPCContext } from "@/trpc/api/trpc";
 const createContext = async (req: NextRequest) => {
   return createTRPCContext({
     headers: req.headers,
+    auth: getAuth(req),
   });
 };
 
