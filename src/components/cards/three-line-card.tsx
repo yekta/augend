@@ -1,4 +1,4 @@
-import CardWrapper from "@/components/cards/card-wrapper";
+import CardWrapper from "@/components/cards/utils/card-wrapper";
 import Indicator from "@/components/ui/indicator";
 import { cn } from "@/lib/utils";
 import React, { ReactNode } from "react";

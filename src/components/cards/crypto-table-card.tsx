@@ -1,6 +1,6 @@
 "use client";
 
-import CardWrapper from "@/components/cards/card-wrapper";
+import CardWrapper from "@/components/cards/utils/card-wrapper";
 import AsyncDataTable, {
   TAsyncDataTableColumnDef,
   TAsyncDataTablePage,

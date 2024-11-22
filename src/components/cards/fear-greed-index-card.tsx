@@ -1,6 +1,6 @@
 "use client";
 
-import CardWrapper from "@/components/cards/card-wrapper";
+import CardWrapper from "@/components/cards/utils/card-wrapper";
 import Indicator from "@/components/ui/indicator";
 import { useCmcGlobalMetrics } from "@/components/providers/cmc/cmc-global-metrics-provider";
 import { linearInterpolation } from "@/lib/helpers";

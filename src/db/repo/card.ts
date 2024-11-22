@@ -1,3 +1,4 @@
+import { TDenominatorCurrency } from "@/components/providers/currency-preference-provider";
 import { db } from "@/db/db";
 import {
   cardsTable,
@@ -9,6 +10,27 @@ import {
 import { and, asc, desc, eq } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 
+const primaryCurrencyAlias = alias(currenciesTable, "primary_currency");
+const secondaryCurrencyAlias = alias(currenciesTable, "secondary_currency");
+const tertiaryCurrencyAlias = alias(currenciesTable, "tertiary_currency");
+
+function getCurrencyFields(
+  curr:
+    | typeof primaryCurrencyAlias
+    | typeof secondaryCurrencyAlias
+    | typeof tertiaryCurrencyAlias
+) {
+  return {
+    id: curr.id,
+    ticker: curr.ticker,
+    name: curr.name,
+    symbol: curr.symbol,
+    coin_id: curr.coin_id,
+    is_crypto: curr.is_crypto,
+    max_decimals_preferred: curr.max_decimals_preferred,
+  };
+}
+
 export async function getCards({
   userId,
   dashboardSlug,
@@ -16,9 +38,6 @@ export async function getCards({
   userId: string;
   dashboardSlug: string;
 }) {
-  const primaryCurrencyAlias = alias(currenciesTable, "primary_currency");
-  const secondaryCurrencyAlias = alias(currenciesTable, "secondary_currency");
-  const tertiaryCurrencyAlias = alias(currenciesTable, "tertiary_currency");
   const res = await db
     .select({
       card: {
@@ -36,9 +55,9 @@ export async function getCards({
         email: usersTable.email,
         devId: usersTable.devId,
       },
-      primary_currency: primaryCurrencyAlias,
-      secondary_currency: secondaryCurrencyAlias,
-      tertiary_currency: tertiaryCurrencyAlias,
+      primary_currency: getCurrencyFields(primaryCurrencyAlias),
+      secondary_currency: getCurrencyFields(secondaryCurrencyAlias),
+      tertiary_currency: getCurrencyFields(tertiaryCurrencyAlias),
     })
     .from(cardsTable)
     .innerJoin(dashboardsTable, eq(cardsTable.dashboardId, dashboardsTable.id))

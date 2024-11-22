@@ -1,7 +1,7 @@
 "use client";
 
-import CardWrapper from "@/components/cards/card-wrapper";
-import { getNumberColorClass } from "@/components/cards/helpers";
+import CardWrapper from "@/components/cards/utils/card-wrapper";
+import { getNumberColorClass } from "@/components/cards/utils/helpers";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import AsyncDataTable, {
   TAsyncDataTableColumnDef,

@@ -1,6 +1,6 @@
 "use client";
 
-import CardWrapper from "@/components/cards/card-wrapper";
+import CardWrapper from "@/components/cards/utils/card-wrapper";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import { useCmcCryptoInfos } from "@/components/providers/cmc/cmc-crypto-infos-provider";
 import { useCurrencyPreference } from "@/components/providers/currency-preference-provider";

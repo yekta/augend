@@ -2,27 +2,8 @@ import {
   componentRequiresNewLine,
   isDev,
 } from "@/app/[username]/_lib/constants";
-import { TValuesEntry } from "@/app/[username]/_lib/types";
-import BananoTotalCard, {
-  bananoCmcId,
-} from "@/components/cards/banano-total-card";
-import Calculator from "@/components/cards/calculator-card";
-import CryptoCard from "@/components/cards/crypto-card";
-import CryptoTableCard from "@/components/cards/crypto-table-card";
-import EthereumGasCard from "@/components/cards/ethereum-gas-card";
-import FearGreedIndexCard from "@/components/cards/fear-greed-index-card";
-import FiatCurrencyCard from "@/components/cards/fiat-currency-card";
-import MiniCryptoCard from "@/components/cards/mini-crypto-card";
-import NanoBananoCard from "@/components/cards/nano-banano-card";
-import OhlcvChartCard, {
-  TOhlcvChartConfig,
-} from "@/components/cards/ohlcv-chart-card";
-import OrderBookCard, {
-  TOrderBookConfig,
-} from "@/components/cards/order-book-card";
-import UniswapPoolsTableCard from "@/components/cards/uniswap-pools-table-card";
-import UniswapPositionCard from "@/components/cards/uniswap-position-card";
-import WBanSummaryCard from "@/components/cards/wban-summary-card";
+import { bananoCmcId } from "@/components/cards/banano-total-card";
+import { CardParser, TValuesEntry } from "@/components/cards/utils/card-parser";
 import DashboardWrapper from "@/components/dashboard-wrapper";
 import CmcCryptoInfosProvider from "@/components/providers/cmc/cmc-crypto-infos-provider";
 import CmcGlobalMetricsProvider from "@/components/providers/cmc/cmc-global-metrics-provider";
@@ -41,8 +22,6 @@ import { getDashboard } from "@/db/repo/dashboard";
 import { getRealUserId, getUser } from "@/db/repo/user";
 import { currenciesTable } from "@/db/schema";
 import { siteTitle } from "@/lib/constants";
-import { TEthereumNetwork } from "@/trpc/api/routers/ethereum/types";
-import { TAvailableExchange } from "@/trpc/api/routers/exchange/types";
 import { auth } from "@clerk/nextjs/server";
 import { inArray } from "drizzle-orm";
 import { Metadata } from "next";
@@ -288,168 +267,13 @@ export default async function Page({ params }: Props) {
             return <div key={`divider-${index}`} className="w-full" />;
           }
           const cardObject = cardObjectOrDivider;
-          if (cardObject.card.cardTypeId === "fear_greed_index") {
-            return <FearGreedIndexCard key={cardObject.card.id} />;
-          }
-          if (cardObject.card.cardTypeId === "wban_summary") {
-            return <WBanSummaryCard key={cardObject.card.id} />;
-          }
-          if (
-            cardObject.card.cardTypeId === "calculator" &&
-            currencyDefinitions &&
-            currencyDefinitions.length > 1
-          ) {
-            const values = cardObject.card.values as TValuesEntry[];
-            if (!values) return null;
-            const ids = values
-              .filter((v) => v.id === "currency_id")
-              .map((v) => v.value);
-            const selectedCurrencies = currencyDefinitions
-              .filter((c) => ids.includes(c.id))
-              .sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id));
-            return (
-              <Calculator
-                key={cardObject.card.id}
-                currencies={selectedCurrencies}
-              />
-            );
-          }
-          if (cardObject.card.cardTypeId === "orderbook") {
-            const values = cardObject.card.values as TValuesEntry[];
-            if (!values) return null;
-            const exchange = values.find((v) => v.id === "exchange")?.value;
-            const tickerBase = values.find((v) => v.id === "ticker_base")
-              ?.value;
-            const tickerQuote = values.find((v) => v.id === "ticker_quote")
-              ?.value;
-            if (!exchange || !tickerBase || !tickerQuote) return null;
-            const config: TOrderBookConfig = {
-              exchange: exchange as TAvailableExchange,
-              limit: 10,
-              ticker: `${tickerBase}/${tickerQuote}`,
-            };
-            return <OrderBookCard key={cardObject.card.id} config={config} />;
-          }
-
-          if (cardObject.card.cardTypeId === "ohlcv_chart") {
-            const values = cardObject.card.values as TValuesEntry[];
-            if (!values) return null;
-            const exchange = values.find((v) => v.id === "exchange")?.value;
-            const tickerBase = values.find((v) => v.id === "ticker_base")
-              ?.value;
-            const tickerQuote = values.find((v) => v.id === "ticker_quote")
-              ?.value;
-            if (!exchange || !tickerBase || !tickerQuote) return null;
-            const config: TOhlcvChartConfig = {
-              exchange: exchange as TAvailableExchange,
-              ticker: `${tickerBase}/${tickerQuote}`,
-            };
-            return <OhlcvChartCard key={cardObject.card.id} config={config} />;
-          }
-
-          if (cardObject.card.cardTypeId === "uniswap_position") {
-            const values = cardObject.card.values as TValuesEntry[];
-            if (!values) return null;
-            const network = values.find((v) => v.id === "network")?.value;
-            const positionId = values.find((v) => v.id === "position_id")
-              ?.value;
-            if (!network || !positionId) return null;
-            return (
-              <UniswapPositionCard
-                key={cardObject.card.id}
-                id={Number(positionId)}
-                network={network as TEthereumNetwork}
-              />
-            );
-          }
-
-          if (cardObject.card.cardTypeId === "mini_crypto") {
-            const values = cardObject.card.values as TValuesEntry[];
-            if (!values) return null;
-            const coinId = values.find((v) => v.id === "coin_id")?.value;
-            if (!coinId) return null;
-            return (
-              <MiniCryptoCard key={cardObject.card.id} id={Number(coinId)} />
-            );
-          }
-
-          if (cardObject.card.cardTypeId === "crypto") {
-            const values = cardObject.card.values as TValuesEntry[];
-            if (!values) return null;
-            const coinId = values.find((v) => v.id === "coin_id")?.value;
-            if (!coinId) return null;
-            return (
-              <CryptoCard
-                key={cardObject.card.id}
-                config={{ id: Number(coinId) }}
-              />
-            );
-          }
-          if (cardObject.card.cardTypeId === "fiat_currency") {
-            const values = cardObject.card.values as TValuesEntry[];
-            if (!values) return null;
-            const baseId = values.find((v) => v.id === "base_id")?.value;
-            const quoteId = values.find((v) => v.id === "quote_id")?.value;
-            if (!baseId || !quoteId) return null;
-            const baseCurrency = currencyDefinitions?.find(
-              (c) => c.id === baseId
-            );
-            const quoteCurrency = currencyDefinitions?.find(
-              (c) => c.id === quoteId
-            );
-            if (!baseCurrency || !quoteCurrency) return null;
-            return (
-              <FiatCurrencyCard
-                key={cardObject.card.id}
-                baseCurrency={baseCurrency}
-                quoteCurrency={quoteCurrency}
-              />
-            );
-          }
-
-          if (cardObject.card.cardTypeId === "uniswap_pools_table") {
-            return <UniswapPoolsTableCard key={cardObject.card.id} />;
-          }
-
-          if (cardObject.card.cardTypeId === "crypto_table") {
-            return <CryptoTableCard key={cardObject.card.id} />;
-          }
-
-          if (
-            cardObject.card.cardTypeId === "nano_balance" ||
-            cardObject.card.cardTypeId === "banano_balance"
-          ) {
-            const values = cardObject.card.values as TValuesEntry[];
-            if (!values) return null;
-            const address = values.find((v) => v.id === "address")?.value;
-            const isOwner = values.find((v) => v.id === "is_owner")?.value;
-            if (address === undefined || isOwner === undefined) return null;
-            return (
-              <NanoBananoCard
-                key={cardObject.card.id}
-                account={{ address: address }}
-              />
-            );
-          }
-
-          if (cardObject.card.cardTypeId === "gas_tracker") {
-            const values = cardObject.card.values as TValuesEntry[];
-            if (!values) return null;
-            const network = values.find((v) => v.id === "network")?.value;
-            if (!network) return null;
-            return (
-              <EthereumGasCard
-                key={cardObject.card.id}
-                network={network as TEthereumNetwork}
-              />
-            );
-          }
-
-          if (cardObject.card.cardTypeId === "banano_total") {
-            return <BananoTotalCard key={cardObject.card.id} />;
-          }
-
-          return null;
+          return (
+            <CardParser
+              key={cardObject.card.id}
+              cardObject={cardObject}
+              currencyDefinitions={currencyDefinitions}
+            />
+          );
         })}
       </Providers>
     </DashboardWrapper>

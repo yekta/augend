@@ -1,6 +1,6 @@
 "use client";
 
-import CardWrapper from "@/components/cards/card-wrapper";
+import CardWrapper from "@/components/cards/utils/card-wrapper";
 import BananoIcon from "@/components/icons/banano-icon";
 import NanoIcon from "@/components/icons/nano-icon";
 import { useCmcCryptoInfos } from "@/components/providers/cmc/cmc-crypto-infos-provider";
