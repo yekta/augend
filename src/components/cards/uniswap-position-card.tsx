@@ -953,10 +953,9 @@ function NFTImageLink({
   className?: string;
   createdAt: number;
 }) {
-  const sharedClassName = "h-36 group/link";
   if (!uri)
     return (
-      <div className={cn(sharedClassName, className)}>
+      <div className={cn("h-36", className)}>
         <svg
           className="h-full bg-muted-foreground group-data-[is-loading-error]/card:bg-destructive/50 rounded-lg md:rounded-lg lg:rounded-xl w-auto
           transition group-data-[is-pending]/card:animate-skeleton"
@@ -967,41 +966,43 @@ function NFTImageLink({
       </div>
     );
   return (
-    <Link
-      target="_blank"
-      href={href || "placeholder"}
-      className={cn("relative overflow-hidden", sharedClassName, className)}
-    >
-      <div className="h-full relative z-0 not-touch:group-hover/link:opacity-25 group-active/link:opacity-50 transition">
-        <img
-          width="290"
-          height="500"
-          className="h-full w-auto filter"
-          src={uri}
-        />
-        <div
-          className="absolute left-0 top-0 pointer-events-none w-full h-full flex items-center justify-center transition -translate-y-full opacity-0 
-          group-data-[is-out-of-range]/card:translate-y-0 group-data-[is-out-of-range]/card:opacity-100 duration-250"
-        >
-          <div className="w-full bg-background/75 filter backdrop-blur pt-1 pb-1.5 items-start justify-center flex">
-            <TriangleAlertIcon className="size-4.5 md:size-5 text-destructive" />
+    <div className={cn("h-36", className)}>
+      <Link
+        target="_blank"
+        href={href || "placeholder"}
+        className="relative overflow-hidden h-full group/link"
+      >
+        <div className="h-full relative z-0 not-touch:group-hover/link:opacity-25 group-active/link:opacity-50 transition">
+          <img
+            width="290"
+            height="500"
+            className="h-full w-auto filter"
+            src={uri}
+          />
+          <div
+            className="absolute left-0 top-0 pointer-events-none w-full h-full flex items-center justify-center transition -translate-y-full opacity-0 
+            group-data-[is-out-of-range]/card:translate-y-0 group-data-[is-out-of-range]/card:opacity-100 duration-250"
+          >
+            <div className="w-full bg-background/75 filter backdrop-blur pt-1 pb-1.5 items-start justify-center flex">
+              <TriangleAlertIcon className="size-4.5 md:size-5 text-destructive" />
+            </div>
+          </div>
+          <div className="w-full px-1 pb-1 flex gap-1 items-center justify-center absolute bottom-0 left-0">
+            <p
+              className={cn(
+                "w-full font-medium whitespace-nowrap shrink min-w-0 overflow-hidden overflow-ellipsis text-xs text-center md:text-sm leading-none md:leading-none px-1.5 py-1 rounded-md text-white bg-black/60"
+              )}
+            >
+              {timeAgo(createdAt, true)}
+            </p>
           </div>
         </div>
-        <div className="w-full px-1 pb-1 flex gap-1 items-center justify-center absolute bottom-0 left-0">
-          <p
-            className={cn(
-              "w-full font-medium whitespace-nowrap shrink min-w-0 overflow-hidden overflow-ellipsis text-xs text-center md:text-sm leading-none md:leading-none px-1.5 py-1 rounded-md text-white bg-black/60"
-            )}
-          >
-            {timeAgo(createdAt, true)}
-          </p>
-        </div>
-      </div>
-      <ExternalLinkIcon
-        className="absolute size-5 left-1/2 origin-bottom-left top-1/2 transition transform -translate-x-1/2 -translate-y-1/2 opacity-0 scale-50
-        not-touch:group-hover/link:scale-100 not-touch:group-hover/link:opacity-100
-        group-active/link:scale-100 group-active/link:opacity-100"
-      />
-    </Link>
+        <ExternalLinkIcon
+          className="absolute size-5 left-1/2 origin-bottom-left top-1/2 transition transform -translate-x-1/2 -translate-y-1/2 opacity-0 scale-50
+          not-touch:group-hover/link:scale-100 not-touch:group-hover/link:opacity-100
+          group-active/link:scale-100 group-active/link:opacity-100"
+        />
+      </Link>
+    </div>
   );
 }
