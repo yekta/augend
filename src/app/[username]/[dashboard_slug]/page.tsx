@@ -18,6 +18,7 @@ import NanoBananoBalancesProvider, {
 import { Button } from "@/components/ui/button";
 import { db } from "@/db/db";
 import { getCards } from "@/db/repo/card";
+import { getCurrencies } from "@/db/repo/currencies";
 import { getDashboard } from "@/db/repo/dashboard";
 import { getRealUserId, getUser } from "@/db/repo/user";
 import { currenciesTable } from "@/db/schema";
@@ -225,19 +226,9 @@ export default async function Page({ params }: Props) {
 
   let currencyDefinitions: TDenominatorCurrency[] | null = null;
   if (currencyDefinitionsToFetch.length > 0) {
-    const result = await db
-      .select({
-        id: currenciesTable.id,
-        name: currenciesTable.name,
-        symbol: currenciesTable.symbol,
-        ticker: currenciesTable.ticker,
-        is_crypto: currenciesTable.is_crypto,
-        coin_id: currenciesTable.coin_id,
-        max_decimals_preferred: currenciesTable.max_decimals_preferred,
-      })
-      .from(currenciesTable)
-      .where(inArray(currenciesTable.id, currencyDefinitionsToFetch));
-    currencyDefinitions = result;
+    currencyDefinitions = await getCurrencies({
+      ids: currencyDefinitionsToFetch,
+    });
   }
 
   if (currencyDefinitions !== null && currencyDefinitions.length > 1) {
@@ -254,14 +245,14 @@ export default async function Page({ params }: Props) {
   console.log(`[username]/[dashboard_slug] | Total | ${Date.now() - start}ms`);
 
   return (
-    <DashboardWrapper centerItems={cardObjectsAndDividers.length < 2}>
-      <Providers
-        cardTypeIds={cards.map((c) => c.card.cardTypeId)}
-        nanoBananoAccounts={nanoBananoAccounts}
-        cryptoCurrencyIds={cryptoCurrencyIds}
-        currencyPreference={currencyPreference}
-        addUsdAsCryptoQuote={addUsdAsCryptoQuote}
-      >
+    <Providers
+      cardTypeIds={cards.map((c) => c.card.cardTypeId)}
+      nanoBananoAccounts={nanoBananoAccounts}
+      cryptoCurrencyIds={cryptoCurrencyIds}
+      currencyPreference={currencyPreference}
+      addUsdAsCryptoQuote={addUsdAsCryptoQuote}
+    >
+      <DashboardWrapper centerItems={cardObjectsAndDividers.length < 2}>
         {cardObjectsAndDividers.map((cardObjectOrDivider, index) => {
           if (cardObjectOrDivider === "divider") {
             return <div key={`divider-${index}`} className="w-full" />;
@@ -275,8 +266,8 @@ export default async function Page({ params }: Props) {
             />
           );
         })}
-      </Providers>
-    </DashboardWrapper>
+      </DashboardWrapper>
+    </Providers>
   );
 }
 
