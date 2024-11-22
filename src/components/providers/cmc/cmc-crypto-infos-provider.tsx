@@ -17,11 +17,11 @@ const CmcCryptoInfosContext = createContext<TCmcCryptoInfosContext | null>(
 export const CmcCryptoInfosProvider: React.FC<{
   children: ReactNode;
   cryptos: TCryptoDef[];
-  addUsd: boolean;
-}> = ({ children, cryptos, addUsd }) => {
+  dontAddUsd?: boolean;
+}> = ({ children, cryptos, dontAddUsd = false }) => {
   const currencyPreference = useCurrencyPreference();
   let convert = Object.values(currencyPreference).map((i) => i.ticker);
-  if (addUsd && !convert.includes("USD")) convert.push("USD");
+  if (!dontAddUsd && !convert.includes("USD")) convert.push("USD");
 
   const query = api.cmc.getCryptoInfos.useQuery(
     {

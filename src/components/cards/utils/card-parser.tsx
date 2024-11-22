@@ -22,10 +22,10 @@ import { TAvailableExchange } from "@/trpc/api/routers/exchange/types";
 
 export function CardParser({
   cardObject,
-  currencyDefinitions,
+  currencies,
 }: {
   cardObject: TCardObject;
-  currencyDefinitions: TDenominatorCurrency[] | null;
+  currencies: TDenominatorCurrency[] | null;
 }) {
   if (cardObject.card.cardTypeId === "fear_greed_index") {
     return <FearGreedIndexCard />;
@@ -37,15 +37,15 @@ export function CardParser({
 
   if (
     cardObject.card.cardTypeId === "calculator" &&
-    currencyDefinitions &&
-    currencyDefinitions.length > 1
+    currencies &&
+    currencies.length > 1
   ) {
     const values = cardObject.card.values as TValuesEntry[];
     if (!values) return null;
     const ids = values
       .filter((v) => v.id === "currency_id")
       .map((v) => v.value);
-    const selectedCurrencies = currencyDefinitions
+    const selectedCurrencies = currencies
       .filter((c) => ids.includes(c.id))
       .sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id));
     return <Calculator currencies={selectedCurrencies} />;
@@ -116,8 +116,8 @@ export function CardParser({
     const baseId = values.find((v) => v.id === "base_id")?.value;
     const quoteId = values.find((v) => v.id === "quote_id")?.value;
     if (!baseId || !quoteId) return null;
-    const baseCurrency = currencyDefinitions?.find((c) => c.id === baseId);
-    const quoteCurrency = currencyDefinitions?.find((c) => c.id === quoteId);
+    const baseCurrency = currencies?.find((c) => c.id === baseId);
+    const quoteCurrency = currencies?.find((c) => c.id === quoteId);
     if (!baseCurrency || !quoteCurrency) return null;
     return (
       <FiatCurrencyCard

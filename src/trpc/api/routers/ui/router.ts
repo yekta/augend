@@ -9,6 +9,7 @@ import {
 } from "@/db/repo/dashboard";
 import { getUser } from "@/db/repo/user";
 import { createTRPCRouter, publicProcedure } from "@/trpc/api/trpc";
+import { getCurrencies } from "@/db/repo/currencies";
 
 const isDev = process.env.NODE_ENV === "development";
 
@@ -92,5 +93,15 @@ export const uiRouter = createTRPCRouter({
       });
 
       return result;
+    }),
+  getCurrencies: publicProcedure
+    .input(
+      z.object({
+        ids: z.array(z.string()),
+      })
+    )
+    .query(async function ({ input: { ids } }) {
+      const res = await getCurrencies({ ids });
+      return res;
     }),
 });
