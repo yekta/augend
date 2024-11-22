@@ -4,7 +4,7 @@ import CardWrapper from "@/components/cards/utils/card-wrapper";
 import Indicator from "@/components/ui/indicator";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import { defaultLocale, defaultQueryOptions } from "@/lib/constants";
-import { useConditionalValue } from "@/lib/hooks/useConditionalValue";
+import { useConditionalValue } from "@/lib/hooks/use-conditional-value";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
 import { ethereumNetworks } from "@/trpc/api/routers/ethereum/constants";

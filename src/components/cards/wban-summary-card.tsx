@@ -3,7 +3,7 @@
 import CardWrapper from "@/components/cards/utils/card-wrapper";
 import Indicator from "@/components/ui/indicator";
 import { defaultQueryOptions } from "@/lib/constants";
-import { useConditionalValue } from "@/lib/hooks/useConditionalValue";
+import { useConditionalValue } from "@/lib/hooks/use-conditional-value";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
 import { getExplorerUrl } from "@/trpc/api/routers/nano-banano/helpers";
