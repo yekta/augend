@@ -1,4 +1,3 @@
-import { TDenominatorCurrency } from "@/components/providers/currency-preference-provider";
 import { db } from "@/db/db";
 import {
   cardsTable,
@@ -34,10 +33,19 @@ function getCurrencyFields(
 export async function getCards({
   userId,
   dashboardSlug,
+  isOwner,
 }: {
   userId: string;
   dashboardSlug: string;
+  isOwner?: boolean;
 }) {
+  let whereFilters = [
+    eq(dashboardsTable.slug, dashboardSlug),
+    eq(dashboardsTable.userId, userId),
+  ];
+  if (!isOwner) {
+    whereFilters.push(eq(dashboardsTable.isPublic, true));
+  }
   const res = await db
     .select({
       card: {
@@ -75,12 +83,7 @@ export async function getCards({
       tertiaryCurrencyAlias,
       eq(usersTable.tertiaryCurrencyId, tertiaryCurrencyAlias.id)
     )
-    .where(
-      and(
-        eq(dashboardsTable.slug, dashboardSlug),
-        eq(dashboardsTable.userId, userId)
-      )
-    )
+    .where(and(...whereFilters))
     .orderBy(
       asc(cardsTable.xOrder),
       desc(cardsTable.updatedAt),
@@ -88,3 +91,5 @@ export async function getCards({
     );
   return res;
 }
+
+export type TGetCardsResult = ReturnType<typeof getCards>;

@@ -17,3 +17,5 @@ export async function getCurrencies({ ids }: { ids: string[] }) {
     .where(inArray(currenciesTable.id, ids));
   return res;
 }
+
+export type TGetCurrenciesResult = ReturnType<typeof getCurrencies>;

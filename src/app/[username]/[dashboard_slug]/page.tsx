@@ -12,66 +12,35 @@ import NanoBananoBalancesProvider, {
   TNanoBananoAccountFull,
 } from "@/components/providers/nano-banano-balance-provider";
 import { Button } from "@/components/ui/button";
-import { getCards } from "@/db/repo/card";
 import { getCurrencies } from "@/db/repo/currencies";
-import { getDashboard } from "@/db/repo/dashboard";
-import { getRealUserId, getUser } from "@/db/repo/user";
 import { siteTitle } from "@/lib/constants";
-import { auth } from "@clerk/nextjs/server";
+import { apiServer } from "@/trpc/setup/server";
 import { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
 import { ReactNode } from "react";
 
 type Props = {
-  params: Promise<{ dashboard_slug: string }>;
+  params: Promise<{ dashboard_slug: string; username: string }>;
 };
-const notFoundObject = {
+
+const notFoundMeta = {
   title: `Not Found | ${siteTitle}`,
   description: "Not found.",
 };
 
-const isDev = process.env.NODE_ENV === "development";
 const componentRequiresNewLine = ["orderbook", "ohlcv_chart"];
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const start = Date.now();
-  let current = Date.now();
-  const { dashboard_slug } = await params;
+  const { username, dashboard_slug } = await params;
 
-  const { userId: userIdRaw } = await auth();
-  if (!userIdRaw) return notFoundObject;
-  console.log(
-    `[username]/[dashboard_slug]:generateMetadata | Auth | ${
-      Date.now() - current
-    }ms`
-  );
-  current = Date.now();
-
-  let userId: string | null = userIdRaw;
-  if (isDev) {
-    userId = await getRealUserId({ userDevId: userId });
-    if (userId === null) return notFoundObject;
-  }
-  console.log(
-    `[username]/[dashboard_slug]:generateMetadata | isDev | ${
-      Date.now() - current
-    }ms`
-  );
-  current = Date.now();
-
-  const dashboardObject = await getDashboard({
-    userId,
+  const dashboardObject = await apiServer.ui.getDashboard({
+    username,
     dashboardSlug: dashboard_slug,
   });
-  console.log(
-    `[username]/[dashboard_slug]:generateMetadata | getDashboard | ${
-      Date.now() - current
-    }ms`
-  );
-  current = Date.now();
 
-  if (dashboardObject === null) return notFoundObject;
+  if (!dashboardObject) return notFoundMeta;
+
   console.log(
     `[username]/[dashboard_slug]:generateMetadata | Total | ${
       Date.now() - start
@@ -86,44 +55,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function Page({ params }: Props) {
   const start = Date.now();
-  let current = Date.now();
-  const { userId: userIdRaw } = await auth();
-  if (!userIdRaw) return notFound();
 
-  console.log(`[username]/[dashboard_slug] | Auth | ${Date.now() - current}ms`);
-  current = Date.now();
-
-  let userId: string | null = userIdRaw;
-  if (isDev) {
-    userId = await getRealUserId({ userDevId: userId });
-    if (userId === null) return notFound();
-  }
-
-  console.log(
-    `[username]/[dashboard_slug] | isDev | ${Date.now() - current}ms`
-  );
-  current = Date.now();
-
-  const { dashboard_slug } = await params;
+  const { dashboard_slug, username } = await params;
   const [cards, dashboard] = await Promise.all([
-    getCards({ userId, dashboardSlug: dashboard_slug }),
-    getDashboard({ userId, dashboardSlug: dashboard_slug }),
+    apiServer.ui.getCards({
+      username,
+      dashboardSlug: dashboard_slug,
+    }),
+    apiServer.ui.getDashboard({
+      username,
+      dashboardSlug: dashboard_slug,
+    }),
   ]);
 
-  console.log(
-    `[username]/[dashboard_slug] | getCards and getDashboard | ${
-      Date.now() - current
-    }ms`
-  );
-  current = Date.now();
-
   if (!dashboard) {
-    const user = await getUser({ userId });
-    console.log(
-      `[username]/[dashboard_slug] | getUser | ${Date.now() - current}ms`
-    );
-
-    if (user === null) return notFound();
     return (
       <div className="w-full flex-1 flex flex-col items-center justify-center p-5 pb-[calc(5vh+1.5rem)] text-center break-words">
         <h1 className="font-bold text-8xl max-w-full">404</h1>
@@ -131,7 +76,7 @@ export default async function Page({ params }: Props) {
           This dashboard doesn't exist.
         </h1>
         <Button asChild>
-          <Link href={`/${user.username}/main`} className="mt-8 max-w-full">
+          <Link href={`/${username}/main`} className="mt-8 max-w-full">
             Return Home
           </Link>
         </Button>

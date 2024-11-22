@@ -4,6 +4,7 @@ import { ethereumRouter } from "@/trpc/api/routers/ethereum/router";
 import { exchangeRouter } from "@/trpc/api/routers/exchange/router";
 import { fiatRouter } from "@/trpc/api/routers/fiat/router";
 import { nanoBananoRouter } from "@/trpc/api/routers/nano-banano/router";
+import { uiRouter } from "@/trpc/api/routers/ui/router";
 import { uniswapRouter } from "@/trpc/api/routers/uniswap/router";
 import { wbanRouter } from "@/trpc/api/routers/wban/router";
 import { createCallerFactory, createTRPCRouter } from "@/trpc/api/trpc";
@@ -20,6 +21,7 @@ import { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
+  ui: uiRouter,
   exchange: exchangeRouter,
   nanoBanano: nanoBananoRouter,
   cmc: cmcRouter,

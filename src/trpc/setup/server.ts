@@ -16,11 +16,10 @@ import { getAuth } from "@clerk/nextjs/server";
  */
 const createContext = cache(async () => {
   const nextHeaders = await headers();
+  const heads = new Headers(nextHeaders);
+  heads.set("x-trpc-source", "rsc");
   return createTRPCContext({
-    headers: new Headers({
-      ...nextHeaders,
-      "x-trpc-source": "rsc",
-    }),
+    headers: heads,
     auth: getAuth(
       new NextRequest("https://wikipedia.org", { headers: nextHeaders })
     ),

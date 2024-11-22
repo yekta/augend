@@ -5,54 +5,63 @@ import { and, asc, desc, eq } from "drizzle-orm";
 export async function getDashboard({
   userId,
   dashboardSlug,
+  isOwner,
 }: {
   userId: string;
   dashboardSlug: string;
+  isOwner?: boolean;
 }) {
+  let whereFilter = [
+    eq(dashboardsTable.slug, dashboardSlug),
+    eq(dashboardsTable.userId, userId),
+  ];
+  if (!isOwner) {
+    whereFilter.push(eq(dashboardsTable.isPublic, true));
+  }
   const res = await db
     .select({
       dashboard: {
-        id: dashboardsTable.id,
         slug: dashboardsTable.slug,
         title: dashboardsTable.title,
+        icon: dashboardsTable.icon,
       },
       user: {
-        id: usersTable.id,
         username: usersTable.username,
-        email: usersTable.email,
-        devId: usersTable.devId,
       },
     })
     .from(dashboardsTable)
-    .where(
-      and(
-        eq(dashboardsTable.slug, dashboardSlug),
-        eq(dashboardsTable.userId, userId)
-      )
-    )
+    .where(and(...whereFilter))
     .innerJoin(usersTable, eq(dashboardsTable.userId, usersTable.id));
   if (res.length === 0) return null;
   return res[0];
 }
 
-export async function getDashboards({ userId }: { userId: string }) {
+export async function getDashboards({
+  userId,
+  isOwner,
+}: {
+  userId: string;
+  isOwner?: boolean;
+}) {
+  const whereFilter = [eq(dashboardsTable.userId, userId)];
+
+  if (!isOwner) {
+    whereFilter.push(eq(dashboardsTable.isPublic, true));
+  }
+
   const res = await db
     .select({
       dashboard: {
-        id: dashboardsTable.id,
         slug: dashboardsTable.slug,
         icon: dashboardsTable.icon,
         title: dashboardsTable.title,
       },
       user: {
-        id: usersTable.id,
         username: usersTable.username,
-        email: usersTable.email,
-        devId: usersTable.devId,
       },
     })
     .from(dashboardsTable)
-    .where(eq(dashboardsTable.userId, userId))
+    .where(and(...whereFilter))
     .innerJoin(usersTable, eq(dashboardsTable.userId, usersTable.id))
     .orderBy(
       asc(dashboardsTable.xOrder),
@@ -61,3 +70,6 @@ export async function getDashboards({ userId }: { userId: string }) {
     );
   return res;
 }
+
+export type TGetDashboardResult = ReturnType<typeof getDashboard>;
+export type TGetDashboardsResult = ReturnType<typeof getDashboards>;
