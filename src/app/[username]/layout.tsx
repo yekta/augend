@@ -22,11 +22,11 @@ export default async function UserLayout({
   const { userId: userIdRaw } = await auth();
   if (!userIdRaw) return notFound();
 
-  console.log("[username]/layout | Auth | ", Date.now() - current);
+  console.log(`[username]/layout | Auth | ${Date.now() - current}ms`);
   current = Date.now();
 
   const user = await getUser({ username });
-  console.log("[username]/layout | getUser | ", Date.now() - current);
+  console.log(`[username]/layout | getUser | ${Date.now() - current}ms`);
   current = Date.now();
 
   let userId = userIdRaw;
@@ -37,7 +37,7 @@ export default async function UserLayout({
       .where(eq(usersTable.devId, userId));
     userId = uids[0].id;
   }
-  console.log("[username]/layout | isDev | ", Date.now() - current);
+  console.log(`[username]/layout | isDev | ${Date.now() - current}ms`);
   current = Date.now();
 
   if (user === null) return notFound();
@@ -56,7 +56,7 @@ export default async function UserLayout({
       desc(dashboardsTable.id)
     );
 
-  console.log("[username]/layout | getDashboards | ", Date.now() - current);
+  console.log(`[username]/layout | getDashboards | ${Date.now() - current}ms`);
   current = Date.now();
 
   const routes: TRoute[] = dashboardObjects.map((d) => ({
@@ -65,7 +65,7 @@ export default async function UserLayout({
     label: d.dashboard.title,
   }));
 
-  console.log("[username]/layout | Total |", Date.now() - start);
+  console.log(`[username]/layout | Total | ${Date.now() - start}ms`);
 
   return (
     <>
