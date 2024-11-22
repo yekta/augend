@@ -170,7 +170,8 @@ export default async function Page({ params }: Props) {
     })
     .filter((v) => v !== null);
 
-  let currencyIdsToFetch: string[] = [];
+  let currencyDefinitionsToFetch: string[] = [];
+  let addUsdAsCryptoQuote = false;
 
   let cardObjectsAndDividers: ((typeof cards)[number] | "divider")[] = [];
 
@@ -182,7 +183,8 @@ export default async function Page({ params }: Props) {
       if (!values) return;
       values.forEach((v) => {
         if (v.id !== "currency_id") return;
-        currencyIdsToFetch.push(v.value);
+        currencyDefinitionsToFetch.push(v.value);
+        addUsdAsCryptoQuote = true;
       });
     }
     if (cardObj.card.cardTypeId === "fiat_currency") {
@@ -190,7 +192,7 @@ export default async function Page({ params }: Props) {
       if (!values) return;
       values.forEach((v) => {
         if (v.id !== "base_id" && v.id !== "quote_id") return;
-        currencyIdsToFetch.push(v.value);
+        currencyDefinitionsToFetch.push(v.value);
       });
     }
     // New line stuff
@@ -216,8 +218,8 @@ export default async function Page({ params }: Props) {
     tertiary: cardObject.tertiary_currency,
   };
 
-  let denominatorCurrencies: TDenominatorCurrency[] | null = null;
-  if (currencyIdsToFetch.length > 0) {
+  let currencyDefinitions: TDenominatorCurrency[] | null = null;
+  if (currencyDefinitionsToFetch.length > 0) {
     const result = await db
       .select({
         id: currenciesTable.id,
@@ -229,12 +231,12 @@ export default async function Page({ params }: Props) {
         max_decimals_preferred: currenciesTable.max_decimals_preferred,
       })
       .from(currenciesTable)
-      .where(inArray(currenciesTable.id, currencyIdsToFetch));
-    denominatorCurrencies = result;
+      .where(inArray(currenciesTable.id, currencyDefinitionsToFetch));
+    currencyDefinitions = result;
   }
 
-  if (denominatorCurrencies !== null && denominatorCurrencies.length > 1) {
-    for (const currency of denominatorCurrencies) {
+  if (currencyDefinitions !== null && currencyDefinitions.length > 1) {
+    for (const currency of currencyDefinitions) {
       if (
         currency.is_crypto &&
         !cryptoCurrencyIds.includes(Number(currency.coin_id))
@@ -253,6 +255,7 @@ export default async function Page({ params }: Props) {
         nanoBananoAccounts={nanoBananoAccounts}
         cryptoCurrencyIds={cryptoCurrencyIds}
         currencyPreference={currencyPreference}
+        addUsdAsCryptoQuote={addUsdAsCryptoQuote}
       >
         {cardObjectsAndDividers.map((cardObjectOrDivider, index) => {
           if (cardObjectOrDivider === "divider") {
@@ -267,15 +270,15 @@ export default async function Page({ params }: Props) {
           }
           if (
             cardObject.card.cardTypeId === "calculator" &&
-            denominatorCurrencies &&
-            denominatorCurrencies.length > 1
+            currencyDefinitions &&
+            currencyDefinitions.length > 1
           ) {
             const values = cardObject.card.values as TValuesEntry[];
             if (!values) return null;
             const ids = values
               .filter((v) => v.id === "currency_id")
               .map((v) => v.value);
-            const selectedCurrencies = denominatorCurrencies
+            const selectedCurrencies = currencyDefinitions
               .filter((c) => ids.includes(c.id))
               .sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id));
             return (
@@ -356,17 +359,16 @@ export default async function Page({ params }: Props) {
               />
             );
           }
-
           if (cardObject.card.cardTypeId === "fiat_currency") {
             const values = cardObject.card.values as TValuesEntry[];
             if (!values) return null;
             const baseId = values.find((v) => v.id === "base_id")?.value;
             const quoteId = values.find((v) => v.id === "quote_id")?.value;
             if (!baseId || !quoteId) return null;
-            const baseCurrency = denominatorCurrencies?.find(
+            const baseCurrency = currencyDefinitions?.find(
               (c) => c.id === baseId
             );
-            const quoteCurrency = denominatorCurrencies?.find(
+            const quoteCurrency = currencyDefinitions?.find(
               (c) => c.id === quoteId
             );
             if (!baseCurrency || !quoteCurrency) return null;
@@ -431,12 +433,14 @@ export default async function Page({ params }: Props) {
 function Providers({
   cardTypeIds,
   cryptoCurrencyIds,
+  addUsdAsCryptoQuote,
   children,
   nanoBananoAccounts,
   currencyPreference,
 }: {
   cardTypeIds: string[];
   cryptoCurrencyIds: number[];
+  addUsdAsCryptoQuote: boolean;
   children: ReactNode;
   nanoBananoAccounts: TNanoBananoAccountFull[];
   currencyPreference: TCurrencyPreference;
@@ -467,7 +471,10 @@ function Providers({
       (id) => !idsWithExtras.includes(id) && idsWithExtras.push(id)
     );
     wrappedChildren = (
-      <CmcCryptoInfosProvider cryptos={idsWithExtras.map((c) => ({ id: c }))}>
+      <CmcCryptoInfosProvider
+        addUsd={addUsdAsCryptoQuote}
+        cryptos={idsWithExtras.map((c) => ({ id: c }))}
+      >
         {wrappedChildren}
       </CmcCryptoInfosProvider>
     );
