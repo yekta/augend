@@ -1,9 +1,7 @@
-import { getUser } from "@/app/[username]/_lib/helpers";
 import Navbar, { TRoute } from "@/components/navbar";
-import { db } from "@/db/db";
-import { dashboardsTable, usersTable } from "@/db/schema";
+import { getDashboards } from "@/db/repo/dashboard";
+import { getRealUserId, getUser } from "@/db/repo/user";
 import { auth } from "@clerk/nextjs/server";
-import { asc, desc, eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 
 const isDev = process.env.NODE_ENV === "development";
@@ -29,32 +27,17 @@ export default async function UserLayout({
   console.log(`[username]/layout | getUser | ${Date.now() - current}ms`);
   current = Date.now();
 
-  let userId = userIdRaw;
+  let userId: string | null = userIdRaw;
   if (isDev) {
-    const uids = await db
-      .select()
-      .from(usersTable)
-      .where(eq(usersTable.devId, userId));
-    userId = uids[0].id;
+    userId = await getRealUserId({ userDevId: userIdRaw });
+    if (userId === null) return notFound();
   }
   console.log(`[username]/layout | isDev | ${Date.now() - current}ms`);
   current = Date.now();
 
   if (user === null) return notFound();
 
-  const dashboardObjects = await db
-    .select({
-      dashboard: dashboardsTable,
-      user: usersTable,
-    })
-    .from(dashboardsTable)
-    .where(eq(dashboardsTable.userId, userId))
-    .innerJoin(usersTable, eq(dashboardsTable.userId, usersTable.id))
-    .orderBy(
-      asc(dashboardsTable.xOrder),
-      desc(dashboardsTable.updatedAt),
-      desc(dashboardsTable.id)
-    );
+  const dashboardObjects = await getDashboards({ userId: user.id });
 
   console.log(`[username]/layout | getDashboards | ${Date.now() - current}ms`);
   current = Date.now();

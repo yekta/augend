@@ -2,12 +2,11 @@ import {
   componentRequiresNewLine,
   isDev,
 } from "@/app/[username]/_lib/constants";
-import { getCards, getDashboard, getUser } from "@/app/[username]/_lib/helpers";
 import { TValuesEntry } from "@/app/[username]/_lib/types";
-import Calculator from "@/components/cards/calculator-card";
 import BananoTotalCard, {
   bananoCmcId,
 } from "@/components/cards/banano-total-card";
+import Calculator from "@/components/cards/calculator-card";
 import CryptoCard from "@/components/cards/crypto-card";
 import CryptoTableCard from "@/components/cards/crypto-table-card";
 import EthereumGasCard from "@/components/cards/ethereum-gas-card";
@@ -37,12 +36,15 @@ import NanoBananoBalancesProvider, {
 } from "@/components/providers/nano-banano-balance-provider";
 import { Button } from "@/components/ui/button";
 import { db } from "@/db/db";
-import { currenciesTable, usersTable } from "@/db/schema";
+import { getCards } from "@/db/repo/card";
+import { getDashboard } from "@/db/repo/dashboard";
+import { getRealUserId, getUser } from "@/db/repo/user";
+import { currenciesTable } from "@/db/schema";
 import { siteTitle } from "@/lib/constants";
 import { TEthereumNetwork } from "@/trpc/api/routers/ethereum/types";
 import { TAvailableExchange } from "@/trpc/api/routers/exchange/types";
 import { auth } from "@clerk/nextjs/server";
-import { eq, inArray } from "drizzle-orm";
+import { inArray } from "drizzle-orm";
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -51,30 +53,54 @@ import { ReactNode } from "react";
 type Props = {
   params: Promise<{ dashboard_slug: string }>;
 };
+const notFoundObject = {
+  title: `Not Found | ${siteTitle}`,
+  description: "Not found.",
+};
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const start = Date.now();
+  let current = Date.now();
   const { dashboard_slug } = await params;
 
   const { userId: userIdRaw } = await auth();
-  if (!userIdRaw)
-    return { title: `Not Found | ${siteTitle}`, description: "Not found." };
+  if (!userIdRaw) return notFoundObject;
+  console.log(
+    `[username]/[dashboard_slug]:generateMetadata | Auth | ${
+      Date.now() - current
+    }ms`
+  );
+  current = Date.now();
 
-  let userId = userIdRaw;
+  let userId: string | null = userIdRaw;
   if (isDev) {
-    const uids = await db
-      .select()
-      .from(usersTable)
-      .where(eq(usersTable.devId, userId));
-    userId = uids[0].id;
+    userId = await getRealUserId({ userDevId: userId });
+    if (userId === null) return notFoundObject;
   }
+  console.log(
+    `[username]/[dashboard_slug]:generateMetadata | isDev | ${
+      Date.now() - current
+    }ms`
+  );
+  current = Date.now();
 
   const dashboardObject = await getDashboard({
     userId,
     dashboardSlug: dashboard_slug,
   });
+  console.log(
+    `[username]/[dashboard_slug]:generateMetadata | getDashboard | ${
+      Date.now() - current
+    }ms`
+  );
+  current = Date.now();
 
-  if (dashboardObject === null)
-    return { title: `Not Found | ${siteTitle}`, description: "Not found." };
+  if (dashboardObject === null) return notFoundObject;
+  console.log(
+    `[username]/[dashboard_slug]:generateMetadata | Total | ${
+      Date.now() - start
+    }ms`
+  );
 
   return {
     title: `${dashboardObject.dashboard.title} | ${dashboardObject.user.username} | ${siteTitle}`,
@@ -91,13 +117,10 @@ export default async function Page({ params }: Props) {
   console.log(`[username]/[dashboard_slug] | Auth | ${Date.now() - current}ms`);
   current = Date.now();
 
-  let userId = userIdRaw;
+  let userId: string | null = userIdRaw;
   if (isDev) {
-    const uids = await db
-      .select()
-      .from(usersTable)
-      .where(eq(usersTable.devId, userId));
-    userId = uids[0].id;
+    userId = await getRealUserId({ userDevId: userId });
+    if (userId === null) return notFound();
   }
 
   console.log(
@@ -142,7 +165,8 @@ export default async function Page({ params }: Props) {
 
   let cryptoCurrencyIds = cards
     .filter(
-      (c) => c.card_type.id === "crypto" || c.card_type.id === "mini_crypto"
+      (c) =>
+        c.card.cardTypeId === "crypto" || c.card.cardTypeId === "mini_crypto"
     )
     .map((c) => {
       const values = c.card.values as TValuesEntry[];
@@ -155,7 +179,8 @@ export default async function Page({ params }: Props) {
   const nanoBananoAccounts: TNanoBananoAccountFull[] = cards
     .filter(
       (c) =>
-        c.card_type.id === "nano_balance" || c.card_type.id === "banano_balance"
+        c.card.cardTypeId === "nano_balance" ||
+        c.card.cardTypeId === "banano_balance"
     )
     .map((c) => {
       const values = c.card.values as TValuesEntry[];
@@ -197,10 +222,11 @@ export default async function Page({ params }: Props) {
     }
     // New line stuff
     const requiresNewLine = componentRequiresNewLine.includes(
-      cardObj.card_type.id
+      cardObj.card.cardTypeId
     );
     const differentThanPrevious =
-      index !== 0 && cards[index - 1].card_type.id !== cardObj.card_type.id;
+      index !== 0 &&
+      cards[index - 1].card.cardTypeId !== cardObj.card.cardTypeId;
     if (requiresNewLine && differentThanPrevious) {
       cardObjectsAndDividers.push("divider");
     }

@@ -9,30 +9,6 @@ import {
 import { and, asc, desc, eq } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 
-export async function getUser({
-  userId,
-  username,
-}:
-  | { userId: string; username?: never }
-  | { userId?: never; username: string }) {
-  if (userId !== undefined) {
-    const res = await db
-      .select()
-      .from(usersTable)
-      .where(eq(usersTable.id, userId));
-    if (res.length === 0) return null;
-    return res[0];
-  } else if (username !== undefined) {
-    const res = await db
-      .select()
-      .from(usersTable)
-      .where(eq(usersTable.username, username));
-    if (res.length === 0) return null;
-    return res[0];
-  }
-  return null;
-}
-
 export async function getCards({
   userId,
   dashboardSlug,
@@ -45,10 +21,21 @@ export async function getCards({
   const tertiaryCurrencyAlias = alias(currenciesTable, "tertiary_currency");
   const res = await db
     .select({
-      card: cardsTable,
-      dashboard: dashboardsTable,
-      card_type: cardTypesTable,
-      user: usersTable,
+      card: {
+        id: cardsTable.id,
+        cardTypeId: cardsTable.cardTypeId,
+        values: cardsTable.values,
+      },
+      cardType: {
+        id: cardTypesTable.id,
+        inputs: cardTypesTable.inputs,
+      },
+      user: {
+        id: usersTable.id,
+        username: usersTable.username,
+        email: usersTable.email,
+        devId: usersTable.devId,
+      },
       primary_currency: primaryCurrencyAlias,
       secondary_currency: secondaryCurrencyAlias,
       tertiary_currency: tertiaryCurrencyAlias,
@@ -81,28 +68,4 @@ export async function getCards({
       desc(cardsTable.id)
     );
   return res;
-}
-
-export async function getDashboard({
-  userId,
-  dashboardSlug,
-}: {
-  userId: string;
-  dashboardSlug: string;
-}) {
-  const res = await db
-    .select({
-      dashboard: dashboardsTable,
-      user: usersTable,
-    })
-    .from(dashboardsTable)
-    .where(
-      and(
-        eq(dashboardsTable.slug, dashboardSlug),
-        eq(dashboardsTable.userId, userId)
-      )
-    )
-    .innerJoin(usersTable, eq(dashboardsTable.userId, usersTable.id));
-  if (res.length === 0) return null;
-  return res[0];
 }
