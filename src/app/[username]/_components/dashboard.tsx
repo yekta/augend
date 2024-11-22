@@ -43,13 +43,16 @@ export default function Dashboard({
     { initialData: dashboardInitialData }
   );
 
-  const { data: cards, isLoadingError: cardsIsLoadingError } =
-    api.ui.getCards.useQuery(
-      { username, dashboardSlug },
-      {
-        initialData: cardsInitialData,
-      }
-    );
+  const {
+    data: cards,
+    isPending: cardsIsPending,
+    isLoadingError: cardsIsLoadingError,
+  } = api.ui.getCards.useQuery(
+    { username, dashboardSlug },
+    {
+      initialData: cardsInitialData,
+    }
+  );
 
   const firstCard = cards && cards.length > 0 ? cards[0] : undefined;
   const currencyPreference: TCurrencyPreference | undefined = firstCard
@@ -163,7 +166,7 @@ export default function Dashboard({
     return ids;
   }, [cards, currencies]);
 
-  if (!dashboardIsPending && !dashboard) {
+  if ((!dashboardIsPending && !dashboard) || cards === null) {
     return (
       <div className="w-full flex-1 flex flex-col items-center justify-center p-5 pb-[calc(5vh+1.5rem)] text-center break-words">
         <h1 className="font-bold text-8xl max-w-full">404</h1>
@@ -253,12 +256,14 @@ function Providers({
   children,
   nanoBananoAccounts,
   currencyPreference,
+  dontAddUsd,
 }: {
   cardTypeIds: string[];
   cryptoCurrencyIds: number[];
   children: ReactNode;
   nanoBananoAccounts: TNanoBananoAccountFull[];
   currencyPreference: TCurrencyPreference;
+  dontAddUsd?: boolean;
 }) {
   let wrappedChildren = children;
   if (
@@ -286,7 +291,10 @@ function Providers({
       (id) => !idsWithExtras.includes(id) && idsWithExtras.push(id)
     );
     wrappedChildren = (
-      <CmcCryptoInfosProvider cryptos={idsWithExtras.map((c) => ({ id: c }))}>
+      <CmcCryptoInfosProvider
+        cryptos={idsWithExtras.map((c) => ({ id: c }))}
+        dontAddUsd={dontAddUsd}
+      >
         {wrappedChildren}
       </CmcCryptoInfosProvider>
     );

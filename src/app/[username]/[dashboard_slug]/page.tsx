@@ -1,6 +1,7 @@
 import Dashboard from "@/app/[username]/_components/dashboard";
 import { TValuesEntry } from "@/components/cards/utils/card-parser";
 import { siteTitle } from "@/lib/constants";
+import { AppRouterOutputs } from "@/trpc/api/root";
 import { apiServer } from "@/trpc/setup/server";
 import { Metadata } from "next";
 
@@ -46,7 +47,9 @@ export default async function Page({ params }: Props) {
   ]);
 
   let currencyIdsForFetch: string[] = [];
-  cardsInitialData.forEach((cardObj, index) => {
+  let currenciesInitialData: AppRouterOutputs["ui"]["getCurrencies"] = [];
+
+  (cardsInitialData || []).forEach((cardObj, index) => {
     if (cardObj.card.cardTypeId === "calculator") {
       const values = cardObj.card.values as TValuesEntry[];
       if (!values) return;
@@ -65,9 +68,11 @@ export default async function Page({ params }: Props) {
     }
   });
 
-  const [currenciesInitialData] = await Promise.all([
-    apiServer.ui.getCurrencies({ ids: currencyIdsForFetch }),
-  ]);
+  if (currencyIdsForFetch.length > 0) {
+    [currenciesInitialData] = await Promise.all([
+      apiServer.ui.getCurrencies({ ids: currencyIdsForFetch }),
+    ]);
+  }
 
   console.log(`[username]/[dashboard_slug] | Total | ${Date.now() - start}ms`);
 

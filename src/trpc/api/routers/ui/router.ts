@@ -1,15 +1,14 @@
 import { z } from "zod";
 
 import { getCards } from "@/db/repo/card";
+import { getCurrencies } from "@/db/repo/currencies";
 import {
   getDashboard,
   getDashboards,
   TGetDashboardResult,
-  TGetDashboardsResult,
 } from "@/db/repo/dashboard";
 import { getUser } from "@/db/repo/user";
 import { createTRPCRouter, publicProcedure } from "@/trpc/api/trpc";
-import { getCurrencies } from "@/db/repo/currencies";
 
 const isDev = process.env.NODE_ENV === "development";
 
@@ -24,11 +23,10 @@ export const uiRouter = createTRPCRouter({
     .query(async function ({
       input: { username, dashboardSlug },
       ctx: { auth },
-    }): TGetDashboardResult {
+    }) {
       const user = await getUser({ username });
-      if (!user) {
-        throw new Error("User not found");
-      }
+      if (!user) return null;
+
       const isOwner = isDev
         ? auth.userId !== null && auth.userId === user.devId
         : auth.userId !== null && auth.userId === user.id;
@@ -47,14 +45,10 @@ export const uiRouter = createTRPCRouter({
         username: z.string(),
       })
     )
-    .query(async function ({
-      input: { username },
-      ctx: { auth },
-    }): TGetDashboardsResult {
+    .query(async function ({ input: { username }, ctx: { auth } }) {
       const user = await getUser({ username });
-      if (!user) {
-        throw new Error("User not found");
-      }
+      if (!user) return null;
+
       const isOwner = isDev
         ? auth.userId !== null && auth.userId === user.devId
         : auth.userId !== null && auth.userId === user.id;
@@ -78,9 +72,7 @@ export const uiRouter = createTRPCRouter({
       ctx: { auth },
     }) {
       const user = await getUser({ username });
-      if (!user) {
-        throw new Error("User not found");
-      }
+      if (!user) return null;
 
       const isOwner = isDev
         ? auth.userId !== null && auth.userId === user.devId
