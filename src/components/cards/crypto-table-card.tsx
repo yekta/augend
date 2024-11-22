@@ -146,7 +146,7 @@ export default function CryptoTableCard({ className }: { className?: string }) {
       },
       {
         accessorKey: "volume",
-        header: "Vol",
+        header: "Vol 24H",
         cell: ({ row }) =>
           `${convertCurrency.symbol}${formatNumberTBMK(
             row.original.volume,
