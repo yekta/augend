@@ -1,7 +1,3 @@
-import {
-  componentRequiresNewLine,
-  isDev,
-} from "@/app/[username]/_lib/constants";
 import { bananoCmcId } from "@/components/cards/banano-total-card";
 import { CardParser, TValuesEntry } from "@/components/cards/utils/card-parser";
 import DashboardWrapper from "@/components/dashboard-wrapper";
@@ -16,15 +12,12 @@ import NanoBananoBalancesProvider, {
   TNanoBananoAccountFull,
 } from "@/components/providers/nano-banano-balance-provider";
 import { Button } from "@/components/ui/button";
-import { db } from "@/db/db";
 import { getCards } from "@/db/repo/card";
 import { getCurrencies } from "@/db/repo/currencies";
 import { getDashboard } from "@/db/repo/dashboard";
 import { getRealUserId, getUser } from "@/db/repo/user";
-import { currenciesTable } from "@/db/schema";
 import { siteTitle } from "@/lib/constants";
 import { auth } from "@clerk/nextjs/server";
-import { inArray } from "drizzle-orm";
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -37,6 +30,9 @@ const notFoundObject = {
   title: `Not Found | ${siteTitle}`,
   description: "Not found.",
 };
+
+const isDev = process.env.NODE_ENV === "development";
+const componentRequiresNewLine = ["orderbook", "ohlcv_chart"];
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const start = Date.now();
