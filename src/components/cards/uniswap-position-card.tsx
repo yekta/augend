@@ -980,10 +980,12 @@ function NFTImageLink({
           src={uri}
         />
         <div
-          className="w-full bg-background/75 filter backdrop-blur pt-1 pb-1.5 absolute left-0 top-1/2 -translate-y-1/2
-          items-start justify-center hidden group-data-[is-out-of-range]/card:flex"
+          className="absolute left-0 top-0 pointer-events-none w-full h-full flex items-center justify-center transition -translate-y-full opacity-0 
+          group-data-[is-out-of-range]/card:translate-y-0 group-data-[is-out-of-range]/card:opacity-100 duration-250"
         >
-          <TriangleAlertIcon className="size-4.5 md:size-5 text-destructive" />
+          <div className="w-full bg-background/75 filter backdrop-blur pt-1 pb-1.5 items-start justify-center flex">
+            <TriangleAlertIcon className="size-4.5 md:size-5 text-destructive" />
+          </div>
         </div>
         <div className="w-full px-1 pb-1 flex gap-1 items-center justify-center absolute bottom-0 left-0">
           <p

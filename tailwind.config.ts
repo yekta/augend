@@ -76,6 +76,9 @@ const config: Config = {
         36: "0.36",
         85: "0.85",
       },
+      transitionDuration: {
+        250: "250ms",
+      },
       fontSize: {
         xxs: ["0.625rem", "1rem"],
       },
