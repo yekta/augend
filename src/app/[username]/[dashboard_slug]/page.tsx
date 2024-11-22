@@ -146,10 +146,10 @@ export default async function Page({ params }: Props) {
     )
     .map((c) => {
       const values = c.card.values as TValuesEntry[];
-      if (!values) return undefined;
+      if (!values) return null;
       return values.find((v) => v.id === "coin_id")?.value;
     })
-    .filter((v) => v !== undefined)
+    .filter((v) => v !== null)
     .map((v) => Number(v));
 
   const nanoBananoAccounts: TNanoBananoAccountFull[] = cards
@@ -159,16 +159,16 @@ export default async function Page({ params }: Props) {
     )
     .map((c) => {
       const values = c.card.values as TValuesEntry[];
-      if (!values) return undefined;
+      if (!values) return null;
       const address = values.find((v) => v.id === "address")?.value;
       const isOwner = values.find((v) => v.id === "is_owner")?.value;
-      if (!address || !isOwner) return undefined;
+      if (address === undefined || isOwner === undefined) return null;
       return {
         address,
         isOwner: isOwner === "true",
       };
     })
-    .filter((v) => v !== undefined);
+    .filter((v) => v !== null);
 
   let currencyIdsToFetch: string[] = [];
 
@@ -394,7 +394,8 @@ export default async function Page({ params }: Props) {
             const values = cardObject.card.values as TValuesEntry[];
             if (!values) return null;
             const address = values.find((v) => v.id === "address")?.value;
-            if (!address) return null;
+            const isOwner = values.find((v) => v.id === "is_owner")?.value;
+            if (address === undefined || isOwner === undefined) return null;
             return (
               <NanoBananoCard
                 key={cardObject.card.id}
