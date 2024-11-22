@@ -88,7 +88,7 @@ export default async function Page({ params }: Props) {
   const { userId: userIdRaw } = await auth();
   if (!userIdRaw) return notFound();
 
-  console.log(`[dashboard_slug] | Auth | ${Date.now() - current}ms`);
+  console.log(`[username]/[dashboard_slug] | Auth | ${Date.now() - current}ms`);
   current = Date.now();
 
   let userId = userIdRaw;
@@ -100,7 +100,9 @@ export default async function Page({ params }: Props) {
     userId = uids[0].id;
   }
 
-  console.log(`[dashboard_slug] | isDev | ${Date.now() - current}ms`);
+  console.log(
+    `[username]/[dashboard_slug] | isDev | ${Date.now() - current}ms`
+  );
   current = Date.now();
 
   const { dashboard_slug } = await params;
@@ -110,13 +112,17 @@ export default async function Page({ params }: Props) {
   ]);
 
   console.log(
-    `[dashboard_slug] | getCards and getDashboard | ${Date.now() - current}ms`
+    `[username]/[dashboard_slug] | getCards and getDashboard | ${
+      Date.now() - current
+    }ms`
   );
   current = Date.now();
 
   if (!dashboard) {
     const user = await getUser({ userId });
-    console.log(`[dashboard_slug] | getUser | ${Date.now() - current}ms`);
+    console.log(
+      `[username]/[dashboard_slug] | getUser | ${Date.now() - current}ms`
+    );
 
     if (user === null) return notFound();
     return (
@@ -238,7 +244,7 @@ export default async function Page({ params }: Props) {
     }
   }
 
-  console.log("[dashboard_slug] | Total:", Date.now() - start);
+  console.log(`[username]/[dashboard_slug] | Total | ${Date.now() - start}ms`);
 
   return (
     <DashboardWrapper centerItems={cardObjectsAndDividers.length < 2}>

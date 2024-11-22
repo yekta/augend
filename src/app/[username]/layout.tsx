@@ -15,11 +15,19 @@ export default async function UserLayout({
   children: React.ReactNode;
   params: Promise<{ username: string }>;
 }>) {
+  const start = Date.now();
+  let current = Date.now();
+
   const { username } = await params;
   const { userId: userIdRaw } = await auth();
   if (!userIdRaw) return notFound();
 
+  console.log("[username]/layout | Auth | ", Date.now() - current);
+  current = Date.now();
+
   const user = await getUser({ username });
+  console.log("[username]/layout | getUser | ", Date.now() - current);
+  current = Date.now();
 
   let userId = userIdRaw;
   if (isDev) {
@@ -29,6 +37,8 @@ export default async function UserLayout({
       .where(eq(usersTable.devId, userId));
     userId = uids[0].id;
   }
+  console.log("[username]/layout | isDev | ", Date.now() - current);
+  current = Date.now();
 
   if (user === null) return notFound();
 
@@ -46,11 +56,16 @@ export default async function UserLayout({
       desc(dashboardsTable.id)
     );
 
+  console.log("[username]/layout | getDashboards | ", Date.now() - current);
+  current = Date.now();
+
   const routes: TRoute[] = dashboardObjects.map((d) => ({
     href: `/${d.user.username}/${d.dashboard.slug}`,
     icon: d.dashboard.icon,
     label: d.dashboard.title,
   }));
+
+  console.log("[username]/layout | Total |", Date.now() - start);
 
   return (
     <>
