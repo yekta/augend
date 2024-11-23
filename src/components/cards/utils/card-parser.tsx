@@ -17,8 +17,8 @@ import UniswapPoolsTableCard from "@/components/cards/uniswap-pools-table-card";
 import UniswapPositionCard from "@/components/cards/uniswap-position-card";
 import WBanSummaryCard from "@/components/cards/wban-summary-card";
 import { TDenominatorCurrency } from "@/components/providers/currency-preference-provider";
-import { TEthereumNetwork } from "@/trpc/api/routers/ethereum/types";
-import { TAvailableExchange } from "@/trpc/api/routers/exchange/types";
+import { TEthereumNetwork } from "@/server/trpc/api/routers/ethereum/types";
+import { TAvailableExchange } from "@/server/trpc/api/routers/exchange/types";
 
 export function CardParser({
   cardObject,

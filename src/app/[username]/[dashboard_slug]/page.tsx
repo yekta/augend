@@ -1,8 +1,8 @@
 import Dashboard from "@/app/[username]/_components/dashboard";
 import { TValuesEntry } from "@/components/cards/utils/card-parser";
 import { siteTitle } from "@/lib/constants";
-import { AppRouterOutputs } from "@/trpc/api/root";
-import { apiServer } from "@/trpc/setup/server";
+import { AppRouterOutputs } from "@/server/trpc/api/root";
+import { apiServer } from "@/server/trpc/setup/server";
 import { Metadata } from "next";
 
 type Props = {

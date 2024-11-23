@@ -1,8 +1,8 @@
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { type NextRequest } from "next/server";
 
-import { appRouter } from "@/trpc/api/root";
-import { createTRPCContext } from "@/trpc/api/trpc";
+import { appRouter } from "@/server/trpc/api/root";
+import { createTRPCContext } from "@/server/trpc/setup/trpc";
 import { getAuth } from "@clerk/nextjs/server";
 
 /**

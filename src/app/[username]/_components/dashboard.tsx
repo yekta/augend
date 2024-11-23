@@ -14,8 +14,8 @@ import NanoBananoBalancesProvider, {
   TNanoBananoAccountFull,
 } from "@/components/providers/nano-banano-balance-provider";
 import { Button } from "@/components/ui/button";
-import { AppRouterOutputs } from "@/trpc/api/root";
-import { api } from "@/trpc/setup/react";
+import { AppRouterOutputs } from "@/server/trpc/api/root";
+import { api } from "@/server/trpc/setup/react";
 import Link from "next/link";
 import { ReactNode, useMemo } from "react";
 

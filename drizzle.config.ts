@@ -10,8 +10,8 @@ if (!databaseUrlRaw) {
 const databaseUrl = databaseUrlRaw;
 
 export default defineConfig({
-  schema: "./src/db/schema.ts",
-  out: "./src/db/migrations",
+  schema: "./src/server/db/schema.ts",
+  out: "./src/server/db/migrations",
   dialect: "postgresql",
   dbCredentials: {
     url: databaseUrl,

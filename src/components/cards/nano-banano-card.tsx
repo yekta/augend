@@ -8,8 +8,8 @@ import {
   getAvatarUrl,
   getExplorerUrl,
   isNano,
-} from "@/trpc/api/routers/nano-banano/helpers";
-import { TNanoBananoAccount } from "@/trpc/api/routers/nano-banano/types";
+} from "@/server/trpc/api/routers/nano-banano/helpers";
+import { TNanoBananoAccount } from "@/server/trpc/api/routers/nano-banano/types";
 
 export default function NanoBananoCard({
   account,

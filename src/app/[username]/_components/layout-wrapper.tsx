@@ -1,8 +1,8 @@
 "use client";
 
 import Navbar, { TRoute } from "@/components/navbar";
-import { AppRouterOutputs } from "@/trpc/api/root";
-import { api } from "@/trpc/setup/react";
+import { AppRouterOutputs } from "@/server/trpc/api/root";
+import { api } from "@/server/trpc/setup/react";
 
 export default function LayoutWrapper({
   children,

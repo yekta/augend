@@ -8,8 +8,8 @@ import { cn } from "@/lib/utils";
 import {
   TAvailableExchange,
   TOrderBook,
-} from "@/trpc/api/routers/exchange/types";
-import { api } from "@/trpc/setup/react";
+} from "@/server/trpc/api/routers/exchange/types";
+import { api } from "@/server/trpc/setup/react";
 import { ChartNoAxesCombinedIcon } from "lucide-react";
 
 const lines = 10;

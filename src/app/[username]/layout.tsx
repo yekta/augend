@@ -1,5 +1,5 @@
 import LayoutWrapper from "@/app/[username]/_components/layout-wrapper";
-import { apiServer } from "@/trpc/setup/server";
+import { apiServer } from "@/server/trpc/setup/server";
 
 export default async function UserLayout({
   params,
