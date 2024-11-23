@@ -4,7 +4,7 @@ import {
   cardTypesTable,
   currenciesTable,
   dashboardsTable,
-  usersTable,
+  oldUsersTable,
 } from "@/server/db/schema";
 import { and, asc, desc, eq } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
@@ -58,10 +58,10 @@ export async function getCards({
         inputs: cardTypesTable.inputs,
       },
       user: {
-        id: usersTable.id,
-        username: usersTable.username,
-        email: usersTable.email,
-        devId: usersTable.devId,
+        id: oldUsersTable.id,
+        username: oldUsersTable.username,
+        email: oldUsersTable.email,
+        devId: oldUsersTable.devId,
       },
       primary_currency: getCurrencyFields(primaryCurrencyAlias),
       secondary_currency: getCurrencyFields(secondaryCurrencyAlias),
@@ -70,18 +70,18 @@ export async function getCards({
     .from(cardsTable)
     .innerJoin(dashboardsTable, eq(cardsTable.dashboardId, dashboardsTable.id))
     .innerJoin(cardTypesTable, eq(cardsTable.cardTypeId, cardTypesTable.id))
-    .innerJoin(usersTable, eq(dashboardsTable.userId, usersTable.id))
+    .innerJoin(oldUsersTable, eq(dashboardsTable.userId, oldUsersTable.id))
     .innerJoin(
       primaryCurrencyAlias,
-      eq(usersTable.primaryCurrencyId, primaryCurrencyAlias.id)
+      eq(oldUsersTable.primaryCurrencyId, primaryCurrencyAlias.id)
     )
     .innerJoin(
       secondaryCurrencyAlias,
-      eq(usersTable.secondaryCurrencyId, secondaryCurrencyAlias.id)
+      eq(oldUsersTable.secondaryCurrencyId, secondaryCurrencyAlias.id)
     )
     .innerJoin(
       tertiaryCurrencyAlias,
-      eq(usersTable.tertiaryCurrencyId, tertiaryCurrencyAlias.id)
+      eq(oldUsersTable.tertiaryCurrencyId, tertiaryCurrencyAlias.id)
     )
     .where(and(...whereFilters))
     .orderBy(

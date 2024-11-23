@@ -48,8 +48,8 @@ export const currenciesTable = pgTable(
   })
 );
 
-export const usersTable = pgTable(
-  "users",
+export const oldUsersTable = pgTable(
+  "users_old",
   {
     id: text("id").primaryKey(),
     devId: text("dev_id").unique().notNull(),
@@ -93,7 +93,7 @@ export const dashboardsTable = pgTable(
     xOrder: integer("x_order").notNull().default(0),
     userId: text("user_id")
       .notNull()
-      .references(() => usersTable.id),
+      .references(() => oldUsersTable.id),
     title: varchar("title", { ...shortText }).notNull(),
     slug: text("slug").notNull(),
     icon: text("icon").notNull(),

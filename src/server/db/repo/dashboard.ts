@@ -1,5 +1,5 @@
 import { db } from "@/server/db/db";
-import { dashboardsTable, usersTable } from "@/server/db/schema";
+import { dashboardsTable, oldUsersTable } from "@/server/db/schema";
 import { and, asc, desc, eq } from "drizzle-orm";
 
 export async function getDashboard({
@@ -26,12 +26,12 @@ export async function getDashboard({
         icon: dashboardsTable.icon,
       },
       user: {
-        username: usersTable.username,
+        username: oldUsersTable.username,
       },
     })
     .from(dashboardsTable)
     .where(and(...whereFilter))
-    .innerJoin(usersTable, eq(dashboardsTable.userId, usersTable.id));
+    .innerJoin(oldUsersTable, eq(dashboardsTable.userId, oldUsersTable.id));
   if (res.length === 0) return null;
   return res[0];
 }
@@ -57,12 +57,12 @@ export async function getDashboards({
         title: dashboardsTable.title,
       },
       user: {
-        username: usersTable.username,
+        username: oldUsersTable.username,
       },
     })
     .from(dashboardsTable)
     .where(and(...whereFilter))
-    .innerJoin(usersTable, eq(dashboardsTable.userId, usersTable.id))
+    .innerJoin(oldUsersTable, eq(dashboardsTable.userId, oldUsersTable.id))
     .orderBy(
       asc(dashboardsTable.xOrder),
       desc(dashboardsTable.updatedAt),
