@@ -11,8 +11,10 @@ import {
   varchar,
   index,
   check,
+  primaryKey,
 } from "drizzle-orm/pg-core";
 import { z } from "zod";
+import type { AdapterAccountType } from "next-auth/adapters";
 
 const shortText = { length: 32 };
 
@@ -48,15 +50,19 @@ export const currenciesTable = pgTable(
   })
 );
 
-export const oldUsersTable = pgTable(
-  "users_old",
+export const usersTable = pgTable(
+  "users",
   {
-    id: text("id").primaryKey(),
-    devId: text("dev_id").unique().notNull(),
-    email: text("email").notNull(),
+    id: uuid("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    name: text("name"),
     username: varchar("username", { ...shortText })
-      .notNull()
-      .unique(),
+      .unique()
+      .$defaultFn(() => crypto.randomUUID().replaceAll("-", "")),
+    email: text("email").unique(),
+    emailVerified: timestamp("emailVerified", { mode: "date" }),
+    image: text("image"),
     primaryCurrencyId: uuid("primary_currency_id")
       .notNull()
       .default("81260265-7335-4d20-9064-0357e75690d6")
@@ -72,9 +78,78 @@ export const oldUsersTable = pgTable(
     ...timestamps,
   },
   (table) => ({
-    emailIdx: index("email_idx").on(table.email),
     usernameIdx: index("username_idx").on(table.username),
-    devIdIdx: index("dev_id_idx").on(table.devId),
+    emailIdx: index("email_idx").on(table.email),
+  })
+);
+
+export const accountsTable = pgTable(
+  "accounts",
+  {
+    userId: uuid("userId")
+      .notNull()
+      .references(() => usersTable.id, { onDelete: "cascade" }),
+    type: text("type").$type<AdapterAccountType>().notNull(),
+    provider: text("provider").notNull(),
+    providerAccountId: text("providerAccountId").notNull(),
+    refresh_token: text("refresh_token"),
+    access_token: text("access_token"),
+    expires_at: integer("expires_at"),
+    token_type: text("token_type"),
+    scope: text("scope"),
+    id_token: text("id_token"),
+    session_state: text("session_state"),
+    ...timestamps,
+  },
+  (account) => ({
+    compoundKey: primaryKey({
+      columns: [account.provider, account.providerAccountId],
+    }),
+  })
+);
+
+export const sessionsTable = pgTable("sessions", {
+  sessionToken: text("sessionToken").primaryKey(),
+  userId: uuid("userId")
+    .notNull()
+    .references(() => usersTable.id, { onDelete: "cascade" }),
+  expires: timestamp("expires", { mode: "date" }).notNull(),
+  ...timestamps,
+});
+
+export const verificationTokensTable = pgTable(
+  "verification_tokens",
+  {
+    identifier: text("identifier").notNull(),
+    token: text("token").notNull(),
+    expires: timestamp("expires", { mode: "date" }).notNull(),
+    ...timestamps,
+  },
+  (verificationToken) => ({
+    compositePk: primaryKey({
+      columns: [verificationToken.identifier, verificationToken.token],
+    }),
+  })
+);
+
+export const authenticatorsTable = pgTable(
+  "authenticators",
+  {
+    credentialID: text("credentialID").notNull().unique(),
+    userId: uuid("userId")
+      .notNull()
+      .references(() => usersTable.id, { onDelete: "cascade" }),
+    providerAccountId: text("providerAccountId").notNull(),
+    credentialPublicKey: text("credentialPublicKey").notNull(),
+    counter: integer("counter").notNull(),
+    credentialDeviceType: text("credentialDeviceType").notNull(),
+    credentialBackedUp: boolean("credentialBackedUp").notNull(),
+    transports: text("transports"),
+  },
+  (authenticator) => ({
+    compositePK: primaryKey({
+      columns: [authenticator.userId, authenticator.credentialID],
+    }),
   })
 );
 
@@ -91,9 +166,9 @@ export const dashboardsTable = pgTable(
   {
     id: uuid("id").primaryKey(),
     xOrder: integer("x_order").notNull().default(0),
-    userId: text("user_id")
+    userId: uuid("user_id")
       .notNull()
-      .references(() => oldUsersTable.id),
+      .references(() => usersTable.id),
     title: varchar("title", { ...shortText }).notNull(),
     slug: text("slug").notNull(),
     icon: text("icon").notNull(),

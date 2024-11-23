@@ -1,10 +1,9 @@
 import { TRPCReactProvider } from "@/server/trpc/setup/react";
 import React from "react";
 
-import ClerkProvider from "@/components/providers/clerk-provider";
+import { IsTouchscreenProvider } from "@/components/providers/is-touchscreen-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { defaultTheme, themes } from "@/components/providers/themes";
-import { IsTouchscreenProvider } from "@/components/providers/is-touchscreen-provider";
 
 export default async function Providers({
   children,
@@ -16,11 +15,9 @@ export default async function Providers({
       defaultTheme={defaultTheme}
       disableTransitionOnChange
     >
-      <ClerkProvider>
-        <TRPCReactProvider>
-          <IsTouchscreenProvider>{children}</IsTouchscreenProvider>
-        </TRPCReactProvider>
-      </ClerkProvider>
+      <TRPCReactProvider>
+        <IsTouchscreenProvider>{children}</IsTouchscreenProvider>
+      </TRPCReactProvider>
     </ThemeProvider>
   );
 }

@@ -186,7 +186,6 @@ type TCardObject = {
   };
   user: {
     id: string;
-    devId: string;
     email: string;
     username: string;
   };

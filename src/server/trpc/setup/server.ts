@@ -7,22 +7,17 @@ import { cache } from "react";
 import { createCaller, type AppRouter } from "@/server/trpc/api/root";
 import { createTRPCContext } from "@/server/trpc/setup/trpc";
 import { createQueryClient } from "./query-client";
-import { NextRequest } from "next/server";
-import { getAuth } from "@clerk/nextjs/server";
 
 /**
  * This wraps the `createTRPCContext` helper and provides the required context for the tRPC API when
  * handling a tRPC call from a React Server Component.
  */
 const createContext = cache(async () => {
-  const nextHeaders = await headers();
-  const heads = new Headers(nextHeaders);
+  const heads = new Headers(await headers());
   heads.set("x-trpc-source", "rsc");
+
   return createTRPCContext({
     headers: heads,
-    auth: getAuth(
-      new NextRequest("https://wikipedia.org", { headers: nextHeaders })
-    ),
   });
 });
 
