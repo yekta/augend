@@ -1,9 +1,3 @@
-import NextAuth, { DefaultSession } from "next-auth";
-import { cache } from "react";
-import Discord from "next-auth/providers/discord";
-import Google from "next-auth/providers/google";
-import GitHub from "next-auth/providers/github";
-import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { db } from "@/server/db/db";
 import {
   accountsTable,
@@ -12,6 +6,11 @@ import {
   usersTable,
   verificationTokensTable,
 } from "@/server/db/schema";
+import { DrizzleAdapter } from "@auth/drizzle-adapter";
+import NextAuth, { DefaultSession } from "next-auth";
+import Discord from "next-auth/providers/discord";
+import GitHub from "next-auth/providers/github";
+import { cache } from "react";
 
 declare module "next-auth" {
   interface Session extends DefaultSession {
@@ -27,7 +26,7 @@ const {
   signIn,
   signOut,
 } = NextAuth({
-  providers: [Discord, Google, GitHub],
+  providers: [Discord, GitHub],
   adapter: DrizzleAdapter(db, {
     usersTable: usersTable,
     accountsTable: accountsTable,
