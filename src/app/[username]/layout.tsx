@@ -9,10 +9,8 @@ export default async function UserLayout({
   children: React.ReactNode;
   params: Promise<{ username: string }>;
 }>) {
-  const start = Date.now();
   const { username } = await params;
   const initialDashboards = await apiServer.ui.getDashboards({ username });
-  console.log(`[username]/layout | Total | ${Date.now() - start}ms`);
 
   return (
     <LayoutWrapper initialDashboards={initialDashboards} username={username}>

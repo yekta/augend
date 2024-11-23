@@ -38,7 +38,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function Page({ params }: Props) {
-  const start = Date.now();
   const { dashboard_slug, username } = await params;
 
   const [cardsInitialData, dashboardInitialData] = await Promise.all([
@@ -73,8 +72,6 @@ export default async function Page({ params }: Props) {
       apiServer.ui.getCurrencies({ ids: currencyIdsForFetch }),
     ]);
   }
-
-  console.log(`[username]/[dashboard_slug] | Total | ${Date.now() - start}ms`);
 
   return (
     <Dashboard
