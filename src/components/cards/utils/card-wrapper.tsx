@@ -14,7 +14,10 @@ export default function CardWrapper({
   children,
   ...rest
 }: CardWrapperProps) {
-  const classNameAll = cn("flex flex-col p-1 group/card w-full", className);
+  const classNameAll = cn(
+    "flex flex-col p-1 group/card col-span-12",
+    className
+  );
   if ("href" in rest && rest.href) {
     const linkProps = rest as LinkProps &
       React.AnchorHTMLAttributes<HTMLAnchorElement>;

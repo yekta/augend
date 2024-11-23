@@ -19,7 +19,7 @@ import { api } from "@/trpc/setup/react";
 import Link from "next/link";
 import { ReactNode, useMemo } from "react";
 
-const componentRequiresNewLine = ["orderbook", "ohlcv_chart"];
+const componentRequiresNewRow = ["orderbook", "ohlcv_chart"];
 
 export default function Dashboard({
   username,
@@ -62,27 +62,6 @@ export default function Dashboard({
         tertiary: firstCard.tertiary_currency,
       }
     : undefined;
-
-  const cardsAndDividers = useMemo(() => {
-    if (!cards) return undefined;
-
-    let cardsAndDividers: (NonNullable<typeof cards>[number] | "divider")[] =
-      [];
-
-    cards.forEach((cardObj, index) => {
-      const requiresNewLine = componentRequiresNewLine.includes(
-        cardObj.card.cardTypeId
-      );
-      const differentThanPrevious =
-        index !== 0 &&
-        cards[index - 1].card.cardTypeId !== cardObj.card.cardTypeId;
-      if (requiresNewLine && differentThanPrevious) {
-        cardsAndDividers.push("divider");
-      }
-      cardsAndDividers.push(cardObj);
-    });
-    return cardsAndDividers;
-  }, [cards]);
 
   const nanoBananoAccounts = useMemo(() => {
     if (!cards) return undefined;
@@ -199,7 +178,6 @@ export default function Dashboard({
   if (
     cards === undefined ||
     dashboard == undefined ||
-    cardsAndDividers === undefined ||
     nanoBananoAccounts === undefined ||
     currencyIdsForFetch === undefined ||
     cryptoCurrencyIds === undefined ||
@@ -231,17 +209,25 @@ export default function Dashboard({
       cryptoCurrencyIds={cryptoCurrencyIds}
       currencyPreference={currencyPreference}
     >
-      <DashboardWrapper centerItems={cardsAndDividers.length < 2}>
-        {cardsAndDividers.map((cardObjectOrDivider, index) => {
-          if (cardObjectOrDivider === "divider") {
-            return <div key={`divider-${index}`} className="w-full" />;
-          }
-          const cardObject = cardObjectOrDivider;
+      <DashboardWrapper centerItems={cards.length < 2}>
+        {cards.map((card, index) => {
+          const requiresNewRow = componentRequiresNewRow.includes(
+            card.card.cardTypeId
+          );
+          const differentThanPrevious =
+            index !== 0 &&
+            cards[index - 1].card.cardTypeId !== card.card.cardTypeId;
+          const startAtNewRow = requiresNewRow || differentThanPrevious;
           return (
             <CardParser
-              key={cardObject.card.id}
-              cardObject={cardObject}
+              key={card.card.id}
+              cardObject={card}
               currencies={currencies}
+              className={
+                startAtNewRow
+                  ? "col-start-1 md:col-start-1 lg:col-start-1 xl:col-start-1 2xl:col-start-1"
+                  : undefined
+              }
             />
           );
         })}

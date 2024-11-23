@@ -240,7 +240,7 @@ export default function UniswapPoolsTableCard({
   }, [data, isPending, isError, isLoadingError]);
 
   return (
-    <CardWrapper className={cn("w-full", className)}>
+    <CardWrapper className={cn(className)}>
       <AsyncDataTable
         className="h-167 max-h-[calc((100svh-3rem)*0.65)]"
         columnDefs={columnDefs}

@@ -66,7 +66,10 @@ export default function OrderBookCard({
   return (
     <CardWrapper
       href={href}
-      className={cn("w-full md:w-1/2 lg:w-1/3 xl:w-1/4", className)}
+      className={cn(
+        "col-span-12 md:col-span-6 lg:col-span-4 xl:col-span-3",
+        className
+      )}
     >
       <div
         data-is-loading-error={(isLoadingError && true) || undefined}

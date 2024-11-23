@@ -3,6 +3,7 @@
 import ThreeLineCard from "@/components/cards/three-line-card";
 import { useNanoBananoBalances } from "@/components/providers/nano-banano-balance-provider";
 import { formatNumberTBMK } from "@/lib/number-formatters";
+import { cn } from "@/lib/utils";
 import {
   getAvatarUrl,
   getExplorerUrl,
@@ -12,8 +13,10 @@ import { TNanoBananoAccount } from "@/trpc/api/routers/nano-banano/types";
 
 export default function NanoBananoCard({
   account,
+  className,
 }: {
   account: TNanoBananoAccount;
+  className?: string;
 }) {
   const {
     data: d,
@@ -30,7 +33,7 @@ export default function NanoBananoCard({
     <>
       <ThreeLineCard
         href={getExplorerUrl(account.address)}
-        className={isNanoAddress ? "text-nano" : "text-banano"}
+        className={cn(isNanoAddress ? "text-nano" : "text-banano", className)}
         isPendingParagraphClassName={isNanoAddress ? "bg-nano" : "bg-banano"}
         key={account.address}
         top={data ? account.address.slice(-6) : undefined}

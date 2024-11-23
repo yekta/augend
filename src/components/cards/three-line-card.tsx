@@ -47,7 +47,7 @@ export default function ThreeLineCard({
   return (
     <CardWrapper
       href={href}
-      className={cn("w-1/2 md:w-1/3 xl:w-1/4 h-32", className)}
+      className={cn("col-span-6 md:col-span-4 lg:col-span-3 h-32", className)}
     >
       <div
         data-is-loading-error={(isLoadingError && true) || undefined}

@@ -183,7 +183,7 @@ export default function OhlcvChartCard({
         isLoadingError && !isPending && !isRefetching ? true : undefined
       }
       data-is-placeholder-data={isPlaceholderData ? true : undefined}
-      className={cn("w-full lg:w-1/2 p-1", className)}
+      className={cn("col-span-12 lg:col-span-6", className)}
     >
       <div className="w-full px-5 pt-4.5 pb-3 border rounded-xl gap-12 flex flex-col items-start relative">
         <Header

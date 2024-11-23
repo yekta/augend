@@ -157,9 +157,7 @@ export default function CryptoTableCard({ className }: { className?: string }) {
   }, [data, isPending, isError, isLoadingError]);
 
   return (
-    <CardWrapper
-      className={cn("flex flex-col p-1 group/card w-full", className)}
-    >
+    <CardWrapper className={cn(className)}>
       <AsyncDataTable
         className="h-167 max-h-[calc((100svh-3rem)*0.65)]"
         columnDefs={columnDefs}

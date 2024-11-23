@@ -5,11 +5,12 @@ import { useCmcCryptoInfos } from "@/components/providers/cmc/cmc-crypto-infos-p
 import { useCurrencyPreference } from "@/components/providers/currency-preference-provider";
 import { useNanoBananoBalances } from "@/components/providers/nano-banano-balance-provider";
 import { formatNumberTBMK } from "@/lib/number-formatters";
+import { cn } from "@/lib/utils";
 import { isNano } from "@/trpc/api/routers/nano-banano/helpers";
 
 export const bananoCmcId = 4704;
 
-export default function BananoTotalCard() {
+export default function BananoTotalCard({ className }: { className?: string }) {
   const {
     primary: primaryCurrency,
     secondary: secondaryCurrency,
@@ -91,7 +92,7 @@ export default function BananoTotalCard() {
 
   return (
     <ThreeLineCard
-      className="text-banano"
+      className={cn("text-banano", className)}
       isPendingParagraphClassName="bg-banano"
       top={top}
       middle={middle}

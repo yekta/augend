@@ -54,7 +54,7 @@ export default function MiniCryptoCard({
       data-is-pending={(isPending && true) || undefined}
       data-has-data={(data !== undefined && true) || undefined}
       href={slug ? getCmcUrl(slug) : undefined}
-      className={cn("w-1/2 md:w-1/3 xl:w-1/4", className)}
+      className={cn("col-span-6 md:col-span-4 lg:col-span-3", className)}
     >
       <div
         className="w-full flex px-2.5 md:pl-3.5 md:pr-3.75 py-3 md:py-4 gap-2.25 md:gap-3 flex-row border items-center rounded-xl text-left group

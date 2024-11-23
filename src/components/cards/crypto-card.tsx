@@ -6,6 +6,7 @@ import { useCmcCryptoInfos } from "@/components/providers/cmc/cmc-crypto-infos-p
 import { useCurrencyPreference } from "@/components/providers/currency-preference-provider";
 import { getCmcUrl } from "@/lib/get-cmc-url";
 import { formatNumberTBMK } from "@/lib/number-formatters";
+import { cn } from "@/lib/utils";
 import { ArrowDownIcon, ArrowRightIcon, ArrowUpIcon } from "lucide-react";
 
 export type TCrypto = {
@@ -14,7 +15,13 @@ export type TCrypto = {
   isPendingParagraphClassName?: string;
 };
 
-export default function CryptoCard({ config }: { config: TCrypto }) {
+export default function CryptoCard({
+  config,
+  className,
+}: {
+  config: TCrypto;
+  className?: string;
+}) {
   const currencyPreference = useCurrencyPreference();
   const formatter = formatNumberTBMK;
   const {
@@ -44,7 +51,7 @@ export default function CryptoCard({ config }: { config: TCrypto }) {
   return (
     <ThreeLineCard
       href={data ? getCmcUrl(data.slug) : undefined}
-      className={config.className}
+      className={cn(config.className, className)}
       isPendingParagraphClassName={config.isPendingParagraphClassName}
       top={
         data ? (

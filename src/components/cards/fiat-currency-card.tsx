@@ -14,9 +14,11 @@ type TCurrency = {
 export default function FiatCurrencyCard({
   baseCurrency,
   quoteCurrency,
+  className,
 }: {
   baseCurrency: TCurrency;
   quoteCurrency: TCurrency;
+  className?: string;
 }) {
   const {
     data: d,
@@ -33,6 +35,7 @@ export default function FiatCurrencyCard({
 
   return (
     <ThreeLineCard
+      className={className}
       top={`${baseCurrency.symbol} ${baseCurrency.ticker}`}
       middle={
         baseInQuote

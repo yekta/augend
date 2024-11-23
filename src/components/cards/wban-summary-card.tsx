@@ -68,7 +68,7 @@ export default function WBanSummaryCard({ className }: { className?: string }) {
   });
 
   return (
-    <CardWrapper className={cn("w-full", className)}>
+    <CardWrapper className={cn(className)}>
       <div
         data-loading-error={isLoadingError ? true : undefined}
         data-is-pending={(isPending && true) || undefined}
