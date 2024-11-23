@@ -186,7 +186,7 @@ type TCardObject = {
   };
   user: {
     id: string;
-    email: string;
+    email: string | null;
     username: string;
   };
   primary_currency: TDenominatorCurrency;

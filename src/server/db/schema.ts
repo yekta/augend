@@ -59,6 +59,7 @@ export const usersTable = pgTable(
     name: text("name"),
     username: varchar("username", { ...shortText })
       .unique()
+      .notNull()
       .$defaultFn(() => crypto.randomUUID().replaceAll("-", "")),
     email: text("email").unique(),
     emailVerified: timestamp("emailVerified", { mode: "date" }),
