@@ -15,7 +15,6 @@ const notFoundMeta = {
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const start = Date.now();
   const { username, dashboard_slug } = await params;
 
   const dashboardObject = await apiServer.ui.getDashboard({
@@ -24,12 +23,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   });
 
   if (!dashboardObject) return notFoundMeta;
-
-  console.log(
-    `[username]/[dashboard_slug]:generateMetadata | Total | ${
-      Date.now() - start
-    }ms`
-  );
 
   return {
     title: `${dashboardObject.dashboard.title} | ${dashboardObject.user.username} | ${siteTitle}`,

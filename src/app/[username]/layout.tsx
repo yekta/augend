@@ -1,5 +1,4 @@
 import LayoutWrapper from "@/app/[username]/_components/layout-wrapper";
-import Navbar, { TRoute } from "@/components/navbar";
 import { apiServer } from "@/trpc/setup/server";
 
 export default async function UserLayout({
