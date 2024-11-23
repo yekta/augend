@@ -217,7 +217,7 @@ export default function Dashboard({
           const differentThanPrevious =
             index !== 0 &&
             cards[index - 1].card.cardTypeId !== card.card.cardTypeId;
-          const startAtNewRow = requiresNewRow || differentThanPrevious;
+          const startAtNewRow = requiresNewRow && differentThanPrevious;
           return (
             <CardParser
               key={card.card.id}
