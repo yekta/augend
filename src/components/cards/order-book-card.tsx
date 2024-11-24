@@ -1,6 +1,8 @@
 "use client";
 
-import CardWrapper from "@/components/cards/utils/card-wrapper";
+import CardWrapper, {
+  TCardWrapperProps,
+} from "@/components/cards/utils/card-wrapper";
 import Indicator from "@/components/ui/indicator";
 import { defaultQueryOptions } from "@/lib/constants";
 import { formatNumberTBMK } from "@/lib/number-formatters";
@@ -34,9 +36,9 @@ const placeholderData: TOrderBook = {
 export default function OrderBookCard({
   config,
   className,
-}: {
+  ...rest
+}: TCardWrapperProps & {
   config: TOrderBookConfig;
-  className?: string;
 }) {
   const { data, isPending, isError, isLoadingError, isRefetching } =
     api.exchange.getOrderBook.useQuery(
@@ -65,11 +67,11 @@ export default function OrderBookCard({
       : undefined;
   return (
     <CardWrapper
-      href={href}
       className={cn(
         "col-span-12 md:col-span-6 lg:col-span-4 xl:col-span-3",
         className
       )}
+      {...rest}
     >
       <div
         data-is-loading-error={(isLoadingError && true) || undefined}

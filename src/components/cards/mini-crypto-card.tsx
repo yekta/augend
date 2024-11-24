@@ -1,6 +1,10 @@
 "use client";
 
-import CardWrapper from "@/components/cards/utils/card-wrapper";
+import CardWrapper, {
+  TCardWrapperDivProps,
+  TCardWrapperLinkProps,
+  TCardWrapperProps,
+} from "@/components/cards/utils/card-wrapper";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import { useCmcCryptoInfos } from "@/components/providers/cmc/cmc-crypto-infos-provider";
 import { useCurrencyPreference } from "@/components/providers/currency-preference-provider";
@@ -13,9 +17,9 @@ import { ArrowDownIcon, ArrowRightIcon, ArrowUpIcon } from "lucide-react";
 export default function MiniCryptoCard({
   coinId,
   className,
-}: {
+  ...rest
+}: TCardWrapperProps & {
   coinId: number;
-  className?: string;
 }) {
   const currencyPreference = useCurrencyPreference();
   const {
@@ -48,13 +52,22 @@ export default function MiniCryptoCard({
       : isChangePositive === true
         ? ArrowUpIcon
         : ArrowRightIcon;
+
+  const restAsDiv = rest as TCardWrapperDivProps;
+  const restAsLink = rest as TCardWrapperLinkProps;
+  const restTyped = slug
+    ? {
+        ...restAsLink,
+        href: restAsLink.href || getCmcUrl(slug),
+      }
+    : restAsDiv;
   return (
     <CardWrapper
+      className={cn("col-span-6 md:col-span-4 lg:col-span-3", className)}
+      {...restTyped}
       data-is-loading-error={(isLoadingError && true) || undefined}
       data-is-pending={(isPending && true) || undefined}
       data-has-data={(data !== undefined && true) || undefined}
-      href={slug ? getCmcUrl(slug) : undefined}
-      className={cn("col-span-6 md:col-span-4 lg:col-span-3", className)}
     >
       <div
         className="w-full flex px-2.5 md:pl-3.5 md:pr-3.75 py-3 md:py-4 gap-2.25 md:gap-3 flex-row border items-center rounded-xl text-left group

@@ -1,6 +1,8 @@
 "use client";
 
-import CardWrapper from "@/components/cards/utils/card-wrapper";
+import CardWrapper, {
+  TCardWrapperProps,
+} from "@/components/cards/utils/card-wrapper";
 import AsyncDataTable, {
   TAsyncDataTableColumnDef,
   TAsyncDataTablePage,
@@ -45,7 +47,10 @@ const dataFallback: TData[] = Array.from({ length: 100 }, (_, i) => ({
   volume: 123456,
 }));
 
-export default function CryptoTableCard({ className }: { className?: string }) {
+export default function CryptoTableCard({
+  className,
+  ...rest
+}: TCardWrapperProps) {
   const [page, setPage] = useState<TAsyncDataTablePage>({
     min: 1,
     max: 5,
@@ -157,7 +162,7 @@ export default function CryptoTableCard({ className }: { className?: string }) {
   }, [data, isPending, isError, isLoadingError]);
 
   return (
-    <CardWrapper className={cn(className)}>
+    <CardWrapper {...rest} className={cn(className)}>
       <AsyncDataTable
         className="h-167 max-h-[calc((100svh-3rem)*0.65)]"
         columnDefs={columnDefs}

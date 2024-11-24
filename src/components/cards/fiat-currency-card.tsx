@@ -1,8 +1,10 @@
 "use client";
 
 import ThreeLineCard from "@/components/cards/three-line-card";
+import { TCardWrapperProps } from "@/components/cards/utils/card-wrapper";
 import { useFiatCurrencyRates } from "@/components/providers/fiat-currency-rates-provider";
 import { formatNumberTBMK } from "@/lib/number-formatters";
+import { cn } from "@/lib/utils";
 
 type TCurrency = {
   id: string;
@@ -15,10 +17,10 @@ export default function FiatCurrencyCard({
   baseCurrency,
   quoteCurrency,
   className,
-}: {
+  ...rest
+}: TCardWrapperProps & {
   baseCurrency: TCurrency;
   quoteCurrency: TCurrency;
-  className?: string;
 }) {
   const {
     data: d,
@@ -35,7 +37,8 @@ export default function FiatCurrencyCard({
 
   return (
     <ThreeLineCard
-      className={className}
+      className={cn(className)}
+      {...rest}
       top={`${baseCurrency.symbol} ${baseCurrency.ticker}`}
       middle={
         baseInQuote

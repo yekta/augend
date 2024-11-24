@@ -1,6 +1,8 @@
 "use client";
 
-import CardWrapper from "@/components/cards/utils/card-wrapper";
+import CardWrapper, {
+  TCardWrapperProps,
+} from "@/components/cards/utils/card-wrapper";
 import Indicator from "@/components/ui/indicator";
 import { defaultQueryOptions } from "@/lib/constants";
 import { useConditionalValue } from "@/lib/hooks/use-conditional-value";
@@ -28,7 +30,10 @@ export const wbanBalanceQueryInput = {
   ],
 };
 
-export default function WBanSummaryCard({ className }: { className?: string }) {
+export default function WBanSummaryCard({
+  className,
+  ...rest
+}: TCardWrapperProps) {
   const {
     data: banBalanceData,
     isError: isBanBalanceError,
@@ -71,7 +76,7 @@ export default function WBanSummaryCard({ className }: { className?: string }) {
   });
 
   return (
-    <CardWrapper className={cn(className)}>
+    <CardWrapper className={cn(className)} {...rest}>
       <div
         data-loading-error={isLoadingError ? true : undefined}
         data-is-pending={(isPending && true) || undefined}

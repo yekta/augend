@@ -1,4 +1,6 @@
-import CardWrapper from "@/components/cards/utils/card-wrapper";
+import CardWrapper, {
+  TCardWrapperProps,
+} from "@/components/cards/utils/card-wrapper";
 import Indicator from "@/components/ui/indicator";
 import { cn } from "@/lib/utils";
 import React, { ReactNode } from "react";
@@ -19,8 +21,8 @@ export default function ThreeLineCard({
   isPendingClassNameTop,
   isPendingClassNameMiddle,
   isPendingClassNameBottom,
-  href = undefined,
   children,
+  ...rest
 }: {
   top: string | ReactNode | undefined;
   middle: string | ReactNode | undefined;
@@ -29,7 +31,6 @@ export default function ThreeLineCard({
   isRefetching: boolean;
   isError: boolean;
   isLoadingError: boolean;
-  className?: string;
   classNameTop?: string;
   classNameMiddle?: string;
   classNameBottom?: string;
@@ -37,22 +38,20 @@ export default function ThreeLineCard({
   isPendingClassNameTop?: string;
   isPendingClassNameMiddle?: string;
   isPendingClassNameBottom?: string;
-  href?: string;
-  children?: React.ReactNode;
-}) {
+} & TCardWrapperProps) {
   const conditionalValue = (v: string | ReactNode | undefined) => {
     return isPending ? "Loading" : v !== undefined ? v : "Error";
   };
 
   return (
     <CardWrapper
-      href={href}
       className={cn("col-span-6 md:col-span-4 lg:col-span-3 h-32", className)}
+      {...rest}
     >
       <div
         data-is-loading-error={(isLoadingError && true) || undefined}
         data-is-pending={(isPending && true) || undefined}
-        data-has-href={href ? true : undefined}
+        data-has-href={rest.href ? true : undefined}
         className="flex flex-1 flex-col justify-center items-center border rounded-xl px-4 py-3 text-center gap-3 group not-touch:data-[has-href]:group-hover/card:bg-background-secondary data-[has-href]:group-active/card:bg-background-secondary relative overflow-hidden"
       >
         <div

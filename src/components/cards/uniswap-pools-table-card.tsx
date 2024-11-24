@@ -1,11 +1,12 @@
 "use client";
 
-import CardWrapper from "@/components/cards/utils/card-wrapper";
+import CardWrapper, {
+  TCardWrapperProps,
+} from "@/components/cards/utils/card-wrapper";
 import { getNumberColorClass } from "@/components/cards/utils/helpers";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import AsyncDataTable, {
   TAsyncDataTableColumnDef,
-  TAsyncDataTablePage,
 } from "@/components/ui/async-data-table";
 import { defaultQueryOptions } from "@/lib/constants";
 import { formatNumberTBMK } from "@/lib/number-formatters";
@@ -56,9 +57,8 @@ const dataFallback: TUniswapPoolsResult = {
 
 export default function UniswapPoolsTableCard({
   className,
-}: {
-  className?: string;
-}) {
+  ...rest
+}: TCardWrapperProps) {
   const [network, setNetwork] = useState<TEthereumNetwork>("ethereum");
 
   const [sorting, setSorting] = useState<SortingState>([
@@ -240,7 +240,7 @@ export default function UniswapPoolsTableCard({
   }, [data, isPending, isError, isLoadingError]);
 
   return (
-    <CardWrapper className={cn(className)}>
+    <CardWrapper className={cn(className)} {...rest}>
       <AsyncDataTable
         className="h-167 max-h-[calc((100svh-3rem)*0.65)]"
         columnDefs={columnDefs}

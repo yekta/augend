@@ -1,6 +1,7 @@
 "use client";
 
 import ThreeLineCard from "@/components/cards/three-line-card";
+import { TCardWrapperProps } from "@/components/cards/utils/card-wrapper";
 import { useCmcCryptoInfos } from "@/components/providers/cmc/cmc-crypto-infos-provider";
 import { useCurrencyPreference } from "@/components/providers/currency-preference-provider";
 import { useNanoBananoBalances } from "@/components/providers/nano-banano-balance-provider";
@@ -10,7 +11,10 @@ import { isNano } from "@/server/trpc/api/routers/nano-banano/helpers";
 
 export const bananoCmcId = 4704;
 
-export default function BananoTotalCard({ className }: { className?: string }) {
+export default function BananoTotalCard({
+  className,
+  ...rest
+}: TCardWrapperProps) {
   const {
     primary: primaryCurrency,
     secondary: secondaryCurrency,
@@ -93,6 +97,7 @@ export default function BananoTotalCard({ className }: { className?: string }) {
   return (
     <ThreeLineCard
       className={cn("text-banano", className)}
+      {...rest}
       isPendingParagraphClassName="bg-banano"
       top={top}
       middle={middle}

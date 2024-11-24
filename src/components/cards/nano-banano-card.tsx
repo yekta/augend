@@ -1,6 +1,11 @@
 "use client";
 
 import ThreeLineCard from "@/components/cards/three-line-card";
+import {
+  TCardWrapperDivProps,
+  TCardWrapperLinkProps,
+  TCardWrapperProps,
+} from "@/components/cards/utils/card-wrapper";
 import { useNanoBananoBalances } from "@/components/providers/nano-banano-balance-provider";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
@@ -14,7 +19,8 @@ import { TNanoBananoAccount } from "@/server/trpc/api/routers/nano-banano/types"
 export default function NanoBananoCard({
   account,
   className,
-}: {
+  ...rest
+}: TCardWrapperProps & {
   account: TNanoBananoAccount;
   className?: string;
 }) {
@@ -29,11 +35,20 @@ export default function NanoBananoCard({
   const isNanoAddress = isNano(account.address);
   const data = d?.find((d) => d.address === account.address);
 
+  const restAsDiv = rest as TCardWrapperDivProps;
+  const restAsLink = rest as TCardWrapperLinkProps;
+  const restTyped = account.address
+    ? {
+        ...restAsLink,
+        href: restAsLink.href || getExplorerUrl(account.address),
+      }
+    : restAsDiv;
+
   return (
     <>
       <ThreeLineCard
-        href={getExplorerUrl(account.address)}
         className={cn(isNanoAddress ? "text-nano" : "text-banano", className)}
+        {...restTyped}
         isPendingParagraphClassName={isNanoAddress ? "bg-nano" : "bg-banano"}
         key={account.address}
         top={data ? account.address.slice(-6) : undefined}

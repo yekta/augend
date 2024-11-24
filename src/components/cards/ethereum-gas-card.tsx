@@ -1,6 +1,10 @@
 "use client";
 
-import CardWrapper from "@/components/cards/utils/card-wrapper";
+import CardWrapper, {
+  TCardWrapperDivProps,
+  TCardWrapperLinkProps,
+  TCardWrapperProps,
+} from "@/components/cards/utils/card-wrapper";
 import Indicator from "@/components/ui/indicator";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import { defaultLocale, defaultQueryOptions } from "@/lib/constants";
@@ -21,9 +25,9 @@ import { ElementType } from "react";
 export default function EthereumGasCard({
   network,
   className,
-}: {
+  ...rest
+}: TCardWrapperProps & {
   network: TEthereumNetwork;
-  className?: string;
 }) {
   const { data, isPending, isError, isLoadingError, isRefetching } =
     api.ethereum.getGasInfo.useQuery(
@@ -39,13 +43,23 @@ export default function EthereumGasCard({
     loadingText: "10,000,000",
     loadingTextShort: "10.0",
   });
+
+  const restAsDiv = rest as TCardWrapperDivProps;
+  const restAsLink = rest as TCardWrapperLinkProps;
+  const restTyped = data
+    ? {
+        ...restAsLink,
+        href: restAsLink.href || ethereumNetworks[network].gasTracker,
+      }
+    : restAsDiv;
+
   return (
     <CardWrapper
+      className={className}
+      {...restTyped}
       data-is-loading-error={(isLoadingError && true) || undefined}
       data-is-pending={(isPending && true) || undefined}
       data-has-data={(data !== undefined && true) || undefined}
-      className={className}
-      href={data ? ethereumNetworks[network].gasTracker : undefined}
     >
       <div
         className="w-full px-2 py-2.5 flex flex-wrap shrink min-w-0 items-center justify-center flex-row rounded-xl border leading-none font-bold relative

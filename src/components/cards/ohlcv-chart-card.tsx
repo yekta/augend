@@ -1,6 +1,8 @@
 "use client";
 
-import CardWrapper from "@/components/cards/utils/card-wrapper";
+import CardWrapper, {
+  TCardWrapperProps,
+} from "@/components/cards/utils/card-wrapper";
 import Indicator from "@/components/ui/indicator";
 import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
 import {
@@ -95,9 +97,9 @@ const intervalDefault = intervalOptions[3];
 export default function OhlcvChartCard({
   config,
   className,
-}: {
+  ...rest
+}: TCardWrapperProps & {
   config: TOhlcvChartConfig;
-  className?: string;
 }) {
   const [interval, setInterval] = useState(intervalDefault);
 
@@ -178,12 +180,13 @@ export default function OhlcvChartCard({
 
   return (
     <CardWrapper
+      className={cn("col-span-12 lg:col-span-6", className)}
+      {...rest}
       data-is-pending={(isPending && true) || undefined}
       data-is-loading-error={
         isLoadingError && !isPending && !isRefetching ? true : undefined
       }
       data-is-placeholder-data={isPlaceholderData ? true : undefined}
-      className={cn("col-span-12 lg:col-span-6", className)}
     >
       <div className="w-full px-5 pt-4.5 pb-3 border rounded-xl gap-12 flex flex-col items-start relative">
         <Header

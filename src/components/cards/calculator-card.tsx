@@ -1,6 +1,8 @@
 "use client";
 
-import CardWrapper from "@/components/cards/utils/card-wrapper";
+import CardWrapper, {
+  TCardWrapperProps,
+} from "@/components/cards/utils/card-wrapper";
 import BananoIcon from "@/components/icons/banano-icon";
 import NanoIcon from "@/components/icons/nano-icon";
 import { useCmcCryptoInfos } from "@/components/providers/cmc/cmc-crypto-infos-provider";
@@ -19,9 +21,9 @@ const tickerToIcon: Record<string, ReactNode> = {
 export default function Calculator({
   currencies,
   className,
-}: {
+  ...rest
+}: TCardWrapperProps & {
   currencies: TDenominatorCurrency[];
-  className?: string;
 }) {
   const {
     data: fiatData,
@@ -146,7 +148,10 @@ export default function Calculator({
     });
   }
   return (
-    <CardWrapper className="col-span-12 md:col-span-6 lg:col-span-3">
+    <CardWrapper
+      {...rest}
+      className={cn("col-span-12 md:col-span-6 lg:col-span-3", className)}
+    >
       <div
         id="calculator"
         className={cn(

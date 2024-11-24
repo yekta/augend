@@ -1,6 +1,10 @@
 "use client";
 
-import CardWrapper from "@/components/cards/utils/card-wrapper";
+import CardWrapper, {
+  TCardWrapperDivProps,
+  TCardWrapperLinkProps,
+  TCardWrapperProps,
+} from "@/components/cards/utils/card-wrapper";
 import Indicator from "@/components/ui/indicator";
 import { useCmcGlobalMetrics } from "@/components/providers/cmc/cmc-global-metrics-provider";
 import { linearInterpolation } from "@/lib/helpers";
@@ -11,9 +15,8 @@ import { useCurrencyPreference } from "@/components/providers/currency-preferenc
 
 export default function FearGreedIndexCard({
   className,
-}: {
-  className?: string;
-}) {
+  ...rest
+}: TCardWrapperProps) {
   const convertCurrency = useCurrencyPreference().primary;
   const { data, isPending, isRefetching, isError, isLoadingError } =
     useCmcGlobalMetrics();
@@ -32,10 +35,21 @@ export default function FearGreedIndexCard({
         ? ArrowDownIcon
         : ArrowRightIcon;
 
+  const restAsDiv = rest as TCardWrapperDivProps;
+  const restAsLink = rest as TCardWrapperLinkProps;
+  const restTyped = data
+    ? {
+        ...restAsLink,
+        href:
+          restAsLink.href ||
+          "https://coinmarketcap.com/charts/fear-and-greed-index",
+      }
+    : restAsDiv;
+
   return (
     <CardWrapper
-      href={"https://coinmarketcap.com/charts/fear-and-greed-index"}
       className={cn("col-span-6 md:col-span-4 lg:col-span-3 h-32", className)}
+      {...restTyped}
     >
       <div
         data-is-loading-error={(isLoadingError && true) || undefined}
