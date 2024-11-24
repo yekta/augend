@@ -163,7 +163,7 @@ export default function CryptoTableCard({
   }, [data, isPending, isError, isLoadingError]);
 
   return (
-    <CardOuterWrapper {...rest} className={cn(className)}>
+    <CardOuterWrapper className={cn(className)} {...rest}>
       <CardInnerWrapper>
         <AsyncDataTable
           className="h-167 max-h-[calc((100svh-3rem)*0.65)]"

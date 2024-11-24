@@ -48,7 +48,6 @@ export default function NanoBananoCard({
     <>
       <ThreeLineCard
         className={cn(isNanoAddress ? "text-nano" : "text-banano", className)}
-        {...restTyped}
         isPendingParagraphClassName={isNanoAddress ? "bg-nano" : "bg-banano"}
         key={account.address}
         top={data ? account.address.slice(-6) : undefined}
@@ -59,6 +58,7 @@ export default function NanoBananoCard({
         isRefetching={isRefetching}
         isError={isError}
         isLoadingError={isLoadingError}
+        {...restTyped}
       >
         {!isPending && !isError && (
           <img

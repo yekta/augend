@@ -312,13 +312,13 @@ export default function UniswapPositionCard({
   return (
     <CardOuterWrapper
       className={cn(className)}
-      {...rest}
       data-is-loading-error={(isLoadingError && true) || undefined}
       data-is-pending={(isPending && true) || undefined}
       data-is-out-of-range={isOutOfRange || undefined}
       data-has-data={
         (!isPending && !isLoadingError && data !== undefined) || undefined
       }
+      {...rest}
     >
       <div className="w-full flex flex-col flex-1 border rounded-xl relative">
         <div

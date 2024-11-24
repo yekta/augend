@@ -97,7 +97,6 @@ export default function BananoTotalCard({
   return (
     <ThreeLineCard
       className={cn("text-banano", className)}
-      {...rest}
       isPendingParagraphClassName="bg-banano"
       top={top}
       middle={middle}
@@ -106,6 +105,7 @@ export default function BananoTotalCard({
       isRefetching={isRefetching}
       isError={isError}
       isLoadingError={isLoadingError}
+      {...rest}
     />
   );
 }

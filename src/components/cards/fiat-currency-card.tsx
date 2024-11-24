@@ -38,7 +38,6 @@ export default function FiatCurrencyCard({
   return (
     <ThreeLineCard
       className={cn(className)}
-      {...rest}
       top={`${baseCurrency.symbol} ${baseCurrency.ticker}`}
       middle={
         baseInQuote
@@ -50,6 +49,7 @@ export default function FiatCurrencyCard({
       isRefetching={isRefetching}
       isError={isError}
       isLoadingError={isLoadingError}
+      {...rest}
     />
   );
 }

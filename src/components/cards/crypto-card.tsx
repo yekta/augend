@@ -61,7 +61,6 @@ export default function CryptoCard({
   return (
     <ThreeLineCard
       className={cn(className)}
-      {...restTyped}
       isPendingParagraphClassName={config.isPendingParagraphClassName}
       top={
         data ? (
@@ -124,6 +123,7 @@ export default function CryptoCard({
       isRefetching={isRefetching}
       isError={isError}
       isLoadingError={isLoadingError}
+      {...restTyped}
     />
   );
 }

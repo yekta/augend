@@ -57,10 +57,10 @@ export default function EthereumGasCard({
   return (
     <CardOuterWrapper
       className={className}
-      {...restTyped}
       data-is-loading-error={(isLoadingError && true) || undefined}
       data-is-pending={(isPending && true) || undefined}
       data-has-data={(data !== undefined && true) || undefined}
+      {...restTyped}
     >
       <CardInnerWrapper
         className="px-2 py-2.5 flex flex-wrap shrink min-w-0 items-center justify-center flex-row leading-none font-bold relative

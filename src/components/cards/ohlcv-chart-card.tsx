@@ -182,12 +182,12 @@ export default function OhlcvChartCard({
   return (
     <CardOuterWrapper
       className={cn("col-span-12 lg:col-span-6", className)}
-      {...rest}
       data-is-pending={(isPending && true) || undefined}
       data-is-loading-error={
         isLoadingError && !isPending && !isRefetching ? true : undefined
       }
       data-is-placeholder-data={isPlaceholderData ? true : undefined}
+      {...rest}
     >
       <CardInnerWrapper className="px-5 pt-4.5 pb-3 gap-12 flex flex-col items-start">
         <Header

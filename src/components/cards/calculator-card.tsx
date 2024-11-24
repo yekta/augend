@@ -150,8 +150,8 @@ export default function Calculator({
   }
   return (
     <CardOuterWrapper
-      {...rest}
       className={cn("col-span-12 md:col-span-6 lg:col-span-3", className)}
+      {...rest}
     >
       <CardInnerWrapper
         id="calculator"
