@@ -1,8 +1,9 @@
 "use client";
 
-import CardWrapper, {
-  TCardWrapperProps,
-} from "@/components/cards/utils/card-wrapper";
+import CardInnerWrapper from "@/components/cards/utils/card-inner-wrapper";
+import CardOuterWrapper, {
+  TCardOuterWrapperProps,
+} from "@/components/cards/utils/card-outer-wrapper";
 import BananoIcon from "@/components/icons/banano-icon";
 import NanoIcon from "@/components/icons/nano-icon";
 import { useCmcCryptoInfos } from "@/components/providers/cmc/cmc-crypto-infos-provider";
@@ -22,7 +23,7 @@ export default function Calculator({
   currencies,
   className,
   ...rest
-}: TCardWrapperProps & {
+}: TCardOuterWrapperProps & {
   currencies: TDenominatorCurrency[];
 }) {
   const {
@@ -148,16 +149,13 @@ export default function Calculator({
     });
   }
   return (
-    <CardWrapper
+    <CardOuterWrapper
       {...rest}
       className={cn("col-span-12 md:col-span-6 lg:col-span-3", className)}
     >
-      <div
+      <CardInnerWrapper
         id="calculator"
-        className={cn(
-          "w-full border rounded-xl p-4 flex flex-col gap-2 relative",
-          className
-        )}
+        className="p-4 flex flex-col gap-2 relative"
       >
         {currencies.map((c, index) => {
           const Icon = tickerToIcon[c.ticker];
@@ -190,7 +188,7 @@ export default function Calculator({
           showOnHasData
           showOnError="all"
         />
-      </div>
-    </CardWrapper>
+      </CardInnerWrapper>
+    </CardOuterWrapper>
   );
 }

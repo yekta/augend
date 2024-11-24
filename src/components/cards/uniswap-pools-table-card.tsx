@@ -1,8 +1,9 @@
 "use client";
 
-import CardWrapper, {
-  TCardWrapperProps,
-} from "@/components/cards/utils/card-wrapper";
+import CardInnerWrapper from "@/components/cards/utils/card-inner-wrapper";
+import CardOuterWrapper, {
+  TCardOuterWrapperProps,
+} from "@/components/cards/utils/card-outer-wrapper";
 import { getNumberColorClass } from "@/components/cards/utils/helpers";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import AsyncDataTable, {
@@ -58,7 +59,7 @@ const dataFallback: TUniswapPoolsResult = {
 export default function UniswapPoolsTableCard({
   className,
   ...rest
-}: TCardWrapperProps) {
+}: TCardOuterWrapperProps) {
   const [network, setNetwork] = useState<TEthereumNetwork>("ethereum");
 
   const [sorting, setSorting] = useState<SortingState>([
@@ -240,18 +241,20 @@ export default function UniswapPoolsTableCard({
   }, [data, isPending, isError, isLoadingError]);
 
   return (
-    <CardWrapper className={cn(className)} {...rest}>
-      <AsyncDataTable
-        className="h-167 max-h-[calc((100svh-3rem)*0.65)]"
-        columnDefs={columnDefs}
-        data={dataOrFallback.pools}
-        isError={isError}
-        isPending={isPending}
-        isLoadingError={isLoadingError}
-        isRefetching={isRefetching}
-        sorting={sorting}
-        setSorting={setSorting}
-      />
-    </CardWrapper>
+    <CardOuterWrapper className={cn(className)} {...rest}>
+      <CardInnerWrapper>
+        <AsyncDataTable
+          className="h-167 max-h-[calc((100svh-3rem)*0.65)]"
+          columnDefs={columnDefs}
+          data={dataOrFallback.pools}
+          isError={isError}
+          isPending={isPending}
+          isLoadingError={isLoadingError}
+          isRefetching={isRefetching}
+          sorting={sorting}
+          setSorting={setSorting}
+        />
+      </CardInnerWrapper>
+    </CardOuterWrapper>
   );
 }

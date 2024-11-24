@@ -1,8 +1,9 @@
 "use client";
 
-import CardWrapper, {
-  TCardWrapperProps,
-} from "@/components/cards/utils/card-wrapper";
+import CardInnerWrapper from "@/components/cards/utils/card-inner-wrapper";
+import CardOuterWrapper, {
+  TCardOuterWrapperProps,
+} from "@/components/cards/utils/card-outer-wrapper";
 import AsyncDataTable, {
   TAsyncDataTableColumnDef,
   TAsyncDataTablePage,
@@ -50,7 +51,7 @@ const dataFallback: TData[] = Array.from({ length: 100 }, (_, i) => ({
 export default function CryptoTableCard({
   className,
   ...rest
-}: TCardWrapperProps) {
+}: TCardOuterWrapperProps) {
   const [page, setPage] = useState<TAsyncDataTablePage>({
     min: 1,
     max: 5,
@@ -162,21 +163,23 @@ export default function CryptoTableCard({
   }, [data, isPending, isError, isLoadingError]);
 
   return (
-    <CardWrapper {...rest} className={cn(className)}>
-      <AsyncDataTable
-        className="h-167 max-h-[calc((100svh-3rem)*0.65)]"
-        columnDefs={columnDefs}
-        data={dataOrFallback}
-        isError={isError}
-        isPending={isPending}
-        isLoadingError={isLoadingError}
-        isRefetching={isRefetching}
-        page={page}
-        setPage={setPage}
-        sorting={sorting}
-        setSorting={setSorting}
-      />
-    </CardWrapper>
+    <CardOuterWrapper {...rest} className={cn(className)}>
+      <CardInnerWrapper>
+        <AsyncDataTable
+          className="h-167 max-h-[calc((100svh-3rem)*0.65)]"
+          columnDefs={columnDefs}
+          data={dataOrFallback}
+          isError={isError}
+          isPending={isPending}
+          isLoadingError={isLoadingError}
+          isRefetching={isRefetching}
+          page={page}
+          setPage={setPage}
+          sorting={sorting}
+          setSorting={setSorting}
+        />
+      </CardInnerWrapper>
+    </CardOuterWrapper>
   );
 }
 

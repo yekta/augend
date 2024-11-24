@@ -1,7 +1,7 @@
 "use client";
 
 import ThreeLineCard from "@/components/cards/three-line-card";
-import { TCardWrapperProps } from "@/components/cards/utils/card-wrapper";
+import { TCardOuterWrapperProps } from "@/components/cards/utils/card-outer-wrapper";
 import { useCmcCryptoInfos } from "@/components/providers/cmc/cmc-crypto-infos-provider";
 import { useCurrencyPreference } from "@/components/providers/currency-preference-provider";
 import { useNanoBananoBalances } from "@/components/providers/nano-banano-balance-provider";
@@ -14,7 +14,7 @@ export const bananoCmcId = 4704;
 export default function BananoTotalCard({
   className,
   ...rest
-}: TCardWrapperProps) {
+}: TCardOuterWrapperProps) {
   const {
     primary: primaryCurrency,
     secondary: secondaryCurrency,

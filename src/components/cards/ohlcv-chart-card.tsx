@@ -1,8 +1,8 @@
 "use client";
 
-import CardWrapper, {
-  TCardWrapperProps,
-} from "@/components/cards/utils/card-wrapper";
+import CardOuterWrapper, {
+  TCardOuterWrapperProps,
+} from "@/components/cards/utils/card-outer-wrapper";
 import Indicator from "@/components/ui/indicator";
 import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
 import {
@@ -29,6 +29,7 @@ import {
   ValueType,
 } from "recharts/types/component/DefaultTooltipContent";
 import { z } from "zod";
+import CardInnerWrapper from "@/components/cards/utils/card-inner-wrapper";
 
 const baseChartContainerConfig = {
   label: "Price",
@@ -98,7 +99,7 @@ export default function OhlcvChartCard({
   config,
   className,
   ...rest
-}: TCardWrapperProps & {
+}: TCardOuterWrapperProps & {
   config: TOhlcvChartConfig;
 }) {
   const [interval, setInterval] = useState(intervalDefault);
@@ -179,7 +180,7 @@ export default function OhlcvChartCard({
   };
 
   return (
-    <CardWrapper
+    <CardOuterWrapper
       className={cn("col-span-12 lg:col-span-6", className)}
       {...rest}
       data-is-pending={(isPending && true) || undefined}
@@ -188,7 +189,7 @@ export default function OhlcvChartCard({
       }
       data-is-placeholder-data={isPlaceholderData ? true : undefined}
     >
-      <div className="w-full px-5 pt-4.5 pb-3 border rounded-xl gap-12 flex flex-col items-start relative">
+      <CardInnerWrapper className="px-5 pt-4.5 pb-3 gap-12 flex flex-col items-start">
         <Header
           config={config}
           priceInfo={priceInfo}
@@ -293,8 +294,8 @@ export default function OhlcvChartCard({
             options={intervalOptions}
           />
         )}
-      </div>
-    </CardWrapper>
+      </CardInnerWrapper>
+    </CardOuterWrapper>
   );
 }
 

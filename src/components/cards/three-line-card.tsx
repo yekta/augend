@@ -1,6 +1,7 @@
-import CardWrapper, {
-  TCardWrapperProps,
-} from "@/components/cards/utils/card-wrapper";
+import CardInnerWrapper from "@/components/cards/utils/card-inner-wrapper";
+import CardOuterWrapper, {
+  TCardOuterWrapperProps,
+} from "@/components/cards/utils/card-outer-wrapper";
 import Indicator from "@/components/ui/indicator";
 import { cn } from "@/lib/utils";
 import React, { ReactNode } from "react";
@@ -38,25 +39,26 @@ export default function ThreeLineCard({
   isPendingClassNameTop?: string;
   isPendingClassNameMiddle?: string;
   isPendingClassNameBottom?: string;
-} & TCardWrapperProps) {
+} & TCardOuterWrapperProps) {
   const conditionalValue = (v: string | ReactNode | undefined) => {
     return isPending ? "Loading" : v !== undefined ? v : "Error";
   };
 
   return (
-    <CardWrapper
+    <CardOuterWrapper
+      data-is-loading-error={(isLoadingError && true) || undefined}
+      data-is-pending={(isPending && true) || undefined}
+      data-has-href={rest.href ? true : undefined}
       className={cn("col-span-6 md:col-span-4 lg:col-span-3 h-32", className)}
       {...rest}
     >
-      <div
-        data-is-loading-error={(isLoadingError && true) || undefined}
-        data-is-pending={(isPending && true) || undefined}
-        data-has-href={rest.href ? true : undefined}
-        className="flex flex-1 flex-col justify-center items-center border rounded-xl px-4 py-3 text-center gap-3 group not-touch:data-[has-href]:group-hover/card:bg-background-secondary data-[has-href]:group-active/card:bg-background-secondary relative overflow-hidden"
+      <CardInnerWrapper
+        className="flex flex-1 flex-col justify-center items-center px-4 py-3 text-center gap-3 
+        not-touch:group-data-[has-href]/card:group-hover/card:bg-background-secondary group-data-[has-href]/card:group-active/card:bg-background-secondary relative overflow-hidden"
       >
         <div
           className={cn(
-            "max-w-full text-sm whitespace-nowrap overflow-hidden overflow-ellipsis group-data-[is-loading-error]:text-destructive group-data-[is-pending]:text-transparent group-data-[is-pending]:rounded-sm group-data-[is-pending]:animate-skeleton",
+            "max-w-full text-sm whitespace-nowrap overflow-hidden overflow-ellipsis group-data-[is-loading-error]/card:text-destructive group-data-[is-pending]/card:text-transparent group-data-[is-pending]/card:rounded-sm group-data-[is-pending]/card:animate-skeleton",
             "leading-none",
             classNameTop,
             isPending && isPendingParagraphClassName
@@ -69,7 +71,7 @@ export default function ThreeLineCard({
         </div>
         <div
           className={cn(
-            "max-w-full font-semibold text-2xl whitespace-nowrap overflow-hidden overflow-ellipsis group-data-[is-loading-error]:text-destructive group-data-[is-pending]:text-transparent group-data-[is-pending]:rounded-md group-data-[is-pending]:animate-skeleton",
+            "max-w-full font-semibold text-2xl whitespace-nowrap overflow-hidden overflow-ellipsis group-data-[is-loading-error]/card:text-destructive group-data-[is-pending]/card:text-transparent group-data-[is-pending]/card:rounded-md group-data-[is-pending]/card:animate-skeleton",
             "leading-none",
             classNameMiddle,
             isPending && isPendingParagraphClassName
@@ -84,7 +86,7 @@ export default function ThreeLineCard({
         </div>
         <div
           className={cn(
-            "max-w-full text-sm whitespace-nowrap overflow-hidden overflow-ellipsis group-data-[is-loading-error]:text-destructive group-data-[is-pending]:text-transparent group-data-[is-pending]:rounded-sm group-data-[is-pending]:animate-skeleton",
+            "max-w-full text-sm whitespace-nowrap overflow-hidden overflow-ellipsis group-data-[is-loading-error]/card:text-destructive group-data-[is-pending]/card:text-transparent group-data-[is-pending]/card:rounded-sm group-data-[is-pending]/card:animate-skeleton",
             "leading-none",
             classNameBottom,
             isPending && isPendingParagraphClassName
@@ -106,7 +108,7 @@ export default function ThreeLineCard({
             top !== undefined && middle !== undefined && bottom !== undefined
           }
         />
-      </div>
-    </CardWrapper>
+      </CardInnerWrapper>
+    </CardOuterWrapper>
   );
 }

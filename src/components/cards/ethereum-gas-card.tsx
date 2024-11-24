@@ -1,10 +1,10 @@
 "use client";
 
-import CardWrapper, {
-  TCardWrapperDivProps,
-  TCardWrapperLinkProps,
-  TCardWrapperProps,
-} from "@/components/cards/utils/card-wrapper";
+import CardOuterWrapper, {
+  TCardOuterWrapperDivProps,
+  TCardOuterWrapperLinkProps,
+  TCardOuterWrapperProps,
+} from "@/components/cards/utils/card-outer-wrapper";
 import Indicator from "@/components/ui/indicator";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import { defaultLocale, defaultQueryOptions } from "@/lib/constants";
@@ -21,12 +21,13 @@ import {
   SendIcon,
 } from "lucide-react";
 import { ElementType } from "react";
+import CardInnerWrapper from "@/components/cards/utils/card-inner-wrapper";
 
 export default function EthereumGasCard({
   network,
   className,
   ...rest
-}: TCardWrapperProps & {
+}: TCardOuterWrapperProps & {
   network: TEthereumNetwork;
 }) {
   const { data, isPending, isError, isLoadingError, isRefetching } =
@@ -44,8 +45,8 @@ export default function EthereumGasCard({
     loadingTextShort: "10.0",
   });
 
-  const restAsDiv = rest as TCardWrapperDivProps;
-  const restAsLink = rest as TCardWrapperLinkProps;
+  const restAsDiv = rest as TCardOuterWrapperDivProps;
+  const restAsLink = rest as TCardOuterWrapperLinkProps;
   const restTyped = data
     ? {
         ...restAsLink,
@@ -54,15 +55,15 @@ export default function EthereumGasCard({
     : restAsDiv;
 
   return (
-    <CardWrapper
+    <CardOuterWrapper
       className={className}
       {...restTyped}
       data-is-loading-error={(isLoadingError && true) || undefined}
       data-is-pending={(isPending && true) || undefined}
       data-has-data={(data !== undefined && true) || undefined}
     >
-      <div
-        className="w-full px-2 py-2.5 flex flex-wrap shrink min-w-0 items-center justify-center flex-row rounded-xl border leading-none font-bold relative
+      <CardInnerWrapper
+        className="px-2 py-2.5 flex flex-wrap shrink min-w-0 items-center justify-center flex-row leading-none font-bold relative
         not-touch:group-data-[has-data]/card:group-hover/card:bg-background-secondary group-data-[has-data]/card:group-active/card:bg-background-secondary"
       >
         <div className="flex -mt-0.5 md:mt-0 w-full md:w-auto items-center justify-center overflow-hidden">
@@ -115,8 +116,8 @@ export default function EthereumGasCard({
           isRefetching={isRefetching}
           hasData={data !== undefined}
         />
-      </div>
-    </CardWrapper>
+      </CardInnerWrapper>
+    </CardOuterWrapper>
   );
 }
 

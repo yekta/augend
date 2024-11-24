@@ -2,10 +2,10 @@
 
 import ThreeLineCard from "@/components/cards/three-line-card";
 import {
-  TCardWrapperDivProps,
-  TCardWrapperLinkProps,
-  TCardWrapperProps,
-} from "@/components/cards/utils/card-wrapper";
+  TCardOuterWrapperDivProps,
+  TCardOuterWrapperLinkProps,
+  TCardOuterWrapperProps,
+} from "@/components/cards/utils/card-outer-wrapper";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import { useCmcCryptoInfos } from "@/components/providers/cmc/cmc-crypto-infos-provider";
 import { useCurrencyPreference } from "@/components/providers/currency-preference-provider";
@@ -23,7 +23,7 @@ export default function CryptoCard({
   config,
   className,
   ...rest
-}: TCardWrapperProps & {
+}: TCardOuterWrapperProps & {
   config: TCrypto;
 }) {
   const currencyPreference = useCurrencyPreference();
@@ -52,8 +52,8 @@ export default function CryptoCard({
         ? ArrowUpIcon
         : ArrowRightIcon;
 
-  const restAsDiv = rest as TCardWrapperDivProps;
-  const restAsLink = rest as TCardWrapperLinkProps;
+  const restAsDiv = rest as TCardOuterWrapperDivProps;
+  const restAsLink = rest as TCardOuterWrapperLinkProps;
   const restTyped = data
     ? { ...restAsLink, href: rest.href || getCmcUrl(data.slug) }
     : restAsDiv;

@@ -1,8 +1,8 @@
 "use client";
 
-import CardWrapper, {
-  TCardWrapperProps,
-} from "@/components/cards/utils/card-wrapper";
+import CardOuterWrapper, {
+  TCardOuterWrapperProps,
+} from "@/components/cards/utils/card-outer-wrapper";
 import { getNumberColorClass } from "@/components/cards/utils/helpers";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import AsyncDataTable, {
@@ -59,7 +59,7 @@ export default function UniswapPositionCard({
   network,
   className,
   ...rest
-}: TCardWrapperProps & {
+}: TCardOuterWrapperProps & {
   positionId: number;
   network: TEthereumNetwork;
 }) {
@@ -310,7 +310,7 @@ export default function UniswapPositionCard({
     : false;
 
   return (
-    <CardWrapper
+    <CardOuterWrapper
       className={cn(className)}
       {...rest}
       data-is-loading-error={(isLoadingError && true) || undefined}
@@ -690,7 +690,7 @@ export default function UniswapPositionCard({
           hasData={!isLoadingError && data !== undefined}
         />
       </div>
-    </CardWrapper>
+    </CardOuterWrapper>
   );
 }
 

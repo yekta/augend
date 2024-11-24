@@ -2,10 +2,10 @@
 
 import ThreeLineCard from "@/components/cards/three-line-card";
 import {
-  TCardWrapperDivProps,
-  TCardWrapperLinkProps,
-  TCardWrapperProps,
-} from "@/components/cards/utils/card-wrapper";
+  TCardOuterWrapperDivProps,
+  TCardOuterWrapperLinkProps,
+  TCardOuterWrapperProps,
+} from "@/components/cards/utils/card-outer-wrapper";
 import { useNanoBananoBalances } from "@/components/providers/nano-banano-balance-provider";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
@@ -20,7 +20,7 @@ export default function NanoBananoCard({
   account,
   className,
   ...rest
-}: TCardWrapperProps & {
+}: TCardOuterWrapperProps & {
   account: TNanoBananoAccount;
   className?: string;
 }) {
@@ -35,8 +35,8 @@ export default function NanoBananoCard({
   const isNanoAddress = isNano(account.address);
   const data = d?.find((d) => d.address === account.address);
 
-  const restAsDiv = rest as TCardWrapperDivProps;
-  const restAsLink = rest as TCardWrapperLinkProps;
+  const restAsDiv = rest as TCardOuterWrapperDivProps;
+  const restAsLink = rest as TCardOuterWrapperLinkProps;
   const restTyped = account.address
     ? {
         ...restAsLink,

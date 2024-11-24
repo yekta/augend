@@ -1,10 +1,11 @@
 "use client";
 
-import CardWrapper, {
-  TCardWrapperDivProps,
-  TCardWrapperLinkProps,
-  TCardWrapperProps,
-} from "@/components/cards/utils/card-wrapper";
+import CardInnerWrapper from "@/components/cards/utils/card-inner-wrapper";
+import CardOuterWrapper, {
+  TCardOuterWrapperDivProps,
+  TCardOuterWrapperLinkProps,
+  TCardOuterWrapperProps,
+} from "@/components/cards/utils/card-outer-wrapper";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import { useCmcCryptoInfos } from "@/components/providers/cmc/cmc-crypto-infos-provider";
 import { useCurrencyPreference } from "@/components/providers/currency-preference-provider";
@@ -18,7 +19,7 @@ export default function MiniCryptoCard({
   coinId,
   className,
   ...rest
-}: TCardWrapperProps & {
+}: TCardOuterWrapperProps & {
   coinId: number;
 }) {
   const currencyPreference = useCurrencyPreference();
@@ -53,8 +54,8 @@ export default function MiniCryptoCard({
         ? ArrowUpIcon
         : ArrowRightIcon;
 
-  const restAsDiv = rest as TCardWrapperDivProps;
-  const restAsLink = rest as TCardWrapperLinkProps;
+  const restAsDiv = rest as TCardOuterWrapperDivProps;
+  const restAsLink = rest as TCardOuterWrapperLinkProps;
   const restTyped = slug
     ? {
         ...restAsLink,
@@ -62,15 +63,15 @@ export default function MiniCryptoCard({
       }
     : restAsDiv;
   return (
-    <CardWrapper
+    <CardOuterWrapper
       className={cn("col-span-6 md:col-span-4 lg:col-span-3", className)}
       {...restTyped}
       data-is-loading-error={(isLoadingError && true) || undefined}
       data-is-pending={(isPending && true) || undefined}
       data-has-data={(data !== undefined && true) || undefined}
     >
-      <div
-        className="w-full flex px-2.5 md:pl-3.5 md:pr-3.75 py-3 md:py-4 gap-2.25 md:gap-3 flex-row border items-center rounded-xl text-left group
+      <CardInnerWrapper
+        className="flex px-2.5 md:pl-3.5 md:pr-3.75 py-3 md:py-4 gap-2.25 md:gap-3 flex-row items-center text-left
         not-touch:group-data-[has-data]/card:group-hover/card:bg-background-secondary group-data-[has-data]/card:group-active/card:bg-background-secondary relative overflow-hidden"
       >
         {isPending ? (
@@ -155,7 +156,7 @@ export default function MiniCryptoCard({
           hasData={data !== undefined}
           className="left-0 top-0 bottom-auto right-auto"
         />
-      </div>
-    </CardWrapper>
+      </CardInnerWrapper>
+    </CardOuterWrapper>
   );
 }

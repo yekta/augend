@@ -1,8 +1,9 @@
 "use client";
 
-import CardWrapper, {
-  TCardWrapperProps,
-} from "@/components/cards/utils/card-wrapper";
+import CardInnerWrapper from "@/components/cards/utils/card-inner-wrapper";
+import CardOuterWrapper, {
+  TCardOuterWrapperProps,
+} from "@/components/cards/utils/card-outer-wrapper";
 import Indicator from "@/components/ui/indicator";
 import { defaultQueryOptions } from "@/lib/constants";
 import { formatNumberTBMK } from "@/lib/number-formatters";
@@ -37,7 +38,7 @@ export default function OrderBookCard({
   config,
   className,
   ...rest
-}: TCardWrapperProps & {
+}: TCardOuterWrapperProps & {
   config: TOrderBookConfig;
 }) {
   const { data, isPending, isError, isLoadingError, isRefetching } =
@@ -66,23 +67,21 @@ export default function OrderBookCard({
           .replace("/", "-")}`
       : undefined;
   return (
-    <CardWrapper
+    <CardOuterWrapper
       className={cn(
         "col-span-12 md:col-span-6 lg:col-span-4 xl:col-span-3",
         className
       )}
+      data-is-loading-error={(isLoadingError && true) || undefined}
+      data-is-pending={(isPending && true) || undefined}
+      data-has-href={href ? true : undefined}
       {...rest}
     >
-      <div
-        data-is-loading-error={(isLoadingError && true) || undefined}
-        data-is-pending={(isPending && true) || undefined}
-        data-has-href={href ? true : undefined}
-        className="flex flex-col items-center border rounded-xl px-4 py-4.5 text-center gap-4 group data-[has-href]:not-touch:group-hover/card:bg-background-secondary group-active/card:bg-background-secondary transition text-sm relative"
-      >
+      <CardInnerWrapper className="flex flex-col items-center border rounded-xl px-4 py-4.5 text-center gap-4 group-data-[has-href]/card:not-touch:group-hover/card:bg-background-secondary group-active/card:bg-background-secondary transition text-sm relative">
         {/* Top */}
-        <p className="font-semibold leading-none max-w-full text-foreground whitespace-nowrap overflow-hidden overflow-ellipsis group-data-[is-pending]:bg-foreground group-data-[is-pending]:text-transparent group-data-[is-pending]:rounded-sm group-data-[is-pending]:animate-skeleton">
+        <p className="font-semibold leading-none max-w-full text-foreground whitespace-nowrap overflow-hidden overflow-ellipsis group-data-[is-pending]/card:bg-foreground group-data-[is-pending]/card:text-transparent group-data-[is-pending]/card:rounded-sm group-data-[is-pending]/card:animate-skeleton">
           {config.ticker}{" "}
-          <span className="text-muted-foreground group-data-[is-pending]:text-transparent font-medium">
+          <span className="text-muted-foreground group-data-[is-pending]/card:text-transparent font-medium">
             ({config.exchange})
           </span>
         </p>
@@ -102,7 +101,7 @@ export default function OrderBookCard({
               {currentData.bids.map((i, index) => (
                 <p
                   data-filler={i.amount === -1 ? true : undefined}
-                  className="leading-none overflow-hidden overflow-ellipsis max-w-full data-[filler]:text-transparent group-data-[is-pending]:text-transparent group-data-[is-loading-error]:text-transparent group-data-[is-pending]:bg-foreground group-data-[is-pending]:rounded-sm group-data-[is-pending]:animate-skeleton"
+                  className="leading-none overflow-hidden overflow-ellipsis max-w-full data-[filler]:text-transparent group-data-[is-pending]/card:text-transparent group-data-[is-loading-error]/card:text-transparent group-data-[is-pending]/card:bg-foreground group-data-[is-pending]/card:rounded-sm group-data-[is-pending]/card:animate-skeleton"
                   key={`sell-amount-${index}`}
                 >
                   {i.amount === -1
@@ -117,7 +116,7 @@ export default function OrderBookCard({
               {currentData.bids.map((i, index) => (
                 <p
                   data-filler={i.amount === -1 ? true : undefined}
-                  className="leading-none w-full overflow-hidden overflow-ellipsis data-[filler]:text-transparent text-success group-data-[is-pending]:text-transparent group-data-[is-loading-error]:text-transparent group-data-[is-pending]:bg-success group-data-[is-pending]:rounded-sm group-data-[is-pending]:animate-skeleton"
+                  className="leading-none w-full overflow-hidden overflow-ellipsis data-[filler]:text-transparent text-success group-data-[is-pending]/card:text-transparent group-data-[is-loading-error]/card:text-transparent group-data-[is-pending]/card:bg-success group-data-[is-pending]/card:rounded-sm group-data-[is-pending]/card:animate-skeleton"
                   key={`sell-price-${index}`}
                 >
                   {i.price === -1
@@ -135,7 +134,7 @@ export default function OrderBookCard({
               {currentData.asks.map((i, index) => (
                 <p
                   data-filler={i.amount === -1 ? true : undefined}
-                  className="leading-none w-full overflow-hidden overflow-ellipsis data-[filler]:text-transparent text-destructive group-data-[is-pending]:text-transparent group-data-[is-loading-error]:text-transparent group-data-[is-pending]:bg-destructive group-data-[is-pending]:rounded-sm group-data-[is-pending]:animate-skeleton"
+                  className="leading-none w-full overflow-hidden overflow-ellipsis data-[filler]:text-transparent text-destructive group-data-[is-pending]/card:text-transparent group-data-[is-loading-error]/card:text-transparent group-data-[is-pending]/card:bg-destructive group-data-[is-pending]/card:rounded-sm group-data-[is-pending]/card:animate-skeleton"
                   key={`buy-price-${index}`}
                 >
                   {i.price === -1
@@ -150,7 +149,7 @@ export default function OrderBookCard({
               {currentData.asks.map((i, index) => (
                 <p
                   data-filler={i.amount === -1 ? true : undefined}
-                  className="leading-none overflow-hidden overflow-ellipsis max-w-full data-[filler]:text-transparent group-data-[is-pending]:text-transparent group-data-[is-loading-error]:text-transparent group-data-[is-pending]:bg-foreground group-data-[is-pending]:rounded-sm group-data-[is-pending]:animate-skeleton"
+                  className="leading-none overflow-hidden overflow-ellipsis max-w-full data-[filler]:text-transparent group-data-[is-pending]/card:text-transparent group-data-[is-loading-error]/card:text-transparent group-data-[is-pending]/card:bg-foreground group-data-[is-pending]/card:rounded-sm group-data-[is-pending]/card:animate-skeleton"
                   key={`buy-amount-${index}`}
                 >
                   {i.amount === -1
@@ -164,7 +163,7 @@ export default function OrderBookCard({
           </div>
         </div>
         {/* Bottom */}
-        <div className="font-semibold leading-none max-w-full text-foreground whitespace-nowrap overflow-hidden overflow-ellipsis group-data-[is-pending]:bg-foreground group-data-[is-loading-error]:text-destructive group-data-[is-pending]:text-transparent group-data-[is-pending]:rounded-sm group-data-[is-pending]:animate-skeleton">
+        <div className="font-semibold leading-none max-w-full text-foreground whitespace-nowrap overflow-hidden overflow-ellipsis group-data-[is-pending]/card:bg-foreground group-data-[is-loading-error]/card:text-destructive group-data-[is-pending]/card:text-transparent group-data-[is-pending]/card:rounded-sm group-data-[is-pending]/card:animate-skeleton">
           {data ? (
             <div className="max-w-full flex items-center justify-center">
               <div className="shrink overflow-hidden flex items-center justify-center gap-1">
@@ -205,8 +204,8 @@ export default function OrderBookCard({
           isRefetching={isRefetching}
           hasData={data !== undefined}
         />
-      </div>
-    </CardWrapper>
+      </CardInnerWrapper>
+    </CardOuterWrapper>
   );
 }
 

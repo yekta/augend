@@ -15,7 +15,7 @@ import OrderBookCard, {
 } from "@/components/cards/order-book-card";
 import UniswapPoolsTableCard from "@/components/cards/uniswap-pools-table-card";
 import UniswapPositionCard from "@/components/cards/uniswap-position-card";
-import { TCardWrapperProps } from "@/components/cards/utils/card-wrapper";
+import { TCardOuterWrapperProps } from "@/components/cards/utils/card-outer-wrapper";
 import WBanSummaryCard from "@/components/cards/wban-summary-card";
 import { TDenominatorCurrency } from "@/components/providers/currency-preference-provider";
 import { TEthereumNetwork } from "@/server/trpc/api/routers/ethereum/types";
@@ -28,7 +28,7 @@ export function CardParser({
 }: {
   cardObject: TCardObject;
   currencies: TDenominatorCurrency[] | null;
-} & TCardWrapperProps) {
+} & TCardOuterWrapperProps) {
   if (cardObject.card.cardTypeId === "fear_greed_index") {
     return <FearGreedIndexCard {...rest} />;
   }
