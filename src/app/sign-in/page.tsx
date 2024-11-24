@@ -8,6 +8,7 @@ type Props = {
     searchParams?: { callbackUrl: string | undefined };
   }>;
 };
+
 export default async function SignInPage({ params }: Props) {
   const { searchParams } = await params;
   return (
