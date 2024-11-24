@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description: "Home.",
 };
 
-export default function Home() {
+export default async function Home() {
   return (
     <div className="w-full flex-1 flex flex-col items-center justify-center p-5 pb-[calc(8vh+1.5rem)] text-center">
       Home
