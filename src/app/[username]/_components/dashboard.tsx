@@ -242,7 +242,7 @@ export default function Dashboard({
         {/* <DndWrapper items={dndCards} setItems={setDndCards}>
           {({ item, attributes, listeners, setNodeRef, style, isActive }) => (
             <CardParser
-              data-is-dnd-active={isActive ? true : undefined}
+              data-dnd-active={isActive ? true : undefined}
               key={item.card.id}
               cardObject={item}
               currencies={currencies}

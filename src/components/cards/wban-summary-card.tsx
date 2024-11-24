@@ -67,9 +67,9 @@ export default function WBanSummaryCard({
     banBalanceData !== undefined && wbanPendingWithdrawalsData !== undefined;
 
   const skeletonParagraphClasses =
-    "group-data-[is-pending]/card:text-transparent group-data-[is-pending]/card:bg-foreground group-data-[is-pending]/card:rounded-sm md:group-data-[is-pending]/card:rounded-sm group-data-[is-pending]/card:animate-skeleton";
+    "group-data-[pending]/card:text-transparent group-data-[pending]/card:bg-foreground group-data-[pending]/card:rounded-sm md:group-data-[pending]/card:rounded-sm group-data-[pending]/card:animate-skeleton";
   const skeletonSmallParagraphClasses =
-    "group-data-[is-pending]/card:text-transparent group-data-[is-pending]/card:bg-muted-foreground group-data-[is-pending]/card:rounded-sm group-data-[is-pending]/card:animate-skeleton";
+    "group-data-[pending]/card:text-transparent group-data-[pending]/card:bg-muted-foreground group-data-[pending]/card:rounded-sm group-data-[pending]/card:animate-skeleton";
 
   const conditionalValue = useConditionalValue({
     isPending,
@@ -79,7 +79,7 @@ export default function WBanSummaryCard({
   return (
     <CardOuterWrapper
       data-loading-error={isLoadingError ? true : undefined}
-      data-is-pending={(isPending && true) || undefined}
+      data-pending={(isPending && true) || undefined}
       className={cn(className)}
       {...rest}
     >
@@ -126,7 +126,7 @@ export default function WBanSummaryCard({
                 <div className="flex flex-col shrink min-w-0 gap-1.5">
                   <p
                     className={cn(
-                      `text-sm md:text-base w-full overflow-hidden overflow-ellipsis font-semibold group-data-[is-loading-error]/card:text-destructive ${skeletonParagraphClasses}`,
+                      `text-sm md:text-base w-full overflow-hidden overflow-ellipsis font-semibold group-data-[loading-error]/card:text-destructive ${skeletonParagraphClasses}`,
                       "leading-none md:leading-none"
                     )}
                   >
@@ -136,7 +136,7 @@ export default function WBanSummaryCard({
                   </p>
                   <p
                     className={cn(
-                      `w-full overflow-hidden overflow-ellipsis text-xs text-muted-foreground group-data-[is-loading-error]/card:text-destructive ${skeletonSmallParagraphClasses}`,
+                      `w-full overflow-hidden overflow-ellipsis text-xs text-muted-foreground group-data-[loading-error]/card:text-destructive ${skeletonSmallParagraphClasses}`,
                       "leading-none md:leading-none"
                     )}
                   >
@@ -159,7 +159,7 @@ export default function WBanSummaryCard({
                 <div className="flex flex-col shrink min-w-0 gap-1.5">
                   <p
                     className={cn(
-                      `text-sm md:text-base w-full overflow-hidden overflow-ellipsis font-semibold group-data-[is-loading-error]/card:text-destructive ${skeletonParagraphClasses}`,
+                      `text-sm md:text-base w-full overflow-hidden overflow-ellipsis font-semibold group-data-[loading-error]/card:text-destructive ${skeletonParagraphClasses}`,
                       "leading-none md:leading-none"
                     )}
                   >
@@ -169,7 +169,7 @@ export default function WBanSummaryCard({
                   </p>
                   <p
                     className={cn(
-                      `w-full overflow-hidden overflow-ellipsis text-xs text-muted-foreground group-data-[is-loading-error]/card:text-destructive ${skeletonSmallParagraphClasses}`,
+                      `w-full overflow-hidden overflow-ellipsis text-xs text-muted-foreground group-data-[loading-error]/card:text-destructive ${skeletonSmallParagraphClasses}`,
                       "leading-none md:leading-none"
                     )}
                   >
@@ -205,7 +205,7 @@ export default function WBanSummaryCard({
                   </p>
                   <p
                     className={cn(
-                      `text-sm md:text-base w-full overflow-hidden overflow-ellipsis font-semibold group-data-[warning]/pending:text-destructive group-data-[is-loading-error]/card:text-destructive ${skeletonParagraphClasses}`,
+                      `text-sm md:text-base w-full overflow-hidden overflow-ellipsis font-semibold group-data-[warning]/pending:text-destructive group-data-[loading-error]/card:text-destructive ${skeletonParagraphClasses}`,
                       "leading-none md:leading-none"
                     )}
                   >
@@ -241,7 +241,7 @@ function IconWithPlaceholder({
   variant?: "mono" | "branded";
 }) {
   const classes = cn(
-    "rounded-md group-data-[is-pending]/card:bg-foreground group-data-[is-pending]/card:animate-skeleton",
+    "rounded-md group-data-[pending]/card:bg-foreground group-data-[pending]/card:animate-skeleton",
     className
   );
   const Component = isPending ? "div" : Icon;

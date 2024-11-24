@@ -90,9 +90,9 @@ export default function UniswapPoolsTableCard({
         cellType: "custom",
         cell: ({ row }) => {
           const pendingClassName =
-            "group-data-[is-pending]/table:text-transparent group-data-[is-pending]/table:bg-foreground group-data-[is-pending]/table:rounded-sm group-data-[is-pending]/table:animate-skeleton group-data-[is-loading-error]/table:text-destructive";
+            "group-data-[pending]/table:text-transparent group-data-[pending]/table:bg-foreground group-data-[pending]/table:rounded-sm group-data-[pending]/table:animate-skeleton group-data-[loading-error]/table:text-destructive";
 
-          const iconSizeClassName = "size-4.5 md:size-5.5";
+          const iconSizeClassName = "size-4.5 md:size-5";
           const PendingIcon = (
             <div
               className={`${iconSizeClassName} bg-foreground animate-skeleton rounded-full`}
@@ -108,7 +108,7 @@ export default function UniswapPoolsTableCard({
             <Component
               target="_blank"
               href={`https://app.uniswap.org/explore/pools/${network}/${row.original.address}`}
-              className="w-full group/link gap-2 md:gap-2.5 text-xs md:text-sm leading-none md:leading-none flex items-center justify-start pl-4 md:pl-5 py-3 pr-2 md:pr-4"
+              className="w-full group/link gap-2 md:gap-2.5 text-xs md:text-sm leading-none md:leading-none flex items-center justify-start pl-4 md:pl-5 py-2.5 pr-2 md:pr-4"
             >
               <div className="shrink min-w-0 gap-2 md:gap-2.5 flex flex-row items-center">
                 <div className="flex -ml-0.75 flex-col justify-center shrink-0">
@@ -158,8 +158,8 @@ export default function UniswapPoolsTableCard({
                         true,
                         [1, 0.01, 0.003, 0.0005]
                       )}
-                      group-data-[is-pending]/table:bg-muted-foreground/50 group-data-[is-pending]/table:text-transparent
-                      group-data-[is-pending]/table:animate-skeleton
+                      group-data-[pending]/table:bg-muted-foreground/50 group-data-[pending]/table:text-transparent
+                      group-data-[pending]/table:animate-skeleton
                       shrink-0 font-medium px-1 py-0.75 rounded leading-none md:leading-none text-xxs md:text-xs`}
                     >
                       {isPending

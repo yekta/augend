@@ -202,9 +202,9 @@ function NameColumn({
 }) {
   const Comp = hasData ? Link : "div";
   const pendingClassesMuted =
-    "group-data-[is-pending]/table:text-transparent group-data-[is-pending]/table:bg-muted-foreground group-data-[is-pending]/table:rounded-sm group-data-[is-pending]/table:animate-skeleton";
+    "group-data-[pending]/table:text-transparent group-data-[pending]/table:bg-muted-foreground group-data-[pending]/table:rounded-sm group-data-[pending]/table:animate-skeleton";
   const pendingClasses =
-    "group-data-[is-pending]/table:text-transparent group-data-[is-pending]/table:bg-foreground group-data-[is-pending]/table:rounded-sm group-data-[is-pending]/table:animate-skeleton";
+    "group-data-[pending]/table:text-transparent group-data-[pending]/table:bg-foreground group-data-[pending]/table:rounded-sm group-data-[pending]/table:animate-skeleton";
   const paddingRight = "pr-2 md:pr-4";
 
   return (
@@ -218,7 +218,7 @@ function NameColumn({
             : "#"
       }
       className={cn(
-        `w-full pl-4 md:pl-5 ${paddingRight} gap-2 md:gap-3 group/link py-3.5 flex flex-row items-center overflow-hidden`
+        `w-full pl-4 md:pl-5 ${paddingRight} gap-2 md:gap-3 group/link py-3 flex flex-row items-center overflow-hidden`
       )}
     >
       <div className="-ml-1 md:-ml-0.75 flex flex-col items-center justify-center gap-1.5">
@@ -238,7 +238,7 @@ function NameColumn({
           className={`w-6.5 overflow-hidden flex items-center justify-center`}
         >
           <p
-            className={`${pendingClassesMuted} max-w-full overflow-hidden overflow-ellipsis text-xs leading-none font-medium text-muted-foreground text-center group-data-[is-loading-error]/table:text-destructive`}
+            className={`${pendingClassesMuted} max-w-full overflow-hidden overflow-ellipsis text-xs leading-none font-medium text-muted-foreground text-center group-data-[loading-error]/table:text-destructive`}
           >
             {isPending ? "#" : hasData ? rank : "E"}
           </p>
@@ -249,7 +249,7 @@ function NameColumn({
       >
         <div className="max-w-full flex items-center justify-start gap-1 md:gap-1.5">
           <p
-            className={`${pendingClasses} shrink min-w-0 font-semibold text-xs md:text-sm md:leading-none leading-none whitespace-nowrap overflow-hidden overflow-ellipsis group-data-[is-loading-error]/table:text-destructive`}
+            className={`${pendingClasses} shrink min-w-0 font-semibold text-xs md:text-sm md:leading-none leading-none whitespace-nowrap overflow-hidden overflow-ellipsis group-data-[loading-error]/table:text-destructive`}
           >
             {isPending ? "Loading" : hasData ? value : "Error"}
           </p>
@@ -260,7 +260,7 @@ function NameColumn({
           />
         </div>
         <p
-          className={`${pendingClassesMuted} max-w-full whitespace-nowrap overflow-hidden overflow-ellipsis text-muted-foreground leading-none text-xs group-data-[is-loading-error]/table:text-destructive`}
+          className={`${pendingClassesMuted} max-w-full whitespace-nowrap overflow-hidden overflow-ellipsis text-muted-foreground leading-none text-xs group-data-[loading-error]/table:text-destructive`}
         >
           {isPending ? "Loading" : hasData ? ticker : "Error"}
         </p>

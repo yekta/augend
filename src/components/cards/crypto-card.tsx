@@ -72,9 +72,9 @@ export default function CryptoCard({
               </p>
             </div>
             <div
-              data-is-negative={isChangeNegative ? true : undefined}
-              data-is-positive={isChangePositive ? true : undefined}
-              className="flex shrink min-w-0 overflow-hidden overflow-ellipsis items-center justify-start text-muted-foreground group-data-[is-loading-error]:text-destructive data-[is-negative]:text-destructive data-[is-positive]:text-success"
+              data-negative={isChangeNegative ? true : undefined}
+              data-positive={isChangePositive ? true : undefined}
+              className="flex shrink min-w-0 overflow-hidden overflow-ellipsis items-center justify-start text-muted-foreground group-data-[loading-error]:text-destructive data-[negative]:text-destructive data-[positive]:text-success"
             >
               {data && <ChangeIcon className="size-4 shrink-0 -my-0.5" />}
               <p className="shrink min-w-0 overflow-hidden overflow-ellipsis">

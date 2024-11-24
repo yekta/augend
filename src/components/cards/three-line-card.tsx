@@ -46,8 +46,8 @@ export default function ThreeLineCard({
 
   return (
     <CardOuterWrapper
-      data-is-loading-error={(isLoadingError && true) || undefined}
-      data-is-pending={(isPending && true) || undefined}
+      data-loading-error={(isLoadingError && true) || undefined}
+      data-pending={(isPending && true) || undefined}
       data-has-href={rest.href ? true : undefined}
       className={cn("col-span-6 md:col-span-4 lg:col-span-3 h-32", className)}
       {...rest}
@@ -58,7 +58,7 @@ export default function ThreeLineCard({
       >
         <div
           className={cn(
-            "max-w-full text-sm whitespace-nowrap overflow-hidden overflow-ellipsis group-data-[is-loading-error]/card:text-destructive group-data-[is-pending]/card:text-transparent group-data-[is-pending]/card:rounded-sm group-data-[is-pending]/card:animate-skeleton",
+            "max-w-full text-sm whitespace-nowrap overflow-hidden overflow-ellipsis group-data-[loading-error]/card:text-destructive group-data-[pending]/card:text-transparent group-data-[pending]/card:rounded-sm group-data-[pending]/card:animate-skeleton",
             "leading-none",
             classNameTop,
             isPending && isPendingParagraphClassName
@@ -71,7 +71,7 @@ export default function ThreeLineCard({
         </div>
         <div
           className={cn(
-            "max-w-full font-semibold text-2xl whitespace-nowrap overflow-hidden overflow-ellipsis group-data-[is-loading-error]/card:text-destructive group-data-[is-pending]/card:text-transparent group-data-[is-pending]/card:rounded-md group-data-[is-pending]/card:animate-skeleton",
+            "max-w-full font-semibold text-2xl whitespace-nowrap overflow-hidden overflow-ellipsis group-data-[loading-error]/card:text-destructive group-data-[pending]/card:text-transparent group-data-[pending]/card:rounded-md group-data-[pending]/card:animate-skeleton",
             "leading-none",
             classNameMiddle,
             isPending && isPendingParagraphClassName
@@ -86,7 +86,7 @@ export default function ThreeLineCard({
         </div>
         <div
           className={cn(
-            "max-w-full text-sm whitespace-nowrap overflow-hidden overflow-ellipsis group-data-[is-loading-error]/card:text-destructive group-data-[is-pending]/card:text-transparent group-data-[is-pending]/card:rounded-sm group-data-[is-pending]/card:animate-skeleton",
+            "max-w-full text-sm whitespace-nowrap overflow-hidden overflow-ellipsis group-data-[loading-error]/card:text-destructive group-data-[pending]/card:text-transparent group-data-[pending]/card:rounded-sm group-data-[pending]/card:animate-skeleton",
             "leading-none",
             classNameBottom,
             isPending && isPendingParagraphClassName

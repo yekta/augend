@@ -182,11 +182,11 @@ export default function OhlcvChartCard({
   return (
     <CardOuterWrapper
       className={cn("col-span-12 lg:col-span-6", className)}
-      data-is-pending={(isPending && true) || undefined}
-      data-is-loading-error={
+      data-pending={(isPending && true) || undefined}
+      data-loading-error={
         isLoadingError && !isPending && !isRefetching ? true : undefined
       }
-      data-is-placeholder-data={isPlaceholderData ? true : undefined}
+      data-placeholder-data={isPlaceholderData ? true : undefined}
       {...rest}
     >
       <CardInnerWrapper className="px-5 pt-4.5 pb-3 gap-12 flex flex-col items-start">
@@ -202,8 +202,8 @@ export default function OhlcvChartCard({
           <ChartContainer
             config={chartContainerConfig}
             className="h-28 w-full relative
-            group-data-[is-pending]/card:opacity-0 group-data-[is-loading-error]/card:opacity-0 group-data-[is-pending]/card:pointer-events-none
-            group-data-[is-placeholder-data]/card:opacity-0 group-data-[is-placeholder-data]/card:pointer-events-none"
+            group-data-[pending]/card:opacity-0 group-data-[loading-error]/card:opacity-0 group-data-[pending]/card:pointer-events-none
+            group-data-[placeholder-data]/card:opacity-0 group-data-[placeholder-data]/card:pointer-events-none"
           >
             <AreaChart
               accessibilityLayer
@@ -373,15 +373,15 @@ function Header({
 
   return (
     <div
-      data-is-pending={(isPending && true) || undefined}
-      data-is-loading-error={(isLoadingError && true) || undefined}
-      data-is-placeholder-data={isPlaceholderData ? true : undefined}
-      data-is-hard-error={!isPending && priceInfo.isFallback ? true : undefined}
+      data-pending={(isPending && true) || undefined}
+      data-loading-error={(isLoadingError && true) || undefined}
+      data-placeholder-data={isPlaceholderData ? true : undefined}
+      data-hard-error={!isPending && priceInfo.isFallback ? true : undefined}
       className="w-full flex flex-col items-start justify-start gap-2.5 pr-14 group/header"
     >
       <div
         className="max-w-full text-sm leading-none whitespace-nowrap overflow-hidden overflow-ellipsis font-semibold flex items-end justify-left 
-          group-data-[is-pending]/header:text-transparent group-data-[is-pending]/header:bg-foreground group-data-[is-pending]/header:animate-skeleton group-data-[is-pending]/header:rounded"
+          group-data-[pending]/header:text-transparent group-data-[pending]/header:bg-foreground group-data-[pending]/header:animate-skeleton group-data-[pending]/header:rounded"
       >
         {isPending ? (
           "Loading data"
@@ -397,7 +397,7 @@ function Header({
         )}
       </div>
       <div className="w-full relative flex justify-start items-start">
-        <div className="max-w-full gap-2 justify-start text-2xl leading-none font-extrabold font-mono whitespace-nowrap overflow-hidden overflow-ellipsis group-data-[is-pending]/header:text-transparent group-data-[is-pending]/header:bg-foreground group-data-[is-pending]/header:animate-skeleton group-data-[is-pending]/header:rounded-md group-data-[is-hard-error]/header:text-destructive flex items-end justify-left">
+        <div className="max-w-full gap-2 justify-start text-2xl leading-none font-extrabold font-mono whitespace-nowrap overflow-hidden overflow-ellipsis group-data-[pending]/header:text-transparent group-data-[pending]/header:bg-foreground group-data-[pending]/header:animate-skeleton group-data-[pending]/header:rounded-md group-data-[hard-error]/header:text-destructive flex items-end justify-left">
           {isPending ? (
             "Loading data"
           ) : !priceInfo.isFallback ? (
@@ -406,9 +406,9 @@ function Header({
                 {priceFormatter(priceInfo.price, 4, true)}
               </p>
               <div
-                data-is-negative={priceInfo.changeRate < 0 ? true : undefined}
-                data-is-positive={priceInfo.changeRate > 0 ? true : undefined}
-                className="inline-flex min-w-0 pb-0.75 text-muted-foreground data-[is-positive]:text-success data-[is-negative]:text-destructive shrink-0 items-end"
+                data-negative={priceInfo.changeRate < 0 ? true : undefined}
+                data-positive={priceInfo.changeRate > 0 ? true : undefined}
+                className="inline-flex min-w-0 pb-0.75 text-muted-foreground data-[positive]:text-success data-[negative]:text-destructive shrink-0 items-end"
               >
                 <div className="size-4.5 shrink-0 -mb-0.25">
                   <ChangeIcon className="size-full" />

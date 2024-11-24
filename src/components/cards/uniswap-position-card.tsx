@@ -47,13 +47,12 @@ const swapsTableDataFallback: TSwapData[] = Array.from(
 );
 
 const pendingClasses =
-  "group-data-[is-pending]/card:text-transparent group-data-[is-pending]/card:animate-skeleton group-data-[is-pending]/card:bg-foreground group-data-[is-pending]/card:rounded";
-const errorClasses = "group-data-[is-loading-error]/card:text-destructive";
+  "group-data-[pending]/card:text-transparent group-data-[pending]/card:animate-skeleton group-data-[pending]/card:bg-foreground group-data-[pending]/card:rounded";
+const errorClasses = "group-data-[loading-error]/card:text-destructive";
 
 const pendingClassesStats =
-  "group-data-[is-pending]/stats:text-transparent group-data-[is-pending]/stats:animate-skeleton group-data-[is-pending]/stats:bg-foreground group-data-[is-pending]/stats:rounded-md";
-const errorClassesStats =
-  "group-data-[is-loading-error]/stats:text-destructive";
+  "group-data-[pending]/stats:text-transparent group-data-[pending]/stats:animate-skeleton group-data-[pending]/stats:bg-foreground group-data-[pending]/stats:rounded-md";
+const errorClassesStats = "group-data-[loading-error]/stats:text-destructive";
 
 export default function UniswapPositionCard({
   positionId,
@@ -148,7 +147,7 @@ export default function UniswapPositionCard({
         sortDescFirst: true,
         cell: ({ row }) => timeAgo(row.original.timestamp),
         cellParagraphClassName:
-          "text-muted-foreground group-data-[is-pending]/table:bg-muted-foreground",
+          "text-muted-foreground group-data-[pending]/table:bg-muted-foreground",
         sortingFn: (rowA, rowB, _columnId) => {
           const a = rowA.original.timestamp;
           const b = rowB.original.timestamp;
@@ -235,7 +234,7 @@ export default function UniswapPositionCard({
                 row.original.traderAddress
               )}
               target="_blank"
-              className="w-full font-mono text-xs md:text-sm leading-none md:leading-none font-medium py-3.25 md:py-3.5 gap-1 flex items-center justify-end pl-2 pr-4 md:pr-5 group/link group-data-[is-loading-error]/table:text-destructive"
+              className="w-full font-mono text-xs md:text-sm leading-none md:leading-none font-medium py-3.25 md:py-3.5 gap-1 flex items-center justify-end pl-2 pr-4 md:pr-5 group/link group-data-[loading-error]/table:text-destructive"
             >
               {swapsData && (
                 <ExternalLinkIcon
@@ -246,8 +245,8 @@ export default function UniswapPositionCard({
               )}
               <p
                 className="min-w-0 leading-none flex-shrink whitespace-nowrap max-w-[4rem] overflow-hidden overflow-ellipsis
-                group-data-[is-pending]/table:text-transparent group-data-[is-pending]/table:animate-skeleton group-data-[is-pending]/table:bg-foreground
-                group-data-[is-pending]/table:rounded"
+                group-data-[pending]/table:text-transparent group-data-[pending]/table:animate-skeleton group-data-[pending]/table:bg-foreground
+                group-data-[pending]/table:rounded"
               >
                 {conditionalValueSwaps(row.original.traderAddress.slice(0, 6))}
               </p>
@@ -313,9 +312,9 @@ export default function UniswapPositionCard({
   return (
     <CardOuterWrapper
       className={cn(className)}
-      data-is-loading-error={(isLoadingError && true) || undefined}
-      data-is-pending={(isPending && true) || undefined}
-      data-is-out-of-range={isOutOfRange || undefined}
+      data-loading-error={(isLoadingError && true) || undefined}
+      data-pending={(isPending && true) || undefined}
+      data-out-of-range={isOutOfRange || undefined}
       data-has-data={
         (!isPending && !isLoadingError && data !== undefined) || undefined
       }
@@ -511,13 +510,13 @@ export default function UniswapPositionCard({
         </div>
         <Button
           disabled={!data}
-          className="absolute top-1.5 right-1.5 size-8 p-0 group-data-[is-loading-error]/card:text-destructive"
+          className="absolute top-1.5 right-1.5 size-8 p-0 group-data-[loading-error]/card:text-destructive"
           variant="outline"
           onClick={() => setIsSwapsOpen((prev) => !prev)}
         >
           <div
-            data-is-open={isSwapsOpen === true || undefined}
-            className="size-full flex items-center justify-center p-1.5 transition data-[is-open]:rotate-90"
+            data-open={isSwapsOpen === true || undefined}
+            className="size-full flex items-center justify-center p-1.5 transition data-[open]:rotate-90"
           >
             {isPending ? (
               <div className="size-full rounded animate-skeleton bg-foreground" />
@@ -534,8 +533,8 @@ export default function UniswapPositionCard({
           <div className="w-full border-t">
             {/* Stats */}
             <div
-              data-is-loading-error={(statsIsLoadingError && true) || undefined}
-              data-is-pending={(statsIsPending && true) || undefined}
+              data-loading-error={(statsIsLoadingError && true) || undefined}
+              data-pending={(statsIsPending && true) || undefined}
               data-has-data={
                 (!statsIsPending &&
                   !statsIsLoadingError &&
@@ -587,9 +586,9 @@ export default function UniswapPositionCard({
                       )}
                     </p>
                     {/* Balance bar */}
-                    <div className="relative w-14 h-3.75 py-1.25 flex items-center justify-center group-data-[is-pending]/stats:animate-skeleton">
-                      <div className="w-2px h-full bg-foreground rounded-full absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 group-data-[is-loading-error]/stats:bg-destructive" />
-                      <div className="w-full flex justify-start h-full rounded-full bg-destructive group-data-[is-pending]/stats:bg-foreground group-data-[is-loading-error]/stats:bg-destructive overflow-hidden relative ring-2 ring-background">
+                    <div className="relative w-14 h-3.75 py-1.25 flex items-center justify-center group-data-[pending]/stats:animate-skeleton">
+                      <div className="w-2px h-full bg-foreground rounded-full absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 group-data-[loading-error]/stats:bg-destructive" />
+                      <div className="w-full flex justify-start h-full rounded-full bg-destructive group-data-[pending]/stats:bg-foreground group-data-[loading-error]/stats:bg-destructive overflow-hidden relative ring-2 ring-background">
                         <div
                           style={{
                             transform: `translateX(${
@@ -598,10 +597,10 @@ export default function UniswapPositionCard({
                               100
                             }%)`,
                           }}
-                          className="w-full h-full transition-transform bg-success group-data-[is-pending]/stats:bg-foreground group-data-[is-loading-error]/stats:bg-destructive"
+                          className="w-full h-full transition-transform bg-success group-data-[pending]/stats:bg-foreground group-data-[loading-error]/stats:bg-destructive"
                         />
                         <div
-                          data-is-full={
+                          data-full={
                             (statsData?.pools[0].tvl0USD || 0) >=
                               (statsData?.pools[0].tvlUSD || 1) * 0.98 ||
                             undefined
@@ -616,7 +615,7 @@ export default function UniswapPositionCard({
                                 100
                               }%)`,
                             }}
-                            className="w-full transition-transform flex items-center justify-center h-full absolute -left-1/2 data-[is-full]:opacity-0"
+                            className="w-full transition-transform flex items-center justify-center h-full absolute -left-1/2 data-[full]:opacity-0"
                           >
                             <div className="w-2px h-full bg-background" />
                           </div>
@@ -737,8 +736,8 @@ function Section({
   titleWrapperClassName?: string;
 }) {
   const pendingClasses =
-    "group-data-[is-pending]/card:text-transparent group-data-[is-pending]/card:animate-skeleton group-data-[is-pending]/card:bg-foreground";
-  const errorClasses = "group-data-[is-loading-error]/card:text-destructive";
+    "group-data-[pending]/card:text-transparent group-data-[pending]/card:animate-skeleton group-data-[pending]/card:bg-foreground";
+  const errorClasses = "group-data-[loading-error]/card:text-destructive";
 
   return (
     <div
@@ -758,7 +757,7 @@ function Section({
             "shrink min-w-0 whitespace-nowrap overflow-hidden overflow-ellipsis font-bold text-xl md:text-2xl leading-none md:leading-none",
             pendingClasses,
             errorClasses,
-            "group-data-[is-pending]/card:rounded-md",
+            "group-data-[pending]/card:rounded-md",
             titleClassName
           )}
         >
@@ -770,7 +769,7 @@ function Section({
               "shrink min-w-0 flex items-center justify-start whitespace-nowrap overflow-hidden overflow-ellipsis font-semibold text-lg md:text-xl leading-none md:leading-none",
               pendingClasses,
               errorClasses,
-              "group-data-[is-pending]/card:rounded-md",
+              "group-data-[pending]/card:rounded-md",
               titleSecondaryClassName
             )}
           >
@@ -796,7 +795,7 @@ function Section({
                   className={cn(
                     "font-medium whitespace-nowrap shrink min-w-0 overflow-hidden overflow-ellipsis text-xs text-center md:text-sm leading-none md:leading-none px-1.5 py-1 md:py-1.25 rounded-md",
                     pendingClasses,
-                    "group-data-[is-pending]/card:bg-muted-foreground/36",
+                    "group-data-[pending]/card:bg-muted-foreground/36",
                     errorClasses,
                     getNumberColorClass(0, true),
                     Array.isArray(chipClassName)
@@ -852,15 +851,15 @@ function TickerTextAmount({
             className={cn(
               "size-3.5 md:size-4 rounded-full shrink-0",
               pendingClasses,
-              "group-data-[is-loading-error]/card:bg-destructive",
-              "group-data-[is-pending]/card:rounded-full"
+              "group-data-[loading-error]/card:bg-destructive",
+              "group-data-[pending]/card:rounded-full"
             )}
           >
             {tickerIcon !== undefined ? (
               tickerIcon
             ) : (
               <CryptoIcon
-                className="size-full bg-muted-foreground text-background rounded-full p-0.25 md:p-0.5 group-data-[is-pending]/card:hidden group-data-[is-loading-error]/card:hidden"
+                className="size-full bg-muted-foreground text-background rounded-full p-0.25 md:p-0.5 group-data-[pending]/card:hidden group-data-[loading-error]/card:hidden"
                 ticker={ticker}
               />
             )}
@@ -871,7 +870,7 @@ function TickerTextAmount({
             className={cn(
               "whitespace-nowrap shrink min-w-0 text-muted-foreground max-w-full overflow-hidden overflow-ellipsis",
               pendingClasses,
-              "group-data-[is-pending]/card:bg-muted-foreground",
+              "group-data-[pending]/card:bg-muted-foreground",
               errorClasses
             )}
           >
@@ -894,7 +893,7 @@ function TickerTextAmount({
             className={cn(
               "text-muted-foreground whitespace-nowrap shrink min-w-0 max-w-full overflow-hidden overflow-ellipsis",
               pendingClasses,
-              "group-data-[is-pending]/card:bg-muted-foreground",
+              "group-data-[pending]/card:bg-muted-foreground",
               errorClasses,
               chipClassName
             )}
@@ -921,7 +920,7 @@ function StatColumn({
       <div className="flex flex-1 flex-col items-start gap-1.5 md:gap-2 flex-shrink">
         <p
           className="shrink min-w-0 overflow-hidden overflow-ellipsis whitespace-nowrap text-xs md:text-sm font-medium text-muted-foreground leading-none md:leading-none
-          group-data-[is-pending]/stats:text-transparent group-data-[is-pending]/stats:animate-skeleton group-data-[is-pending]/stats:bg-muted-foreground group-data-[is-pending]/stats:rounded"
+          group-data-[pending]/stats:text-transparent group-data-[pending]/stats:animate-skeleton group-data-[pending]/stats:bg-muted-foreground group-data-[pending]/stats:rounded"
         >
           {title}
         </p>
@@ -929,7 +928,7 @@ function StatColumn({
           {typeof value !== "string" && value}
           {typeof value === "string" && (
             <p
-              data-is-node={typeof value !== "string" || undefined}
+              data-node={typeof value !== "string" || undefined}
               className={cn(
                 "shrink min-w-0 overflow-hidden overflow-ellipsis whitespace-nowrap text-base md:text-lg font-bold leading-none md:leading-none",
                 pendingClassesStats,
@@ -961,8 +960,8 @@ function NFTImageLink({
     return (
       <div className={cn("h-36", className)}>
         <svg
-          className="h-full bg-muted-foreground group-data-[is-loading-error]/card:bg-destructive/50 rounded-lg md:rounded-lg lg:rounded-xl w-auto
-          transition group-data-[is-pending]/card:animate-skeleton"
+          className="h-full bg-muted-foreground group-data-[loading-error]/card:bg-destructive/50 rounded-lg md:rounded-lg lg:rounded-xl w-auto
+          transition group-data-[pending]/card:animate-skeleton"
           viewBox="0 0 290 500"
           width="290"
           height="500"
@@ -985,7 +984,7 @@ function NFTImageLink({
           />
           <div
             className="absolute left-0 top-0 pointer-events-none w-full h-full flex items-center justify-center transition -translate-y-full opacity-0 
-            group-data-[is-out-of-range]/card:translate-y-0 group-data-[is-out-of-range]/card:opacity-100 duration-250"
+            group-data-[out-of-range]/card:translate-y-0 group-data-[out-of-range]/card:opacity-100 duration-250"
           >
             <div className="w-full bg-background/75 filter backdrop-blur pt-1 pb-1.5 items-start justify-center flex">
               <TriangleAlertIcon className="size-4.5 md:size-5 text-destructive" />

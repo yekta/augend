@@ -148,8 +148,8 @@ export default function AsyncDataTable<T>({
 
   return (
     <div
-      data-is-loading-error={(isLoadingError && true) || undefined}
-      data-is-pending={(isPending && true) || undefined}
+      data-loading-error={(isLoadingError && true) || undefined}
+      data-pending={(isPending && true) || undefined}
       data-has-data={
         (!isPending && !isLoadingError && data !== undefined) || undefined
       }
@@ -406,7 +406,7 @@ function getCell<T>({
 }
 
 const pendingClasses =
-  "group-data-[is-pending]/table:text-transparent group-data-[is-pending]/table:bg-foreground group-data-[is-pending]/table:rounded-sm group-data-[is-pending]/table:animate-skeleton";
+  "group-data-[pending]/table:text-transparent group-data-[pending]/table:bg-foreground group-data-[pending]/table:rounded-sm group-data-[pending]/table:animate-skeleton";
 const paddingLeft = "pl-2 md:pl-4";
 const paddingRight = "pr-2 md:pr-4";
 const paddingY = "py-3.5";
@@ -473,11 +473,11 @@ function ChangeColumn({
 
   return (
     <div
-      data-is-negative={isNegative ? true : undefined}
-      data-is-positive={isPositive ? true : undefined}
+      data-negative={isNegative ? true : undefined}
+      data-positive={isPositive ? true : undefined}
       className={cn(
         "w-full",
-        `${paddingLeft} ${paddingRight} ${paddingY} ${defaultColumnClasses} text-xs md:text-sm md:leading-none break-words leading-none font-medium flex text-right overflow-hidden overflow-ellipsis items-center justify-end text-muted-foreground data-[is-loading-error]:text-destructive data-[is-negative]:text-destructive data-[is-positive]:text-success`,
+        `${paddingLeft} ${paddingRight} ${paddingY} ${defaultColumnClasses} text-xs md:text-sm md:leading-none break-words leading-none font-medium flex text-right overflow-hidden overflow-ellipsis items-center justify-end text-muted-foreground data-[loading-error]:text-destructive data-[negative]:text-destructive data-[positive]:text-success`,
         className
       )}
     >
@@ -485,7 +485,7 @@ function ChangeColumn({
         <Icon className="size-3.5 md:size-4 shrink-0 -my-0.5" />
       )}
       <p
-        className={`${pendingClasses} shrink min-w-0 overflow-hidden overflow-ellipsis group-data-[is-loading-error]/table:text-destructive`}
+        className={`${pendingClasses} shrink min-w-0 overflow-hidden overflow-ellipsis group-data-[loading-error]/table:text-destructive`}
       >
         {isPending
           ? "Loading"
@@ -520,7 +520,7 @@ function RegularColumn({
     >
       <p
         className={cn(
-          `${pendingClasses} max-w-full break-words leading-none text-right overflow-hidden overflow-ellipsis group-data-[is-loading-error]/table:text-destructive`,
+          `${pendingClasses} max-w-full break-words leading-none text-right overflow-hidden overflow-ellipsis group-data-[loading-error]/table:text-destructive`,
           classNameParagraph
         )}
       >

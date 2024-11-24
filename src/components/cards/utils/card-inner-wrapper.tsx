@@ -11,7 +11,7 @@ export default function CardInnerWrapper({
   return (
     <div
       className={cn(
-        "w-full border rounded-xl relative overflow-hidden group-data-[is-dnd-active]/card:bg-background",
+        "w-full border rounded-xl relative overflow-hidden group-data-[dnd-active]/card:bg-background",
         className
       )}
       {...rest}

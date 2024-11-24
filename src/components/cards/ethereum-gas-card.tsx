@@ -57,8 +57,8 @@ export default function EthereumGasCard({
   return (
     <CardOuterWrapper
       className={className}
-      data-is-loading-error={(isLoadingError && true) || undefined}
-      data-is-pending={(isPending && true) || undefined}
+      data-loading-error={(isLoadingError && true) || undefined}
+      data-pending={(isPending && true) || undefined}
       data-has-data={(data !== undefined && true) || undefined}
       {...restTyped}
     >
@@ -134,21 +134,21 @@ function IconAndText({
     <div
       className={cn(
         "shrink min-w-0 font-mono px-3 md:px-5 py-2 flex justify-start items-center gap-1.25 md:gap-1.5",
-        "group-data-[is-loading-error]/card:text-destructive",
+        "group-data-[loading-error]/card:text-destructive",
         className
       )}
     >
       <div
         className="size-4 md:size-4.5 shrink-0 -my-1
-        group-data-[is-pending]/card:bg-foreground group-data-[is-pending]/card:animate-skeleton group-data-[is-pending]/card:rounded-full
-        group-data-[is-loading-error]/card:bg-destructive group-data-[is-loading-error]/card:rounded-full"
+        group-data-[pending]/card:bg-foreground group-data-[pending]/card:animate-skeleton group-data-[pending]/card:rounded-full
+        group-data-[loading-error]/card:bg-destructive group-data-[loading-error]/card:rounded-full"
       >
-        <Icon className="size-full group-data-[is-pending]/card:opacity-0 group-data-[is-loading-error]/card:opacity-0" />
+        <Icon className="size-full group-data-[pending]/card:opacity-0 group-data-[loading-error]/card:opacity-0" />
       </div>
       <p
         className="shrink text-sm md:text-base md:leading-none leading-none min-w-0 overflow-hidden overflow-ellipsis whitespace-nowrap
-        group-data-[is-pending]/card:bg-foreground group-data-[is-pending]/card:animate-skeleton group-data-[is-pending]/card:rounded
-        group-data-[is-loading-error]/card:text-destructive"
+        group-data-[pending]/card:bg-foreground group-data-[pending]/card:animate-skeleton group-data-[pending]/card:rounded
+        group-data-[loading-error]/card:text-destructive"
       >
         {text}
       </p>
