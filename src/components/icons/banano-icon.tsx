@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
+import { ComponentProps } from "react";
 
-export default function BananoIcon({ className }: { className?: string }) {
+export default function BananoIcon({ className }: ComponentProps<"svg">) {
   return (
     <svg
       className={cn("size-6", className)}

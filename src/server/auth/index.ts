@@ -1,3 +1,5 @@
+import "server-only";
+
 import { db } from "@/server/db/db";
 import {
   accountsTable,
@@ -12,6 +14,7 @@ import Discord from "next-auth/providers/discord";
 import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 import { cache } from "react";
+import type { Provider as AuthProvider } from "next-auth/providers";
 
 declare module "next-auth" {
   interface Session extends DefaultSession {
@@ -21,17 +24,17 @@ declare module "next-auth" {
   }
 }
 
-let providers = [];
+let authProviders: AuthProvider[] = [];
 if (process.env.AUTH_GOOGLE_ID && process.env.AUTH_GOOGLE_SECRET) {
-  providers.push(Google({ allowDangerousEmailAccountLinking: true }));
+  authProviders.push(Google({ allowDangerousEmailAccountLinking: true }));
 }
 if (process.env.AUTH_GITHUB_ID && process.env.AUTH_GITHUB_SECRET) {
-  providers.push(GitHub({ allowDangerousEmailAccountLinking: true }));
+  authProviders.push(GitHub({ allowDangerousEmailAccountLinking: true }));
 }
 if (process.env.AUTH_DISCORD_ID && process.env.AUTH_DISCORD_SECRET) {
-  providers.push(Discord({}));
+  authProviders.push(Discord({}));
 }
-if (providers.length === 0) {
+if (authProviders.length === 0) {
   throw new Error(
     `No OAuth providers configured. Set one of the following pair of environment variables in your env.local file:
     AUTH_GOOGLE_ID and AUTH_GOOGLE_SECRET, AUTH_GITHUB_ID and AUTH_GITHUB_SECRET, or AUTH_DISCORD_ID and AUTH_DISCORD_SECRET.`
@@ -44,7 +47,7 @@ const {
   signIn,
   signOut,
 } = NextAuth({
-  providers,
+  providers: authProviders,
   adapter: DrizzleAdapter(db, {
     usersTable: usersTable,
     accountsTable: accountsTable,
@@ -61,7 +64,22 @@ const {
       },
     }),
   },
+  pages: {
+    signIn: "/sign-in",
+    signOut: "/sign-out",
+  },
 });
+
+export const authProviderMap = authProviders
+  .map((provider) => {
+    if (typeof provider === "function") {
+      const providerData = provider();
+      return { id: providerData.id, name: providerData.name };
+    } else {
+      return { id: provider.id, name: provider.name };
+    }
+  })
+  .filter((provider) => provider.id !== "credentials");
 
 const auth = cache(uncachedAuth);
 

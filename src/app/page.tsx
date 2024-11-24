@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default async function Home() {
   const session = await auth();
   if (!session?.user) {
-    redirect("/api/auth/signin");
+    redirect("/sign-in");
   } else {
     const user = await getUser({ userId: session.user.id });
     if (user) {

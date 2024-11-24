@@ -67,6 +67,18 @@ const config: Config = {
           neutral: "hsl(var(--index-neutral))",
           greed: "hsl(var(--index-greed))",
         },
+        google: {
+          DEFAULT: "hsl(var(--google))",
+          foreground: "hsl(var(--google-foreground))",
+        },
+        discord: {
+          DEFAULT: "hsl(var(--discord))",
+          foreground: "hsl(var(--discord-foreground))",
+        },
+        github: {
+          DEFAULT: "hsl(var(--github))",
+          foreground: "hsl(var(--github-foreground))",
+        },
       },
       opacity: {
         2: "0.02",

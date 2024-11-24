@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
+import { ComponentProps } from "react";
 
-export default function NanoIcon({ className }: { className?: string }) {
+export default function NanoIcon({ className }: ComponentProps<"svg"> & {}) {
   return (
     <svg
       className={cn("size-6", className)}
