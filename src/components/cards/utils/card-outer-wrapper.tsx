@@ -16,7 +16,7 @@ export default function CardOuterWrapper({
   ...rest
 }: TCardOuterWrapperProps) {
   const classNameAll = cn(
-    "flex flex-col p-1 group/card col-span-12",
+    "flex flex-col p-1 group/card col-span-12 data-[is-dnd-active]:z-20 relative",
     className
   );
   if ("href" in rest && rest.href) {

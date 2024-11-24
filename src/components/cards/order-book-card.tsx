@@ -2,6 +2,8 @@
 
 import CardInnerWrapper from "@/components/cards/utils/card-inner-wrapper";
 import CardOuterWrapper, {
+  TCardOuterWrapperDivProps,
+  TCardOuterWrapperLinkProps,
   TCardOuterWrapperProps,
 } from "@/components/cards/utils/card-outer-wrapper";
 import Indicator from "@/components/ui/indicator";
@@ -66,6 +68,15 @@ export default function OrderBookCard({
           .toLowerCase()
           .replace("/", "-")}`
       : undefined;
+
+  const restAsDiv = rest as TCardOuterWrapperDivProps;
+  const restAsLink = rest as TCardOuterWrapperLinkProps;
+  const restTyped = href
+    ? {
+        ...restAsLink,
+        href,
+      }
+    : restAsDiv;
   return (
     <CardOuterWrapper
       className={cn(
@@ -75,7 +86,7 @@ export default function OrderBookCard({
       data-is-loading-error={(isLoadingError && true) || undefined}
       data-is-pending={(isPending && true) || undefined}
       data-has-href={href ? true : undefined}
-      {...rest}
+      {...restTyped}
     >
       <CardInnerWrapper className="flex flex-col items-center border rounded-xl px-4 py-4.5 text-center gap-4 group-data-[has-href]/card:not-touch:group-hover/card:bg-background-secondary group-active/card:bg-background-secondary transition text-sm relative">
         {/* Top */}

@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
 import { api } from "@/server/trpc/setup/react";
 import Link from "next/link";
-import { ReactNode, useMemo } from "react";
+import { ReactNode, useEffect, useMemo, useState } from "react";
 
 const componentRequiresNewRow = ["orderbook", "ohlcv_chart"];
 
@@ -145,6 +145,14 @@ export default function Dashboard({
     return ids;
   }, [cards, currencies]);
 
+  type TCard = NonNullable<typeof cards>[number] & { id: string };
+  const [dndCards, setDndCards] = useState<TCard[]>([]);
+
+  useEffect(() => {
+    if (!cards) return;
+    setDndCards(cards.map((c) => ({ ...c, id: c.card.id })));
+  }, [cards]);
+
   if ((!dashboardIsPending && !dashboard) || cards === null) {
     return (
       <div className="w-full flex-1 flex flex-col items-center justify-center p-5 pb-[calc(5vh+1.5rem)] text-center break-words">
@@ -231,6 +239,20 @@ export default function Dashboard({
             />
           );
         })}
+        {/* <DndWrapper items={dndCards} setItems={setDndCards}>
+          {({ item, attributes, listeners, setNodeRef, style, isActive }) => (
+            <CardParser
+              data-is-dnd-active={isActive ? true : undefined}
+              key={item.card.id}
+              cardObject={item}
+              currencies={currencies}
+              style={style}
+              {...attributes}
+              {...listeners}
+              ref={setNodeRef}
+            />
+          )}
+        </DndWrapper> */}
       </DashboardWrapper>
     </Providers>
   );

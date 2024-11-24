@@ -1,5 +1,6 @@
 "use client";
 
+import CardInnerWrapper from "@/components/cards/utils/card-inner-wrapper";
 import CardOuterWrapper, {
   TCardOuterWrapperProps,
 } from "@/components/cards/utils/card-outer-wrapper";
@@ -320,7 +321,7 @@ export default function UniswapPositionCard({
       }
       {...rest}
     >
-      <div className="w-full flex flex-col flex-1 border rounded-xl relative">
+      <CardInnerWrapper className="flex flex-col flex-1">
         <div
           className={cn(
             "w-full flex flex-1 text-sm justify-center items-center overflow-hidden"
@@ -689,7 +690,7 @@ export default function UniswapPositionCard({
           isRefetching={isRefetching}
           hasData={!isLoadingError && data !== undefined}
         />
-      </div>
+      </CardInnerWrapper>
     </CardOuterWrapper>
   );
 }
