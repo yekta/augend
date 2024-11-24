@@ -11,10 +11,10 @@ import { cn } from "@/lib/utils";
 import { ArrowDownIcon, ArrowRightIcon, ArrowUpIcon } from "lucide-react";
 
 export default function MiniCryptoCard({
-  id,
+  cryptoId,
   className,
 }: {
-  id: number;
+  cryptoId: number;
   className?: string;
 }) {
   const currencyPreference = useCurrencyPreference();
@@ -26,7 +26,7 @@ export default function MiniCryptoCard({
     isRefetching,
   } = useCmcCryptoInfos();
 
-  const data = d?.[id];
+  const data = d?.[cryptoId];
   const convertCurrency = currencyPreference.primary;
 
   const priceSymbol = convertCurrency.symbol;

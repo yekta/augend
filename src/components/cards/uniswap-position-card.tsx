@@ -53,23 +53,23 @@ const errorClassesStats =
   "group-data-[is-loading-error]/stats:text-destructive";
 
 export default function UniswapPositionCard({
-  id,
+  positionId,
   network,
   className,
 }: {
-  id: number;
+  positionId: number;
   network: TEthereumNetwork;
   className?: string;
 }) {
   const { data, isPending, isError, isLoadingError, isRefetching } =
     api.uniswap.getPosition.useQuery(
       {
-        id,
+        id: positionId,
         network,
       },
       defaultQueryOptions.fast
     );
-  const href = `https://app.uniswap.org/pools/${id}`;
+  const href = `https://app.uniswap.org/pools/${positionId}`;
 
   const [isSwapsOpen, setIsSwapsOpen] = useState(false);
 

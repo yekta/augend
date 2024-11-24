@@ -1,17 +1,15 @@
 import { cn } from "@/lib/utils";
-import Link, { LinkProps } from "next/link";
+import Link from "next/link";
+import { ComponentProps } from "react";
 
-type CardWrapperProps = {
-  className?: string;
-  children: React.ReactNode;
-} & (
-  | (React.HTMLAttributes<HTMLDivElement> & { href?: never })
-  | (LinkProps & React.AnchorHTMLAttributes<HTMLAnchorElement>)
-);
+export type TDivProps = ComponentProps<"div"> & { href?: never };
+export type TLinkProps = ComponentProps<typeof Link>;
+type CardWrapperProps = TDivProps | TLinkProps;
 
 export default function CardWrapper({
   className,
   children,
+  ref,
   ...rest
 }: CardWrapperProps) {
   const classNameAll = cn(
@@ -19,17 +17,16 @@ export default function CardWrapper({
     className
   );
   if ("href" in rest && rest.href) {
-    const linkProps = rest as LinkProps &
-      React.AnchorHTMLAttributes<HTMLAnchorElement>;
+    const { target = "_blank", ...restLink } = rest as TLinkProps;
     return (
-      <Link {...linkProps} className={classNameAll} target="_blank">
+      <Link {...restLink} className={classNameAll} target={target}>
         {children}
       </Link>
     );
   }
-  const divProps = rest as React.HTMLAttributes<HTMLDivElement>;
+  const restDiv = rest as TDivProps;
   return (
-    <div {...divProps} className={classNameAll}>
+    <div {...restDiv} className={classNameAll}>
       {children}
     </div>
   );
