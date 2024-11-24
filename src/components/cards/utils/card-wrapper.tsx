@@ -9,7 +9,6 @@ export type TCardWrapperProps = TCardWrapperDivProps | TCardWrapperLinkProps;
 export default function CardWrapper({
   className,
   children,
-  ref,
   ...rest
 }: TCardWrapperProps) {
   const classNameAll = cn(

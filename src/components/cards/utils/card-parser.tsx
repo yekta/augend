@@ -15,6 +15,7 @@ import OrderBookCard, {
 } from "@/components/cards/order-book-card";
 import UniswapPoolsTableCard from "@/components/cards/uniswap-pools-table-card";
 import UniswapPositionCard from "@/components/cards/uniswap-position-card";
+import { TCardWrapperProps } from "@/components/cards/utils/card-wrapper";
 import WBanSummaryCard from "@/components/cards/wban-summary-card";
 import { TDenominatorCurrency } from "@/components/providers/currency-preference-provider";
 import { TEthereumNetwork } from "@/server/trpc/api/routers/ethereum/types";
@@ -23,18 +24,17 @@ import { TAvailableExchange } from "@/server/trpc/api/routers/exchange/types";
 export function CardParser({
   cardObject,
   currencies,
-  className,
+  ...rest
 }: {
   cardObject: TCardObject;
   currencies: TDenominatorCurrency[] | null;
-  className?: string;
-}) {
+} & TCardWrapperProps) {
   if (cardObject.card.cardTypeId === "fear_greed_index") {
-    return <FearGreedIndexCard className={className} />;
+    return <FearGreedIndexCard {...rest} />;
   }
 
   if (cardObject.card.cardTypeId === "wban_summary") {
-    return <WBanSummaryCard className={className} />;
+    return <WBanSummaryCard {...rest} />;
   }
 
   if (
@@ -50,7 +50,7 @@ export function CardParser({
     const selectedCurrencies = currencies
       .filter((c) => ids.includes(c.id))
       .sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id));
-    return <Calculator currencies={selectedCurrencies} className={className} />;
+    return <Calculator currencies={selectedCurrencies} {...rest} />;
   }
 
   if (cardObject.card.cardTypeId === "orderbook") {
@@ -65,7 +65,7 @@ export function CardParser({
       limit: 10,
       ticker: `${tickerBase}/${tickerQuote}`,
     };
-    return <OrderBookCard config={config} className={className} />;
+    return <OrderBookCard config={config} {...rest} />;
   }
 
   if (cardObject.card.cardTypeId === "ohlcv_chart") {
@@ -79,7 +79,7 @@ export function CardParser({
       exchange: exchange as TAvailableExchange,
       ticker: `${tickerBase}/${tickerQuote}`,
     };
-    return <OhlcvChartCard config={config} className={className} />;
+    return <OhlcvChartCard config={config} {...rest} />;
   }
 
   if (cardObject.card.cardTypeId === "uniswap_position") {
@@ -92,6 +92,7 @@ export function CardParser({
       <UniswapPositionCard
         positionId={Number(positionId)}
         network={network as TEthereumNetwork}
+        {...rest}
       />
     );
   }
@@ -101,7 +102,7 @@ export function CardParser({
     if (!values) return null;
     const coinId = values.find((v) => v.id === "coin_id")?.value;
     if (!coinId) return null;
-    return <MiniCryptoCard coinId={Number(coinId)} className={className} />;
+    return <MiniCryptoCard coinId={Number(coinId)} {...rest} />;
   }
 
   if (cardObject.card.cardTypeId === "crypto") {
@@ -109,7 +110,7 @@ export function CardParser({
     if (!values) return null;
     const coinId = values.find((v) => v.id === "coin_id")?.value;
     if (!coinId) return null;
-    return <CryptoCard config={{ id: Number(coinId) }} className={className} />;
+    return <CryptoCard config={{ id: Number(coinId) }} {...rest} />;
   }
 
   if (cardObject.card.cardTypeId === "fiat_currency") {
@@ -125,17 +126,17 @@ export function CardParser({
       <FiatCurrencyCard
         baseCurrency={baseCurrency}
         quoteCurrency={quoteCurrency}
-        className={className}
+        {...rest}
       />
     );
   }
 
   if (cardObject.card.cardTypeId === "uniswap_pools_table") {
-    return <UniswapPoolsTableCard className={className} />;
+    return <UniswapPoolsTableCard {...rest} />;
   }
 
   if (cardObject.card.cardTypeId === "crypto_table") {
-    return <CryptoTableCard className={className} />;
+    return <CryptoTableCard {...rest} />;
   }
 
   if (
@@ -147,9 +148,7 @@ export function CardParser({
     const address = values.find((v) => v.id === "address")?.value;
     const isOwner = values.find((v) => v.id === "is_owner")?.value;
     if (address === undefined || isOwner === undefined) return null;
-    return (
-      <NanoBananoCard account={{ address: address }} className={className} />
-    );
+    return <NanoBananoCard account={{ address: address }} {...rest} />;
   }
 
   if (cardObject.card.cardTypeId === "gas_tracker") {
@@ -157,16 +156,11 @@ export function CardParser({
     if (!values) return null;
     const network = values.find((v) => v.id === "network")?.value;
     if (!network) return null;
-    return (
-      <EthereumGasCard
-        network={network as TEthereumNetwork}
-        className={className}
-      />
-    );
+    return <EthereumGasCard network={network as TEthereumNetwork} {...rest} />;
   }
 
   if (cardObject.card.cardTypeId === "banano_total") {
-    return <BananoTotalCard className={className} />;
+    return <BananoTotalCard {...rest} />;
   }
 
   return null;
