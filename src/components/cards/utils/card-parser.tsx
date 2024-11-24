@@ -90,7 +90,7 @@ export function CardParser({
     if (!network || !positionId) return null;
     return (
       <UniswapPositionCard
-        id={Number(positionId)}
+        positionId={Number(positionId)}
         network={network as TEthereumNetwork}
       />
     );
@@ -101,7 +101,7 @@ export function CardParser({
     if (!values) return null;
     const coinId = values.find((v) => v.id === "coin_id")?.value;
     if (!coinId) return null;
-    return <MiniCryptoCard id={Number(coinId)} className={className} />;
+    return <MiniCryptoCard coinId={Number(coinId)} className={className} />;
   }
 
   if (cardObject.card.cardTypeId === "crypto") {
