@@ -68,6 +68,7 @@ const {
     signIn: "/sign-in",
     signOut: "/sign-out",
   },
+  basePath: "/api/authenticate",
 });
 
 export const authProviderMap = authProviders

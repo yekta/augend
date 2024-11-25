@@ -23,7 +23,7 @@ export default async function SignInPage({ params }: Props) {
                 "use server";
                 try {
                   await signIn(provider.id, {
-                    redirectTo: searchParams?.callbackUrl ?? "",
+                    redirectTo: searchParams?.callbackUrl ?? "/",
                   });
                 } catch (error) {
                   if (error instanceof AuthError) {
