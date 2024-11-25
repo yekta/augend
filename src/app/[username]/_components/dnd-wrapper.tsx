@@ -1,4 +1,5 @@
 import {
+  closestCorners,
   DndContext,
   DragEndEvent,
   DraggableAttributes,
@@ -69,6 +70,7 @@ export default function DndWrapper<T>({
       onDragStart={onDragStart}
       onDragOver={onDragOver}
       onDragEnd={onDragEnd}
+      collisionDetection={closestCorners}
     >
       <SortableContext items={items} strategy={rectSortingStrategy}>
         {items.map((item) => (
