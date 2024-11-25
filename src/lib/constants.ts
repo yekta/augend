@@ -20,3 +20,4 @@ export const defaultQueryOptions = {
 
 export const siteTitle = "Centile";
 export const siteDescription = "Centile.";
+export const mainDashboardSlug = "main";

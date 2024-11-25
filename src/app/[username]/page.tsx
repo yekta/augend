@@ -1,3 +1,4 @@
+import { mainDashboardSlug } from "@/lib/constants";
 import { redirect } from "next/navigation";
 
 export default async function UserLayout({
@@ -6,5 +7,5 @@ export default async function UserLayout({
   params: Promise<{ username: string }>;
 }>) {
   const { username } = await params;
-  redirect(`/${username}/main`);
+  redirect(`/${username}/${mainDashboardSlug}`);
 }

@@ -1,4 +1,4 @@
-import { siteDescription, siteTitle } from "@/lib/constants";
+import { mainDashboardSlug, siteDescription, siteTitle } from "@/lib/constants";
 import { auth } from "@/server/auth";
 import { getUser } from "@/server/db/repo/user";
 import { Metadata } from "next";
@@ -16,7 +16,7 @@ export default async function Home() {
   } else {
     const user = await getUser({ userId: session.user.id });
     if (user) {
-      redirect(`/${user.username}/main`);
+      redirect(`/${user.username}/${mainDashboardSlug}`);
     }
   }
   return (

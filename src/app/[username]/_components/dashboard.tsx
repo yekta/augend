@@ -16,6 +16,7 @@ import NanoBananoBalancesProvider, {
   TNanoBananoAccountFull,
 } from "@/components/providers/nano-banano-balance-provider";
 import { Button } from "@/components/ui/button";
+import { mainDashboardSlug } from "@/lib/constants";
 import { TCardValue } from "@/server/db/schema";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
 import { api } from "@/server/trpc/setup/react";
@@ -168,7 +169,10 @@ export default function Dashboard({
           This dashboard doesn't exist.
         </h1>
         <Button asChild>
-          <Link href={`/${username}/main`} className="mt-8 max-w-full">
+          <Link
+            href={`/${username}/${mainDashboardSlug}`}
+            className="mt-8 max-w-full"
+          >
             Return Home
           </Link>
         </Button>
