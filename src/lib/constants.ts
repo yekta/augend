@@ -18,5 +18,5 @@ export const defaultQueryOptions = {
   },
 };
 
-export const siteTitle = "YDashboard";
-export const siteDescription = "YDashboard.";
+export const siteTitle = "Centile";
+export const siteDescription = "Centile.";
