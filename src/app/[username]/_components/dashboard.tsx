@@ -2,7 +2,7 @@
 
 import { bananoCmcId } from "@/components/cards/banano-total-card";
 import ThreeLineCard from "@/components/cards/three-line-card";
-import { CardParser, TValuesEntry } from "@/components/cards/utils/card-parser";
+import { CardParser } from "@/components/cards/utils/card-parser";
 import DashboardWrapper from "@/components/dashboard-wrapper";
 import CmcCryptoInfosProvider from "@/components/providers/cmc/cmc-crypto-infos-provider";
 import CmcGlobalMetricsProvider from "@/components/providers/cmc/cmc-global-metrics-provider";
@@ -14,6 +14,7 @@ import NanoBananoBalancesProvider, {
   TNanoBananoAccountFull,
 } from "@/components/providers/nano-banano-balance-provider";
 import { Button } from "@/components/ui/button";
+import { TCardValue } from "@/server/db/schema";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
 import { api } from "@/server/trpc/setup/react";
 import Link from "next/link";
@@ -72,7 +73,7 @@ export default function Dashboard({
           c.card.cardTypeId === "banano_balance"
       )
       .map((c) => {
-        const values = c.card.values as TValuesEntry[];
+        const values = c.card.values as TCardValue[];
         if (!values) return null;
         const address = values.find((v) => v.id === "address")?.value;
         const isOwner = values.find((v) => v.id === "is_owner")?.value;
@@ -91,7 +92,7 @@ export default function Dashboard({
     let ids: string[] = [];
     cards.forEach((cardObj, index) => {
       if (cardObj.card.cardTypeId === "calculator") {
-        const values = cardObj.card.values as TValuesEntry[];
+        const values = cardObj.card.values as TCardValue[];
         if (!values) return;
         values.forEach((v) => {
           if (v.id !== "currency_id") return;
@@ -99,7 +100,7 @@ export default function Dashboard({
         });
       }
       if (cardObj.card.cardTypeId === "fiat_currency") {
-        const values = cardObj.card.values as TValuesEntry[];
+        const values = cardObj.card.values as TCardValue[];
         if (!values) return;
         values.forEach((v) => {
           if (v.id !== "base_id" && v.id !== "quote_id") return;
@@ -127,7 +128,7 @@ export default function Dashboard({
           c.card.cardTypeId === "crypto" || c.card.cardTypeId === "mini_crypto"
       )
       .map((c) => {
-        const values = c.card.values as TValuesEntry[];
+        const values = c.card.values as TCardValue[];
         if (!values) return null;
         return values.find((v) => v.id === "coin_id")?.value;
       })

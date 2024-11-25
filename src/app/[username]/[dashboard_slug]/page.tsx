@@ -1,6 +1,6 @@
 import Dashboard from "@/app/[username]/_components/dashboard";
-import { TValuesEntry } from "@/components/cards/utils/card-parser";
 import { siteTitle } from "@/lib/constants";
+import { TCardValue } from "@/server/db/schema";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
 import { apiServer } from "@/server/trpc/setup/server";
 import { Metadata } from "next";
@@ -43,7 +43,7 @@ export default async function Page({ params }: Props) {
 
   (cardsInitialData || []).forEach((cardObj, index) => {
     if (cardObj.card.cardTypeId === "calculator") {
-      const values = cardObj.card.values as TValuesEntry[];
+      const values = cardObj.card.values as TCardValue[];
       if (!values) return;
       values.forEach((v) => {
         if (v.id !== "currency_id") return;
@@ -51,7 +51,7 @@ export default async function Page({ params }: Props) {
       });
     }
     if (cardObj.card.cardTypeId === "fiat_currency") {
-      const values = cardObj.card.values as TValuesEntry[];
+      const values = cardObj.card.values as TCardValue[];
       if (!values) return;
       values.forEach((v) => {
         if (v.id !== "base_id" && v.id !== "quote_id") return;

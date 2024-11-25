@@ -18,6 +18,7 @@ import UniswapPositionCard from "@/components/cards/uniswap-position-card";
 import { TCardOuterWrapperProps } from "@/components/cards/utils/card-outer-wrapper";
 import WBanSummaryCard from "@/components/cards/wban-summary-card";
 import { TCurrencyWithSelectedFields } from "@/server/db/repo/types";
+import { TCardValue } from "@/server/db/schema";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
 import { TEthereumNetwork } from "@/server/trpc/api/routers/ethereum/types";
 import { TAvailableExchange } from "@/server/trpc/api/routers/exchange/types";
@@ -43,7 +44,7 @@ export function CardParser({
     currencies &&
     currencies.length > 1
   ) {
-    const values = cardObject.card.values as TValuesEntry[];
+    const values = cardObject.card.values as TCardValue[];
     if (!values) return null;
     const ids = values
       .filter((v) => v.id === "currency_id")
@@ -55,7 +56,7 @@ export function CardParser({
   }
 
   if (cardObject.card.cardTypeId === "orderbook") {
-    const values = cardObject.card.values as TValuesEntry[];
+    const values = cardObject.card.values as TCardValue[];
     if (!values) return null;
     const exchange = values.find((v) => v.id === "exchange")?.value;
     const tickerBase = values.find((v) => v.id === "ticker_base")?.value;
@@ -70,7 +71,7 @@ export function CardParser({
   }
 
   if (cardObject.card.cardTypeId === "ohlcv_chart") {
-    const values = cardObject.card.values as TValuesEntry[];
+    const values = cardObject.card.values as TCardValue[];
     if (!values) return null;
     const exchange = values.find((v) => v.id === "exchange")?.value;
     const tickerBase = values.find((v) => v.id === "ticker_base")?.value;
@@ -84,7 +85,7 @@ export function CardParser({
   }
 
   if (cardObject.card.cardTypeId === "uniswap_position") {
-    const values = cardObject.card.values as TValuesEntry[];
+    const values = cardObject.card.values as TCardValue[];
     if (!values) return null;
     const network = values.find((v) => v.id === "network")?.value;
     const positionId = values.find((v) => v.id === "position_id")?.value;
@@ -99,7 +100,7 @@ export function CardParser({
   }
 
   if (cardObject.card.cardTypeId === "mini_crypto") {
-    const values = cardObject.card.values as TValuesEntry[];
+    const values = cardObject.card.values as TCardValue[];
     if (!values) return null;
     const coinId = values.find((v) => v.id === "coin_id")?.value;
     if (!coinId) return null;
@@ -107,7 +108,7 @@ export function CardParser({
   }
 
   if (cardObject.card.cardTypeId === "crypto") {
-    const values = cardObject.card.values as TValuesEntry[];
+    const values = cardObject.card.values as TCardValue[];
     if (!values) return null;
     const coinId = values.find((v) => v.id === "coin_id")?.value;
     if (!coinId) return null;
@@ -115,7 +116,7 @@ export function CardParser({
   }
 
   if (cardObject.card.cardTypeId === "fiat_currency") {
-    const values = cardObject.card.values as TValuesEntry[];
+    const values = cardObject.card.values as TCardValue[];
     if (!values) return null;
     const baseId = values.find((v) => v.id === "base_id")?.value;
     const quoteId = values.find((v) => v.id === "quote_id")?.value;
@@ -144,7 +145,7 @@ export function CardParser({
     cardObject.card.cardTypeId === "nano_balance" ||
     cardObject.card.cardTypeId === "banano_balance"
   ) {
-    const values = cardObject.card.values as TValuesEntry[];
+    const values = cardObject.card.values as TCardValue[];
     if (!values) return null;
     const address = values.find((v) => v.id === "address")?.value;
     const isOwner = values.find((v) => v.id === "is_owner")?.value;
@@ -153,7 +154,7 @@ export function CardParser({
   }
 
   if (cardObject.card.cardTypeId === "gas_tracker") {
-    const values = cardObject.card.values as TValuesEntry[];
+    const values = cardObject.card.values as TCardValue[];
     if (!values) return null;
     const network = values.find((v) => v.id === "network")?.value;
     if (!network) return null;
@@ -166,5 +167,3 @@ export function CardParser({
 
   return null;
 }
-
-export type TValuesEntry = { id: string; value: string };

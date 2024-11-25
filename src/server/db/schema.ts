@@ -30,7 +30,9 @@ const timestamps = {
 export const currenciesTable = pgTable(
   "currencies",
   {
-    id: uuid("id").primaryKey(),
+    id: uuid("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
     name: text("name").notNull(),
     ticker: text("ticker").notNull(),
     symbol: text("symbol").notNull(),
@@ -165,7 +167,9 @@ export const cardTypesTable = pgTable("card_types", {
 export const dashboardsTable = pgTable(
   "dashboards",
   {
-    id: uuid("id").primaryKey(),
+    id: uuid("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
     xOrder: integer("x_order").notNull().default(0),
     userId: uuid("user_id")
       .notNull()
@@ -194,7 +198,9 @@ export const dashboardsTable = pgTable(
 export const cardsTable = pgTable(
   "cards",
   {
-    id: uuid("id").primaryKey(),
+    id: uuid("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
     xOrder: integer("x_order").notNull().default(0),
     cardTypeId: varchar("card_type_id", { ...shortText })
       .notNull()
@@ -221,11 +227,9 @@ export const CardTypesInputsSchema = z
   .array(CardTypesInputsElementSchema)
   .nullable();
 
-export const CardValuesElementSchema = z.object({
+export const CardValueSchema = z.object({
   id: z.string(),
   value: z.string(),
 });
-export const CardValuesSchema = z.array(CardValuesElementSchema).nullable();
-
-export type SelectDashboard = typeof dashboardsTable.$inferSelect;
-export type SelectCard = typeof cardsTable.$inferSelect;
+export type TCardValue = z.infer<typeof CardValueSchema>;
+export const CardValuesSchema = z.array(CardValueSchema).nullable();
