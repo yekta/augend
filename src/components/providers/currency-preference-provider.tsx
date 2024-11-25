@@ -1,21 +1,12 @@
 "use client";
 
+import { TCurrencyWithSelectedFields } from "@/server/db/repo/types";
 import React, { createContext, ReactNode, useContext } from "react";
 
-export type TDenominatorCurrency = {
-  id: string;
-  name: string;
-  symbol: string;
-  ticker: string;
-  is_crypto: boolean;
-  coin_id: string | null;
-  max_decimals_preferred: number;
-};
-
 export type TCurrencyPreference = {
-  primary: TDenominatorCurrency;
-  secondary: TDenominatorCurrency;
-  tertiary: TDenominatorCurrency;
+  primary: TCurrencyWithSelectedFields;
+  secondary: TCurrencyWithSelectedFields;
+  tertiary: TCurrencyWithSelectedFields;
 };
 
 const CurrencyPreferenceContext =

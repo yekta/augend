@@ -17,7 +17,8 @@ import UniswapPoolsTableCard from "@/components/cards/uniswap-pools-table-card";
 import UniswapPositionCard from "@/components/cards/uniswap-position-card";
 import { TCardOuterWrapperProps } from "@/components/cards/utils/card-outer-wrapper";
 import WBanSummaryCard from "@/components/cards/wban-summary-card";
-import { TDenominatorCurrency } from "@/components/providers/currency-preference-provider";
+import { TCurrencyWithSelectedFields } from "@/server/db/repo/types";
+import { AppRouterOutputs } from "@/server/trpc/api/root";
 import { TEthereumNetwork } from "@/server/trpc/api/routers/ethereum/types";
 import { TAvailableExchange } from "@/server/trpc/api/routers/exchange/types";
 
@@ -26,8 +27,8 @@ export function CardParser({
   currencies,
   ...rest
 }: {
-  cardObject: TCardObject;
-  currencies: TDenominatorCurrency[] | null;
+  cardObject: NonNullable<AppRouterOutputs["ui"]["getCards"]>[number];
+  currencies: TCurrencyWithSelectedFields[] | null;
 } & TCardOuterWrapperProps) {
   if (cardObject.card.cardTypeId === "fear_greed_index") {
     return <FearGreedIndexCard {...rest} />;
@@ -167,23 +168,3 @@ export function CardParser({
 }
 
 export type TValuesEntry = { id: string; value: string };
-
-type TCardObject = {
-  card: {
-    values: unknown;
-    id: string;
-    cardTypeId: string;
-  };
-  cardType: {
-    id: string;
-    inputs: unknown;
-  };
-  user: {
-    id: string;
-    email: string | null;
-    username: string;
-  };
-  primary_currency: TDenominatorCurrency;
-  secondary_currency: TDenominatorCurrency;
-  tertiary_currency: TDenominatorCurrency;
-};

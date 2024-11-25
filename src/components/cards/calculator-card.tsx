@@ -7,11 +7,11 @@ import CardOuterWrapper, {
 import BananoIcon from "@/components/icons/banano-icon";
 import NanoIcon from "@/components/icons/nano-icon";
 import { useCmcCryptoInfos } from "@/components/providers/cmc/cmc-crypto-infos-provider";
-import { TDenominatorCurrency } from "@/components/providers/currency-preference-provider";
 import { useFiatCurrencyRates } from "@/components/providers/fiat-currency-rates-provider";
 import Indicator from "@/components/ui/indicator";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { TCurrencyWithSelectedFields } from "@/server/db/repo/types";
 import React, { ReactNode, useEffect, useRef, useState } from "react";
 
 const tickerToIcon: Record<string, ReactNode> = {
@@ -24,7 +24,7 @@ export default function Calculator({
   className,
   ...rest
 }: TCardOuterWrapperProps & {
-  currencies: TDenominatorCurrency[];
+  currencies: TCurrencyWithSelectedFields[];
 }) {
   const {
     data: fiatData,
@@ -96,7 +96,7 @@ export default function Calculator({
     let selfId = input.getAttribute("data-id");
 
     if (!selfTicker || !selfId) return;
-    const selfIsCrypto = currencies.find((c) => c.id === selfId)?.is_crypto;
+    const selfIsCrypto = currencies.find((c) => c.id === selfId)?.isCrypto;
     const selfCoinId = input.getAttribute("data-coin-id");
     if (selfIsCrypto && selfCoinId === null) return;
 
@@ -115,7 +115,7 @@ export default function Calculator({
 
       const targetCoinIdStr = i.getAttribute("data-coin-id");
       const targetIsCrypto = currencies.find((c) => c.ticker === targetTicker)
-        ?.is_crypto;
+        ?.isCrypto;
 
       if (targetIsCrypto) {
         if (!targetCoinIdStr) return;
@@ -130,7 +130,7 @@ export default function Calculator({
         i.value = inputValue.toLocaleString("en-US", {
           maximumFractionDigits: currencies.find(
             (c) => c.ticker === targetTicker
-          )?.max_decimals_preferred,
+          )?.maxDecimalsPreferred,
         });
         return;
       }
@@ -143,7 +143,7 @@ export default function Calculator({
       }
       i.value = inputValue.toLocaleString("en-US", {
         maximumFractionDigits: currencies.find((c) => c.ticker === targetTicker)
-          ?.max_decimals_preferred,
+          ?.maxDecimalsPreferred,
       });
       return;
     });
@@ -169,7 +169,7 @@ export default function Calculator({
                 onInput={onInput}
                 data-ticker={c.ticker}
                 data-id={c.id}
-                data-coin-id={c.coin_id !== null ? c.coin_id : undefined}
+                data-coin-id={c.coinId !== null ? c.coinId : undefined}
                 className="text-xl pl-11 py-2.5 h-auto font-semibold rounded-lg"
               />
 

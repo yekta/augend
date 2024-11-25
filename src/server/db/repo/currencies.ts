@@ -9,9 +9,9 @@ export async function getCurrencies({ ids }: { ids: string[] }) {
       name: currenciesTable.name,
       symbol: currenciesTable.symbol,
       ticker: currenciesTable.ticker,
-      is_crypto: currenciesTable.is_crypto,
-      coin_id: currenciesTable.coin_id,
-      max_decimals_preferred: currenciesTable.max_decimals_preferred,
+      isCrypto: currenciesTable.isCrypto,
+      coinId: currenciesTable.coinId,
+      maxDecimalsPreferred: currenciesTable.maxDecimalsPreferred,
     })
     .from(currenciesTable)
     .where(inArray(currenciesTable.id, ids));

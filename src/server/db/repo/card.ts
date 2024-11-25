@@ -1,4 +1,5 @@
 import { db } from "@/server/db/db";
+import { TCurrencyWithSelectedFields } from "@/server/db/repo/types";
 import {
   cardsTable,
   cardTypesTable,
@@ -13,20 +14,15 @@ const primaryCurrencyAlias = alias(currenciesTable, "primary_currency");
 const secondaryCurrencyAlias = alias(currenciesTable, "secondary_currency");
 const tertiaryCurrencyAlias = alias(currenciesTable, "tertiary_currency");
 
-function getCurrencyFields(
-  curr:
-    | typeof primaryCurrencyAlias
-    | typeof secondaryCurrencyAlias
-    | typeof tertiaryCurrencyAlias
-): Record<keyof TCurrencyWithSelectedFields, any> {
+function getCurrencyFields(curr: TCurrencyAlias): TCurrencyFieldSelectors {
   return {
     id: curr.id,
     ticker: curr.ticker,
     name: curr.name,
     symbol: curr.symbol,
-    coin_id: curr.coin_id,
-    is_crypto: curr.is_crypto,
-    max_decimals_preferred: curr.max_decimals_preferred,
+    coinId: curr.coinId,
+    isCrypto: curr.isCrypto,
+    maxDecimalsPreferred: curr.maxDecimalsPreferred,
   };
 }
 
@@ -63,9 +59,9 @@ export async function getCards({
       dashboard: {
         id: dashboardsTable.id,
       },
-      primary_currency: getCurrencyFields(primaryCurrencyAlias),
-      secondary_currency: getCurrencyFields(secondaryCurrencyAlias),
-      tertiary_currency: getCurrencyFields(tertiaryCurrencyAlias),
+      primaryCurrency: getCurrencyFields(primaryCurrencyAlias),
+      secondaryCurrency: getCurrencyFields(secondaryCurrencyAlias),
+      tertiaryCurrency: getCurrencyFields(tertiaryCurrencyAlias),
     })
     .from(cardsTable)
     .innerJoin(dashboardsTable, eq(cardsTable.dashboardId, dashboardsTable.id))
@@ -100,26 +96,21 @@ export async function getCards({
   return editedRes;
 }
 
-export type TGetCardsResult = ReturnType<typeof getCards>;
+type TCurrencyAlias =
+  | typeof primaryCurrencyAlias
+  | typeof secondaryCurrencyAlias
+  | typeof tertiaryCurrencyAlias;
 
-type TCurrencyTable = InferSelectModel<typeof currenciesTable>;
-type TCurrencyWithSelectedFields = Pick<
-  TCurrencyTable,
-  | "id"
-  | "ticker"
-  | "name"
-  | "symbol"
-  | "coin_id"
-  | "is_crypto"
-  | "max_decimals_preferred"
->;
+type TCurrencyFieldSelectors = {
+  [K in keyof TCurrencyWithSelectedFields]: TCurrencyAlias[K];
+};
 
 const defaultPrimaryCurrency: TCurrencyWithSelectedFields = {
   id: "81260265-7335-4d20-9064-0357e75690d6",
   ticker: "USD",
-  coin_id: null,
-  is_crypto: false,
-  max_decimals_preferred: 2,
+  coinId: null,
+  isCrypto: false,
+  maxDecimalsPreferred: 2,
   name: "United States Dollar",
   symbol: "$",
 };
@@ -127,9 +118,9 @@ const defaultPrimaryCurrency: TCurrencyWithSelectedFields = {
 const defaultSecondaryCurrency: TCurrencyWithSelectedFields = {
   id: "d11e7514-5c8e-423d-bc94-efa24bf0f423",
   ticker: "EUR",
-  coin_id: null,
-  is_crypto: false,
-  max_decimals_preferred: 2,
+  coinId: null,
+  isCrypto: false,
+  maxDecimalsPreferred: 2,
   name: "Euro",
   symbol: "€",
 };
@@ -137,9 +128,9 @@ const defaultSecondaryCurrency: TCurrencyWithSelectedFields = {
 const defaultTertiaryCurrency: TCurrencyWithSelectedFields = {
   id: "9710ede3-9d6e-4c3f-8c1f-3664263e4a8e",
   ticker: "GBP",
-  coin_id: null,
-  is_crypto: false,
-  max_decimals_preferred: 2,
+  coinId: null,
+  isCrypto: false,
+  maxDecimalsPreferred: 2,
   name: "British Pound Sterling",
   symbol: "£",
 };

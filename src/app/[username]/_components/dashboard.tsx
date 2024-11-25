@@ -57,9 +57,9 @@ export default function Dashboard({
   const firstCard = cards && cards.length > 0 ? cards[0] : undefined;
   const currencyPreference: TCurrencyPreference | undefined = firstCard
     ? {
-        primary: firstCard.primary_currency,
-        secondary: firstCard.secondary_currency,
-        tertiary: firstCard.tertiary_currency,
+        primary: firstCard.primaryCurrency,
+        secondary: firstCard.secondaryCurrency,
+        tertiary: firstCard.tertiaryCurrency,
       }
     : undefined;
 
@@ -136,8 +136,8 @@ export default function Dashboard({
 
     if (currencies.length > 1) {
       for (const currency of currencies) {
-        if (currency.is_crypto && !ids.includes(Number(currency.coin_id))) {
-          ids.push(Number(currency.coin_id));
+        if (currency.isCrypto && !ids.includes(Number(currency.coinId))) {
+          ids.push(Number(currency.coinId));
         }
       }
     }
