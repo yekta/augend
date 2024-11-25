@@ -155,7 +155,7 @@ export default function Calculator({
     >
       <CardInnerWrapper
         id="calculator"
-        className="p-4 flex flex-col gap-2 relative"
+        className="p-3.75 flex flex-col gap-2 relative"
       >
         {currencies.map((c, index) => {
           const Icon = tickerToIcon[c.ticker];
