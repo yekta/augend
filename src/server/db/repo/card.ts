@@ -7,7 +7,7 @@ import {
   dashboardsTable,
   usersTable,
 } from "@/server/db/schema";
-import { and, asc, desc, eq, InferSelectModel } from "drizzle-orm";
+import { and, asc, desc, eq } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 
 const primaryCurrencyAlias = alias(currenciesTable, "primary_currency");

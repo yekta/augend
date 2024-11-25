@@ -25,8 +25,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!dashboardObject) return notFoundMeta;
 
   return {
-    title: `${dashboardObject.dashboard.title} | ${dashboardObject.user.username} | ${siteTitle}`,
-    description: dashboardObject.dashboard.title,
+    title: `${dashboardObject.data.dashboard.title} | ${dashboardObject.data.user.username} | ${siteTitle}`,
+    description: dashboardObject.data.dashboard.title,
   };
 }
 

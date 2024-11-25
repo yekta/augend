@@ -33,7 +33,7 @@ export async function getDashboard({
     .where(and(...whereFilter))
     .innerJoin(usersTable, eq(dashboardsTable.userId, usersTable.id));
   if (res.length === 0) return null;
-  return res[0];
+  return { data: res[0], isOwner };
 }
 
 export async function getDashboards({

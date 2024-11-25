@@ -2,6 +2,8 @@
 
 import { bananoCmcId } from "@/components/cards/banano-total-card";
 import ThreeLineCard from "@/components/cards/three-line-card";
+import CardInnerWrapper from "@/components/cards/utils/card-inner-wrapper";
+import CardOuterWrapper from "@/components/cards/utils/card-outer-wrapper";
 import { CardParser } from "@/components/cards/utils/card-parser";
 import DashboardWrapper from "@/components/dashboard-wrapper";
 import CmcCryptoInfosProvider from "@/components/providers/cmc/cmc-crypto-infos-provider";
@@ -17,8 +19,9 @@ import { Button } from "@/components/ui/button";
 import { TCardValue } from "@/server/db/schema";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
 import { api } from "@/server/trpc/setup/react";
+import { PlusIcon } from "lucide-react";
 import Link from "next/link";
-import { ReactNode, useEffect, useMemo, useState } from "react";
+import { ReactNode, useMemo } from "react";
 
 const componentRequiresNewRow = ["orderbook", "ohlcv_chart"];
 
@@ -56,13 +59,16 @@ export default function Dashboard({
   );
 
   const firstCard = cards && cards.length > 0 ? cards[0] : undefined;
-  const currencyPreference: TCurrencyPreference | undefined = firstCard
-    ? {
-        primary: firstCard.primaryCurrency,
-        secondary: firstCard.secondaryCurrency,
-        tertiary: firstCard.tertiaryCurrency,
-      }
-    : undefined;
+  const currencyPreference: TCurrencyPreference | false | undefined =
+    cards !== undefined && cards !== null && cards.length === 0
+      ? false
+      : firstCard
+        ? {
+            primary: firstCard.primaryCurrency,
+            secondary: firstCard.secondaryCurrency,
+            tertiary: firstCard.tertiaryCurrency,
+          }
+        : undefined;
 
   const nanoBananoAccounts = useMemo(() => {
     if (!cards) return undefined;
@@ -146,13 +152,13 @@ export default function Dashboard({
     return ids;
   }, [cards, currencies]);
 
-  type TCard = NonNullable<typeof cards>[number] & { id: string };
+  /* type TCard = NonNullable<typeof cards>[number] & { id: string };
   const [dndCards, setDndCards] = useState<TCard[]>([]);
 
   useEffect(() => {
     if (!cards) return;
     setDndCards(cards.map((c) => ({ ...c, id: c.card.id })));
-  }, [cards]);
+  }, [cards]); */
 
   if ((!dashboardIsPending && !dashboard) || cards === null) {
     return (
@@ -211,6 +217,33 @@ export default function Dashboard({
     );
   }
 
+  if (cards.length === 0 && dashboard.isOwner) {
+    return (
+      <DashboardWrapper centerItems>
+        <div className="flex flex-col w-64 max-w-full text-center gap-4">
+          <h1 className="font-bold text-lg px-5">Start by adding a card</h1>
+          <CardOuterWrapper>
+            <CardInnerWrapper className="w-full h-32 px-5 py-3 font-medium items-center text-muted-foreground justify-center flex gap-1">
+              <PlusIcon className="size-5 shrink-0" />
+              <p className="leading-snug shrink text-left min-w-0 overflow-hidden overflow-ellipsis">
+                Add a card
+              </p>
+            </CardInnerWrapper>
+          </CardOuterWrapper>
+        </div>
+      </DashboardWrapper>
+    );
+  }
+
+  if (cards.length === 0 && !dashboard.isOwner) {
+    return (
+      <DashboardWrapper centerItems>
+        <p className="text-muted-foreground max-w-full px-5 text-center">
+          This dashboard doesn't have any cards yet.
+        </p>
+      </DashboardWrapper>
+    );
+  }
   return (
     <Providers
       cardTypeIds={cards.map((c) => c.card.cardTypeId)}
@@ -271,7 +304,7 @@ function Providers({
   cryptoCurrencyIds: number[];
   children: ReactNode;
   nanoBananoAccounts: TNanoBananoAccountFull[];
-  currencyPreference: TCurrencyPreference;
+  currencyPreference: TCurrencyPreference | false;
   dontAddUsd?: boolean;
 }) {
   let wrappedChildren = children;
@@ -321,10 +354,12 @@ function Providers({
   }
 
   // General wrappers
-  wrappedChildren = (
-    <CurrencyPreferenceProvider currencyPreference={currencyPreference}>
-      {wrappedChildren}
-    </CurrencyPreferenceProvider>
-  );
+  if (currencyPreference !== false) {
+    wrappedChildren = (
+      <CurrencyPreferenceProvider currencyPreference={currencyPreference}>
+        {wrappedChildren}
+      </CurrencyPreferenceProvider>
+    );
+  }
   return wrappedChildren;
 }
