@@ -1,5 +1,4 @@
 import { cmcRouter } from "@/server/trpc/api/routers/cmc/router";
-import { coinGeckoRouter } from "@/server/trpc/api/routers/coin-gecko/router";
 import { ethereumRouter } from "@/server/trpc/api/routers/ethereum/router";
 import { exchangeRouter } from "@/server/trpc/api/routers/exchange/router";
 import { fiatRouter } from "@/server/trpc/api/routers/fiat/router";
@@ -30,7 +29,6 @@ export const appRouter = createTRPCRouter({
   cmc: cmcRouter,
   fiat: fiatRouter,
   wban: wbanRouter,
-  coinGecko: coinGeckoRouter,
   uniswap: uniswapRouter,
   ethereum: ethereumRouter,
 });

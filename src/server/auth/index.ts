@@ -15,6 +15,7 @@ import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 import { cache } from "react";
 import type { Provider as AuthProvider } from "next-auth/providers";
+import { env } from "@/lib/env";
 
 declare module "next-auth" {
   interface Session extends DefaultSession {
@@ -25,13 +26,13 @@ declare module "next-auth" {
 }
 
 let authProviders: AuthProvider[] = [];
-if (process.env.AUTH_GOOGLE_ID && process.env.AUTH_GOOGLE_SECRET) {
+if (env.AUTH_GOOGLE_ID && env.AUTH_GOOGLE_SECRET) {
   authProviders.push(Google({ allowDangerousEmailAccountLinking: true }));
 }
-if (process.env.AUTH_GITHUB_ID && process.env.AUTH_GITHUB_SECRET) {
+if (env.AUTH_GITHUB_ID && env.AUTH_GITHUB_SECRET) {
   authProviders.push(GitHub({ allowDangerousEmailAccountLinking: true }));
 }
-if (process.env.AUTH_DISCORD_ID && process.env.AUTH_DISCORD_SECRET) {
+if (env.AUTH_DISCORD_ID && env.AUTH_DISCORD_SECRET) {
   authProviders.push(Discord({}));
 }
 if (authProviders.length === 0) {

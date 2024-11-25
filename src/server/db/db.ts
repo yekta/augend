@@ -2,8 +2,9 @@ import "server-only";
 
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
+import { env } from "@/lib/env";
 
-const databaseUrlRaw = process.env.DATABASE_URL;
+const databaseUrlRaw = env.DATABASE_URL;
 if (!databaseUrlRaw) {
   throw new Error("DATABASE_URL is not set");
 }

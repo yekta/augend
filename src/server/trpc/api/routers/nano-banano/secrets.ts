@@ -1,9 +1,8 @@
+import { env } from "@/lib/env";
 import "server-only";
 
-const bananoApiKeyRaw = process.env.BANANO_API_KEY;
-
-export const bananoHeaders = bananoApiKeyRaw
+export const bananoHeaders = env.BANANO_API_KEY
   ? {
-      Authorization: bananoApiKeyRaw,
+      Authorization: env.BANANO_API_KEY,
     }
   : undefined;

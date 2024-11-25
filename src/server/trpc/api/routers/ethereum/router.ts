@@ -1,3 +1,4 @@
+import { env } from "@/lib/env";
 import { cmcApiUrl } from "@/server/trpc/api/routers/cmc/constants";
 import { cmcFetchOptions } from "@/server/trpc/api/routers/cmc/secrets";
 import { TCmcGetCryptosResult } from "@/server/trpc/api/routers/cmc/types";
@@ -5,7 +6,6 @@ import {
   ethereumNetworks,
   etherscanApiUrl,
 } from "@/server/trpc/api/routers/ethereum/constants";
-import { etherscanApiKey } from "@/server/trpc/api/routers/ethereum/secrets";
 import {
   EthereumNetworkSchema,
   TGasInfoResultRaw,
@@ -29,7 +29,7 @@ export const ethereumRouter = createTRPCRouter({
     .query(async ({ input: { network } }) => {
       const chainId = ethereumNetworks[network].id;
       const cmcId = ethereumNetworks[network].cmcId;
-      const url = `${etherscanApiUrl}/v2/api?chainid=${chainId}&module=gastracker&action=gasoracle&apikey=${etherscanApiKey}`;
+      const url = `${etherscanApiUrl}/v2/api?chainid=${chainId}&module=gastracker&action=gasoracle&apikey=${env.ETHERSCAN_API_KEY}`;
       const ethUsdUrl = `${cmcApiUrl}/v2/cryptocurrency/quotes/latest?id=${cmcId}&convert=USD`;
 
       const [response, ethUsdRes] = await Promise.all([
