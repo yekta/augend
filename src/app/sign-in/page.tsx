@@ -1,5 +1,4 @@
-import { SignInButton } from "@/components/auth/sign-in/sign-in-button";
-import { SignInCard } from "@/components/auth/sign-in/sign-in-card";
+import SignInCard from "@/components/auth/sign-in-card";
 
 type Props = {
   searchParams: Promise<{ callbackUrl?: string; error?: string }>;
