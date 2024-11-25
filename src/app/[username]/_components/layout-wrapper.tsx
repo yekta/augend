@@ -1,6 +1,6 @@
 "use client";
 
-import Navbar, { TRoute } from "@/components/navbar";
+import Navbar, { TRoute } from "@/components/navigation/navbar";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
 import { api } from "@/server/trpc/setup/react";
 

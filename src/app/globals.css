@@ -43,7 +43,6 @@ body {
     --banano: 35 100% 25%;
     --nano: 250 80% 25%;
     --radius: 0.5rem;
-    --opacity-shadow: 0.06;
     --chart-1: 250 80% 25%;
     --chart-2: 130 84% 20%;
     --chart-3: 35 100% 25%;
@@ -53,6 +52,17 @@ body {
     --index-fear: 0 100% 70%;
     --index-neutral: 50 100% 60%;
     --index-greed: 120 50% 55%;
+
+    --google: 120 40% 85%;
+    --google-foreground: 250 25% 4%;
+    --discord: 235 86% 65%;
+    --discord-foreground: 0 0% 100%;
+    --github: 0 0% 0%;
+    --github-foreground: 0 0% 100%;
+
+    --barrier: 0 0% 0%;
+    --opacity-barrier: 0.6;
+    --opacity-shadow: 0.06;
   }
   .dark {
     --background: 250 25% 4%;
@@ -80,7 +90,6 @@ body {
     --ring: 0 0% 83.1%;
     --banano: 50 80% 50%;
     --nano: 200 90% 55%;
-    --opacity-shadow: 1;
     --chart-1: 200 90% 55%;
     --chart-2: 130 80% 70%;
     --chart-3: 30 75% 65%;
@@ -97,6 +106,10 @@ body {
     --discord-foreground: 250 50% 92%;
     --github: 250 50% 92%;
     --github-foreground: 250 25% 4%;
+
+    --barrier: 250 25% 4%;
+    --opacity-barrier: 0.75;
+    --opacity-shadow: 1;
   }
 }
 

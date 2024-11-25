@@ -79,6 +79,7 @@ const config: Config = {
           DEFAULT: "hsl(var(--github))",
           foreground: "hsl(var(--github-foreground))",
         },
+        barrier: "hsl(var(--barrier))",
       },
       opacity: {
         2: "0.02",
@@ -90,6 +91,8 @@ const config: Config = {
       },
       transitionDuration: {
         250: "250ms",
+        2000: "2000ms",
+        5000: "5000ms",
       },
       fontSize: {
         xxs: ["0.625rem", "1rem"],
@@ -153,6 +156,7 @@ const config: Config = {
       boxShadow: {
         navbar:
           "0rem 0rem 0.5rem 0rem, 0rem 0rem 0.75rem 0rem, 0rem 0rem 1.5rem 0rem",
+        dialog: "0rem 0.5rem 1rem 0rem",
       },
     },
     animation: {
