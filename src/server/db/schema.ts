@@ -16,7 +16,8 @@ import {
 import { z } from "zod";
 import type { AdapterAccountType } from "next-auth/adapters";
 
-const shortText = { length: 32 };
+const shortText = { length: 20 };
+const mediumText = { length: 32 };
 
 const timestamps = {
   createdAt: timestamp("created_at").notNull().defaultNow(),
@@ -62,7 +63,7 @@ export const usersTable = pgTable(
     username: varchar("username", { ...shortText })
       .unique()
       .notNull()
-      .$defaultFn(() => crypto.randomUUID().replaceAll("-", "")),
+      .$defaultFn(() => crypto.randomUUID().replaceAll("-", "").slice(0, 20)),
     email: text("email").unique(),
     emailVerified: timestamp("emailVerified", { mode: "date" }),
     image: text("image"),
@@ -157,7 +158,7 @@ export const authenticatorsTable = pgTable(
 );
 
 export const cardTypesTable = pgTable("card_types", {
-  id: varchar("id", { ...shortText }).primaryKey(),
+  id: varchar("id", { ...mediumText }).primaryKey(),
   title: text("title").notNull(),
   description: text("description").notNull(),
   inputs: jsonb("inputs"),
@@ -174,7 +175,7 @@ export const dashboardsTable = pgTable(
     userId: uuid("user_id")
       .notNull()
       .references(() => usersTable.id),
-    title: varchar("title", { ...shortText }).notNull(),
+    title: varchar("title", { ...mediumText }).notNull(),
     slug: text("slug").notNull(),
     icon: text("icon").notNull(),
     isMain: boolean("is_main").notNull().default(false),
@@ -202,7 +203,7 @@ export const cardsTable = pgTable(
       .primaryKey()
       .$defaultFn(() => crypto.randomUUID()),
     xOrder: integer("x_order").notNull().default(0),
-    cardTypeId: varchar("card_type_id", { ...shortText })
+    cardTypeId: varchar("card_type_id", { ...mediumText })
       .notNull()
       .references(() => cardTypesTable.id),
     dashboardId: uuid("dashboard_id")
