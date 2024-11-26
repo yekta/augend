@@ -30,6 +30,7 @@
     "@trpc/server": "^11.0.0-rc.446",
     "@uniswap/v3-periphery": "^1.4.4",
     "@web3icons/react": "^3.11.0",
+    "alchemy-sdk": "^3.5.0",
     "ccxt": "^4.4.25",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",

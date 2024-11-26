@@ -127,7 +127,7 @@ export const uniswapRouter = createTRPCRouter({
       })
     )
     .query(async ({ input: { id, network } }) => {
-      const positionManager = getUniswapPositionManager(network);
+      const positionManager = await getUniswapPositionManager(network);
       const url = `${uniswapOkuApiUrl}/${network}/cush/analyticsPosition`;
       const body = {
         params: [

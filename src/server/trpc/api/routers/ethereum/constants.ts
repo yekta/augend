@@ -1,7 +1,5 @@
 import { TEthereumNetwork } from "@/server/trpc/api/routers/ethereum/types";
 
-export const etherscanApiUrl = "https://api.etherscan.io";
-
 export const ethereumNetworks: Record<
   TEthereumNetwork,
   {
