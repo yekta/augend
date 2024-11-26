@@ -18,7 +18,7 @@ export const env = createEnv({
     AUTH_DISCORD_SECRET: z.string().optional(),
     AUTH_GITHUB_ID: z.string().optional(),
     AUTH_GITHUB_SECRET: z.string().optional(),
-    AUTH_TRUST_HOST: z.boolean(),
+    AUTH_TRUST_HOST: z.string(),
     BINANCE_API_KEY: z.string().optional(),
     BINANCE_API_SECRET: z.string().optional(),
     BANANO_API_KEY: z.string().optional(),
