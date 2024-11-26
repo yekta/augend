@@ -1,10 +1,9 @@
-import { env } from "@/lib/env";
 import { config } from "dotenv";
 import { defineConfig } from "drizzle-kit";
 
 config({ path: ".env.local" });
 
-const databaseUrlRaw = env.DATABASE_URL;
+const databaseUrlRaw = process.env.DATABASE_URL;
 if (!databaseUrlRaw) {
   throw new Error("DATABASE_URL is not set");
 }

@@ -11,19 +11,19 @@ const baseGasLimit = 21_000;
 const swapGasLimit = 360_000;
 const uniswapV3PositionCreationLimit = 500_000;
 const ethToGwei = Math.pow(10, 9);
-const weiToGwei = Math.pow(10, 9);
+const gweiToWei = Math.pow(10, 9);
 
 export const ethereumRouter = createTRPCRouter({
   getGasInfo: publicProcedure
     .input(
       z.object({
-        page: z.number().int().positive().default(1),
         network: EthereumNetworkSchema.optional().default("ethereum"),
+        convert: z.string().optional().default("USD"),
       })
     )
-    .query(async ({ input: { network } }) => {
+    .query(async ({ input: { network, convert } }) => {
       const cmcId = ethereumNetworks[network].cmcId;
-      const ethUsdUrl = `${cmcApiUrl}/v2/cryptocurrency/quotes/latest?id=${cmcId}&convert=USD`;
+      const ethUsdUrl = `${cmcApiUrl}/v2/cryptocurrency/quotes/latest?id=${cmcId}&convert=${convert}`;
 
       const [gasPriceBigNumber, block, ethUsdRes] = await Promise.all([
         ethereumProviders[network].core.getGasPrice(),
@@ -39,8 +39,8 @@ export const ethereumRouter = createTRPCRouter({
         ethUsdRes.json(),
       ]);
 
-      const gasPriceGwei = gasPriceBigNumber.toNumber() / weiToGwei;
-      const ethUsd = ethUsdResJson.data[cmcId].quote.USD.price;
+      const gasPriceGwei = gasPriceBigNumber.toNumber() / gweiToWei;
+      const ethUsd = ethUsdResJson.data[cmcId].quote[convert].price;
 
       const gweiPerLimit = gasPriceGwei / baseGasLimit;
       const swapGwei = gweiPerLimit * swapGasLimit;

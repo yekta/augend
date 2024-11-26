@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { ElementType } from "react";
 import CardInnerWrapper from "@/components/cards/utils/card-inner-wrapper";
+import { useCurrencyPreference } from "@/components/providers/currency-preference-provider";
 
 export default function EthereumGasCard({
   network,
@@ -30,10 +31,13 @@ export default function EthereumGasCard({
 }: TCardOuterWrapperProps & {
   network: TEthereumNetwork;
 }) {
+  const currencyPreference = useCurrencyPreference();
+  const convertCurrency = currencyPreference.primary;
   const { data, isPending, isError, isLoadingError, isRefetching } =
     api.ethereum.getGasInfo.useQuery(
       {
         network,
+        convert: convertCurrency.ticker,
       },
       defaultQueryOptions.fast
     );
@@ -84,7 +88,11 @@ export default function EthereumGasCard({
           />
           <IconAndText
             text={conditionalValue(
-              `$${formatNumberTBMK(data?.sendUsd || 1, 3, true)}`,
+              `${convertCurrency.symbol}${formatNumberTBMK(
+                data?.sendUsd || 1,
+                3,
+                true
+              )}`,
               true
             )}
             Icon={SendIcon}
@@ -93,14 +101,18 @@ export default function EthereumGasCard({
         <div className="flex flex-wrap shrink min-w-0 overflow-hidden items-center justify-center">
           <IconAndText
             text={conditionalValue(
-              `$${formatNumberTBMK(data?.swapUsd || 1, 3, true)}`,
+              `${convertCurrency.symbol}${formatNumberTBMK(
+                data?.swapUsd || 1,
+                3,
+                true
+              )}`,
               true
             )}
             Icon={ArrowRightLeftIcon}
           />
           <IconAndText
             text={conditionalValue(
-              `$${formatNumberTBMK(
+              `${convertCurrency.symbol}${formatNumberTBMK(
                 data?.uniswapV3PositionCreationUsd || 1,
                 3,
                 true

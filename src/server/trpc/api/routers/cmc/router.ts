@@ -13,7 +13,7 @@ export const cmcRouter = createTRPCRouter({
     .input(
       z.object({
         ids: z.array(z.number()),
-        convert: z.array(z.string()),
+        convert: z.array(z.string()).optional().default(["USD"]),
       })
     )
     .query(async ({ input: { ids, convert } }) => {
@@ -57,7 +57,7 @@ export const cmcRouter = createTRPCRouter({
   getGlobalMetrics: publicProcedure
     .input(
       z.object({
-        convert: z.string().default("USD"),
+        convert: z.string().optional().default("USD"),
       })
     )
     .query(async ({ input: { convert } }) => {
@@ -101,7 +101,7 @@ export const cmcRouter = createTRPCRouter({
   getCoinList: publicProcedure
     .input(
       z.object({
-        convert: z.string().default("usd"),
+        convert: z.string().optional().default("USD"),
         page: z.number().int().positive().default(0),
       })
     )
