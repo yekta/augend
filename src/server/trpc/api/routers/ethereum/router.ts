@@ -7,9 +7,9 @@ import { EthereumNetworkSchema } from "@/server/trpc/api/routers/ethereum/types"
 import { createTRPCRouter, publicProcedure } from "@/server/trpc/setup/trpc";
 import { z } from "zod";
 
-const baseGasLimit = 21_000;
-const swapGasLimit = 360_000;
-const uniswapV3PositionCreationLimit = 500_000;
+const baseGasLimitGwei = 21_000;
+const swapGasLimitGwei = 360_000;
+const uniswapV3PositionCreationLimitGwei = 500_000;
 const ethToGwei = Math.pow(10, 9);
 const gweiToWei = Math.pow(10, 9);
 
@@ -25,7 +25,7 @@ export const ethereumRouter = createTRPCRouter({
       const cmcId = ethereumNetworks[network].cmcId;
       const ethUsdUrl = `${cmcApiUrl}/v2/cryptocurrency/quotes/latest?id=${cmcId}&convert=${convert}`;
 
-      const [gasPriceBigNumber, block, ethUsdRes] = await Promise.all([
+      const [gasPriceWei, block, ethUsdRes] = await Promise.all([
         ethereumProviders[network].core.getGasPrice(),
         ethereumProviders[network].core.getBlockNumber(),
         fetch(ethUsdUrl, cmcFetchOptions),
@@ -39,21 +39,20 @@ export const ethereumRouter = createTRPCRouter({
         ethUsdRes.json(),
       ]);
 
-      const gasPriceGwei = gasPriceBigNumber.toNumber() / gweiToWei;
+      const gasPriceGwei = gasPriceWei.toNumber() / gweiToWei;
       const ethUsd = ethUsdResJson.data[cmcId].quote[convert].price;
 
-      const gweiPerLimit = gasPriceGwei / baseGasLimit;
-      const swapGwei = gweiPerLimit * swapGasLimit;
+      const swapGwei = gasPriceGwei * swapGasLimitGwei;
       const uniswapV3PositionCreationGwei =
-        gweiPerLimit * uniswapV3PositionCreationLimit;
+        gasPriceGwei * uniswapV3PositionCreationLimitGwei;
 
       return {
         block,
         gwei: gasPriceGwei,
-        sendUsd: ((gasPriceGwei * baseGasLimit) / ethToGwei) * ethUsd,
-        swapUsd: ((swapGwei * baseGasLimit) / ethToGwei) * ethUsd,
+        sendUsd: ((gasPriceGwei * baseGasLimitGwei) / ethToGwei) * ethUsd,
+        swapUsd: (swapGwei / ethToGwei) * ethUsd,
         uniswapV3PositionCreationUsd:
-          ((uniswapV3PositionCreationGwei * baseGasLimit) / ethToGwei) * ethUsd,
+          (uniswapV3PositionCreationGwei / ethToGwei) * ethUsd,
       };
     }),
 });
