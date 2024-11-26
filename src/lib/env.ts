@@ -52,7 +52,7 @@ export const env = createEnv({
     AUTH_DISCORD_SECRET: process.env.AUTH_DISCORD_SECRET,
     AUTH_GITHUB_ID: process.env.AUTH_GITHUB_ID,
     AUTH_GITHUB_SECRET: process.env.AUTH_GITHUB_SECRET,
-    AUTH_URL: process.env.AUTH_TRUST_HOST,
+    AUTH_URL: process.env.AUTH_URL,
     BINANCE_API_KEY: process.env.BINANCE_API_KEY,
     BINANCE_API_SECRET: process.env.BINANCE_API_SECRET,
     BANANO_API_KEY: process.env.BANANO_API_KEY,
