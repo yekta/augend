@@ -29,11 +29,11 @@ let authProviders: AuthProvider[] = [];
 if (env.AUTH_GOOGLE_ID && env.AUTH_GOOGLE_SECRET) {
   authProviders.push(Google({ allowDangerousEmailAccountLinking: true }));
 }
-if (env.AUTH_GITHUB_ID && env.AUTH_GITHUB_SECRET) {
-  authProviders.push(GitHub({ allowDangerousEmailAccountLinking: true }));
-}
 if (env.AUTH_DISCORD_ID && env.AUTH_DISCORD_SECRET) {
   authProviders.push(Discord({}));
+}
+if (env.AUTH_GITHUB_ID && env.AUTH_GITHUB_SECRET) {
+  authProviders.push(GitHub({ allowDangerousEmailAccountLinking: true }));
 }
 if (authProviders.length === 0) {
   throw new Error(
