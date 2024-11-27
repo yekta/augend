@@ -1,0 +1,1 @@
+ALTER TABLE "card_type_inputs" ALTER COLUMN "placeholder" SET DEFAULT 'Placeholder';

@@ -172,6 +172,7 @@ export const cardTypeInputsTable = pgTable(
     cardTypeId: text("card_type_id").references(() => cardTypesTable.id),
     title: text("title").notNull(),
     description: text("description").notNull(),
+    placeholder: text("placeholder").notNull().default("Placeholder"),
     type: cardTypeInputTypeEnum("type").notNull(),
     xOrder: integer("x_order").notNull().default(0),
     ...timestamps,

@@ -16,6 +16,7 @@ export async function getCardTypes() {
         description: cardTypeInputsTable.description,
         type: cardTypeInputsTable.type,
         xOrder: cardTypeInputsTable.xOrder,
+        placeholder: cardTypeInputsTable.placeholder,
       },
     })
     .from(cardTypesTable)

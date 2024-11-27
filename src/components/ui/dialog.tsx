@@ -54,7 +54,11 @@ const DialogContent = React.forwardRef<
     <DialogOverlay>
       <DialogPrimitive.Content
         ref={ref}
-        className={cn(dialogContentVariants({ variant }), className)}
+        className={cn(
+          "outline-none focus:outline-none",
+          dialogContentVariants({ variant }),
+          className
+        )}
         {...props}
       >
         {children}

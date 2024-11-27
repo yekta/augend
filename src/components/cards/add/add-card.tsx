@@ -16,10 +16,22 @@ import {
   DialogContent,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@/components/ui/form";
 import { cn } from "@/lib/utils";
 import { api } from "@/server/trpc/setup/react";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Input } from "@/components/ui/input";
 
 type AddCardButtonProps = {
   className?: string;
@@ -63,54 +75,155 @@ type AddCardCommandPanelProps = {
 
 export function AddCardCommandPanel({ className }: AddCardCommandPanelProps) {
   const { data, isPending, isLoadingError } = api.ui.getCardTypes.useQuery({});
+
+  type TSelectedCardType = NonNullable<typeof data>[number];
+  type TSelectedCardTypeWithInputs = TSelectedCardType & {
+    inputs: NonNullable<TSelectedCardType["inputs"]>;
+  };
+  const [selectedCardType, setSelectedCardType] =
+    useState<TSelectedCardType | null>(null);
+
   return (
-    <Command className={cn("rounded-xl border", className)}>
-      <CommandInput placeholder="Search for a card..." />
-      {!isPending && data && (
-        <CommandEmpty className="text-muted-foreground w-full text-center text-sm py-6">
-          No cards found.
-        </CommandEmpty>
+    <>
+      {selectedCardType !== null && (
+        <div className="w-full rounded-xl border bg-background">
+          <div className="w-full flex flex-col px-4 pt-3 pb-4 gap-1.5">
+            <h1 className="font-bold text-xl leading-tight">
+              {selectedCardType.cardType.title}
+            </h1>
+            <p className="text-base text-muted-foreground leading-tight">
+              {selectedCardType.cardType.description}
+            </p>
+          </div>
+          {selectedCardType.inputs && (
+            <>
+              <div className="w-full bg-border h-px" />
+              <div className="w-full px-4 pt-3 pb-4">
+                <AddCardForm
+                  cardTypeObj={selectedCardType as TSelectedCardTypeWithInputs}
+                />
+              </div>
+            </>
+          )}
+        </div>
       )}
-      <CommandList>
-        {!isPending && isLoadingError && (
-          <p className="w-full py-5 px-8 text-destructive text-sm text-center">
-            Couldn't load cards :(
-          </p>
-        )}
-        {!isLoadingError && (
-          <CommandGroup data-pending={isPending ? true : undefined}>
-            {(
-              data ||
-              Array.from({ length: 20 }).map((_, index) => ({
-                cardType: {
-                  id: `loading-${index}`,
-                  title: `Loading title ${index}`,
-                  description: `Loading description ${index}`,
-                },
-              }))
-            ).map((cardTypeObj, i) => (
-              <CommandItem
-                className="px-3 py-3 flex flex-col w-full text-left justify-start items-start gap-1"
-                key={`${cardTypeObj.cardType.id}-${i}`}
-                state={isPending ? "pending" : undefined}
-              >
-                <p
-                  className="max-w-full font-bold group-data-[pending]/command:text-transparent group-data-[pending]/command:bg-foreground
-                  group-data-[pending]/command:rounded group-data-[pending]/command:animate-skeleton leading-tight"
+      {selectedCardType === null && (
+        <Command className={cn("rounded-xl border", className)}>
+          <CommandInput placeholder="Search for a card..." />
+          {!isPending && data && (
+            <CommandEmpty className="text-muted-foreground w-full text-center text-sm py-6">
+              No cards found.
+            </CommandEmpty>
+          )}
+          <CommandList>
+            {!isPending && isLoadingError && (
+              <p className="w-full py-5 px-8 text-destructive text-sm text-center">
+                Couldn't load cards :(
+              </p>
+            )}
+            {!isLoadingError && (
+              <CommandGroup data-pending={isPending ? true : undefined}>
+                {(
+                  data ||
+                  Array.from({ length: 20 }).map((_, index) => ({
+                    cardType: {
+                      id: `loading-${index}`,
+                      title: `Loading title ${index}`,
+                      description: `Loading description ${index}`,
+                    },
+                  }))
+                ).map((cardTypeObj, i) => (
+                  <CommandItem
+                    className="px-3 py-3 flex flex-col w-full text-left justify-start items-start gap-1"
+                    key={`${cardTypeObj.cardType.id}-${i}`}
+                    state={isPending ? "pending" : undefined}
+                    onSelect={(e) => {
+                      if (!data) return;
+                      const cardType = data.find(
+                        (c) => c.cardType.id === cardTypeObj.cardType.id
+                      );
+                      if (!cardType) return;
+                      setSelectedCardType(cardType);
+                    }}
+                  >
+                    <p
+                      className="max-w-full text-sm font-bold group-data-[pending]/command:text-transparent group-data-[pending]/command:bg-foreground
+                      group-data-[pending]/command:rounded group-data-[pending]/command:animate-skeleton leading-tight"
+                    >
+                      {cardTypeObj.cardType.title}
+                    </p>
+                    <p
+                      className="max-w-full text-xs text-muted-foreground group-data-[pending]/command:text-transparent group-data-[pending]/command:bg-muted-foreground
+                      group-data-[pending]/command:rounded group-data-[pending]/command:animate-skeleton leading-tight"
+                    >
+                      {cardTypeObj.cardType.description}
+                    </p>
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            )}
+          </CommandList>
+        </Command>
+      )}
+    </>
+  );
+}
+
+export function AddCardForm({
+  cardTypeObj,
+}: {
+  cardTypeObj: {
+    cardType: {
+      id: string;
+      title: string;
+      description: string;
+    };
+    inputs: {
+      id: string;
+      title: string;
+      description: string;
+      type: string;
+      xOrder: number;
+      placeholder: string;
+    }[];
+  };
+}) {
+  const formSchema = z.object({
+    [cardTypeObj.inputs[0].id]: z.string(),
+  });
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+  });
+
+  return (
+    <Form {...form}>
+      {cardTypeObj.inputs
+        .sort((a, b) => a.xOrder - b.xOrder)
+        .map((input, index) => {
+          return (
+            <FormField
+              key={input.id}
+              name={input.title}
+              control={form.control}
+              render={({ field }) => (
+                <FormItem
+                  data-first={index === 0 ? true : undefined}
+                  className="mt-5 data-[first]:mt-0"
                 >
-                  {cardTypeObj.cardType.title}
-                </p>
-                <p
-                  className="max-w-full text-xs text-muted-foreground group-data-[pending]/command:text-transparent group-data-[pending]/command:bg-muted-foreground
-                  group-data-[pending]/command:rounded group-data-[pending]/command:animate-skeleton leading-tight"
-                >
-                  {cardTypeObj.cardType.description}
-                </p>
-              </CommandItem>
-            ))}
-          </CommandGroup>
-        )}
-      </CommandList>
-    </Command>
+                  <FormLabel className="text-base font-bold leading-tight">
+                    {input.title}
+                  </FormLabel>
+                  <FormDescription className="text-sm leading-tight mt-0.5">
+                    {input.description}
+                  </FormDescription>
+                  <FormControl className="mt-3">
+                    <Input {...field} placeholder={input.placeholder} />
+                  </FormControl>
+                </FormItem>
+              )}
+            ></FormField>
+          );
+        })}
+    </Form>
   );
 }
