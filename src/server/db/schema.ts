@@ -45,9 +45,9 @@ export const currenciesTable = pgTable(
     ...timestamps,
   },
   (table) => ({
-    uniqueTicker: unique("unique_ticker").on(table.ticker),
+    uniqueTicker: unique("currencies_unique_ticker").on(table.ticker),
     cryptoMustHaveCoinId: check(
-      "crypto_must_have_coin_id",
+      "currencies_crypto_must_have_coin_id",
       sql`(NOT "is_crypto" OR "coin_id" IS NOT NULL)`
     ),
   })
