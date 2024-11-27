@@ -1,5 +1,6 @@
 "use client";
 
+import { AddCardButton } from "@/components/cards/add/add-card";
 import { bananoCmcId } from "@/components/cards/banano-total-card";
 import ThreeLineCard from "@/components/cards/three-line-card";
 import CardInnerWrapper from "@/components/cards/utils/card-inner-wrapper";
@@ -234,16 +235,9 @@ export default function Dashboard({
   if (cards.length === 0 && dashboard.isOwner) {
     return (
       <DashboardWrapper centerItems>
-        <div className="flex flex-col w-64 max-w-full text-center gap-4">
+        <div className="flex flex-col items-center w-full text-center gap-4">
           <h1 className="font-bold text-lg px-5">Start by adding a card</h1>
-          <CardOuterWrapper>
-            <CardInnerWrapper className="w-full h-32 px-5 py-3 font-medium items-center text-muted-foreground justify-center flex gap-1">
-              <PlusIcon className="size-5 shrink-0" />
-              <p className="leading-snug shrink text-left min-w-0 overflow-hidden overflow-ellipsis">
-                Add a card
-              </p>
-            </CardInnerWrapper>
-          </CardOuterWrapper>
+          <AddCardButton className="w-1/2 md:w-1/3 lg:w-1/4" />
         </div>
       </DashboardWrapper>
     );
@@ -287,6 +281,7 @@ export default function Dashboard({
             />
           );
         })}
+        <AddCardButton />
         {/* <DndWrapper items={dndCards} setItems={setDndCards}>
           {({ item, attributes, listeners, setNodeRef, style, isActive }) => (
             <CardParser

@@ -35,7 +35,7 @@ const buttonVariants = cva(
       },
       state: {
         default: "",
-        pending: "disabled:opacity-75",
+        loading: "opacity-75 disabled:opacity-75",
       },
     },
     defaultVariants: {
@@ -61,7 +61,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       <Comp
         className={cn(buttonVariants({ variant, size, className, state }))}
         ref={ref}
-        disabled={state === "pending" ? true : disabled}
+        disabled={state === "loading" ? true : disabled}
         {...props}
       />
     );

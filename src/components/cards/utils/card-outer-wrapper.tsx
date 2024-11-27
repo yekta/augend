@@ -6,9 +6,15 @@ export type TCardOuterWrapperDivProps = ComponentProps<"div"> & {
   href?: undefined;
 };
 export type TCardOuterWrapperLinkProps = ComponentProps<typeof Link>;
+export type TCardOuterWrapperButtonProps = ComponentProps<"button"> & {
+  href?: undefined;
+  onClick?: () => void;
+};
+
 export type TCardOuterWrapperProps =
   | TCardOuterWrapperDivProps
-  | TCardOuterWrapperLinkProps;
+  | TCardOuterWrapperLinkProps
+  | TCardOuterWrapperButtonProps;
 
 export default function CardOuterWrapper({
   className,
@@ -16,7 +22,7 @@ export default function CardOuterWrapper({
   ...rest
 }: TCardOuterWrapperProps) {
   const classNameAll = cn(
-    "flex flex-col p-1 group/card col-span-12 data-[dnd-active]:z-20 relative",
+    "flex flex-col p-1 group/card col-span-12 data-[dnd-active]:z-20 relative focus:outline-none",
     className
   );
   if ("href" in rest && rest.href) {
@@ -28,6 +34,15 @@ export default function CardOuterWrapper({
       </Link>
     );
   }
+  if ("onClick" in rest && rest.onClick) {
+    const restButton = rest as TCardOuterWrapperButtonProps;
+    return (
+      <button {...restButton} className={classNameAll}>
+        {children}
+      </button>
+    );
+  }
+
   const restDiv = rest as TCardOuterWrapperDivProps;
   return (
     <div {...restDiv} className={classNameAll}>

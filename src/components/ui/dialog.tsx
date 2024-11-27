@@ -4,6 +4,7 @@ import * as React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { cn } from "@/lib/utils";
 import { Cross2Icon } from "@radix-ui/react-icons";
+import { cva, VariantProps } from "class-variance-authority";
 
 const Dialog = DialogPrimitive.Root;
 
@@ -28,28 +29,44 @@ const DialogOverlay = React.forwardRef<
 ));
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
+const dialogContentVariants = cva(
+  "z-50 relative flex flex-col gap-5 w-full pointer-events-none duration-200 data-[state=open]:duration-200 data-[state=closed]:duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-bottom-[6%] data-[state=open]:slide-in-from-bottom-[6%]",
+  {
+    variants: {
+      variant: {
+        default:
+          "bg-background border rounded-xl p-5 pt-4.5 shadow-dialog shadow-shadow/[var(--opacity-shadow)]",
+        styleless: "",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  }
+);
+
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
->(({ className, children, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> &
+    VariantProps<typeof dialogContentVariants>
+>(({ className, variant, children, ...props }, ref) => (
   <DialogPortal>
     <DialogOverlay>
       <DialogPrimitive.Content
         ref={ref}
-        className={`${cn(
-          "z-50 bg-background relative flex flex-col gap-5 border rounded-xl p-5 pt-4.5 w-full pointer-events-none duration-200 data-[state=open]:duration-200 data-[state=closed]:duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-bottom-[10%] data-[state=open]:slide-in-from-bottom-[10%]",
-          className
-        )} shadow-dialog shadow-shadow/[var(--opacity-shadow)]`}
+        className={cn(dialogContentVariants({ variant }), className)}
         {...props}
       >
         {children}
-        <DialogPrimitive.Close
-          className="absolute right-0 top-0 rounded-xl p-2.5 opacity-50 transition-opacity not-touch:hover:opacity-100 active:opacity-100 ring-1 ring-transparent 
-          focus-visible:outline-none focus-visible:ring-foreground disabled:pointer-events-none text-muted-foreground"
-        >
-          <Cross2Icon className="h-5 w-5" />
-          <span className="sr-only">Close</span>
-        </DialogPrimitive.Close>
+        {variant !== "styleless" && (
+          <DialogPrimitive.Close
+            className="absolute right-0 top-0 rounded-xl p-2.5 opacity-50 transition-opacity not-touch:hover:opacity-100 active:opacity-100 ring-1 ring-transparent 
+            focus-visible:outline-none focus-visible:ring-foreground disabled:pointer-events-none text-muted-foreground"
+          >
+            <Cross2Icon className="h-5 w-5" />
+            <span className="sr-only">Close</span>
+          </DialogPrimitive.Close>
+        )}
       </DialogPrimitive.Content>
     </DialogOverlay>
   </DialogPortal>

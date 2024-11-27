@@ -1,6 +1,6 @@
 import { db } from "@/server/db/db";
 import { cardTypeInputsTable, cardTypesTable } from "@/server/db/schema";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 
 export async function getCardTypes() {
   const res = await db
@@ -22,7 +22,8 @@ export async function getCardTypes() {
     .leftJoin(
       cardTypeInputsTable,
       eq(cardTypesTable.id, cardTypeInputsTable.cardTypeId)
-    );
+    )
+    .orderBy(desc(cardTypeInputsTable.createdAt), desc(cardTypeInputsTable.id));
 
   const editedRes = res;
 
@@ -54,9 +55,5 @@ export async function getCardTypes() {
       shapedRes[existingRowIndex] = existingRow;
     }
   }
-
-  shapedRes = shapedRes.sort((a, b) =>
-    a.cardType.id.localeCompare(b.cardType.id)
-  );
   return shapedRes;
 }

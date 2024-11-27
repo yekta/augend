@@ -22,7 +22,7 @@ export default function SignOutButton({ callbackUrl, className }: Props) {
     <form className={cn("w-full", className)} action={action}>
       <Button
         className="w-full px-10"
-        state={isPending ? "pending" : undefined}
+        state={isPending ? "loading" : undefined}
       >
         <div className="absolute left-2.25 top-1/2 -translate-y-1/2 size-6 flex items-center justify-center">
           {isPending && <LoaderIcon className="size-full p-0.5 animate-spin" />}
