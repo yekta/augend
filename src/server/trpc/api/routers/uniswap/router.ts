@@ -24,7 +24,7 @@ export const uniswapRouter = createTRPCRouter({
     .input(
       z.object({
         page: z.number().int().positive().default(1),
-        network: EthereumNetworkSchema.optional().default("ethereum"),
+        network: EthereumNetworkSchema.optional().default("Ethereum"),
         limit: z.number().int().positive().min(1).max(1000).default(1000),
         searchAddress: EthereumAddressSchema.optional(),
         errorOnUnmatchingSearchResult: z.boolean().optional().default(false),
@@ -41,7 +41,8 @@ export const uniswapRouter = createTRPCRouter({
         },
       }) => {
         const endpoint = searchAddress ? "searchPoolsByAddress" : "topPools";
-        const url = `${uniswapOkuApiUrl}/${network}/cush/${endpoint}`;
+        const networkOku = network.toLowerCase();
+        const url = `${uniswapOkuApiUrl}/${networkOku}/cush/${endpoint}`;
         let body: { params: (SearchFilterOpts | string)[] } = {
           params: [
             {
@@ -123,12 +124,13 @@ export const uniswapRouter = createTRPCRouter({
     .input(
       z.object({
         id: z.number(),
-        network: EthereumNetworkSchema.optional().default("ethereum"),
+        network: EthereumNetworkSchema.optional().default("Ethereum"),
       })
     )
     .query(async ({ input: { id, network } }) => {
       const positionManager = await getUniswapPositionManager(network);
-      const url = `${uniswapOkuApiUrl}/${network}/cush/analyticsPosition`;
+      const networkOku = network.toLowerCase();
+      const url = `${uniswapOkuApiUrl}/${networkOku}/cush/analyticsPosition`;
       const body = {
         params: [
           {
@@ -251,15 +253,16 @@ export const uniswapRouter = createTRPCRouter({
   getSwaps: publicProcedure
     .input(
       z.object({
-        network: EthereumNetworkSchema.optional().default("ethereum"),
+        network: EthereumNetworkSchema.optional().default("Ethereum"),
         poolAddress: z.string(),
         page: z.number().int().positive().default(1),
         limit: z.number().int().positive().min(1).max(500).default(500),
       })
     )
     .query(async ({ input: { network, poolAddress, page, limit } }) => {
-      const url = `${uniswapOkuApiUrl}/${network}/cush/poolSwaps`;
-      const poolUrl = `${uniswapOkuApiUrl}/${network}/cush/searchPoolsByAddress`;
+      const networkOku = network.toLowerCase();
+      const url = `${uniswapOkuApiUrl}/${networkOku}/cush/poolSwaps`;
+      const poolUrl = `${uniswapOkuApiUrl}/${networkOku}/cush/searchPoolsByAddress`;
       const body = {
         params: [poolAddress, limit, page - 1, false],
       };

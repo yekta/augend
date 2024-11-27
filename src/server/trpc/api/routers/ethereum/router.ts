@@ -17,7 +17,7 @@ export const ethereumRouter = createTRPCRouter({
   getGasInfo: publicProcedure
     .input(
       z.object({
-        network: EthereumNetworkSchema.optional().default("ethereum"),
+        network: EthereumNetworkSchema.optional().default("Ethereum"),
         convert: z.string().optional().default("USD"),
       })
     )

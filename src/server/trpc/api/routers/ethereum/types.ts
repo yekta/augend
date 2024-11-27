@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const EthereumNetworkSchema = z.enum(["ethereum", "polygon"]);
+export const EthereumNetworkSchema = z.enum(["Ethereum", "Polygon"]);
 export type TEthereumNetwork = z.infer<typeof EthereumNetworkSchema>;
 
 export type TGasInfoResultRaw = {

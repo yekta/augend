@@ -60,7 +60,7 @@ export default function UniswapPoolsTableCard({
   className,
   ...rest
 }: TCardOuterWrapperProps) {
-  const [network, setNetwork] = useState<TEthereumNetwork>("ethereum");
+  const [network, setNetwork] = useState<TEthereumNetwork>("Ethereum");
 
   const [sorting, setSorting] = useState<SortingState>([
     {

@@ -5,14 +5,14 @@ import { env } from "@/lib/env";
 import { Alchemy, Network } from "alchemy-sdk";
 
 export const ethereumProviders: Record<TEthereumNetwork, Alchemy> = {
-  ethereum: new Alchemy({
+  Ethereum: new Alchemy({
     apiKey: env.ALCHEMY_API_KEY,
     network: Network.ETH_MAINNET,
     connectionInfoOverrides: {
       skipFetchSetup: true,
     },
   }),
-  polygon: new Alchemy({
+  Polygon: new Alchemy({
     apiKey: env.ALCHEMY_API_KEY,
     network: Network.MATIC_MAINNET,
     connectionInfoOverrides: {

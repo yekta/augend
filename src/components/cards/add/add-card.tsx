@@ -88,10 +88,10 @@ export function AddCardCommandPanel({ className }: AddCardCommandPanelProps) {
       {selectedCardType !== null && (
         <div className="w-full rounded-xl border bg-background">
           <div className="w-full flex flex-col px-4 pt-3 pb-4 gap-1.5">
-            <h1 className="font-bold text-xl leading-tight">
+            <h1 className="font-bold text-base leading-tight">
               {selectedCardType.cardType.title}
             </h1>
-            <p className="text-base text-muted-foreground leading-tight">
+            <p className="text-sm text-muted-foreground leading-tight">
               {selectedCardType.cardType.description}
             </p>
           </div>
