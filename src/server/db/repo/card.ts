@@ -105,7 +105,7 @@ export async function getCards({
 
   type TResItem = (typeof editedRes)[number];
 
-  const shapedRes: (Omit<TResItem, "value"> & {
+  let shapedRes: (Omit<TResItem, "value"> & {
     values: NonNullable<TResItem["value"]>[] | null;
   })[] = [];
 

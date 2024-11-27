@@ -6,6 +6,7 @@ import { getDashboard, getDashboards } from "@/server/db/repo/dashboard";
 import { getUser } from "@/server/db/repo/user";
 import { createTRPCRouter, publicProcedure } from "@/server/trpc/setup/trpc";
 import { Session } from "next-auth";
+import { getCardTypes } from "@/server/db/repo/card_types";
 
 function getIsOwner({
   session,
@@ -95,4 +96,10 @@ export const uiRouter = createTRPCRouter({
       const res = await getCurrencies({ ids });
       return res;
     }),
+  getCardTypes: publicProcedure.input(z.object({})).query(async function ({
+    input: {},
+  }) {
+    const res = await getCardTypes();
+    return res;
+  }),
 });

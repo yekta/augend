@@ -47,16 +47,13 @@ export default function Dashboard({
     { initialData: dashboardInitialData }
   );
 
-  const {
-    data: cards,
-    isPending: cardsIsPending,
-    isLoadingError: cardsIsLoadingError,
-  } = api.ui.getCards.useQuery(
-    { username, dashboardSlug },
-    {
-      initialData: cardsInitialData,
-    }
-  );
+  const { data: cards, isLoadingError: cardsIsLoadingError } =
+    api.ui.getCards.useQuery(
+      { username, dashboardSlug },
+      {
+        initialData: cardsInitialData,
+      }
+    );
 
   const firstCard = cards && cards.length > 0 ? cards[0] : undefined;
   const currencyPreference: TCurrencyPreference | false | undefined =
