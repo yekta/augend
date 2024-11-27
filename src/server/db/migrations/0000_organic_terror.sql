@@ -1,3 +1,4 @@
+CREATE TYPE "public"."card_type_input_type" AS ENUM('string', 'number', 'boolean', 'enum');--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "accounts" (
 	"userId" uuid NOT NULL,
 	"type" text NOT NULL,
@@ -29,11 +30,34 @@ CREATE TABLE IF NOT EXISTS "authenticators" (
 	CONSTRAINT "authenticators_credentialID_unique" UNIQUE("credentialID")
 );
 --> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "card_type_inputs" (
+	"id" uuid PRIMARY KEY NOT NULL,
+	"slug" text NOT NULL,
+	"card_type_id" varchar,
+	"title" text NOT NULL,
+	"description" text NOT NULL,
+	"type" "card_type_input_type" NOT NULL,
+	"x_order" integer DEFAULT 0 NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL,
+	"deleted_at" timestamp,
+	CONSTRAINT "card_type_inputs_unique_slug_per_card_type" UNIQUE("card_type_id","slug")
+);
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "card_types" (
 	"id" varchar(32) PRIMARY KEY NOT NULL,
 	"title" text NOT NULL,
 	"description" text NOT NULL,
-	"inputs" jsonb,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL,
+	"deleted_at" timestamp
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "card_values" (
+	"id" uuid PRIMARY KEY NOT NULL,
+	"card_id" uuid NOT NULL,
+	"card_type_input_id" uuid NOT NULL,
+	"value" text NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL,
 	"deleted_at" timestamp
@@ -42,9 +66,8 @@ CREATE TABLE IF NOT EXISTS "card_types" (
 CREATE TABLE IF NOT EXISTS "cards" (
 	"id" uuid PRIMARY KEY NOT NULL,
 	"x_order" integer DEFAULT 0 NOT NULL,
-	"card_type_id" varchar(32) NOT NULL,
+	"card_type_id" uuid NOT NULL,
 	"dashboard_id" uuid NOT NULL,
-	"values" jsonb,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL,
 	"deleted_at" timestamp
@@ -77,7 +100,7 @@ CREATE TABLE IF NOT EXISTS "dashboards" (
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL,
 	"deleted_at" timestamp,
-	CONSTRAINT "unique_slug_per_user" UNIQUE("user_id","slug")
+	CONSTRAINT "dashboards_unique_slug_per_user" UNIQUE("user_id","slug")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "sessions" (
@@ -129,6 +152,24 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
+ ALTER TABLE "card_type_inputs" ADD CONSTRAINT "card_type_inputs_card_type_id_card_types_id_fk" FOREIGN KEY ("card_type_id") REFERENCES "public"."card_types"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "card_values" ADD CONSTRAINT "card_values_card_id_cards_id_fk" FOREIGN KEY ("card_id") REFERENCES "public"."cards"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "card_values" ADD CONSTRAINT "card_values_card_type_input_id_card_type_inputs_id_fk" FOREIGN KEY ("card_type_input_id") REFERENCES "public"."card_type_inputs"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
  ALTER TABLE "cards" ADD CONSTRAINT "cards_card_type_id_card_types_id_fk" FOREIGN KEY ("card_type_id") REFERENCES "public"."card_types"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
@@ -170,10 +211,13 @@ EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "dashboard_id_idx" ON "cards" USING btree ("dashboard_id");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "card_type_id_idx" ON "cards" USING btree ("card_type_id");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "user_id_idx" ON "dashboards" USING btree ("user_id");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "slug_idx" ON "dashboards" USING btree ("slug");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "user_id_and_slug_idx" ON "dashboards" USING btree ("user_id","slug");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "username_idx" ON "users" USING btree ("username");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "email_idx" ON "users" USING btree ("email");
+CREATE INDEX IF NOT EXISTS "card_type_inputs_card_type_id_idx" ON "card_type_inputs" USING btree ("card_type_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "card_values_card_id_idx" ON "card_values" USING btree ("card_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "card_values_card_type_input_id_idx" ON "card_values" USING btree ("card_type_input_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "cards_dashboard_id_idx" ON "cards" USING btree ("dashboard_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "cards_card_type_id_idx" ON "cards" USING btree ("card_type_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "dashboards_user_id_idx" ON "dashboards" USING btree ("user_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "dashboards_slug_idx" ON "dashboards" USING btree ("slug");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "dashboards_user_id_and_slug_idx" ON "dashboards" USING btree ("user_id","slug");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "users_username_idx" ON "users" USING btree ("username");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "users_email_idx" ON "users" USING btree ("email");

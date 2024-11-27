@@ -2,7 +2,9 @@ import { db } from "@/server/db/db";
 import { TCurrencyWithSelectedFields } from "@/server/db/repo/types";
 import {
   cardsTable,
+  cardTypeInputsTable,
   cardTypesTable,
+  cardValuesTable,
   currenciesTable,
   dashboardsTable,
   usersTable,
@@ -46,18 +48,20 @@ export async function getCards({
     .select({
       card: {
         id: cardsTable.id,
-        cardTypeId: cardsTable.cardTypeId,
-        values: cardsTable.values,
       },
       cardType: {
         id: cardTypesTable.id,
-        inputs: cardTypesTable.inputs,
       },
       user: {
         username: usersTable.username,
       },
       dashboard: {
         id: dashboardsTable.id,
+      },
+      value: {
+        cardTypeInputId: cardValuesTable.cardTypeInputId,
+        value: cardValuesTable.value,
+        xOrder: cardValuesTable.xOrder,
       },
       primaryCurrency: getCurrencyFields(primaryCurrencyAlias),
       secondaryCurrency: getCurrencyFields(secondaryCurrencyAlias),
@@ -79,6 +83,11 @@ export async function getCards({
       tertiaryCurrencyAlias,
       eq(usersTable.tertiaryCurrencyId, tertiaryCurrencyAlias.id)
     )
+    .leftJoin(cardValuesTable, eq(cardsTable.id, cardValuesTable.cardId))
+    .leftJoin(
+      cardTypeInputsTable,
+      eq(cardValuesTable.cardTypeInputId, cardTypeInputsTable.id)
+    )
     .where(and(...whereFilters))
     .orderBy(
       asc(cardsTable.xOrder),
@@ -93,7 +102,36 @@ export async function getCards({
         secondary_currency: defaultSecondaryCurrency,
         tertiary_currency: defaultTertiaryCurrency,
       }));
-  return editedRes;
+
+  type TResItem = (typeof editedRes)[number];
+
+  const shapedRes: (Omit<TResItem, "value"> & {
+    values: NonNullable<TResItem["value"]>[] | null;
+  })[] = [];
+
+  for (const row of editedRes) {
+    const existingRowIndex = shapedRes.findIndex(
+      (r) => r.card.id === row.card.id
+    );
+    let existingRow =
+      existingRowIndex !== -1 ? shapedRes[existingRowIndex] : null;
+    if (!existingRow) {
+      const { value, ...rest } = row;
+      shapedRes.push({
+        ...rest,
+        values: row.value ? [row.value] : null,
+      });
+      continue;
+    }
+    if (existingRow.values && row.value) {
+      existingRow.values.push(row.value);
+      existingRow.values = existingRow.values.sort(
+        (a, b) => a.xOrder - b.xOrder
+      );
+      shapedRes[existingRowIndex] = existingRow;
+    }
+  }
+  return shapedRes;
 }
 
 type TCurrencyAlias =

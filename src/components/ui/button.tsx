@@ -5,7 +5,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "relative inline-flex items-center select-none before:w-full before:h-full before:min-w-[48px] before:min-h-[48px] before:z-[-1] z-0 before:bg-transparent before:absolute touch-manipulation justify-center gap-2 rounded-lg text-base font-bold focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+  "relative inline-flex items-center select-none before:w-full before:h-full before:min-w-[48px] before:min-h-[48px] before:z-[-1] z-0 before:bg-transparent before:absolute touch-manipulation justify-center gap-2 rounded-lg text-base font-bold focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0",
   {
     variants: {
       variant: {
@@ -33,6 +33,10 @@ const buttonVariants = cva(
         lg: "rounded-lg px-8 py-2.5",
         icon: "size-9",
       },
+      state: {
+        default: "",
+        pending: "disabled:opacity-75",
+      },
     },
     defaultVariants: {
       variant: "default",
@@ -48,12 +52,16 @@ export interface ButtonProps
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  (
+    { className, variant, size, disabled, state, asChild = false, ...props },
+    ref
+  ) => {
     const Comp = asChild ? Slot : "button";
     return (
       <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
+        className={cn(buttonVariants({ variant, size, className, state }))}
         ref={ref}
+        disabled={state === "pending" ? true : disabled}
         {...props}
       />
     );

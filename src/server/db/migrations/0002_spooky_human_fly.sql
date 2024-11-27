@@ -1,0 +1,1 @@
+ALTER TABLE "card_values" ADD COLUMN "x_order" integer DEFAULT 0 NOT NULL;

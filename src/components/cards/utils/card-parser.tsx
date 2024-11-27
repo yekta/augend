@@ -18,7 +18,6 @@ import UniswapPositionCard from "@/components/cards/uniswap-position-card";
 import { TCardOuterWrapperProps } from "@/components/cards/utils/card-outer-wrapper";
 import WBanSummaryCard from "@/components/cards/wban-summary-card";
 import { TCurrencyWithSelectedFields } from "@/server/db/repo/types";
-import { TCardValue } from "@/server/db/schema";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
 import { TEthereumNetwork } from "@/server/trpc/api/routers/ethereum/types";
 import { TAvailableExchange } from "@/server/trpc/api/routers/exchange/types";
@@ -31,23 +30,23 @@ export function CardParser({
   cardObject: NonNullable<AppRouterOutputs["ui"]["getCards"]>[number];
   currencies: TCurrencyWithSelectedFields[] | null;
 } & TCardOuterWrapperProps) {
-  if (cardObject.card.cardTypeId === "fear_greed_index") {
+  if (cardObject.cardType.id === "fear_greed_index") {
     return <FearGreedIndexCard {...rest} />;
   }
 
-  if (cardObject.card.cardTypeId === "wban_summary") {
+  if (cardObject.cardType.id === "wban_summary") {
     return <WBanSummaryCard {...rest} />;
   }
 
   if (
-    cardObject.card.cardTypeId === "calculator" &&
+    cardObject.cardType.id === "calculator" &&
     currencies &&
     currencies.length > 1
   ) {
-    const values = cardObject.card.values as TCardValue[];
+    const values = cardObject.values;
     if (!values) return null;
     const ids = values
-      .filter((v) => v.id === "currency_id")
+      .filter((v) => v.cardTypeInputId === "calculator_currency_id")
       .map((v) => v.value);
     const selectedCurrencies = currencies
       .filter((c) => ids.includes(c.id))
@@ -55,12 +54,18 @@ export function CardParser({
     return <Calculator currencies={selectedCurrencies} {...rest} />;
   }
 
-  if (cardObject.card.cardTypeId === "orderbook") {
-    const values = cardObject.card.values as TCardValue[];
+  if (cardObject.cardType.id === "orderbook") {
+    const values = cardObject.values;
     if (!values) return null;
-    const exchange = values.find((v) => v.id === "exchange")?.value;
-    const tickerBase = values.find((v) => v.id === "ticker_base")?.value;
-    const tickerQuote = values.find((v) => v.id === "ticker_quote")?.value;
+    const exchange = values.find(
+      (v) => v.cardTypeInputId === "orderbook_exchange"
+    )?.value;
+    const tickerBase = values.find(
+      (v) => v.cardTypeInputId === "orderbook_ticker_base"
+    )?.value;
+    const tickerQuote = values.find(
+      (v) => v.cardTypeInputId === "orderbook_ticker_quote"
+    )?.value;
     if (!exchange || !tickerBase || !tickerQuote) return null;
     const config: TOrderBookConfig = {
       exchange: exchange as TAvailableExchange,
@@ -70,12 +75,18 @@ export function CardParser({
     return <OrderBookCard config={config} {...rest} />;
   }
 
-  if (cardObject.card.cardTypeId === "ohlcv_chart") {
-    const values = cardObject.card.values as TCardValue[];
+  if (cardObject.cardType.id === "ohlcv_chart") {
+    const values = cardObject.values;
     if (!values) return null;
-    const exchange = values.find((v) => v.id === "exchange")?.value;
-    const tickerBase = values.find((v) => v.id === "ticker_base")?.value;
-    const tickerQuote = values.find((v) => v.id === "ticker_quote")?.value;
+    const exchange = values.find(
+      (v) => v.cardTypeInputId === "ohlcv_chart_exchange"
+    )?.value;
+    const tickerBase = values.find(
+      (v) => v.cardTypeInputId === "ohlcv_chart_ticker_base"
+    )?.value;
+    const tickerQuote = values.find(
+      (v) => v.cardTypeInputId === "ohlcv_chart_ticker_quote"
+    )?.value;
     if (!exchange || !tickerBase || !tickerQuote) return null;
     const config: TOhlcvChartConfig = {
       exchange: exchange as TAvailableExchange,
@@ -84,11 +95,15 @@ export function CardParser({
     return <OhlcvChartCard config={config} {...rest} />;
   }
 
-  if (cardObject.card.cardTypeId === "uniswap_position") {
-    const values = cardObject.card.values as TCardValue[];
+  if (cardObject.cardType.id === "uniswap_position") {
+    const values = cardObject.values;
     if (!values) return null;
-    const network = values.find((v) => v.id === "network")?.value;
-    const positionId = values.find((v) => v.id === "position_id")?.value;
+    const network = values.find(
+      (v) => v.cardTypeInputId === "uniswap_position_network"
+    )?.value;
+    const positionId = values.find(
+      (v) => v.cardTypeInputId === "uniswap_position_position_id"
+    )?.value;
     if (!network || !positionId) return null;
     return (
       <UniswapPositionCard
@@ -99,27 +114,34 @@ export function CardParser({
     );
   }
 
-  if (cardObject.card.cardTypeId === "mini_crypto") {
-    const values = cardObject.card.values as TCardValue[];
+  if (cardObject.cardType.id === "mini_crypto") {
+    const values = cardObject.values;
     if (!values) return null;
-    const coinId = values.find((v) => v.id === "coin_id")?.value;
+    const coinId = values.find(
+      (v) => v.cardTypeInputId === "mini_crypto_coin_id"
+    )?.value;
     if (!coinId) return null;
     return <MiniCryptoCard coinId={Number(coinId)} {...rest} />;
   }
 
-  if (cardObject.card.cardTypeId === "crypto") {
-    const values = cardObject.card.values as TCardValue[];
+  if (cardObject.cardType.id === "crypto") {
+    const values = cardObject.values;
     if (!values) return null;
-    const coinId = values.find((v) => v.id === "coin_id")?.value;
+    const coinId = values.find((v) => v.cardTypeInputId === "crypto_coin_id")
+      ?.value;
     if (!coinId) return null;
     return <CryptoCard config={{ id: Number(coinId) }} {...rest} />;
   }
 
-  if (cardObject.card.cardTypeId === "fiat_currency") {
-    const values = cardObject.card.values as TCardValue[];
+  if (cardObject.cardType.id === "fiat_currency") {
+    const values = cardObject.values;
     if (!values) return null;
-    const baseId = values.find((v) => v.id === "base_id")?.value;
-    const quoteId = values.find((v) => v.id === "quote_id")?.value;
+    const baseId = values.find(
+      (v) => v.cardTypeInputId === "fiat_currency_currency_id_base"
+    )?.value;
+    const quoteId = values.find(
+      (v) => v.cardTypeInputId === "fiat_currency_currency_id_quote"
+    )?.value;
     if (!baseId || !quoteId) return null;
     const baseCurrency = currencies?.find((c) => c.id === baseId);
     const quoteCurrency = currencies?.find((c) => c.id === quoteId);
@@ -133,35 +155,45 @@ export function CardParser({
     );
   }
 
-  if (cardObject.card.cardTypeId === "uniswap_pools_table") {
+  if (cardObject.cardType.id === "uniswap_pools_table") {
     return <UniswapPoolsTableCard {...rest} />;
   }
 
-  if (cardObject.card.cardTypeId === "crypto_table") {
+  if (cardObject.cardType.id === "crypto_table") {
     return <CryptoTableCard {...rest} />;
   }
 
   if (
-    cardObject.card.cardTypeId === "nano_balance" ||
-    cardObject.card.cardTypeId === "banano_balance"
+    cardObject.cardType.id === "nano_balance" ||
+    cardObject.cardType.id === "banano_balance"
   ) {
-    const values = cardObject.card.values as TCardValue[];
+    const values = cardObject.values;
     if (!values) return null;
-    const address = values.find((v) => v.id === "address")?.value;
-    const isOwner = values.find((v) => v.id === "is_owner")?.value;
+    const address = values.find(
+      (v) =>
+        v.cardTypeInputId === "nano_balance_address" ||
+        v.cardTypeInputId === "banano_balance_address"
+    )?.value;
+    const isOwner = values.find(
+      (v) =>
+        v.cardTypeInputId === "nano_balance_is_owner" ||
+        v.cardTypeInputId === "banano_balance_is_owner"
+    )?.value;
     if (address === undefined || isOwner === undefined) return null;
     return <NanoBananoCard account={{ address: address }} {...rest} />;
   }
 
-  if (cardObject.card.cardTypeId === "gas_tracker") {
-    const values = cardObject.card.values as TCardValue[];
+  if (cardObject.cardType.id === "gas_tracker") {
+    const values = cardObject.values;
     if (!values) return null;
-    const network = values.find((v) => v.id === "network")?.value;
+    const network = values.find(
+      (v) => v.cardTypeInputId === "gas_tracker_network"
+    )?.value;
     if (!network) return null;
     return <EthereumGasCard network={network as TEthereumNetwork} {...rest} />;
   }
 
-  if (cardObject.card.cardTypeId === "banano_total") {
+  if (cardObject.cardType.id === "banano_total") {
     return <BananoTotalCard {...rest} />;
   }
 

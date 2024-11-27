@@ -1,6 +1,5 @@
 import Dashboard from "@/app/[username]/_components/dashboard";
 import { siteTitle } from "@/lib/constants";
-import { TCardValue } from "@/server/db/schema";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
 import { apiServer } from "@/server/trpc/setup/server";
 import { Metadata } from "next";
@@ -42,19 +41,23 @@ export default async function Page({ params }: Props) {
   let currenciesInitialData: AppRouterOutputs["ui"]["getCurrencies"] = [];
 
   (cardsInitialData || []).forEach((cardObj, index) => {
-    if (cardObj.card.cardTypeId === "calculator") {
-      const values = cardObj.card.values as TCardValue[];
+    if (cardObj.cardType.id === "calculator") {
+      const values = cardObj.values;
       if (!values) return;
       values.forEach((v) => {
-        if (v.id !== "currency_id") return;
+        if (v.cardTypeInputId !== "calculator_currency_id") return;
         currencyIdsForFetch.push(v.value);
       });
     }
-    if (cardObj.card.cardTypeId === "fiat_currency") {
-      const values = cardObj.card.values as TCardValue[];
+    if (cardObj.cardType.id === "fiat_currency") {
+      const values = cardObj.values;
       if (!values) return;
       values.forEach((v) => {
-        if (v.id !== "base_id" && v.id !== "quote_id") return;
+        if (
+          v.cardTypeInputId !== "fiat_currency_currency_id_base" &&
+          v.cardTypeInputId !== "fiat_currency_currency_id_quote"
+        )
+          return;
         currencyIdsForFetch.push(v.value);
       });
     }

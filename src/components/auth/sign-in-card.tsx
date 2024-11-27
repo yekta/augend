@@ -1,5 +1,4 @@
-import { cn } from "@/lib/utils";
-import { ComponentProps } from "react";
+import SignInWithOAuthButton from "@/components/auth/sign-in-with-oauth-button";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -9,9 +8,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import ProviderIcon from "@/components/icons/provider-icon";
-import { authProviderMap, signIn } from "@/server/auth";
-import { AuthError } from "next-auth";
+import { cn } from "@/lib/utils";
+import { authProviderMap } from "@/server/auth";
+import { ComponentProps } from "react";
 
 type SignInCardProps = ComponentProps<"div"> & {
   error?: string;
@@ -91,36 +90,12 @@ function SignInContent({
         </div>
       )}
       {Object.values(authProviderMap).map((provider) => (
-        <form
+        <SignInWithOAuthButton
           key={provider.id}
-          className="w-full"
-          action={async () => {
-            "use server";
-            try {
-              await signIn(provider.id, {
-                redirectTo: callbackUrl ?? "",
-              });
-            } catch (error) {
-              if (error instanceof AuthError) {
-                /* return redirect(`${SIGNIN_ERROR_URL}?error=${error.type}`); */
-              }
-              throw error;
-            }
-          }}
-        >
-          <Button
-            variant={
-              provider.name.toLowerCase() as "github" | "google" | "discord"
-            }
-            className="w-full px-10"
-          >
-            <ProviderIcon
-              className="absolute left-2.5 top-1/2 -translate-y-1/2 size-6"
-              provider={provider.name.toLowerCase()}
-            ></ProviderIcon>
-            Continue with {provider.name}
-          </Button>
-        </form>
+          providerId={provider.id}
+          providerName={provider.name}
+          callbackUrl={callbackUrl}
+        />
       ))}
     </div>
   );

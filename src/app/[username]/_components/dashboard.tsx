@@ -17,7 +17,6 @@ import NanoBananoBalancesProvider, {
 } from "@/components/providers/nano-banano-balance-provider";
 import { Button } from "@/components/ui/button";
 import { mainDashboardSlug } from "@/lib/constants";
-import { TCardValue } from "@/server/db/schema";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
 import { api } from "@/server/trpc/setup/react";
 import { PlusIcon } from "lucide-react";
@@ -76,14 +75,21 @@ export default function Dashboard({
     return cards
       .filter(
         (c) =>
-          c.card.cardTypeId === "nano_balance" ||
-          c.card.cardTypeId === "banano_balance"
+          c.cardType.id === "nano_balance" || c.cardType.id === "banano_balance"
       )
       .map((c) => {
-        const values = c.card.values as TCardValue[];
+        const values = c.values;
         if (!values) return null;
-        const address = values.find((v) => v.id === "address")?.value;
-        const isOwner = values.find((v) => v.id === "is_owner")?.value;
+        const address = values.find(
+          (v) =>
+            v.cardTypeInputId === "nano_balance_address" ||
+            v.cardTypeInputId === "banano_balance_address"
+        )?.value;
+        const isOwner = values.find(
+          (v) =>
+            v.cardTypeInputId === "banano_balance_is_owner" ||
+            v.cardTypeInputId === "nano_balance_is_owner"
+        )?.value;
         if (address === undefined || isOwner === undefined) return null;
         const account: TNanoBananoAccountFull = {
           address,
@@ -98,19 +104,23 @@ export default function Dashboard({
     if (!cards) return undefined;
     let ids: string[] = [];
     cards.forEach((cardObj, index) => {
-      if (cardObj.card.cardTypeId === "calculator") {
-        const values = cardObj.card.values as TCardValue[];
+      if (cardObj.cardType.id === "calculator") {
+        const values = cardObj.values;
         if (!values) return;
         values.forEach((v) => {
-          if (v.id !== "currency_id") return;
+          if (v.cardTypeInputId !== "calculator_currency_id") return;
           ids.push(v.value);
         });
       }
-      if (cardObj.card.cardTypeId === "fiat_currency") {
-        const values = cardObj.card.values as TCardValue[];
+      if (cardObj.cardType.id === "fiat_currency") {
+        const values = cardObj.values;
         if (!values) return;
         values.forEach((v) => {
-          if (v.id !== "base_id" && v.id !== "quote_id") return;
+          if (
+            v.cardTypeInputId !== "fiat_currency_currency_id_base" &&
+            v.cardTypeInputId !== "fiat_currency_currency_id_quote"
+          )
+            return;
           ids.push(v.value);
         });
       }
@@ -131,13 +141,16 @@ export default function Dashboard({
     if (!cards || !currencies) return undefined;
     let ids = cards
       .filter(
-        (c) =>
-          c.card.cardTypeId === "crypto" || c.card.cardTypeId === "mini_crypto"
+        (c) => c.cardType.id === "crypto" || c.cardType.id === "mini_crypto"
       )
       .map((c) => {
-        const values = c.card.values as TCardValue[];
+        const values = c.values;
         if (!values) return null;
-        return values.find((v) => v.id === "coin_id")?.value;
+        return values.find(
+          (v) =>
+            v.cardTypeInputId === "crypto_coin_id" ||
+            v.cardTypeInputId === "mini_crypto_coin_id"
+        )?.value;
       })
       .filter((v) => v !== null)
       .map((v) => Number(v));
@@ -248,9 +261,10 @@ export default function Dashboard({
       </DashboardWrapper>
     );
   }
+
   return (
     <Providers
-      cardTypeIds={cards.map((c) => c.card.cardTypeId)}
+      cardTypeIds={cards.map((c) => c.cardType.id)}
       nanoBananoAccounts={nanoBananoAccounts}
       cryptoCurrencyIds={cryptoCurrencyIds}
       currencyPreference={currencyPreference}
@@ -258,11 +272,10 @@ export default function Dashboard({
       <DashboardWrapper centerItems={cards.length < 2}>
         {cards.map((card, index) => {
           const requiresNewRow = componentRequiresNewRow.includes(
-            card.card.cardTypeId
+            card.cardType.id
           );
           const differentThanPrevious =
-            index !== 0 &&
-            cards[index - 1].card.cardTypeId !== card.card.cardTypeId;
+            index !== 0 && cards[index - 1].cardType.id !== card.cardType.id;
           const startAtNewRow = requiresNewRow && differentThanPrevious;
           return (
             <CardParser

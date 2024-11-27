@@ -1,6 +1,6 @@
 {
-  "id": "c6ff6a62-f8ee-48ba-bea9-a025cd110003",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "8aacfdbe-3ab6-43b2-93a2-cce62236d155",
+  "prevId": "4ba15bcc-c612-43b3-9fc4-3daa4b065545",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -222,19 +222,13 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "slug": {
-          "name": "slug",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
         "card_type_id": {
           "name": "card_type_id",
-          "type": "varchar",
+          "type": "text",
           "primaryKey": false,
           "notNull": false
         },
@@ -318,16 +312,7 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "card_type_inputs_unique_slug_per_card_type": {
-          "name": "card_type_inputs_unique_slug_per_card_type",
-          "nullsNotDistinct": false,
-          "columns": [
-            "card_type_id",
-            "slug"
-          ]
-        }
-      },
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -338,7 +323,7 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "varchar(32)",
+          "type": "text",
           "primaryKey": true,
           "notNull": true
         },
@@ -410,6 +395,13 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "x_order": {
+          "name": "x_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
         },
         "created_at": {
           "name": "created_at",
@@ -1172,7 +1164,8 @@
         "string",
         "number",
         "boolean",
-        "enum"
+        "enum",
+        "string[]"
       ]
     }
   },

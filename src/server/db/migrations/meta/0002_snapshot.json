@@ -1,6 +1,6 @@
 {
-  "id": "c6ff6a62-f8ee-48ba-bea9-a025cd110003",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "4ba15bcc-c612-43b3-9fc4-3daa4b065545",
+  "prevId": "b5a13d9a-1365-486e-bdf1-254a507fc0ad",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -410,6 +410,13 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "x_order": {
+          "name": "x_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
         },
         "created_at": {
           "name": "created_at",
@@ -1172,7 +1179,8 @@
         "string",
         "number",
         "boolean",
-        "enum"
+        "enum",
+        "string[]"
       ]
     }
   },
