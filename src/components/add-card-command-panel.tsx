@@ -1,13 +1,10 @@
 import {
   Command,
-  CommandDialog,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
-  CommandShortcut,
 } from "@/components/ui/command";
 import { cn } from "@/lib/utils";
 import { api } from "@/server/trpc/setup/react";
@@ -16,11 +13,14 @@ type Props = {
   className?: string;
 };
 
-export default function AddCardPanel({ className }: Props) {
+export default function AddCardCommandPanel({ className }: Props) {
   const { data, isPending, isLoadingError } = api.ui.getCardTypes.useQuery({});
   return (
     <Command className={cn("rounded-xl border", className)}>
       <CommandInput placeholder="Search for a card..." />
+      <CommandEmpty className="text-muted-foreground w-full text-center text-sm py-6">
+        No cards found.
+      </CommandEmpty>
       <CommandList>
         {isPending && !isLoadingError && (
           <p className="w-full flex-1 py-5 px-8 text-muted-foreground text-sm text-center">
