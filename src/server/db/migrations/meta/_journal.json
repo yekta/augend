@@ -78,6 +78,13 @@
       "when": 1732754693117,
       "tag": "0010_old_northstar",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1732762469765,
+      "tag": "0011_wandering_proteus",
+      "breakpoints": true
     }
   ]
 }

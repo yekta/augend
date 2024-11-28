@@ -50,6 +50,9 @@ export const currenciesTable = pgTable(
       "currencies_crypto_must_have_coin_id",
       sql`(NOT "is_crypto" OR "coin_id" IS NOT NULL)`
     ),
+    createdAtIdx: index("currencies_created_at_idx").on(table.createdAt),
+    updatedAtIdx: index("currencies_updated_at_idx").on(table.updatedAt),
+    deletedAtIdx: index("currencies_deleted_at_idx").on(table.deletedAt),
   })
 );
 
@@ -181,15 +184,26 @@ export const cardTypeInputsTable = pgTable(
     cardTypeIdIdx: index("card_type_inputs_card_type_id_idx").on(
       table.cardTypeId
     ),
+    createdAtIdx: index("card_type_inputs_created_at_idx").on(table.createdAt),
+    updatedAtIdx: index("card_type_inputs_updated_at_idx").on(table.updatedAt),
+    deletedAtIdx: index("card_type_inputs_deleted_at_idx").on(table.deletedAt),
   })
 );
 
-export const cardTypesTable = pgTable("card_types", {
-  id: text("id").primaryKey(),
-  title: text("title").notNull(),
-  description: text("description").notNull(),
-  ...timestamps,
-});
+export const cardTypesTable = pgTable(
+  "card_types",
+  {
+    id: text("id").primaryKey(),
+    title: text("title").notNull(),
+    description: text("description").notNull(),
+    ...timestamps,
+  },
+  (table) => ({
+    createdAtIdx: index("card_types_created_at_idx").on(table.createdAt),
+    updatedAtIdx: index("card_types_updated_at_idx").on(table.updatedAt),
+    deletedAtIdx: index("card_types_deleted_at_idx").on(table.deletedAt),
+  })
+);
 
 export const dashboardsTable = pgTable(
   "dashboards",
@@ -219,6 +233,9 @@ export const dashboardsTable = pgTable(
       table.userId,
       table.slug
     ),
+    createdAtIdx: index("dashboards_created_at_idx").on(table.createdAt),
+    updatedAtIdx: index("dashboards_updated_at_idx").on(table.updatedAt),
+    deletedAtIdx: index("dashboards_deleted_at_idx").on(table.deletedAt),
   })
 );
 
@@ -243,6 +260,9 @@ export const cardValuesTable = pgTable(
     cardTypeInputIdIdx: index("card_values_card_type_input_id_idx").on(
       table.cardTypeInputId
     ),
+    createdAtIdx: index("card_values_created_at_idx").on(table.createdAt),
+    updatedAtIdx: index("card_values_updated_at_idx").on(table.updatedAt),
+    deletedAtIdx: index("card_values_deleted_at_idx").on(table.deletedAt),
   })
 );
 
@@ -264,6 +284,9 @@ export const cardsTable = pgTable(
   (table) => ({
     dashboardIdIdx: index("cards_dashboard_id_idx").on(table.dashboardId),
     cardTypeIdIdx: index("cards_card_type_id_idx").on(table.cardTypeId),
+    createdAtIdx: index("cards_created_at_idx").on(table.createdAt),
+    updatedAtIdx: index("cards_updated_at_idx").on(table.updatedAt),
+    deletedAtIdx: index("cards_deleted_at_idx").on(table.deletedAt),
   })
 );
 
