@@ -21,7 +21,7 @@ const DialogOverlay = React.forwardRef<
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
-      "fixed px-4 py-12 overflow-auto grid place-items-center inset-0 z-50 duration-200 data-[state=open]:duration-200 data-[state=closed]:duration-200 bg-barrier/[var(--opacity-barrier)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+      "fixed px-2 py-12 overflow-auto grid place-items-center inset-0 z-50 duration-200 data-[state=open]:duration-200 data-[state=closed]:duration-200 bg-barrier/[var(--opacity-barrier)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
       className
     )}
     {...props}
@@ -35,7 +35,7 @@ const dialogContentVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-background border rounded-xl p-5 pt-4.5 shadow-dialog shadow-shadow/[var(--opacity-shadow)]",
+          "bg-background border rounded-xl p-5 pt-4.5 shadow-xl shadow-shadow/[var(--opacity-shadow)]",
         styleless: "",
       },
     },

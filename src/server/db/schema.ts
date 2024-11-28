@@ -230,8 +230,8 @@ export const cardValuesTable = pgTable(
       .$defaultFn(() => crypto.randomUUID()),
     cardId: uuid("card_id")
       .notNull()
-      .references(() => cardsTable.id),
-    cardTypeInputId: uuid("card_type_input_id")
+      .references(() => cardsTable.id, { onDelete: "cascade" }),
+    cardTypeInputId: text("card_type_input_id")
       .notNull()
       .references(() => cardTypeInputsTable.id),
     value: text("value").notNull(),
@@ -258,7 +258,7 @@ export const cardsTable = pgTable(
       .references(() => cardTypesTable.id),
     dashboardId: uuid("dashboard_id")
       .notNull()
-      .references(() => dashboardsTable.id),
+      .references(() => dashboardsTable.id, { onDelete: "cascade" }),
     ...timestamps,
   },
   (table) => ({

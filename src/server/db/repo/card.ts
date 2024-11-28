@@ -134,6 +134,25 @@ export async function getCards({
   return shapedRes;
 }
 
+export async function createCard({
+  cardTypeId,
+  dashboardId,
+  xOrder,
+}: {
+  cardTypeId: string;
+  dashboardId: string;
+  xOrder: number;
+}) {
+  const id = crypto.randomUUID();
+  await db.insert(cardsTable).values({
+    id,
+    cardTypeId,
+    dashboardId,
+    xOrder,
+  });
+  return id;
+}
+
 type TCurrencyAlias =
   | typeof primaryCurrencyAlias
   | typeof secondaryCurrencyAlias

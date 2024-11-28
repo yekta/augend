@@ -2,6 +2,7 @@
 
 import CardInnerWrapper from "@/components/cards/utils/card-inner-wrapper";
 import CardOuterWrapper from "@/components/cards/utils/card-outer-wrapper";
+import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -12,8 +13,8 @@ import {
 } from "@/components/ui/command";
 import {
   Dialog,
-  DialogTitle,
   DialogContent,
+  DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
@@ -24,20 +25,25 @@ import {
   FormItem,
   FormLabel,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { TCardValueForAddCards } from "@/server/trpc/api/routers/ui/types";
 import { api } from "@/server/trpc/setup/react";
-import { PlusIcon } from "lucide-react";
-import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { LoaderIcon, PlusIcon } from "lucide-react";
+import { Dispatch, FormEvent, SetStateAction, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Input } from "@/components/ui/input";
 
 type AddCardButtonProps = {
+  dashboardSlug: string;
   className?: string;
 };
 
-export function AddCardButton({ className }: AddCardButtonProps) {
+export function AddCardButton({
+  dashboardSlug,
+  className,
+}: AddCardButtonProps) {
   const [open, setOpen] = useState(false);
   return (
     <>
@@ -61,8 +67,12 @@ export function AddCardButton({ className }: AddCardButtonProps) {
           </CardOuterWrapper>
         </DialogTrigger>
         <DialogTitle className="sr-only">Add a card</DialogTitle>
-        <DialogContent variant="styleless" className="max-w-sm">
-          <AddCardCommandPanel className="h-96 max-h-[calc((100vh-3rem)*0.6)]" />
+        <DialogContent variant="styleless" className="max-w-md">
+          <AddCardCommandPanel
+            setOpen={setOpen}
+            dashboardSlug={dashboardSlug}
+            className="h-96 max-h-[calc((100vh-3rem)*0.6)] shadow-xl shadow-shadow/[var(--opacity-shadow)]"
+          />
         </DialogContent>
       </Dialog>
     </>
@@ -70,16 +80,19 @@ export function AddCardButton({ className }: AddCardButtonProps) {
 }
 
 type AddCardCommandPanelProps = {
+  setOpen: Dispatch<SetStateAction<boolean>>;
+  dashboardSlug: string;
   className?: string;
 };
 
-export function AddCardCommandPanel({ className }: AddCardCommandPanelProps) {
+export function AddCardCommandPanel({
+  setOpen,
+  dashboardSlug,
+  className,
+}: AddCardCommandPanelProps) {
   const { data, isPending, isLoadingError } = api.ui.getCardTypes.useQuery({});
 
   type TSelectedCardType = NonNullable<typeof data>[number];
-  type TSelectedCardTypeWithInputs = TSelectedCardType & {
-    inputs: NonNullable<TSelectedCardType["inputs"]>;
-  };
   const [selectedCardType, setSelectedCardType] =
     useState<TSelectedCardType | null>(null);
 
@@ -95,16 +108,14 @@ export function AddCardCommandPanel({ className }: AddCardCommandPanelProps) {
               {selectedCardType.cardType.description}
             </p>
           </div>
-          {selectedCardType.inputs && (
-            <>
-              <div className="w-full bg-border h-px" />
-              <div className="w-full px-4 pt-3 pb-4">
-                <AddCardForm
-                  cardTypeObj={selectedCardType as TSelectedCardTypeWithInputs}
-                />
-              </div>
-            </>
-          )}
+          <div className="w-full bg-border h-px" />
+          <div className="w-full px-4 pt-3 pb-4">
+            <AddCardForm
+              dashboardSlug={dashboardSlug}
+              cardTypeObj={selectedCardType}
+              setOpen={setOpen}
+            />
+          </div>
         </div>
       )}
       {selectedCardType === null && (
@@ -171,59 +182,146 @@ export function AddCardCommandPanel({ className }: AddCardCommandPanelProps) {
 
 export function AddCardForm({
   cardTypeObj,
+  dashboardSlug,
+  setOpen,
 }: {
+  dashboardSlug: string;
+  setOpen: Dispatch<SetStateAction<boolean>>;
   cardTypeObj: {
     cardType: {
       id: string;
       title: string;
       description: string;
     };
-    inputs: {
-      id: string;
-      title: string;
-      description: string;
-      type: string;
-      xOrder: number;
-      placeholder: string;
-    }[];
+    inputs:
+      | {
+          id: string;
+          title: string;
+          description: string;
+          type: string;
+          xOrder: number;
+          placeholder: string;
+        }[]
+      | null;
   };
 }) {
-  const formSchema = z.object({
-    [cardTypeObj.inputs[0].id]: z.string(),
-  });
-  const form = useForm<z.infer<typeof formSchema>>({
+  const inputs = cardTypeObj.inputs;
+
+  type SchemaShape = { [K: string]: z.ZodString };
+  const schemaObject: SchemaShape = {};
+  const defaultValues: { [key: string]: string } = {};
+
+  if (inputs) {
+    inputs.forEach((input) => {
+      schemaObject[input.id] = z.string().min(1, `${input.title} is required`);
+      defaultValues[input.id] = "";
+    });
+  }
+  const formSchema = z.object(schemaObject);
+
+  type FormValues = z.infer<typeof formSchema>;
+
+  const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
+    defaultValues, // Add default values here
   });
+
+  const onSubmit = (data: FormValues) => {
+    const values: TCardValueForAddCards[] = Object.entries(data).map(
+      ([key, value]) => ({
+        cardTypeInputId: key,
+        value,
+        xOrder: inputs?.find((i) => i.id === key)?.xOrder ?? 0,
+      })
+    );
+    createCardMutation({
+      cardTypeId: cardTypeObj.cardType.id,
+      values,
+      dashboardSlug,
+    });
+  };
+
+  const onSubmitWithNoValues = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    createCardMutation({
+      cardTypeId: cardTypeObj.cardType.id,
+      dashboardSlug,
+      values: [],
+    });
+  };
+
+  const { mutate: createCardMutation, isPending } =
+    api.ui.createCard.useMutation({
+      onSuccess: () => {
+        setOpen(false);
+      },
+    });
+
+  if (!inputs) {
+    return (
+      <form onSubmit={onSubmitWithNoValues}>
+        <AddCardFormSubmitButton isPending={isPending} />
+      </form>
+    );
+  }
 
   return (
     <Form {...form}>
-      {cardTypeObj.inputs
-        .sort((a, b) => a.xOrder - b.xOrder)
-        .map((input, index) => {
-          return (
-            <FormField
-              key={input.id}
-              name={input.title}
-              control={form.control}
-              render={({ field }) => (
-                <FormItem
-                  data-first={index === 0 ? true : undefined}
-                  className="mt-5 data-[first]:mt-0"
-                >
-                  <FormLabel className="text-base font-bold leading-tight">
-                    {input.title}
-                  </FormLabel>
-                  <FormDescription className="text-sm leading-tight mt-0.5">
-                    {input.description}
-                  </FormDescription>
-                  <FormControl className="mt-3">
-                    <Input {...field} placeholder={input.placeholder} />
-                  </FormControl>
-                </FormItem>
-              )}
-            ></FormField>
-          );
-        })}
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        {inputs
+          .sort((a, b) => a.xOrder - b.xOrder)
+          .map((input, index) => {
+            return (
+              <FormField
+                key={input.id}
+                name={input.id}
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem
+                    data-first={index === 0 ? true : undefined}
+                    className="mt-5 data-[first]:mt-0"
+                  >
+                    <FormLabel className="text-base font-bold leading-tight">
+                      {input.title}
+                    </FormLabel>
+                    <FormDescription className="text-sm leading-tight mt-0.5">
+                      {input.description}
+                    </FormDescription>
+                    <FormControl className="mt-3">
+                      <Input {...field} placeholder={input.placeholder} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              ></FormField>
+            );
+          })}
+        <AddCardFormSubmitButton isPending={isPending} className="mt-5" />
+      </form>
     </Form>
+  );
+}
+
+function AddCardFormSubmitButton({
+  isPending,
+  className,
+}: {
+  isPending: boolean;
+  className?: string;
+}) {
+  return (
+    <Button
+      className={cn("w-full", className)}
+      state={isPending ? "loading" : undefined}
+    >
+      {isPending && (
+        <>
+          <p className="text-transparent select-none">Add Card</p>
+          <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <LoaderIcon className="size-full animate-spin" />
+          </div>
+        </>
+      )}
+      {!isPending && "Add Card"}
+    </Button>
   );
 }

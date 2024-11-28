@@ -1,12 +1,22 @@
 import { z } from "zod";
 
-import { getCards } from "@/server/db/repo/card";
+import { createCard, getCards } from "@/server/db/repo/card";
 import { getCurrencies } from "@/server/db/repo/currencies";
-import { getDashboard, getDashboards } from "@/server/db/repo/dashboard";
+import {
+  getDashboard,
+  getDashboards,
+  getMaximumXOrderForDashboard,
+} from "@/server/db/repo/dashboard";
 import { getUser } from "@/server/db/repo/user";
 import { createTRPCRouter, publicProcedure } from "@/server/trpc/setup/trpc";
 import { Session } from "next-auth";
 import { getCardTypes } from "@/server/db/repo/card_types";
+import { TRPCError } from "@trpc/server";
+import {
+  createCardValues,
+  InsertCardValueSchema,
+} from "@/server/db/repo/card_values";
+import { CardValueForAddCardsSchema } from "@/server/trpc/api/routers/ui/types";
 
 function getIsOwner({
   session,
@@ -102,4 +112,90 @@ export const uiRouter = createTRPCRouter({
     const res = await getCardTypes();
     return res;
   }),
+  createCard: publicProcedure
+    .input(
+      z.object({
+        cardTypeId: z.string(),
+        dashboardSlug: z.string(),
+        xOrder: z.number().optional(),
+        values: z.array(CardValueForAddCardsSchema),
+      })
+    )
+    .mutation(async function ({
+      input: { cardTypeId, dashboardSlug, xOrder, values },
+      ctx: { session },
+    }) {
+      console.log("FIRST");
+      // If there is no user
+      if (!session || session.user.id === undefined) {
+        throw new TRPCError({
+          message: "Unauthorized",
+          code: "UNAUTHORIZED",
+        });
+      }
+      const user = await getUser({ userId: session.user.id });
+      if (!user) {
+        throw new TRPCError({
+          message: "Unauthorized",
+          code: "UNAUTHORIZED",
+        });
+      }
+
+      // Get the dashboard
+      const dashboard = await getDashboard({
+        userId: session.user.id,
+        dashboardSlug,
+        isOwner: true,
+      });
+
+      if (!dashboard) {
+        throw new TRPCError({
+          message: "Dashboard not found",
+          code: "NOT_FOUND",
+        });
+      }
+
+      // If dashboard does not belong to user
+      if (dashboard.data.user.username !== user.username) {
+        throw new TRPCError({
+          message: "Unauthorized",
+          code: "UNAUTHORIZED",
+        });
+      }
+
+      let xOrderSelected = xOrder;
+      if (xOrder === undefined) {
+        const maximumXOrder = await getMaximumXOrderForDashboard({
+          dashboardId: dashboard.data.dashboard.id,
+        });
+        xOrderSelected = maximumXOrder + 1;
+      }
+      if (xOrderSelected === undefined) {
+        throw new TRPCError({
+          message: "Invalid xOrder",
+          code: "BAD_REQUEST",
+        });
+      }
+
+      // Create card
+      const cardId = await createCard({
+        cardTypeId,
+        dashboardId: dashboard.data.dashboard.id,
+        xOrder: xOrderSelected,
+      });
+
+      if (values.length > 0) {
+        // Create card values
+        await createCardValues({
+          values: values.map((v) => ({
+            ...v,
+            cardId,
+          })),
+        });
+      }
+
+      return {
+        cardId,
+      };
+    }),
 });
