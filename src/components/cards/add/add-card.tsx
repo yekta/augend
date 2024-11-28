@@ -31,7 +31,7 @@ import { TCardValueForAddCards } from "@/server/trpc/api/routers/ui/types";
 import { api } from "@/server/trpc/setup/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderIcon, PlusIcon } from "lucide-react";
-import { Dispatch, FormEvent, SetStateAction, useState } from "react";
+import { FormEvent, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -47,6 +47,7 @@ export function AddCardButton({
   className,
 }: AddCardButtonProps) {
   const [open, setOpen] = useState(false);
+  const [closeOnInteractOutside, setCloseOnInteractOutside] = useState(true);
   return (
     <>
       <Dialog open={open} onOpenChange={setOpen}>
@@ -69,9 +70,20 @@ export function AddCardButton({
           </CardOuterWrapper>
         </DialogTrigger>
         <DialogTitle className="sr-only">Add a card</DialogTitle>
-        <DialogContent variant="styleless" className="max-w-md">
+        <DialogContent
+          variant="styleless"
+          className="max-w-md"
+          onInteractOutside={
+            closeOnInteractOutside ? undefined : (e) => e.preventDefault()
+          }
+        >
           <AddCardCommandPanel
-            setOpen={setOpen}
+            onCardSelected={() => setCloseOnInteractOutside(false)}
+            onCardDeselected={() => setCloseOnInteractOutside(true)}
+            onFormSuccess={() => {
+              setCloseOnInteractOutside(true);
+              setOpen(false);
+            }}
             username={username}
             dashboardSlug={dashboardSlug}
             className="h-96 max-h-[calc((100vh-3rem)*0.6)] shadow-xl shadow-shadow/[var(--opacity-shadow)]"
@@ -85,15 +97,19 @@ export function AddCardButton({
 type AddCardCommandPanelProps = {
   username: string;
   dashboardSlug: string;
-  setOpen: Dispatch<SetStateAction<boolean>>;
+  onFormSuccess?: () => void;
+  onCardSelected?: (cardId: string) => void;
+  onCardDeselected?: (cardId: string) => void;
   className?: string;
 };
 
 export function AddCardCommandPanel({
   username,
   dashboardSlug,
-  setOpen,
   className,
+  onCardSelected,
+  onCardDeselected,
+  onFormSuccess,
 }: AddCardCommandPanelProps) {
   const { data, isPending, isLoadingError } = api.ui.getCardTypes.useQuery({});
 
@@ -105,7 +121,7 @@ export function AddCardCommandPanel({
     <>
       {selectedCardType !== null && (
         <div className="w-full rounded-xl border bg-background">
-          <div className="w-full flex flex-col px-4 pt-3 pb-4 gap-1.5">
+          <div className="w-full flex flex-col px-4 pt-3.5 pb-4 gap-1.5">
             <h1 className="font-bold text-base leading-tight">
               {selectedCardType.cardType.title}
             </h1>
@@ -114,12 +130,12 @@ export function AddCardCommandPanel({
             </p>
           </div>
           <div className="w-full bg-border h-px" />
-          <div className="w-full px-4 pt-3 pb-4">
+          <div className="w-full px-4 pt-3.5 pb-4">
             <AddCardForm
               username={username}
               dashboardSlug={dashboardSlug}
               cardTypeObj={selectedCardType}
-              setOpen={setOpen}
+              onFormSuccess={onFormSuccess}
             />
           </div>
         </div>
@@ -161,6 +177,7 @@ export function AddCardCommandPanel({
                       );
                       if (!cardType) return;
                       setSelectedCardType(cardType);
+                      onCardSelected?.(cardType.cardType.id);
                     }}
                   >
                     <p
@@ -190,11 +207,11 @@ export function AddCardForm({
   username,
   dashboardSlug,
   cardTypeObj,
-  setOpen,
+  onFormSuccess,
 }: {
   dashboardSlug: string;
   username: string;
-  setOpen: Dispatch<SetStateAction<boolean>>;
+  onFormSuccess?: () => void;
   cardTypeObj: {
     cardType: {
       id: string;
@@ -249,7 +266,7 @@ export function AddCardForm({
     api.ui.createCard.useMutation({
       onSuccess: async () => {
         await utils.ui.getCards.invalidate({ username, dashboardSlug });
-        setOpen(false);
+        onFormSuccess?.();
       },
     });
 
