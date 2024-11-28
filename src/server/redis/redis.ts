@@ -19,10 +19,11 @@ export async function setCache(
   value: any,
   cacheType: keyof typeof cacheTimes = "medium"
 ) {
+  const start = Date.now();
   const _key = createKey(key, params);
   try {
     await redis.set(_key, JSON.stringify(value), "EX", cacheTimes[cacheType]);
-    console.log(`[CACHE]: Set for "${_key}"`);
+    console.log(`[CACHE]: Set for "${_key}" | ${Date.now() - start}ms`);
     return true;
   } catch (error) {
     console.log(`Error setting cache for "key"`, error);
@@ -31,11 +32,12 @@ export async function setCache(
 }
 
 export async function getCache<T>(key: string, params: string[]) {
+  const start = Date.now();
   const _key = createKey(key, params);
   try {
     const value = await redis.get(createKey(key, params));
     if (!value) return null;
-    console.log(`[CACHE]: Hit for "${_key}"`);
+    console.log(`[CACHE]: Hit for "${_key}" | ${Date.now() - start}ms`);
     return JSON.parse(value) as T;
   } catch (error) {
     console.log(`Error getting cache for "key"`, error);
