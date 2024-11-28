@@ -1,7 +1,7 @@
 import { env } from "@/lib/env";
 import { Redis } from "ioredis";
 
-const redis = new Redis(env.REDIS_URL);
+const redis = new Redis(env.REDIS_URL + "?family=0");
 
 function createKey(key: string, params: string[]) {
   return `${key}:${params.join("_")}`;
