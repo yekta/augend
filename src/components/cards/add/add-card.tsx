@@ -30,8 +30,8 @@ import { cn } from "@/lib/utils";
 import { TCardValueForAddCards } from "@/server/trpc/api/routers/ui/types";
 import { api } from "@/server/trpc/setup/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LoaderIcon, PlusIcon } from "lucide-react";
-import { FormEvent, useState } from "react";
+import { LoaderIcon, PlusIcon, XIcon } from "lucide-react";
+import { FormEvent, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -48,6 +48,11 @@ export function AddCardButton({
 }: AddCardButtonProps) {
   const [open, setOpen] = useState(false);
   const [closeOnInteractOutside, setCloseOnInteractOutside] = useState(true);
+
+  useEffect(() => {
+    if (!open) setCloseOnInteractOutside(true);
+  }, [open]);
+
   return (
     <>
       <Dialog open={open} onOpenChange={setOpen}>
@@ -84,9 +89,10 @@ export function AddCardButton({
               setCloseOnInteractOutside(true);
               setOpen(false);
             }}
+            onCloseClick={() => setOpen(false)}
             username={username}
             dashboardSlug={dashboardSlug}
-            className="h-96 max-h-[calc((100vh-3rem)*0.6)] shadow-xl shadow-shadow/[var(--opacity-shadow)]"
+            className="h-96 max-h-[calc((100vh-3rem)*0.6)]"
           />
         </DialogContent>
       </Dialog>
@@ -100,6 +106,7 @@ type AddCardCommandPanelProps = {
   onFormSuccess?: () => void;
   onCardSelected?: (cardId: string) => void;
   onCardDeselected?: (cardId: string) => void;
+  onCloseClick?: () => void;
   className?: string;
 };
 
@@ -109,6 +116,7 @@ export function AddCardCommandPanel({
   className,
   onCardSelected,
   onCardDeselected,
+  onCloseClick,
   onFormSuccess,
 }: AddCardCommandPanelProps) {
   const { data, isPending, isLoadingError } = api.ui.getCardTypes.useQuery({});
@@ -120,14 +128,22 @@ export function AddCardCommandPanel({
   return (
     <>
       {selectedCardType !== null && (
-        <div className="w-full rounded-xl border bg-background">
-          <div className="w-full flex flex-col px-4 pt-3.5 pb-4 gap-1.5">
-            <h1 className="font-bold text-base leading-tight">
+        <div className="w-full bg-background border rounded-xl shadow-xl shadow-shadow/[var(--opacity-shadow)]">
+          <div className="w-full flex flex-col px-4 pt-3.5 pb-4 gap-1.5 relative">
+            <h1 className="font-bold text-base leading-tight pr-8">
               {selectedCardType.cardType.title}
             </h1>
             <p className="text-sm text-muted-foreground leading-tight">
               {selectedCardType.cardType.description}
             </p>
+            <Button
+              className="absolute size-8 right-1 top-1"
+              onClick={onCloseClick}
+              variant="outline"
+              size="icon"
+            >
+              <XIcon className="size-4 text-muted-foreground" />
+            </Button>
           </div>
           <div className="w-full bg-border h-px" />
           <div className="w-full px-4 pt-3.5 pb-4">
@@ -141,7 +157,12 @@ export function AddCardCommandPanel({
         </div>
       )}
       {selectedCardType === null && (
-        <Command className={cn("rounded-xl border", className)}>
+        <Command
+          className={`shadow-xl shadow-shadow/[var(--opacity-shadow)] ${cn(
+            "w-full rounded-xl border",
+            className
+          )}`}
+        >
           <CommandInput placeholder="Search for a card..." />
           {!isPending && data && (
             <CommandEmpty className="text-muted-foreground w-full text-center text-sm py-6">
