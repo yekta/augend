@@ -7,6 +7,7 @@ import {
   TCmcGetCryptosResultEdited,
 } from "@/server/trpc/api/routers/cmc/types";
 import { cmcFetchOptions } from "@/server/trpc/api/routers/cmc/secrets";
+import { getCache, setCache } from "@/server/redis/redis";
 
 export const cmcRouter = createTRPCRouter({
   getCryptoInfos: publicProcedure
@@ -61,6 +62,17 @@ export const cmcRouter = createTRPCRouter({
       })
     )
     .query(async ({ input: { convert } }) => {
+      type TReturn = TCmcGlobalMetricsResult["data"]["quote"]["USD"] & {
+        fear_greed_index: TCmcFearGreedIndexResult["data"];
+        eth_dominance: number;
+        btc_dominance: number;
+      };
+
+      const cachedResult = await getCache<TReturn>("cmc:global_metrics", [
+        convert,
+      ]);
+      if (cachedResult) return cachedResult;
+
       const fearAndGreedUrl = `${cmcApiUrl}/v3/fear-and-greed/latest`;
       const metricsUrl = `${cmcApiUrl}/v1/global-metrics/quotes/latest?convert=${convert}`;
 
@@ -91,12 +103,16 @@ export const cmcRouter = createTRPCRouter({
         metricsResponse.json(),
       ]);
 
-      return {
+      const result: TReturn = {
         fear_greed_index: fearGreedIndexData.data,
         btc_dominance: metricsData.data.btc_dominance,
         eth_dominance: metricsData.data.eth_dominance,
         ...metricsData.data.quote[convert],
       };
+
+      await setCache("cmc:global_metrics", [convert], result);
+
+      return result;
     }),
   getCoinList: publicProcedure
     .input(
@@ -106,6 +122,16 @@ export const cmcRouter = createTRPCRouter({
       })
     )
     .query(async ({ input: { convert, page } }) => {
+      type TReturn = {
+        coin_list: TCmcCoinListResult["data"];
+      };
+
+      const cachedResult = await getCache<TReturn>("cmc:coin_list", [
+        convert,
+        page.toString(),
+      ]);
+      if (cachedResult) return cachedResult;
+
       const limit = 100;
       const start = ((page || 1) - 1) * limit + 1;
       const coinListUrl = `${cmcApiUrl}/v1/cryptocurrency/listings/latest?convert=${convert}&limit=100&start=${start}`;
@@ -122,9 +148,13 @@ export const cmcRouter = createTRPCRouter({
         );
       }
 
-      return {
+      const result: TReturn = {
         coin_list: coinListJson.data,
       };
+
+      await setCache("cmc:coin_list", [convert, page.toString()], result);
+
+      return result;
     }),
 });
 

@@ -8,6 +8,7 @@ export const env = createEnv({
    */
   server: {
     DATABASE_URL: z.string().url(),
+    REDIS_URL: z.string().url(),
     CMC_API_KEY: z.string(),
     ALCHEMY_API_KEY: z.string(),
     AUTH_SECRET: z.string(),
@@ -42,6 +43,7 @@ export const env = createEnv({
    */
   runtimeEnv: {
     DATABASE_URL: process.env.DATABASE_URL,
+    REDIS_URL: process.env.REDIS_URL,
     CMC_API_KEY: process.env.CMC_API_KEY,
     ALCHEMY_API_KEY: process.env.ALCHEMY_API_KEY,
     AUTH_SECRET: process.env.AUTH_SECRET,
