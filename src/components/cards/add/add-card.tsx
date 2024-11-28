@@ -36,12 +36,14 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 type AddCardButtonProps = {
+  username: string;
   dashboardSlug: string;
   className?: string;
 };
 
 export function AddCardButton({
   dashboardSlug,
+  username,
   className,
 }: AddCardButtonProps) {
   const [open, setOpen] = useState(false);
@@ -70,6 +72,7 @@ export function AddCardButton({
         <DialogContent variant="styleless" className="max-w-md">
           <AddCardCommandPanel
             setOpen={setOpen}
+            username={username}
             dashboardSlug={dashboardSlug}
             className="h-96 max-h-[calc((100vh-3rem)*0.6)] shadow-xl shadow-shadow/[var(--opacity-shadow)]"
           />
@@ -80,14 +83,16 @@ export function AddCardButton({
 }
 
 type AddCardCommandPanelProps = {
-  setOpen: Dispatch<SetStateAction<boolean>>;
+  username: string;
   dashboardSlug: string;
+  setOpen: Dispatch<SetStateAction<boolean>>;
   className?: string;
 };
 
 export function AddCardCommandPanel({
-  setOpen,
+  username,
   dashboardSlug,
+  setOpen,
   className,
 }: AddCardCommandPanelProps) {
   const { data, isPending, isLoadingError } = api.ui.getCardTypes.useQuery({});
@@ -111,6 +116,7 @@ export function AddCardCommandPanel({
           <div className="w-full bg-border h-px" />
           <div className="w-full px-4 pt-3 pb-4">
             <AddCardForm
+              username={username}
               dashboardSlug={dashboardSlug}
               cardTypeObj={selectedCardType}
               setOpen={setOpen}
@@ -181,11 +187,13 @@ export function AddCardCommandPanel({
 }
 
 export function AddCardForm({
-  cardTypeObj,
+  username,
   dashboardSlug,
+  cardTypeObj,
   setOpen,
 }: {
   dashboardSlug: string;
+  username: string;
   setOpen: Dispatch<SetStateAction<boolean>>;
   cardTypeObj: {
     cardType: {
@@ -226,6 +234,27 @@ export function AddCardForm({
     defaultValues, // Add default values here
   });
 
+  const utils = api.useUtils();
+  const { isPending: invalidationPending } = api.ui.getCards.useQuery(
+    {
+      username,
+      dashboardSlug,
+    },
+    {
+      enabled: false,
+    }
+  );
+
+  const { mutate: createCardMutation, isPending } =
+    api.ui.createCard.useMutation({
+      onSuccess: async () => {
+        await utils.ui.getCards.invalidate({ username, dashboardSlug });
+        setOpen(false);
+      },
+    });
+
+  const isAnyPending = invalidationPending || isPending;
+
   const onSubmit = (data: FormValues) => {
     const values: TCardValueForAddCards[] = Object.entries(data).map(
       ([key, value]) => ({
@@ -250,17 +279,10 @@ export function AddCardForm({
     });
   };
 
-  const { mutate: createCardMutation, isPending } =
-    api.ui.createCard.useMutation({
-      onSuccess: () => {
-        setOpen(false);
-      },
-    });
-
   if (!inputs) {
     return (
       <form onSubmit={onSubmitWithNoValues}>
-        <AddCardFormSubmitButton isPending={isPending} />
+        <AddCardFormSubmitButton isPending={isAnyPending} />
       </form>
     );
   }
@@ -295,7 +317,7 @@ export function AddCardForm({
               ></FormField>
             );
           })}
-        <AddCardFormSubmitButton isPending={isPending} className="mt-5" />
+        <AddCardFormSubmitButton isPending={isAnyPending} className="mt-5" />
       </form>
     </Form>
   );

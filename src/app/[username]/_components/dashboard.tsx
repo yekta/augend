@@ -238,6 +238,7 @@ export default function Dashboard({
         <div className="flex flex-col items-center w-full text-center gap-4">
           <h1 className="font-bold text-lg px-5">Start by adding a card</h1>
           <AddCardButton
+            username={username}
             dashboardSlug={dashboardSlug}
             className="w-1/2 md:w-1/3 lg:w-1/4"
           />
@@ -284,7 +285,7 @@ export default function Dashboard({
             />
           );
         })}
-        <AddCardButton dashboardSlug={dashboardSlug} />
+        <AddCardButton username={username} dashboardSlug={dashboardSlug} />
         {/* <DndWrapper items={dndCards} setItems={setDndCards}>
           {({ item, attributes, listeners, setNodeRef, style, isActive }) => (
             <CardParser
