@@ -316,14 +316,14 @@ export const uniswapRouter = createTRPCRouter({
         },
         swaps: swapsResJson.result.swaps
           .sort((a, b) => b.time - a.time)
-          .map((swap) => {
+          .map((swap, index) => {
             return {
               amount0: swap.amount0,
               amount1: swap.amount1,
               amountUSD: swap.usd_value,
               timestamp: swap.time,
               type: swap.side === "sell" ? "sell" : "buy",
-              traderAddress: swap.recipient,
+              traderAddress: swap.event.sender,
             };
           }),
       };
