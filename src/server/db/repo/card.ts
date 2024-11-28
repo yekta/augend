@@ -9,7 +9,7 @@ import {
   dashboardsTable,
   usersTable,
 } from "@/server/db/schema";
-import { and, asc, desc, eq } from "drizzle-orm";
+import { and, asc, desc, eq, isNull } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 
 const primaryCurrencyAlias = alias(currenciesTable, "primary_currency");
@@ -40,6 +40,8 @@ export async function getCards({
   let whereFilters = [
     eq(dashboardsTable.slug, dashboardSlug),
     eq(dashboardsTable.userId, userId),
+    isNull(dashboardsTable.deletedAt),
+    isNull(cardsTable.deletedAt),
   ];
   if (!isOwner) {
     whereFilters.push(eq(dashboardsTable.isPublic, true));

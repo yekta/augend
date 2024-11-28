@@ -1,6 +1,6 @@
 import { db } from "@/server/db/db";
 import { cardsTable, dashboardsTable, usersTable } from "@/server/db/schema";
-import { and, asc, desc, eq } from "drizzle-orm";
+import { and, asc, desc, eq, isNull } from "drizzle-orm";
 
 type SharedProps = {
   userId: string;
@@ -24,7 +24,10 @@ export async function getDashboard({
   if (!dashboardSlug && !dashboardId) {
     throw new Error("Either dashboardSlug or dashboardId must be provided");
   }
-  let whereFilter = [eq(dashboardsTable.userId, userId)];
+  let whereFilter = [
+    eq(dashboardsTable.userId, userId),
+    isNull(dashboardsTable.deletedAt),
+  ];
   if (dashboardSlug) {
     whereFilter.push(eq(dashboardsTable.slug, dashboardSlug));
   } else if (dashboardId) {
@@ -62,7 +65,10 @@ export async function getDashboards({
   userId: string;
   isOwner?: boolean;
 }) {
-  const whereFilter = [eq(dashboardsTable.userId, userId)];
+  const whereFilter = [
+    eq(dashboardsTable.userId, userId),
+    isNull(dashboardsTable.deletedAt),
+  ];
 
   if (!isOwner) {
     whereFilter.push(eq(dashboardsTable.isPublic, true));
@@ -100,7 +106,13 @@ export async function getMaximumXOrderForDashboard({
       xOrder: cardsTable.xOrder,
     })
     .from(cardsTable)
-    .where(eq(cardsTable.dashboardId, dashboardId))
+    .innerJoin(dashboardsTable, eq(cardsTable.dashboardId, dashboardsTable.id))
+    .where(
+      and(
+        eq(cardsTable.dashboardId, dashboardId),
+        isNull(dashboardsTable.deletedAt)
+      )
+    )
     .orderBy(desc(cardsTable.xOrder))
     .limit(1);
   if (res.length === 0) return -1;
