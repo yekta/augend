@@ -22,6 +22,7 @@ export async function setCache(
   const _key = createKey(key, params);
   try {
     await redis.set(_key, JSON.stringify(value), "EX", cacheTimes[cacheType]);
+    console.log(`[CACHE]: Set for "${_key}"`);
     return true;
   } catch (error) {
     console.log(`Error setting cache for "key"`, error);
