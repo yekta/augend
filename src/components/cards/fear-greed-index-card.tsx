@@ -160,7 +160,7 @@ function Gauge({
               }}
               className="w-full h-full"
             >
-              <div className="w-full h-full rounded-full bg-background not-touch:group-data-[has-href]/card:group-hover/card:bg-background-secondary group-active/card:bg-background-secondary" />
+              <div className="w-full h-full rounded-full bg-background not-touch:group-data-[has-href]/card:group-hover/card:bg-background-secondary group-data-[has-href]:group-active/card:bg-background-secondary" />
             </div>
           </div>
         </div>
@@ -177,7 +177,7 @@ function Gauge({
                     width: `calc(100% + ${lineWidth}px)`,
                     height: lineWidth,
                   }}
-                  className="flex justify-start not-touch:group-data-[has-href]/card:group-hover/card:bg-background-secondary group-active/card:bg-background-secondary bg-background items-center z-20 absolute"
+                  className="flex justify-start not-touch:group-data-[has-href]/card:group-hover/card:bg-background-secondary group-data-[has-href]:group-active/card:bg-background-secondary bg-background items-center z-20 absolute"
                 />
               );
             })}
@@ -195,7 +195,7 @@ function Gauge({
             }}
             className="flex justify-start items-center z-20 absolute rounded-full transition-transform"
           >
-            <div className="bg-background ring-4 ring-background not-touch:group-data-[has-href]/card:group-hover/card:ring-background-secondary group-active/card:ring-background-secondary group-active/card:bg-background-secondary not-touch:group-hover/card:bg-background-secondary rounded-full">
+            <div className="bg-background ring-4 ring-background not-touch:group-data-[has-href]/card:group-hover/card:ring-background-secondary group-data-[has-href]:group-active/card:ring-background-secondary group-data-[has-href]:group-active/card:bg-background-secondary not-touch:group-hover/card:bg-background-secondary rounded-full">
               <div
                 style={{
                   width: circleWidth,

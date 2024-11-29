@@ -9,15 +9,18 @@ import { ComponentProps } from "react";
 
 export type TCardOuterWrapperDivProps = ComponentProps<"div"> & {
   href?: undefined;
-  onRemoveCardClick?: () => void;
+  isRemovable?: boolean;
+  cardId?: string;
 };
 export type TCardOuterWrapperLinkProps = ComponentProps<typeof Link> & {
-  onRemoveCardClick?: () => void;
+  isRemovable?: boolean;
+  cardId?: string;
 };
 export type TCardOuterWrapperButtonProps = ComponentProps<"button"> & {
   href?: undefined;
   onClick?: () => void;
-  onRemoveCardClick?: () => void;
+  isRemovable?: boolean;
+  cardId?: string;
 };
 
 export type TCardOuterWrapperProps =
@@ -28,7 +31,8 @@ export type TCardOuterWrapperProps =
 export default function CardOuterWrapper({
   className,
   children,
-  onRemoveCardClick,
+  isRemovable,
+  cardId,
   ...rest
 }: TCardOuterWrapperProps) {
   const { isEditing } = useEditMode();
@@ -38,14 +42,14 @@ export default function CardOuterWrapper({
     className
   );
 
-  if (isEditing && onRemoveCardClick) {
+  if (isEditing && isRemovable && cardId) {
     const restDiv = rest as TCardOuterWrapperDivProps;
     return (
       <div {...restDiv} className={classNameAll}>
         {children}
         {isEditing && (
           <Button
-            onClick={onRemoveCardClick}
+            onClick={() => console.log(cardId)}
             size="icon"
             variant="outline"
             className="absolute left-0 top-0 size-7 rounded-full z-30 text-foreground shadow-md shadow-shadow/[var(--opacity-shadow)]"

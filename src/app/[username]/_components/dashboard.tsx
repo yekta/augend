@@ -274,7 +274,8 @@ export default function Dashboard({
               key={card.card.id}
               cardObject={card}
               currencies={currencies}
-              onRemoveCardClick={() => console.log(card.card.id)}
+              isRemovable={true}
+              cardId={card.card.id}
               className={
                 startAtNewRow
                   ? "col-start-1 md:col-start-1 lg:col-start-1 xl:col-start-1 2xl:col-start-1"
