@@ -27,13 +27,22 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { AppRouterOutputs, AppRouterQueryResult } from "@/server/trpc/api/root";
 import { TCardValueForAddCards } from "@/server/trpc/api/routers/ui/types";
 import { api } from "@/server/trpc/setup/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LoaderIcon, PlusIcon, XIcon } from "lucide-react";
-import { FormEvent, useEffect, useState } from "react";
+import { ArrowLeftIcon, LoaderIcon, PlusIcon } from "lucide-react";
+import {
+  Dispatch,
+  FormEvent,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useHotkeys } from "react-hotkeys-hook";
 
 type AddCardButtonProps = {
   username: string;
@@ -41,17 +50,94 @@ type AddCardButtonProps = {
   className?: string;
 };
 
+type TSelectedCardType = AppRouterOutputs["ui"]["getCardTypes"][number];
+
 export function AddCardButton({
   dashboardSlug,
   username,
   className,
 }: AddCardButtonProps) {
   const [open, setOpen] = useState(false);
-  const [closeOnInteractOutside, setCloseOnInteractOutside] = useState(true);
 
-  useEffect(() => {
-    if (!open) setCloseOnInteractOutside(true);
-  }, [open]);
+  const getCardTypesQuery = api.ui.getCardTypes.useQuery(
+    {},
+    {
+      enabled: open,
+    }
+  );
+
+  const [selectedCardType, setSelectedCardType] =
+    useState<TSelectedCardType | null>(null);
+
+  const inputs = selectedCardType?.inputs;
+
+  type SchemaShape = { [K: string]: z.ZodString };
+  const schemaObject: SchemaShape = {};
+  const defaultValues: { [key: string]: string } = {};
+
+  if (inputs) {
+    inputs.forEach((input) => {
+      schemaObject[input.id] = z.string().min(1, `${input.title} is required`);
+      defaultValues[input.id] = "";
+    });
+  }
+  const formSchema = z.object(schemaObject);
+
+  type FormValues = z.infer<typeof formSchema>;
+
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues, // Add default values here
+  });
+
+  const utils = api.useUtils();
+  const { isPending: invalidationPending } = api.ui.getCards.useQuery(
+    {
+      username,
+      dashboardSlug,
+    },
+    {
+      enabled: false,
+    }
+  );
+
+  const { mutate: createCardMutation, isPending: mutationIsPending } =
+    api.ui.createCard.useMutation({
+      onSuccess: async () => {
+        await utils.ui.getCards.invalidate({ username, dashboardSlug });
+        setOpen(false);
+        setSelectedCardType(null);
+        form.reset();
+      },
+    });
+
+  const isFormPending = invalidationPending || mutationIsPending;
+
+  const onSubmit = (data: FormValues) => {
+    if (!selectedCardType) return;
+    const values: TCardValueForAddCards[] = Object.entries(data).map(
+      ([key, value]) => ({
+        cardTypeInputId: key,
+        value,
+        xOrder: inputs?.find((i) => i.id === key)?.xOrder ?? 0,
+      })
+    );
+    createCardMutation({
+      cardTypeId: selectedCardType.cardType.id,
+      values,
+      dashboardSlug,
+    });
+  };
+
+  const onSubmitWithNoValues = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!selectedCardType) return;
+    createCardMutation({
+      cardTypeId: selectedCardType.cardType.id,
+      dashboardSlug,
+      values: [],
+    });
+  };
 
   return (
     <>
@@ -78,20 +164,19 @@ export function AddCardButton({
         <DialogContent
           variant="styleless"
           className="max-w-md"
-          onInteractOutside={
-            closeOnInteractOutside ? undefined : (e) => e.preventDefault()
+          onEscapeKeyDown={
+            selectedCardType !== null ? (e) => e.preventDefault() : undefined
           }
         >
           <AddCardCommandPanel
-            onCardSelected={() => setCloseOnInteractOutside(false)}
-            onCardDeselected={() => setCloseOnInteractOutside(true)}
-            onFormSuccess={() => {
-              setCloseOnInteractOutside(true);
-              setOpen(false);
-            }}
-            onCloseClick={() => setOpen(false)}
-            username={username}
-            dashboardSlug={dashboardSlug}
+            form={form}
+            inputs={inputs}
+            selectedCardType={selectedCardType}
+            setSelectedCardType={setSelectedCardType}
+            isFormPending={isFormPending}
+            onSubmit={form.handleSubmit(onSubmit)}
+            onSubmitWithNoValues={onSubmitWithNoValues}
+            getCardTypesQuery={getCardTypesQuery}
             className="h-96 max-h-[calc((100vh-3rem)*0.6)]"
           />
         </DialogContent>
@@ -101,57 +186,79 @@ export function AddCardButton({
 }
 
 type AddCardCommandPanelProps = {
-  username: string;
-  dashboardSlug: string;
-  onFormSuccess?: () => void;
-  onCardSelected?: (cardId: string) => void;
-  onCardDeselected?: (cardId: string) => void;
-  onCloseClick?: () => void;
+  getCardTypesQuery: AppRouterQueryResult<
+    AppRouterOutputs["ui"]["getCardTypes"]
+  >;
+  form: ReturnType<typeof useForm>;
+  inputs?: AppRouterOutputs["ui"]["getCardTypes"][number]["inputs"];
+  isFormPending: boolean;
+  selectedCardType: TSelectedCardType | null;
+  setSelectedCardType: Dispatch<SetStateAction<TSelectedCardType | null>>;
+  onSubmit: (e: FormEvent<HTMLFormElement>) => void;
+  onSubmitWithNoValues: (e: FormEvent<HTMLFormElement>) => void;
   className?: string;
 };
 
 export function AddCardCommandPanel({
-  username,
-  dashboardSlug,
+  getCardTypesQuery,
+  form,
+  inputs,
+  isFormPending,
+  selectedCardType,
+  setSelectedCardType,
+  onSubmit,
+  onSubmitWithNoValues,
   className,
-  onCardSelected,
-  onCardDeselected,
-  onCloseClick,
-  onFormSuccess,
 }: AddCardCommandPanelProps) {
-  const { data, isPending, isLoadingError } = api.ui.getCardTypes.useQuery({});
+  const inputRef = useRef<HTMLInputElement>(null);
+  const { data, isPending, isLoadingError } = getCardTypesQuery;
 
-  type TSelectedCardType = NonNullable<typeof data>[number];
-  const [selectedCardType, setSelectedCardType] =
-    useState<TSelectedCardType | null>(null);
+  useHotkeys("esc", (e) => {
+    if (selectedCardType !== null) {
+      setSelectedCardType(null);
+    }
+  });
+
+  useEffect(() => {
+    if (selectedCardType === null) {
+      setTimeout(() => {
+        inputRef.current?.focus();
+      });
+    }
+  }, [selectedCardType]);
 
   return (
     <>
       {selectedCardType !== null && (
         <div className="w-full bg-background border rounded-xl shadow-xl shadow-shadow/[var(--opacity-shadow)]">
-          <div className="w-full flex flex-col px-4 pt-3.5 pb-4 gap-1.5 relative">
-            <h1 className="font-bold text-base leading-tight pr-8">
+          <div className="w-full flex flex-row p-1">
+            <Button
+              size="sm"
+              onClick={() => setSelectedCardType(null)}
+              variant="outline"
+              className="border-none text-muted-foreground font-semibold px-2 text-left gap-1"
+            >
+              <ArrowLeftIcon className="size-4 -my-1" />
+              Back
+            </Button>
+          </div>
+          <div className="w-full bg-border h-px" />
+          <div className="w-full flex flex-col items-start px-4 pt-3.5 pb-4 gap-1.5 relative">
+            <h1 className="w-full font-bold text-base leading-tight mt-1">
               {selectedCardType.cardType.title}
             </h1>
-            <p className="text-sm text-muted-foreground leading-tight">
+            <p className="w-full text-sm text-muted-foreground leading-tight">
               {selectedCardType.cardType.description}
             </p>
-            <Button
-              className="absolute size-8 right-1 top-1"
-              onClick={onCloseClick}
-              variant="outline"
-              size="icon"
-            >
-              <XIcon className="size-4 text-muted-foreground" />
-            </Button>
           </div>
           <div className="w-full bg-border h-px" />
           <div className="w-full px-4 pt-3.5 pb-4">
             <AddCardForm
-              username={username}
-              dashboardSlug={dashboardSlug}
-              cardTypeObj={selectedCardType}
-              onFormSuccess={onFormSuccess}
+              form={form}
+              inputs={inputs}
+              isPending={isFormPending}
+              onSubmit={onSubmit}
+              onSubmitWithNoValues={onSubmitWithNoValues}
             />
           </div>
         </div>
@@ -163,7 +270,7 @@ export function AddCardCommandPanel({
             className
           )}`}
         >
-          <CommandInput placeholder="Search for a card..." />
+          <CommandInput ref={inputRef} placeholder="Search for a card..." />
           {!isPending && data && (
             <CommandEmpty className="text-muted-foreground w-full text-center text-sm py-6">
               No cards found.
@@ -198,7 +305,6 @@ export function AddCardCommandPanel({
                       );
                       if (!cardType) return;
                       setSelectedCardType(cardType);
-                      onCardSelected?.(cardType.cardType.id);
                     }}
                   >
                     <p
@@ -225,109 +331,29 @@ export function AddCardCommandPanel({
 }
 
 export function AddCardForm({
-  username,
-  dashboardSlug,
-  cardTypeObj,
-  onFormSuccess,
+  form,
+  inputs,
+  isPending,
+  onSubmit,
+  onSubmitWithNoValues,
 }: {
-  dashboardSlug: string;
-  username: string;
-  onFormSuccess?: () => void;
-  cardTypeObj: {
-    cardType: {
-      id: string;
-      title: string;
-      description: string;
-    };
-    inputs:
-      | {
-          id: string;
-          title: string;
-          description: string;
-          type: string;
-          xOrder: number;
-          placeholder: string;
-        }[]
-      | null;
-  };
+  form: ReturnType<typeof useForm>;
+  inputs?: AppRouterOutputs["ui"]["getCardTypes"][number]["inputs"];
+  isPending: boolean;
+  onSubmit: (e: FormEvent<HTMLFormElement>) => void;
+  onSubmitWithNoValues: (e: FormEvent<HTMLFormElement>) => void;
 }) {
-  const inputs = cardTypeObj.inputs;
-
-  type SchemaShape = { [K: string]: z.ZodString };
-  const schemaObject: SchemaShape = {};
-  const defaultValues: { [key: string]: string } = {};
-
-  if (inputs) {
-    inputs.forEach((input) => {
-      schemaObject[input.id] = z.string().min(1, `${input.title} is required`);
-      defaultValues[input.id] = "";
-    });
-  }
-  const formSchema = z.object(schemaObject);
-
-  type FormValues = z.infer<typeof formSchema>;
-
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues, // Add default values here
-  });
-
-  const utils = api.useUtils();
-  const { isPending: invalidationPending } = api.ui.getCards.useQuery(
-    {
-      username,
-      dashboardSlug,
-    },
-    {
-      enabled: false,
-    }
-  );
-
-  const { mutate: createCardMutation, isPending } =
-    api.ui.createCard.useMutation({
-      onSuccess: async () => {
-        await utils.ui.getCards.invalidate({ username, dashboardSlug });
-        onFormSuccess?.();
-      },
-    });
-
-  const isAnyPending = invalidationPending || isPending;
-
-  const onSubmit = (data: FormValues) => {
-    const values: TCardValueForAddCards[] = Object.entries(data).map(
-      ([key, value]) => ({
-        cardTypeInputId: key,
-        value,
-        xOrder: inputs?.find((i) => i.id === key)?.xOrder ?? 0,
-      })
-    );
-    createCardMutation({
-      cardTypeId: cardTypeObj.cardType.id,
-      values,
-      dashboardSlug,
-    });
-  };
-
-  const onSubmitWithNoValues = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    createCardMutation({
-      cardTypeId: cardTypeObj.cardType.id,
-      dashboardSlug,
-      values: [],
-    });
-  };
-
   if (!inputs) {
     return (
       <form onSubmit={onSubmitWithNoValues}>
-        <AddCardFormSubmitButton isPending={isAnyPending} />
+        <AddCardFormSubmitButton isPending={isPending} />
       </form>
     );
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form onSubmit={onSubmit}>
         {inputs
           .sort((a, b) => a.xOrder - b.xOrder)
           .map((input, index) => {
@@ -348,14 +374,18 @@ export function AddCardForm({
                       {input.description}
                     </FormDescription>
                     <FormControl className="mt-3">
-                      <Input {...field} placeholder={input.placeholder} />
+                      <Input
+                        {...field}
+                        placeholder={input.placeholder}
+                        value={field.value ?? ""}
+                      />
                     </FormControl>
                   </FormItem>
                 )}
               ></FormField>
             );
           })}
-        <AddCardFormSubmitButton isPending={isAnyPending} className="mt-5" />
+        <AddCardFormSubmitButton isPending={isPending} className="mt-5" />
       </form>
     </Form>
   );
