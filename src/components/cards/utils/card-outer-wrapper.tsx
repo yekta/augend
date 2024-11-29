@@ -1,6 +1,5 @@
 "use client";
 
-import { useEditMode } from "@/components/providers/edit-mode-provider";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { ComponentProps } from "react";
@@ -24,21 +23,10 @@ export default function CardOuterWrapper({
   children,
   ...rest
 }: TCardOuterWrapperProps) {
-  const { isEditing } = useEditMode();
-
   const classNameAll = cn(
     "flex flex-col p-1 group/card col-span-12 data-[dnd-active]:z-20 relative focus:outline-none",
     className
   );
-
-  if (isEditing) {
-    const restDiv = rest as TCardOuterWrapperDivProps;
-    return (
-      <div {...restDiv} className={classNameAll}>
-        {children}
-      </div>
-    );
-  }
 
   if ("href" in rest && rest.href) {
     const { target = "_blank", ...restLink } =

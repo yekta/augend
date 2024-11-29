@@ -283,20 +283,6 @@ export default function Dashboard({
           );
         })}
         <AddCardButton username={username} dashboardSlug={dashboardSlug} />
-        {/* <DndWrapper items={dndCards} setItems={setDndCards}>
-          {({ item, attributes, listeners, setNodeRef, style, isActive }) => (
-            <CardParser
-              data-dnd-active={isActive ? true : undefined}
-              key={item.card.id}
-              cardObject={item}
-              currencies={currencies}
-              style={style}
-              {...attributes}
-              {...listeners}
-              ref={setNodeRef}
-            />
-          )}
-        </DndWrapper> */}
       </DashboardWrapper>
     </Providers>
   );
