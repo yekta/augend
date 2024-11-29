@@ -22,6 +22,13 @@
       "when": 1732916620094,
       "tag": "0002_card_type_counter_triggers",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1732917952835,
+      "tag": "0003_naive_sauron",
+      "breakpoints": true
     }
   ]
 }

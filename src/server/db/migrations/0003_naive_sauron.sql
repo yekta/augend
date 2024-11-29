@@ -1,0 +1,2 @@
+CREATE INDEX IF NOT EXISTS "card_types_alltime_counter_idx" ON "card_types" USING btree ("alltime_counter");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "card_types_current_counter_idx" ON "card_types" USING btree ("current_counter");

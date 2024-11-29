@@ -265,6 +265,12 @@ export const cardTypesTable = pgTable(
     createdAtIdx: index("card_types_created_at_idx").on(table.createdAt),
     updatedAtIdx: index("card_types_updated_at_idx").on(table.updatedAt),
     deletedAtIdx: index("card_types_deleted_at_idx").on(table.deletedAt),
+    alltimeCounterIdx: index("card_types_alltime_counter_idx").on(
+      table.alltimeCounter
+    ),
+    currentCounterIdx: index("card_types_current_counter_idx").on(
+      table.currentCounter
+    ),
   })
 );
 
