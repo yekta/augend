@@ -85,7 +85,6 @@ export default function OrderBookCard({
       )}
       data-loading-error={(isLoadingError && true) || undefined}
       data-pending={(isPending && true) || undefined}
-      data-has-href={href ? true : undefined}
       {...restTyped}
     >
       <CardInnerWrapper className="flex flex-col items-center border rounded-xl px-4 py-4.5 text-center gap-4 group-data-[has-href]/card:not-touch:group-hover/card:bg-background-secondary group-active/card:bg-background-secondary transition text-sm relative">

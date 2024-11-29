@@ -63,12 +63,11 @@ export default function EthereumGasCard({
       className={className}
       data-loading-error={(isLoadingError && true) || undefined}
       data-pending={(isPending && true) || undefined}
-      data-has-data={(data !== undefined && true) || undefined}
       {...restTyped}
     >
       <CardInnerWrapper
         className="px-2 py-2.5 flex flex-wrap shrink min-w-0 items-center justify-center flex-row leading-none font-bold relative
-        not-touch:group-data-[has-data]/card:group-hover/card:bg-background-secondary group-data-[has-data]/card:group-active/card:bg-background-secondary"
+        not-touch:group-data-[has-href]/card:group-hover/card:bg-background-secondary group-data-[has-href]/card:group-active/card:bg-background-secondary"
       >
         <div className="flex -mt-0.5 md:mt-0 w-full md:w-auto items-center justify-center overflow-hidden">
           <IconAndText

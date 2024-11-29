@@ -1,4 +1,5 @@
 import LayoutWrapper from "@/app/[username]/_components/layout-wrapper";
+import EditModeProvider from "@/components/providers/edit-mode-provider";
 import { apiServer } from "@/server/trpc/setup/server";
 
 export default async function UserLayout({
@@ -12,8 +13,10 @@ export default async function UserLayout({
   const initialDashboards = await apiServer.ui.getDashboards({ username });
 
   return (
-    <LayoutWrapper initialDashboards={initialDashboards} username={username}>
-      {children}
-    </LayoutWrapper>
+    <EditModeProvider>
+      <LayoutWrapper initialDashboards={initialDashboards} username={username}>
+        {children}
+      </LayoutWrapper>
+    </EditModeProvider>
   );
 }

@@ -67,12 +67,11 @@ export default function MiniCryptoCard({
       className={cn("col-span-6 md:col-span-4 lg:col-span-3", className)}
       data-loading-error={(isLoadingError && true) || undefined}
       data-pending={(isPending && true) || undefined}
-      data-has-data={(data !== undefined && true) || undefined}
       {...restTyped}
     >
       <CardInnerWrapper
         className="flex px-2.5 md:pl-3.5 md:pr-3.75 py-3 md:py-4 gap-2.25 md:gap-3 flex-row items-center text-left
-        not-touch:group-data-[has-data]/card:group-hover/card:bg-background-secondary group-data-[has-data]/card:group-active/card:bg-background-secondary relative overflow-hidden"
+        not-touch:group-data-[has-href]/card:group-hover/card:bg-background-secondary group-data-[has-href]/card:group-active/card:bg-background-secondary relative overflow-hidden"
       >
         {isPending ? (
           <div className="size-5 md:size-6 rounded-md bg-foreground animate-skeleton shrink-0" />

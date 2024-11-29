@@ -1,16 +1,23 @@
 "use client";
 
+import { useEditMode } from "@/components/providers/edit-mode-provider";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { XIcon } from "lucide-react";
 import Link from "next/link";
 import { ComponentProps } from "react";
 
 export type TCardOuterWrapperDivProps = ComponentProps<"div"> & {
   href?: undefined;
+  onRemoveCardClick?: () => void;
 };
-export type TCardOuterWrapperLinkProps = ComponentProps<typeof Link>;
+export type TCardOuterWrapperLinkProps = ComponentProps<typeof Link> & {
+  onRemoveCardClick?: () => void;
+};
 export type TCardOuterWrapperButtonProps = ComponentProps<"button"> & {
   href?: undefined;
   onClick?: () => void;
+  onRemoveCardClick?: () => void;
 };
 
 export type TCardOuterWrapperProps =
@@ -21,18 +28,49 @@ export type TCardOuterWrapperProps =
 export default function CardOuterWrapper({
   className,
   children,
+  onRemoveCardClick,
   ...rest
 }: TCardOuterWrapperProps) {
+  const { isEditing } = useEditMode();
+
   const classNameAll = cn(
     "flex flex-col p-1 group/card col-span-12 data-[dnd-active]:z-20 relative focus:outline-none",
     className
   );
 
-  if ("href" in rest && rest.href) {
-    const { target = "_blank", ...restLink } =
-      rest as TCardOuterWrapperLinkProps;
+  if (isEditing && onRemoveCardClick) {
+    const restDiv = rest as TCardOuterWrapperDivProps;
     return (
-      <Link {...restLink} className={classNameAll} target={target}>
+      <div {...restDiv} className={classNameAll}>
+        {children}
+        {isEditing && (
+          <Button
+            onClick={onRemoveCardClick}
+            size="icon"
+            variant="outline"
+            className="absolute left-0 top-0 size-7 rounded-full z-30 text-foreground shadow-md shadow-shadow/[var(--opacity-shadow)]"
+          >
+            <XIcon className="size-4" />
+          </Button>
+        )}
+      </div>
+    );
+  }
+
+  if ("href" in rest && rest.href) {
+    const {
+      target = "_blank",
+      href,
+      ...restLink
+    } = rest as TCardOuterWrapperLinkProps;
+    return (
+      <Link
+        data-has-href={href ? true : undefined}
+        href={href}
+        {...restLink}
+        className={classNameAll}
+        target={target}
+      >
         {children}
       </Link>
     );
