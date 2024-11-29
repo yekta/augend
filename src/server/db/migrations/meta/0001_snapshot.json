@@ -1,6 +1,6 @@
 {
-  "id": "b5a13d9a-1365-486e-bdf1-254a507fc0ad",
-  "prevId": "c6ff6a62-f8ee-48ba-bea9-a025cd110003",
+  "id": "05f1f422-d10c-445f-ad73-effebc336a81",
+  "prevId": "aeabf81d-e68b-4ff1-bef0-b71579244e1c",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -100,15 +100,15 @@
         "accounts_userId_users_id_fk": {
           "name": "accounts_userId_users_id_fk",
           "tableFrom": "accounts",
-          "tableTo": "users",
           "columnsFrom": [
             "userId"
           ],
+          "tableTo": "users",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
@@ -183,15 +183,15 @@
         "authenticators_userId_users_id_fk": {
           "name": "authenticators_userId_users_id_fk",
           "tableFrom": "authenticators",
-          "tableTo": "users",
           "columnsFrom": [
             "userId"
           ],
+          "tableTo": "users",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
@@ -206,10 +206,10 @@
       "uniqueConstraints": {
         "authenticators_credentialID_unique": {
           "name": "authenticators_credentialID_unique",
-          "nullsNotDistinct": false,
           "columns": [
             "credentialID"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       },
       "policies": {},
@@ -222,19 +222,13 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "slug": {
-          "name": "slug",
           "type": "text",
-          "primaryKey": false,
+          "primaryKey": true,
           "notNull": true
         },
         "card_type_id": {
           "name": "card_type_id",
-          "type": "varchar",
+          "type": "text",
           "primaryKey": false,
           "notNull": false
         },
@@ -249,6 +243,13 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "placeholder": {
+          "name": "placeholder",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Placeholder'"
         },
         "type": {
           "name": "type",
@@ -297,37 +298,73 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
+        },
+        "card_type_inputs_created_at_idx": {
+          "name": "card_type_inputs_created_at_idx",
+          "columns": [
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "card_type_inputs_updated_at_idx": {
+          "name": "card_type_inputs_updated_at_idx",
+          "columns": [
+            {
+              "expression": "updated_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "card_type_inputs_deleted_at_idx": {
+          "name": "card_type_inputs_deleted_at_idx",
+          "columns": [
+            {
+              "expression": "deleted_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "card_type_inputs_card_type_id_card_types_id_fk": {
           "name": "card_type_inputs_card_type_id_card_types_id_fk",
           "tableFrom": "card_type_inputs",
-          "tableTo": "card_types",
           "columnsFrom": [
             "card_type_id"
           ],
+          "tableTo": "card_types",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "card_type_inputs_unique_slug_per_card_type": {
-          "name": "card_type_inputs_unique_slug_per_card_type",
-          "nullsNotDistinct": false,
-          "columns": [
-            "card_type_id",
-            "slug"
-          ]
-        }
-      },
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -338,7 +375,7 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "varchar(32)",
+          "type": "text",
           "primaryKey": true,
           "notNull": true
         },
@@ -353,6 +390,20 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "alltime_counter": {
+          "name": "alltime_counter",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "current_counter": {
+          "name": "current_counter",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
         },
         "created_at": {
           "name": "created_at",
@@ -375,7 +426,53 @@
           "notNull": false
         }
       },
-      "indexes": {},
+      "indexes": {
+        "card_types_created_at_idx": {
+          "name": "card_types_created_at_idx",
+          "columns": [
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "card_types_updated_at_idx": {
+          "name": "card_types_updated_at_idx",
+          "columns": [
+            {
+              "expression": "updated_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "card_types_deleted_at_idx": {
+          "name": "card_types_deleted_at_idx",
+          "columns": [
+            {
+              "expression": "deleted_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
@@ -401,7 +498,7 @@
         },
         "card_type_input_id": {
           "name": "card_type_input_id",
-          "type": "uuid",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
@@ -410,6 +507,13 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "x_order": {
+          "name": "x_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
         },
         "created_at": {
           "name": "created_at",
@@ -444,9 +548,9 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         },
         "card_values_card_type_input_id_idx": {
           "name": "card_values_card_type_input_id_idx",
@@ -459,37 +563,82 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
+        },
+        "card_values_created_at_idx": {
+          "name": "card_values_created_at_idx",
+          "columns": [
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "card_values_updated_at_idx": {
+          "name": "card_values_updated_at_idx",
+          "columns": [
+            {
+              "expression": "updated_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "card_values_deleted_at_idx": {
+          "name": "card_values_deleted_at_idx",
+          "columns": [
+            {
+              "expression": "deleted_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "card_values_card_id_cards_id_fk": {
           "name": "card_values_card_id_cards_id_fk",
           "tableFrom": "card_values",
-          "tableTo": "cards",
           "columnsFrom": [
             "card_id"
           ],
+          "tableTo": "cards",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         },
         "card_values_card_type_input_id_card_type_inputs_id_fk": {
           "name": "card_values_card_type_input_id_card_type_inputs_id_fk",
           "tableFrom": "card_values",
-          "tableTo": "card_type_inputs",
           "columnsFrom": [
             "card_type_input_id"
           ],
+          "tableTo": "card_type_inputs",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -517,7 +666,7 @@
         },
         "card_type_id": {
           "name": "card_type_id",
-          "type": "uuid",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
@@ -560,9 +709,9 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         },
         "cards_card_type_id_idx": {
           "name": "cards_card_type_id_idx",
@@ -575,37 +724,82 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
+        },
+        "cards_created_at_idx": {
+          "name": "cards_created_at_idx",
+          "columns": [
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "cards_updated_at_idx": {
+          "name": "cards_updated_at_idx",
+          "columns": [
+            {
+              "expression": "updated_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "cards_deleted_at_idx": {
+          "name": "cards_deleted_at_idx",
+          "columns": [
+            {
+              "expression": "deleted_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "cards_card_type_id_card_types_id_fk": {
           "name": "cards_card_type_id_card_types_id_fk",
           "tableFrom": "cards",
-          "tableTo": "card_types",
           "columnsFrom": [
             "card_type_id"
           ],
+          "tableTo": "card_types",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "cards_dashboard_id_dashboards_id_fk": {
           "name": "cards_dashboard_id_dashboards_id_fk",
           "tableFrom": "cards",
-          "tableTo": "dashboards",
           "columnsFrom": [
             "dashboard_id"
           ],
+          "tableTo": "dashboards",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {},
@@ -683,22 +877,68 @@
           "notNull": false
         }
       },
-      "indexes": {},
+      "indexes": {
+        "currencies_created_at_idx": {
+          "name": "currencies_created_at_idx",
+          "columns": [
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "currencies_updated_at_idx": {
+          "name": "currencies_updated_at_idx",
+          "columns": [
+            {
+              "expression": "updated_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "currencies_deleted_at_idx": {
+          "name": "currencies_deleted_at_idx",
+          "columns": [
+            {
+              "expression": "deleted_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "unique_ticker": {
-          "name": "unique_ticker",
-          "nullsNotDistinct": false,
+        "currencies_unique_ticker": {
+          "name": "currencies_unique_ticker",
           "columns": [
             "ticker"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       },
       "policies": {},
       "checkConstraints": {
-        "crypto_must_have_coin_id": {
-          "name": "crypto_must_have_coin_id",
+        "currencies_crypto_must_have_coin_id": {
+          "name": "currencies_crypto_must_have_coin_id",
           "value": "(NOT \"is_crypto\" OR \"coin_id\" IS NOT NULL)"
         }
       },
@@ -743,7 +983,8 @@
           "name": "icon",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "'default'"
         },
         "is_main": {
           "name": "is_main",
@@ -792,9 +1033,9 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         },
         "dashboards_slug_idx": {
           "name": "dashboards_slug_idx",
@@ -807,9 +1048,9 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         },
         "dashboards_user_id_and_slug_idx": {
           "name": "dashboards_user_id_and_slug_idx",
@@ -828,35 +1069,80 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
+        },
+        "dashboards_created_at_idx": {
+          "name": "dashboards_created_at_idx",
+          "columns": [
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "dashboards_updated_at_idx": {
+          "name": "dashboards_updated_at_idx",
+          "columns": [
+            {
+              "expression": "updated_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "dashboards_deleted_at_idx": {
+          "name": "dashboards_deleted_at_idx",
+          "columns": [
+            {
+              "expression": "deleted_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "dashboards_user_id_users_id_fk": {
           "name": "dashboards_user_id_users_id_fk",
           "tableFrom": "dashboards",
-          "tableTo": "users",
           "columnsFrom": [
             "user_id"
           ],
+          "tableTo": "users",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "dashboards_unique_slug_per_user": {
           "name": "dashboards_unique_slug_per_user",
-          "nullsNotDistinct": false,
           "columns": [
             "user_id",
             "slug"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       },
       "policies": {},
@@ -911,15 +1197,15 @@
         "sessions_userId_users_id_fk": {
           "name": "sessions_userId_users_id_fk",
           "tableFrom": "sessions",
-          "tableTo": "users",
           "columnsFrom": [
             "userId"
           ],
+          "tableTo": "users",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {},
@@ -1022,9 +1308,9 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         },
         "users_email_idx": {
           "name": "users_email_idx",
@@ -1037,67 +1323,67 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "users_primary_currency_id_currencies_id_fk": {
           "name": "users_primary_currency_id_currencies_id_fk",
           "tableFrom": "users",
-          "tableTo": "currencies",
           "columnsFrom": [
             "primary_currency_id"
           ],
+          "tableTo": "currencies",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "users_secondary_currency_id_currencies_id_fk": {
           "name": "users_secondary_currency_id_currencies_id_fk",
           "tableFrom": "users",
-          "tableTo": "currencies",
           "columnsFrom": [
             "secondary_currency_id"
           ],
+          "tableTo": "currencies",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "users_tertiary_currency_id_currencies_id_fk": {
           "name": "users_tertiary_currency_id_currencies_id_fk",
           "tableFrom": "users",
-          "tableTo": "currencies",
           "columnsFrom": [
             "tertiary_currency_id"
           ],
+          "tableTo": "currencies",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "users_username_unique": {
           "name": "users_username_unique",
-          "nullsNotDistinct": false,
           "columns": [
             "username"
-          ]
+          ],
+          "nullsNotDistinct": false
         },
         "users_email_unique": {
           "name": "users_email_unique",
-          "nullsNotDistinct": false,
           "columns": [
             "email"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       },
       "policies": {},
@@ -1178,10 +1464,10 @@
     }
   },
   "schemas": {},
+  "views": {},
   "sequences": {},
   "roles": {},
   "policies": {},
-  "views": {},
   "_meta": {
     "columns": {},
     "schemas": {},

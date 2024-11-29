@@ -1,1 +1,0 @@
-ALTER TYPE "public"."card_type_input_type" ADD VALUE 'string[]';

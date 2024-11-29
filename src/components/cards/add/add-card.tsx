@@ -31,7 +31,13 @@ import { AppRouterOutputs, AppRouterQueryResult } from "@/server/trpc/api/root";
 import { TCardValueForAddCards } from "@/server/trpc/api/routers/ui/types";
 import { api } from "@/server/trpc/setup/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeftIcon, LoaderIcon, PlusIcon } from "lucide-react";
+import {
+  ArrowDownCircle,
+  ArrowLeftIcon,
+  DownloadIcon,
+  LoaderIcon,
+  PlusIcon,
+} from "lucide-react";
 import {
   Dispatch,
   FormEvent,
@@ -43,6 +49,7 @@ import {
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useHotkeys } from "react-hotkeys-hook";
+import { formatNumberTBMK } from "@/lib/number-formatters";
 
 type AddCardButtonProps = {
   username: string;
@@ -309,11 +316,13 @@ export function AddCardCommandPanel({
                       id: `loading-${index}`,
                       title: `Loading title ${index}`,
                       description: `Loading description ${index}`,
+                      alltimeCounter: 0,
+                      currentCounter: 0,
                     },
                   }))
                 ).map((cardTypeObj, i) => (
                   <CommandItem
-                    className="px-3 py-3 flex flex-col w-full text-left justify-start items-start gap-1"
+                    className="px-3 py-3 flex flex-row w-full items-center justify-between text-left gap-4"
                     key={`${cardTypeObj.cardType.id}-${i}`}
                     state={isPending ? "pending" : undefined}
                     onSelect={(e) => {
@@ -325,18 +334,26 @@ export function AddCardCommandPanel({
                       setSelectedCardType(cardType);
                     }}
                   >
-                    <p
-                      className="max-w-full text-sm font-bold group-data-[pending]/command:text-transparent group-data-[pending]/command:bg-foreground
-                      group-data-[pending]/command:rounded group-data-[pending]/command:animate-skeleton leading-tight"
-                    >
-                      {cardTypeObj.cardType.title}
-                    </p>
-                    <p
-                      className="max-w-full text-xs text-muted-foreground group-data-[pending]/command:text-transparent group-data-[pending]/command:bg-muted-foreground
-                      group-data-[pending]/command:rounded group-data-[pending]/command:animate-skeleton leading-tight"
-                    >
-                      {cardTypeObj.cardType.description}
-                    </p>
+                    <div className="flex flex-col items-start min-w-0 shrink overflow-hidden gap-1">
+                      <p
+                        className="max-w-full text-sm font-bold group-data-[pending]/command:text-transparent group-data-[pending]/command:bg-foreground
+                        group-data-[pending]/command:rounded group-data-[pending]/command:animate-skeleton leading-tight"
+                      >
+                        {cardTypeObj.cardType.title}
+                      </p>
+                      <p
+                        className="max-w-full text-xs text-muted-foreground group-data-[pending]/command:text-transparent group-data-[pending]/command:bg-muted-foreground
+                        group-data-[pending]/command:rounded group-data-[pending]/command:animate-skeleton leading-tight"
+                      >
+                        {cardTypeObj.cardType.description}
+                      </p>
+                    </div>
+                    <div className="shrink-0 flex text-muted-foreground text-sm items-center justify-end text-right gap-1.5">
+                      <ArrowDownCircle className="size-3 -my-1" />
+                      <p className="leading-none font-medium">
+                        {formatNumberTBMK(cardTypeObj.cardType.alltimeCounter)}
+                      </p>
+                    </div>
                   </CommandItem>
                 ))}
               </CommandGroup>

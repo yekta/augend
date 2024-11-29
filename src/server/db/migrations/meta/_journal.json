@@ -5,85 +5,22 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1732653857147,
-      "tag": "0000_organic_terror",
+      "when": 1732916387483,
+      "tag": "0000_dapper_whistler",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "7",
-      "when": 1732656938401,
-      "tag": "0001_foamy_black_queen",
+      "when": 1732916613668,
+      "tag": "0001_create_main_dashboard_trigger",
       "breakpoints": true
     },
     {
       "idx": 2,
       "version": "7",
-      "when": 1732657055919,
-      "tag": "0002_spooky_human_fly",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1732659872412,
-      "tag": "0003_dark_richard_fisk",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1732669231522,
-      "tag": "0004_worried_quicksilver",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1732733882688,
-      "tag": "0005_violet_owl",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "7",
-      "when": 1732740288773,
-      "tag": "0006_ancient_tenebrous",
-      "breakpoints": true
-    },
-    {
-      "idx": 7,
-      "version": "7",
-      "when": 1732740299697,
-      "tag": "0007_round_black_bird",
-      "breakpoints": true
-    },
-    {
-      "idx": 8,
-      "version": "7",
-      "when": 1732753649430,
-      "tag": "0008_strange_epoch",
-      "breakpoints": true
-    },
-    {
-      "idx": 9,
-      "version": "7",
-      "when": 1732754053758,
-      "tag": "0009_silent_unicorn",
-      "breakpoints": true
-    },
-    {
-      "idx": 10,
-      "version": "7",
-      "when": 1732754693117,
-      "tag": "0010_old_northstar",
-      "breakpoints": true
-    },
-    {
-      "idx": 11,
-      "version": "7",
-      "when": 1732762469765,
-      "tag": "0011_wandering_proteus",
+      "when": 1732916620094,
+      "tag": "0002_card_type_counter_triggers",
       "breakpoints": true
     }
   ]

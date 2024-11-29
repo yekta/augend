@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { createCard, deleteCards, getCards } from "@/server/db/repo/card";
+import { createCard, getCards } from "@/server/db/repo/card";
 import { getCardTypes } from "@/server/db/repo/card_types";
 import { createCardValues } from "@/server/db/repo/card_values";
 import { getCurrencies } from "@/server/db/repo/currencies";

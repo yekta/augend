@@ -9,6 +9,8 @@ export async function getCardTypes() {
         id: cardTypesTable.id,
         title: cardTypesTable.title,
         description: cardTypesTable.description,
+        alltimeCounter: cardTypesTable.alltimeCounter,
+        currentCounter: cardTypesTable.currentCounter,
       },
       input: {
         id: cardTypeInputsTable.id,

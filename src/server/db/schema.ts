@@ -171,7 +171,7 @@ export const cardTypeInputTypeEnum = pgEnum("card_type_input_type", [
 export const cardTypeInputsTable = pgTable(
   "card_type_inputs",
   {
-    id: text("id").notNull(),
+    id: text("id").primaryKey(),
     cardTypeId: text("card_type_id").references(() => cardTypesTable.id),
     title: text("title").notNull(),
     description: text("description").notNull(),
@@ -187,21 +187,6 @@ export const cardTypeInputsTable = pgTable(
     createdAtIdx: index("card_type_inputs_created_at_idx").on(table.createdAt),
     updatedAtIdx: index("card_type_inputs_updated_at_idx").on(table.updatedAt),
     deletedAtIdx: index("card_type_inputs_deleted_at_idx").on(table.deletedAt),
-  })
-);
-
-export const cardTypesTable = pgTable(
-  "card_types",
-  {
-    id: text("id").primaryKey(),
-    title: text("title").notNull(),
-    description: text("description").notNull(),
-    ...timestamps,
-  },
-  (table) => ({
-    createdAtIdx: index("card_types_created_at_idx").on(table.createdAt),
-    updatedAtIdx: index("card_types_updated_at_idx").on(table.updatedAt),
-    deletedAtIdx: index("card_types_deleted_at_idx").on(table.deletedAt),
   })
 );
 
@@ -266,6 +251,23 @@ export const cardValuesTable = pgTable(
   })
 );
 
+export const cardTypesTable = pgTable(
+  "card_types",
+  {
+    id: text("id").primaryKey(),
+    title: text("title").notNull(),
+    description: text("description").notNull(),
+    alltimeCounter: integer("alltime_counter").notNull().default(0),
+    currentCounter: integer("current_counter").notNull().default(0),
+    ...timestamps,
+  },
+  (table) => ({
+    createdAtIdx: index("card_types_created_at_idx").on(table.createdAt),
+    updatedAtIdx: index("card_types_updated_at_idx").on(table.updatedAt),
+    deletedAtIdx: index("card_types_deleted_at_idx").on(table.deletedAt),
+  })
+);
+
 export const cardsTable = pgTable(
   "cards",
   {
@@ -273,7 +275,7 @@ export const cardsTable = pgTable(
       .primaryKey()
       .$defaultFn(() => crypto.randomUUID()),
     xOrder: integer("x_order").notNull().default(0),
-    cardTypeId: uuid("card_type_id")
+    cardTypeId: text("card_type_id")
       .notNull()
       .references(() => cardTypesTable.id),
     dashboardId: uuid("dashboard_id")
