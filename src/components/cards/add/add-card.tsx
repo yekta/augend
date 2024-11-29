@@ -316,8 +316,8 @@ export function AddCardCommandPanel({
                       id: `loading-${index}`,
                       title: `Loading title ${index}`,
                       description: `Loading description ${index}`,
-                      alltimeCounter: 0,
-                      currentCounter: 0,
+                      alltimeCounter: 10,
+                      currentCounter: 10,
                     },
                   }))
                 ).map((cardTypeObj, i) => (
@@ -349,8 +349,15 @@ export function AddCardCommandPanel({
                       </p>
                     </div>
                     <div className="shrink-0 flex text-muted-foreground text-sm items-center justify-end text-right gap-1.5">
-                      <ArrowDownCircle className="size-3 -my-1" />
-                      <p className="leading-none font-medium">
+                      <ArrowDownCircle
+                        className="size-3 -my-1 group-data-[pending]/command:text-transparent group-data-[pending]/command:rounded-full
+                        group-data-[pending]/command:bg-muted-foreground group-data-[pending]/command:animate-skeleton"
+                      />
+                      <p
+                        className="leading-none font-medium 
+                        group-data-[pending]/command:text-transparent group-data-[pending]/command:bg-muted-foreground
+                        group-data-[pending]/command:rounded group-data-[pending]/command:animate-skeleton"
+                      >
                         {formatNumberTBMK(cardTypeObj.cardType.alltimeCounter)}
                       </p>
                     </div>

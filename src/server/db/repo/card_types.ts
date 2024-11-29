@@ -26,7 +26,11 @@ export async function getCardTypes() {
       cardTypeInputsTable,
       eq(cardTypesTable.id, cardTypeInputsTable.cardTypeId)
     )
-    .orderBy(desc(cardTypeInputsTable.createdAt), desc(cardTypeInputsTable.id));
+    .orderBy(
+      desc(cardTypesTable.alltimeCounter),
+      desc(cardTypesTable.createdAt),
+      desc(cardTypesTable.id)
+    );
 
   const editedRes = res;
 
