@@ -1,6 +1,8 @@
 import { z } from "zod";
 
 import { createCard, getCards } from "@/server/db/repo/card";
+import { getCardTypes } from "@/server/db/repo/card_types";
+import { createCardValues } from "@/server/db/repo/card_values";
 import { getCurrencies } from "@/server/db/repo/currencies";
 import {
   getDashboard,
@@ -8,15 +10,10 @@ import {
   getMaximumXOrderForDashboard,
 } from "@/server/db/repo/dashboard";
 import { getUser } from "@/server/db/repo/user";
-import { createTRPCRouter, publicProcedure } from "@/server/trpc/setup/trpc";
-import { Session } from "next-auth";
-import { getCardTypes } from "@/server/db/repo/card_types";
-import { TRPCError } from "@trpc/server";
-import {
-  createCardValues,
-  InsertCardValueSchema,
-} from "@/server/db/repo/card_values";
 import { CardValueForAddCardsSchema } from "@/server/trpc/api/routers/ui/types";
+import { createTRPCRouter, publicProcedure } from "@/server/trpc/setup/trpc";
+import { TRPCError } from "@trpc/server";
+import { Session } from "next-auth";
 
 function getIsOwner({
   session,
@@ -125,7 +122,6 @@ export const uiRouter = createTRPCRouter({
       input: { cardTypeId, dashboardSlug, xOrder, values },
       ctx: { session },
     }) {
-      console.log("FIRST");
       // If there is no user
       if (!session || session.user.id === undefined) {
         throw new TRPCError({
