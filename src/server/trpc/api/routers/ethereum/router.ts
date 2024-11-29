@@ -4,7 +4,10 @@ import { TCmcGetCryptosResult } from "@/server/trpc/api/routers/cmc/types";
 import { ethereumNetworks } from "@/server/trpc/api/routers/ethereum/constants";
 import { ethereumProviders } from "@/server/trpc/api/routers/ethereum/secrets";
 import { EthereumNetworkSchema } from "@/server/trpc/api/routers/ethereum/types";
-import { createTRPCRouter, publicProcedure } from "@/server/trpc/setup/trpc";
+import {
+  cachedPublicProcedure,
+  createTRPCRouter,
+} from "@/server/trpc/setup/trpc";
 import { z } from "zod";
 
 const baseGasLimitGwei = 21_000;
@@ -14,14 +17,26 @@ const ethToGwei = Math.pow(10, 9);
 const gweiToWei = Math.pow(10, 9);
 
 export const ethereumRouter = createTRPCRouter({
-  getGasInfo: publicProcedure
+  getGasInfo: cachedPublicProcedure("short")
     .input(
       z.object({
         network: EthereumNetworkSchema.optional().default("Ethereum"),
         convert: z.string().optional().default("USD"),
       })
     )
-    .query(async ({ input: { network, convert } }) => {
+    .query(async ({ input: { network, convert }, ctx }) => {
+      type TReturn = {
+        block: number;
+        gwei: number;
+        sendUsd: number;
+        swapUsd: number;
+        uniswapV3PositionCreationUsd: number;
+      };
+
+      if (ctx.cachedResult) {
+        return ctx.cachedResult as TReturn;
+      }
+
       const cmcId = ethereumNetworks[network].cmcId;
       const ethUsdUrl = `${cmcApiUrl}/v2/cryptocurrency/quotes/latest?id=${cmcId}&convert=${convert}`;
 
@@ -46,7 +61,7 @@ export const ethereumRouter = createTRPCRouter({
       const uniswapV3PositionCreationGwei =
         gasPriceGwei * uniswapV3PositionCreationLimitGwei;
 
-      return {
+      const result: TReturn = {
         block,
         gwei: gasPriceGwei,
         sendUsd: ((gasPriceGwei * baseGasLimitGwei) / ethToGwei) * ethUsd,
@@ -54,5 +69,7 @@ export const ethereumRouter = createTRPCRouter({
         uniswapV3PositionCreationUsd:
           (uniswapV3PositionCreationGwei / ethToGwei) * ethUsd,
       };
+
+      return result;
     }),
 });

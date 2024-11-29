@@ -3,100 +3,42 @@ import { Redis } from "ioredis";
 
 const redis = new Redis(env.REDIS_URL + "?family=0");
 
-function createKey(key: string, params: string[]) {
-  return `${key}:${params.join("_")}`;
-}
-
 const cacheTimes = {
   short: 8,
   medium: 24,
   long: 48,
 };
 
+export type TCacheTime = keyof typeof cacheTimes;
+
 export async function setCache(
   key: string,
-  params: string[],
-  value: any,
+  value: unknown,
   cacheType: keyof typeof cacheTimes = "medium"
 ) {
   const start = Date.now();
-  const _key = createKey(key, params);
   try {
-    await redis.set(_key, JSON.stringify(value), "EX", cacheTimes[cacheType]);
-    console.log(`[CACHE]: Set for "${_key}" | ${Date.now() - start}ms`);
+    await redis.set(key, JSON.stringify(value), "EX", cacheTimes[cacheType]);
+    console.log(`[CACHE][SET]: "${key}" | ${Date.now() - start}ms`);
     return true;
   } catch (error) {
-    console.log(`Error setting cache for "key"`, error);
+    console.log(`[CACHE][ERROR]: Setting cache for "key"`, error);
   }
   return false;
 }
 
-export async function getCache<T>(key: string, params: string[]) {
+export async function getCache<T>(key: string) {
   const start = Date.now();
-  const _key = createKey(key, params);
   try {
-    const value = await redis.get(createKey(key, params));
-    if (!value) return null;
-    console.log(`[CACHE]: Hit for "${_key}" | ${Date.now() - start}ms`);
+    const value = await redis.get(key);
+    if (!value) {
+      console.log(`[CACHE][MISS]: "${key}" | ${Date.now() - start}ms`);
+      return null;
+    }
+    console.log(`[CACHE][HIT]: "${key}" | ${Date.now() - start}ms`);
     return JSON.parse(value) as T;
   } catch (error) {
-    console.log(`Error getting cache for "key"`, error);
+    console.log(`[CACHE][ERROR]: Getting cache for "key"`, error);
   }
   return null;
-}
-
-interface RedisConfig {
-  host: string;
-  port: number;
-  username?: string;
-  password?: string;
-  database?: number;
-  protocol: string;
-  tls: boolean;
-}
-
-function parseRedisUrl(url: string): RedisConfig {
-  try {
-    const parsedUrl = new URL(url);
-
-    // Extract basic components
-    const protocol = parsedUrl.protocol.replace(":", "");
-    const host = parsedUrl.hostname;
-    const port = parsedUrl.port ? parseInt(parsedUrl.port, 10) : 6379;
-
-    // Initialize config with required fields
-    const config: RedisConfig = {
-      host,
-      port,
-      protocol,
-      tls: protocol === "rediss",
-    };
-
-    // Parse authentication if present
-    if (parsedUrl.username || parsedUrl.password) {
-      // URL decoded username handling
-      const decodedUsername = decodeURIComponent(parsedUrl.username);
-      if (decodedUsername && decodedUsername !== "default") {
-        config.username = decodedUsername;
-      }
-
-      // URL decoded password handling
-      if (parsedUrl.password) {
-        config.password = decodeURIComponent(parsedUrl.password);
-      }
-    }
-
-    // Parse database number from pathname
-    const pathname = parsedUrl.pathname;
-    if (pathname && pathname.length > 1) {
-      const database = parseInt(pathname.slice(1), 10);
-      if (!isNaN(database)) {
-        config.database = database;
-      }
-    }
-
-    return config;
-  } catch (error) {
-    throw new Error(`Invalid Redis URL: ${error}`);
-  }
 }

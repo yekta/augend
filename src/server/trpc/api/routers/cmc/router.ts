@@ -1,13 +1,16 @@
 import { z } from "zod";
 
 import { cmcApiUrl } from "@/server/trpc/api/routers/cmc/constants";
-import { createTRPCRouter, publicProcedure } from "@/server/trpc/setup/trpc";
+import { cmcFetchOptions } from "@/server/trpc/api/routers/cmc/secrets";
 import {
   TCmcGetCryptosResult,
   TCmcGetCryptosResultEdited,
 } from "@/server/trpc/api/routers/cmc/types";
-import { cmcFetchOptions } from "@/server/trpc/api/routers/cmc/secrets";
-import { getCache, setCache } from "@/server/redis/redis";
+import {
+  cachedPublicProcedure,
+  createTRPCRouter,
+  publicProcedure,
+} from "@/server/trpc/setup/trpc";
 
 export const cmcRouter = createTRPCRouter({
   getCryptoInfos: publicProcedure
@@ -18,6 +21,8 @@ export const cmcRouter = createTRPCRouter({
       })
     )
     .query(async ({ input: { ids, convert } }) => {
+      type TReturn = TCmcGetCryptosResultEdited;
+
       const idsStr = ids.join(",");
       const urls = convert.map(
         (c) =>
@@ -38,7 +43,7 @@ export const cmcRouter = createTRPCRouter({
         }
       });
 
-      let editedResult: TCmcGetCryptosResultEdited = {};
+      let editedResult: TReturn = {};
       const firstResult = results[0];
       for (const key in firstResult.data) {
         const quoteObj: TCmcGetCryptosResultEdited[number]["quote"] = {};
@@ -55,23 +60,22 @@ export const cmcRouter = createTRPCRouter({
       }
       return editedResult;
     }),
-  getGlobalMetrics: publicProcedure
+  getGlobalMetrics: cachedPublicProcedure("medium")
     .input(
       z.object({
         convert: z.string().optional().default("USD"),
       })
     )
-    .query(async ({ input: { convert } }) => {
+    .query(async ({ input: { convert }, ctx }) => {
       type TReturn = TCmcGlobalMetricsResult["data"]["quote"]["USD"] & {
         fear_greed_index: TCmcFearGreedIndexResult["data"];
         eth_dominance: number;
         btc_dominance: number;
       };
 
-      const cachedResult = await getCache<TReturn>("cmc:global_metrics", [
-        convert,
-      ]);
-      if (cachedResult) return cachedResult;
+      if (ctx.cachedResult) {
+        return ctx.cachedResult as TReturn;
+      }
 
       const fearAndGreedUrl = `${cmcApiUrl}/v3/fear-and-greed/latest`;
       const metricsUrl = `${cmcApiUrl}/v1/global-metrics/quotes/latest?convert=${convert}`;
@@ -110,27 +114,23 @@ export const cmcRouter = createTRPCRouter({
         ...metricsData.data.quote[convert],
       };
 
-      await setCache("cmc:global_metrics", [convert], result);
-
       return result;
     }),
-  getCoinList: publicProcedure
+  getCoinList: cachedPublicProcedure("medium")
     .input(
       z.object({
         convert: z.string().optional().default("USD"),
         page: z.number().int().positive().default(0),
       })
     )
-    .query(async ({ input: { convert, page } }) => {
+    .query(async ({ input: { convert, page }, ctx }) => {
       type TReturn = {
         coin_list: TCmcCoinListResult["data"];
       };
 
-      const cachedResult = await getCache<TReturn>("cmc:coin_list", [
-        convert,
-        page.toString(),
-      ]);
-      if (cachedResult) return cachedResult;
+      if (ctx.cachedResult) {
+        return ctx.cachedResult as TReturn;
+      }
 
       const limit = 100;
       const start = ((page || 1) - 1) * limit + 1;
@@ -151,8 +151,6 @@ export const cmcRouter = createTRPCRouter({
       const result: TReturn = {
         coin_list: coinListJson.data,
       };
-
-      await setCache("cmc:coin_list", [convert, page.toString()], result);
 
       return result;
     }),

@@ -10,6 +10,8 @@ import { initTRPC } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
 import { auth } from "@/server/auth";
+import { getCache, setCache, TCacheTime } from "@/server/redis/redis";
+import { Session } from "next-auth";
 
 /**
  * 1. CONTEXT
@@ -26,10 +28,18 @@ import { auth } from "@/server/auth";
 export const createTRPCContext = async (opts: { headers: Headers }) => {
   const session = await auth();
 
-  return {
-    session,
-    ...opts,
+  type Result = {
+    headers: Headers;
+    session: Session | null;
+    cachedResult: unknown;
   };
+
+  const result: Result = {
+    cachedResult: null,
+    headers: opts.headers,
+    session,
+  };
+  return result;
 };
 
 /**
@@ -97,6 +107,42 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
   return result;
 });
 
+const createCacheKey: (path: string, rawInput: unknown) => string = (
+  path,
+  rawInput
+) => {
+  function normalizeValue(value: unknown): unknown {
+    if (Array.isArray(value)) {
+      return [...value].sort();
+    }
+    if (value && typeof value === "object") {
+      return Object.fromEntries(
+        Object.entries(value).map(([k, v]) => [k, normalizeValue(v)])
+      );
+    }
+    return value;
+  }
+
+  const normalizedInput = normalizeValue(rawInput);
+  return `${path}:${JSON.stringify(normalizedInput)}`;
+};
+
+const cacheMiddleware = (cacheTime: TCacheTime) =>
+  t.middleware(async ({ path, next, getRawInput, ctx }) => {
+    const rawInput = await getRawInput();
+    const cacheKey = createCacheKey(path, rawInput);
+    const cachedResult = await getCache(cacheKey);
+
+    const result = await next({ ctx: { ...ctx, cachedResult } });
+
+    // @ts-ignore
+    if (result.ok && !cachedResult) {
+      await setCache(cacheKey, result.data, cacheTime);
+    }
+
+    return result;
+  });
+
 /**
  * Public (unauthenticated) procedure
  *
@@ -105,3 +151,5 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
  * are logged in.
  */
 export const publicProcedure = t.procedure.use(timingMiddleware);
+export const cachedPublicProcedure = (cacheTime: TCacheTime) =>
+  publicProcedure.use(cacheMiddleware(cacheTime));
