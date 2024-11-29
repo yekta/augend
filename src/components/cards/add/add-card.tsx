@@ -236,14 +236,14 @@ export function AddCardCommandPanel({
               size="sm"
               onClick={() => setSelectedCardType(null)}
               variant="outline"
-              className="border-none text-muted-foreground font-semibold px-2 text-left gap-1"
+              className="border-none text-muted-foreground font-semibold pl-2 pr-2.5 text-left gap-1"
             >
               <ArrowLeftIcon className="size-4 -my-1" />
               Back
             </Button>
           </div>
           <div className="w-full bg-border h-px" />
-          <div className="w-full flex flex-col items-start px-4 pt-3.5 pb-4 gap-1.5 relative">
+          <div className="w-full flex flex-col items-start px-4 pt-2.5 pb-4 gap-1.5 relative">
             <h1 className="w-full font-bold text-base leading-tight mt-1">
               {selectedCardType.cardType.title}
             </h1>
@@ -252,7 +252,10 @@ export function AddCardCommandPanel({
             </p>
           </div>
           <div className="w-full bg-border h-px" />
-          <div className="w-full px-4 pt-3.5 pb-4">
+          <div
+            data-has-inputs={inputs ? true : undefined}
+            className="w-full px-4 pt-3.5 pb-4 data-[has-inputs]:pt-3"
+          >
             <AddCardForm
               form={form}
               inputs={inputs}
