@@ -211,19 +211,34 @@ export function AddCardCommandPanel({
   className,
 }: AddCardCommandPanelProps) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
+
   const { data, isPending, isLoadingError } = getCardTypesQuery;
 
-  useHotkeys("esc", (e) => {
-    if (selectedCardType !== null) {
-      setSelectedCardType(null);
-    }
-  });
+  useHotkeys(
+    "esc",
+    (e) => {
+      if (selectedCardType !== null) {
+        setSelectedCardType(null);
+      }
+    },
+    { enableOnFormTags: true }
+  );
 
   useEffect(() => {
     if (selectedCardType === null) {
-      setTimeout(() => {
-        inputRef.current?.focus();
-      });
+      inputRef.current?.focus();
+    } else {
+      const firstInput = formRef.current?.querySelector("input");
+      if (firstInput) {
+        firstInput.focus();
+        return;
+      }
+      const firstButton = formRef.current?.querySelector("button");
+      if (firstButton) {
+        firstButton.focus();
+        return;
+      }
     }
   }, [selectedCardType]);
 
@@ -236,7 +251,7 @@ export function AddCardCommandPanel({
               size="sm"
               onClick={() => setSelectedCardType(null)}
               variant="outline"
-              className="border-none text-muted-foreground font-semibold pl-2 pr-2.5 text-left gap-1"
+              className="border-none text-muted-foreground font-semibold pl-2 pr-3 text-left gap-1"
             >
               <ArrowLeftIcon className="size-4 -my-1" />
               Back
@@ -258,6 +273,7 @@ export function AddCardCommandPanel({
           >
             <AddCardForm
               form={form}
+              formRef={formRef}
               inputs={inputs}
               isPending={isFormPending}
               onSubmit={onSubmit}
@@ -339,16 +355,18 @@ export function AddCardForm({
   isPending,
   onSubmit,
   onSubmitWithNoValues,
+  formRef,
 }: {
   form: ReturnType<typeof useForm>;
   inputs?: AppRouterOutputs["ui"]["getCardTypes"][number]["inputs"];
   isPending: boolean;
   onSubmit: (e: FormEvent<HTMLFormElement>) => void;
   onSubmitWithNoValues: (e: FormEvent<HTMLFormElement>) => void;
+  formRef: React.RefObject<HTMLFormElement>;
 }) {
   if (!inputs) {
     return (
-      <form onSubmit={onSubmitWithNoValues}>
+      <form ref={formRef} onSubmit={onSubmitWithNoValues}>
         <AddCardFormSubmitButton isPending={isPending} />
       </form>
     );
@@ -356,7 +374,7 @@ export function AddCardForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={onSubmit}>
+      <form ref={formRef} onSubmit={onSubmit}>
         {inputs
           .sort((a, b) => a.xOrder - b.xOrder)
           .map((input, index) => {
