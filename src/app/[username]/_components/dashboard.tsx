@@ -333,7 +333,7 @@ function Providers({
     );
   }
 
-  if (cryptoCurrencyIds.length > 0) {
+  if (cryptoCurrencyIds.length > 0 || cardTypeIds.includes("banano_total")) {
     let extraIds = [];
     if (cardTypeIds.includes("banano_total")) {
       extraIds.push(bananoCmcId);
@@ -354,7 +354,7 @@ function Providers({
   if (
     cardTypeIds.includes("nano_balance") ||
     cardTypeIds.includes("banano_balance") ||
-    cardTypeIds.includes("banano_total_balance")
+    cardTypeIds.includes("banano_total")
   ) {
     wrappedChildren = (
       <NanoBananoBalancesProvider accounts={nanoBananoAccounts}>

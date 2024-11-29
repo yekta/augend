@@ -9,7 +9,7 @@ import {
   dashboardsTable,
   usersTable,
 } from "@/server/db/schema";
-import { and, asc, desc, eq, isNull } from "drizzle-orm";
+import { and, asc, desc, eq, exists, inArray, isNull } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 
 const primaryCurrencyAlias = alias(currenciesTable, "primary_currency");
@@ -153,6 +153,32 @@ export async function createCard({
     xOrder,
   });
   return id;
+}
+
+export async function deleteCards({
+  userId,
+  ids,
+}: {
+  userId: string;
+  ids: string[];
+}) {
+  return await db.delete(cardsTable).where(
+    and(
+      inArray(cardsTable.id, ids),
+      exists(
+        db
+          .select({ id: dashboardsTable.id })
+          .from(dashboardsTable)
+          .where(
+            and(
+              eq(dashboardsTable.id, cardsTable.dashboardId),
+              eq(dashboardsTable.userId, userId),
+              isNull(dashboardsTable.deletedAt)
+            )
+          )
+      )
+    )
+  );
 }
 
 type TCurrencyAlias =
