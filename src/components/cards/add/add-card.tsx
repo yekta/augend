@@ -248,21 +248,20 @@ export function AddCardCommandPanel({
         <div className="w-full bg-background border rounded-xl shadow-xl shadow-shadow/[var(--opacity-shadow)]">
           <div className="w-full flex flex-row p-1">
             <Button
-              size="sm"
               onClick={() => setSelectedCardType(null)}
               variant="outline"
-              className="border-none text-muted-foreground font-semibold pl-2 pr-3 text-left gap-1"
+              className="border-none text-muted-foreground font-semibold pl-2.5 pr-3.5 py-1.5 text-left gap-1"
             >
               <ArrowLeftIcon className="size-4 -my-1" />
               Back
             </Button>
           </div>
           <div className="w-full bg-border h-px" />
-          <div className="w-full flex flex-col items-start px-4 pt-2.5 pb-4 gap-1.5 relative">
-            <h1 className="w-full font-bold text-base leading-tight mt-1">
+          <div className="w-full flex flex-col items-start px-4 pt-2.5 pb-4 gap-1 relative">
+            <h1 className="w-full font-bold text-lg leading-tight mt-1">
               {selectedCardType.cardType.title}
             </h1>
-            <p className="w-full text-sm text-muted-foreground leading-tight">
+            <p className="w-full text-base text-muted-foreground leading-tight">
               {selectedCardType.cardType.description}
             </p>
           </div>
