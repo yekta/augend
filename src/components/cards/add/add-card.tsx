@@ -250,7 +250,7 @@ export function AddCardCommandPanel({
             <Button
               onClick={() => setSelectedCardType(null)}
               variant="outline"
-              className="border-none text-muted-foreground font-semibold pl-2.5 pr-3.5 py-1.5 text-left gap-1"
+              className="border-none text-muted-foreground font-semibold pl-2.5 pr-3.5 py-1.5 text-left gap-1.5"
             >
               <ArrowLeftIcon className="size-4 -my-1" />
               Back

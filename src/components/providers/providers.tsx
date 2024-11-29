@@ -4,6 +4,7 @@ import React from "react";
 import { IsTouchscreenProvider } from "@/components/providers/is-touchscreen-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { defaultTheme, themes } from "@/components/providers/themes";
+import EditModeProvider from "@/components/providers/edit-mode-provider";
 
 export default async function Providers({
   children,
@@ -16,7 +17,9 @@ export default async function Providers({
       disableTransitionOnChange
     >
       <TRPCReactProvider>
-        <IsTouchscreenProvider>{children}</IsTouchscreenProvider>
+        <IsTouchscreenProvider>
+          <EditModeProvider>{children}</EditModeProvider>
+        </IsTouchscreenProvider>
       </TRPCReactProvider>
     </ThemeProvider>
   );
