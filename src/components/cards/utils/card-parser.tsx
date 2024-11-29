@@ -7,9 +7,9 @@ import FearGreedIndexCard from "@/components/cards/fear-greed-index-card";
 import FiatCurrencyCard from "@/components/cards/fiat-currency-card";
 import MiniCryptoCard from "@/components/cards/mini-crypto-card";
 import NanoBananoCard from "@/components/cards/nano-banano-card";
-import OhlcvChartCard, {
+import CryptoPriceChartCard, {
   TOhlcvChartConfig,
-} from "@/components/cards/ohlcv-chart-card";
+} from "@/components/cards/crypto-price-chart-card";
 import OrderBookCard, {
   TOrderBookConfig,
 } from "@/components/cards/order-book-card";
@@ -75,24 +75,24 @@ export function CardParser({
     return <OrderBookCard config={config} {...rest} />;
   }
 
-  if (cardObject.cardType.id === "ohlcv_chart") {
+  if (cardObject.cardType.id === "crypto_price_chart") {
     const values = cardObject.values;
     if (!values) return null;
     const exchange = values.find(
-      (v) => v.cardTypeInputId === "ohlcv_chart_exchange"
+      (v) => v.cardTypeInputId === "crypto_price_chart_exchange"
     )?.value;
     const tickerBase = values.find(
-      (v) => v.cardTypeInputId === "ohlcv_chart_ticker_base"
+      (v) => v.cardTypeInputId === "crypto_price_chart_ticker_base"
     )?.value;
     const tickerQuote = values.find(
-      (v) => v.cardTypeInputId === "ohlcv_chart_ticker_quote"
+      (v) => v.cardTypeInputId === "crypto_price_chart_ticker_quote"
     )?.value;
     if (!exchange || !tickerBase || !tickerQuote) return null;
     const config: TOhlcvChartConfig = {
       exchange: exchange as TAvailableExchange,
       ticker: `${tickerBase}/${tickerQuote}`,
     };
-    return <OhlcvChartCard config={config} {...rest} />;
+    return <CryptoPriceChartCard config={config} {...rest} />;
   }
 
   if (cardObject.cardType.id === "uniswap_position") {

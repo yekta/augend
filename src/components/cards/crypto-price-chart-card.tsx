@@ -95,7 +95,7 @@ const intervalOptions: (TSelectOption & {
 ];
 const intervalDefault = intervalOptions[3];
 
-export default function OhlcvChartCard({
+export default function CryptoPriceChartCard({
   config,
   className,
   ...rest

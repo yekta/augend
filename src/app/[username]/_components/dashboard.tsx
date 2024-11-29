@@ -24,7 +24,7 @@ import { PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { ReactNode, useMemo } from "react";
 
-const componentRequiresNewRow = ["orderbook", "ohlcv_chart"];
+const componentRequiresNewRow = ["orderbook", "crypto_price_chart"];
 
 export default function Dashboard({
   username,
