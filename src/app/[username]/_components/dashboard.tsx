@@ -3,8 +3,6 @@
 import { AddCardButton } from "@/components/cards/add/add-card";
 import { bananoCmcId } from "@/components/cards/banano-total-card";
 import ThreeLineCard from "@/components/cards/three-line-card";
-import CardInnerWrapper from "@/components/cards/utils/card-inner-wrapper";
-import CardOuterWrapper from "@/components/cards/utils/card-outer-wrapper";
 import { CardParser } from "@/components/cards/utils/card-parser";
 import DashboardWrapper from "@/components/dashboard-wrapper";
 import CmcCryptoInfosProvider from "@/components/providers/cmc/cmc-crypto-infos-provider";
@@ -20,7 +18,6 @@ import { Button } from "@/components/ui/button";
 import { mainDashboardSlug } from "@/lib/constants";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
 import { api } from "@/server/trpc/setup/react";
-import { PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { ReactNode, useMemo } from "react";
 
