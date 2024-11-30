@@ -4,8 +4,7 @@ import CardInnerWrapper from "@/components/cards/utils/card-inner-wrapper";
 import CardOuterWrapper, {
   TCardOuterWrapperProps,
 } from "@/components/cards/utils/card-outer-wrapper";
-import BananoIcon from "@/components/icons/banano-icon";
-import NanoIcon from "@/components/icons/nano-icon";
+import CryptoIcon from "@/components/icons/crypto-icon";
 import { useCmcCryptoInfos } from "@/components/providers/cmc/cmc-crypto-infos-provider";
 import { useFiatCurrencyRates } from "@/components/providers/fiat-currency-rates-provider";
 import Indicator from "@/components/ui/indicator";
@@ -15,8 +14,10 @@ import { TCurrencyWithSelectedFields } from "@/server/db/repo/types";
 import React, { ReactNode, useEffect, useRef, useState } from "react";
 
 const tickerToIcon: Record<string, ReactNode> = {
-  XNO: <NanoIcon className="size-6 -ml-1.25" />,
-  BAN: <BananoIcon className="size-6 -ml-1.25" />,
+  ETH: <CryptoIcon ticker="ETH" className="size-6 -ml-1.25" />,
+  BTC: <CryptoIcon ticker="BTC" className="size-6 -ml-1.25" />,
+  XNO: <CryptoIcon ticker="XNO" className="size-6 -ml-1.25" />,
+  BAN: <CryptoIcon ticker="BAN" className="size-6 -ml-1.25" />,
 };
 
 export default function Calculator({
@@ -104,8 +105,8 @@ export default function Calculator({
     const selfUsdPrice = selfIsCrypto
       ? cryptoData[selfCoinId!].quote["USD"].price
       : selfIsUsd
-        ? 1
-        : fiatData["USD"][selfTicker].buy;
+      ? 1
+      : fiatData["USD"][selfTicker].buy;
 
     otherInputs.forEach((i) => {
       if (!i) return;
@@ -114,8 +115,9 @@ export default function Calculator({
       if (!targetTicker || !targetId) return;
 
       const targetCoinIdStr = i.getAttribute("data-coin-id");
-      const targetIsCrypto = currencies.find((c) => c.ticker === targetTicker)
-        ?.isCrypto;
+      const targetIsCrypto = currencies.find(
+        (c) => c.ticker === targetTicker
+      )?.isCrypto;
 
       if (targetIsCrypto) {
         if (!targetCoinIdStr) return;

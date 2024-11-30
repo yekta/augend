@@ -4,6 +4,7 @@ import CardInnerWrapper from "@/components/cards/utils/card-inner-wrapper";
 import CardOuterWrapper, {
   TCardOuterWrapperProps,
 } from "@/components/cards/utils/card-outer-wrapper";
+import CryptoIcon from "@/components/icons/crypto-icon";
 import AsyncDataTable, {
   TAsyncDataTableColumnDef,
   TAsyncDataTablePage,
@@ -88,7 +89,7 @@ export default function CryptoTableCard({
       {
         accessorKey: "name",
         header: "Name",
-        className: "min-w-[9rem] md:min-w-[11rem]",
+        className: "min-w-[8.5rem] md:min-w-[11rem]",
         headerAlignment: "start",
         isPinnedLeft: true,
         sortDescFirst: false,
@@ -214,21 +215,22 @@ function NameColumn({
         isPending
           ? "#"
           : hasData
-            ? `https://coinmarketcap.com/currencies/${slug}`
-            : "#"
+          ? `https://coinmarketcap.com/currencies/${slug}`
+          : "#"
       }
       className={cn(
-        `w-full pl-4 md:pl-5 ${paddingRight} gap-2 md:gap-3 group/link py-3 flex flex-row items-center overflow-hidden`
+        `w-full pl-4 md:pl-5 ${paddingRight} gap-2 md:gap-2.5 group/link py-3 flex flex-row items-center overflow-hidden`
       )}
     >
       <div className="-ml-1 md:-ml-0.75 flex flex-col items-center justify-center gap-1.5">
-        <div className="size-4.5 shrink-0">
+        <div className="size-5.5 shrink-0">
           {isPending ? (
             <div className="size-full rounded-full bg-foreground animate-skeleton" />
           ) : hasData ? (
-            <img
-              src={`https://s2.coinmarketcap.com/static/img/coins/64x64/${id}.png`}
-              className="size-full rounded-full bg-foreground p-px"
+            <CryptoIcon
+              ticker={ticker}
+              variant="branded"
+              className="size-full bg-border rounded-full p-1"
             />
           ) : (
             <div className="size-full rounded-full bg-destructive" />

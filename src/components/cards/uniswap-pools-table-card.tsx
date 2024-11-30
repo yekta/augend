@@ -92,7 +92,7 @@ export default function UniswapPoolsTableCard({
           const pendingClassName =
             "group-data-[pending]/table:text-transparent group-data-[pending]/table:bg-foreground group-data-[pending]/table:rounded-sm group-data-[pending]/table:animate-skeleton group-data-[loading-error]/table:text-destructive";
 
-          const iconSizeClassName = "size-4.5 md:size-5";
+          const iconSizeClassName = "size-5.5";
           const PendingIcon = (
             <div
               className={`${iconSizeClassName} bg-foreground animate-skeleton rounded-full`}
@@ -121,20 +121,20 @@ export default function UniswapPoolsTableCard({
                       <CryptoIcon
                         variant="branded"
                         ticker={row.original.token0.symbol}
-                        className={`${iconSizeClassName} bg-border p-0.5 md:p-0.75 rounded-full`}
+                        className={`${iconSizeClassName} bg-border p-1 rounded-full`}
                       />
                     ) : (
                       ErrorIcon
                     )}
                   </div>
-                  <div className="-mt-1 z-10 bg-background not-touch:group-data-[has-data]/table:group-hover/row:bg-background-secondary group-data-[has-data]/table:group-active/row:bg-background-secondary rounded-full p-0.5">
+                  <div className="-mt-1.5 z-10 bg-background not-touch:group-data-[has-data]/table:group-hover/row:bg-background-secondary group-data-[has-data]/table:group-active/row:bg-background-secondary rounded-full p-0.5">
                     {isPending ? (
                       PendingIcon
                     ) : data ? (
                       <CryptoIcon
                         variant="branded"
                         ticker={row.original.token1.symbol}
-                        className={`${iconSizeClassName} bg-border p-0.5 md:p-0.75 rounded-full`}
+                        className={`${iconSizeClassName} bg-border p-1 rounded-full`}
                       />
                     ) : (
                       ErrorIcon
@@ -149,8 +149,8 @@ export default function UniswapPoolsTableCard({
                       {isPending
                         ? "Load"
                         : data
-                          ? row.original.token0.symbol
-                          : "ERR"}
+                        ? row.original.token0.symbol
+                        : "ERR"}
                     </p>
                     <p
                       className={`${getNumberColorClass(
@@ -167,8 +167,8 @@ export default function UniswapPoolsTableCard({
                       {isPending
                         ? "1%"
                         : data
-                          ? `${formatNumberTBMK(row.original.feeTier * 100)}%`
-                          : "ERR"}
+                        ? `${formatNumberTBMK(row.original.feeTier * 100)}%`
+                        : "ERR"}
                     </p>
                   </div>
                   <div className="max-w-full flex flex-row items-center gap-2 overflow-hidden">
@@ -178,8 +178,8 @@ export default function UniswapPoolsTableCard({
                       {isPending
                         ? "Load"
                         : data
-                          ? row.original.token1.symbol
-                          : "ERR"}
+                        ? row.original.token1.symbol
+                        : "ERR"}
                     </p>
                     <ExternalLinkIcon
                       className="opacity-0 shrink-0 -ml-0.5 origin-bottom-left scale-50 pointer-events-none size-3 md:size-4 -my-1 transition
