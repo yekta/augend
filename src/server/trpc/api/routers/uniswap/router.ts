@@ -16,11 +16,15 @@ import {
   TUniswapPositionResult,
   TUniswapPositionResultRaw,
 } from "@/server/trpc/api/routers/uniswap/types";
-import { createTRPCRouter, publicProcedure } from "@/server/trpc/setup/trpc";
+import {
+  cachedPublicProcedure,
+  createTRPCRouter,
+  publicProcedure,
+} from "@/server/trpc/setup/trpc";
 import type { PositionPriceRange, SearchFilterOpts } from "@gfxlabs/oku";
 
 export const uniswapRouter = createTRPCRouter({
-  getPools: publicProcedure
+  getPools: cachedPublicProcedure("medium")
     .input(
       z.object({
         page: z.number().int().positive().default(1),
@@ -39,7 +43,14 @@ export const uniswapRouter = createTRPCRouter({
           searchAddress,
           errorOnUnmatchingSearchResult,
         },
+        ctx,
       }) => {
+        type TResult = TUniswapPoolsResult;
+
+        if (ctx.cachedResult) {
+          return ctx.cachedResult as TResult;
+        }
+
         const endpoint = searchAddress ? "searchPoolsByAddress" : "topPools";
         const networkOku = network.toLowerCase();
         const url = `${uniswapOkuApiUrl}/${networkOku}/cush/${endpoint}`;
@@ -83,7 +94,7 @@ export const uniswapRouter = createTRPCRouter({
           throw new Error(`No pool found for address: ${searchAddress}`);
         }
 
-        const editedRes: TUniswapPoolsResult = {
+        const editedRes: TResult = {
           pools: resJson.result.pools
             .filter((p) => (searchAddress ? true : p.t0_volume_usd > 1000))
             .map((pool) => {
@@ -120,14 +131,20 @@ export const uniswapRouter = createTRPCRouter({
         return editedRes;
       }
     ),
-  getPosition: publicProcedure
+  getPosition: cachedPublicProcedure("short")
     .input(
       z.object({
         id: z.number(),
         network: EthereumNetworkSchema.optional().default("Ethereum"),
       })
     )
-    .query(async ({ input: { id, network } }) => {
+    .query(async ({ input: { id, network }, ctx }) => {
+      type TResult = TUniswapPositionResult;
+
+      if (ctx.cachedResult) {
+        return ctx.cachedResult as TResult;
+      }
+
       const positionManager = await getUniswapPositionManager(network);
       const networkOku = network.toLowerCase();
       const url = `${uniswapOkuApiUrl}/${networkOku}/cush/analyticsPosition`;
@@ -202,7 +219,8 @@ export const uniswapRouter = createTRPCRouter({
       const token1Price = amount1USD / amount1;
       const uncollectedFees0USD = uncollectedFees0 * token0Price;
       const uncollectedFees1USD = uncollectedFees1 * token1Price;
-      const editedRes: TUniswapPositionResult = {
+
+      const editedRes: TResult = {
         position: {
           poolAddress: position.pool,
           nftUri,
@@ -250,7 +268,7 @@ export const uniswapRouter = createTRPCRouter({
       };
       return editedRes;
     }),
-  getSwaps: publicProcedure
+  getSwaps: cachedPublicProcedure("short")
     .input(
       z.object({
         network: EthereumNetworkSchema.optional().default("Ethereum"),
@@ -259,7 +277,13 @@ export const uniswapRouter = createTRPCRouter({
         limit: z.number().int().positive().min(1).max(500).default(500),
       })
     )
-    .query(async ({ input: { network, poolAddress, page, limit } }) => {
+    .query(async ({ input: { network, poolAddress, page, limit }, ctx }) => {
+      type TResult = TUniswapPoolSwapsResult;
+
+      if (ctx.cachedResult) {
+        return ctx.cachedResult as TResult;
+      }
+
       const networkOku = network.toLowerCase();
       const url = `${uniswapOkuApiUrl}/${networkOku}/cush/poolSwaps`;
       const poolUrl = `${uniswapOkuApiUrl}/${networkOku}/cush/searchPoolsByAddress`;
@@ -305,7 +329,7 @@ export const uniswapRouter = createTRPCRouter({
         throw new Error(`Swap result has error: ${swapsResJson.error.message}`);
       }
 
-      const swapsResult: TUniswapPoolSwapsResult = {
+      const swapsResult: TResult = {
         pool: {
           token0: {
             id: swapsResJson.result.token0,
