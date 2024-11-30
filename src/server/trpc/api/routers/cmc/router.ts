@@ -9,19 +9,22 @@ import {
 import {
   cachedPublicProcedure,
   createTRPCRouter,
-  publicProcedure,
 } from "@/server/trpc/setup/trpc";
 
 export const cmcRouter = createTRPCRouter({
-  getCryptoInfos: publicProcedure
+  getCryptoInfos: cachedPublicProcedure("medium")
     .input(
       z.object({
         ids: z.array(z.number()),
         convert: z.array(z.string()).optional().default(["USD"]),
       })
     )
-    .query(async ({ input: { ids, convert } }) => {
+    .query(async ({ input: { ids, convert }, ctx }) => {
       type TReturn = TCmcGetCryptosResultEdited;
+
+      if (ctx.cachedResult) {
+        return ctx.cachedResult as TReturn;
+      }
 
       const idsSet = new Set(ids);
       const idsCleaned = Array.from(idsSet);

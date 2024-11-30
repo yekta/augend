@@ -6,7 +6,11 @@ import {
   TOHLCVResult,
   TOrderBook,
 } from "@/server/trpc/api/routers/exchange/types";
-import { createTRPCRouter, publicProcedure } from "@/server/trpc/setup/trpc";
+import {
+  cachedPublicProcedure,
+  createTRPCRouter,
+  publicProcedure,
+} from "@/server/trpc/setup/trpc";
 import { OHLCV, OrderBook, Ticker } from "ccxt";
 
 const OrderbookInputSchema = z.object({
@@ -23,20 +27,32 @@ const OHLCVInputSchema = z.object({
 });
 
 export const exchangeRouter = createTRPCRouter({
-  getOrderBook: publicProcedure
+  getOrderBook: cachedPublicProcedure("medium")
     .input(OrderbookInputSchema)
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
+      type TReturn = TOrderBook;
+
+      if (ctx.cachedResult) {
+        return ctx.cachedResult as TReturn;
+      }
+
       const promises = getOrderbookPromiseObject(input);
       const [book, tickerInfo] = await Promise.all([
         promises.orderBookPromise,
         promises.tickerInfoPromise,
       ]);
-      return parseOrderbookResult(book, tickerInfo, input);
+      const result: TReturn = parseOrderbookResult(book, tickerInfo, input);
+      return result;
     }),
 
-  getOrderBooks: publicProcedure
+  getOrderBooks: cachedPublicProcedure("medium")
     .input(z.array(OrderbookInputSchema))
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
+      type TReturn = TOrderBook[];
+
+      if (ctx.cachedResult) {
+        return ctx.cachedResult as TReturn;
+      }
       const promises = input.map(getOrderbookPromiseObject);
       const orderBookPromises = promises.map((p) => p.orderBookPromise);
       const tickerInfoPromises = promises.map((p) => p.tickerInfoPromise);
@@ -55,24 +71,39 @@ export const exchangeRouter = createTRPCRouter({
         allRes.length
       ) as Ticker[];
 
-      let orderBooks = orderBookResults.map((book, index) =>
+      let orderBooks: TReturn = orderBookResults.map((book, index) =>
         parseOrderbookResult(book, tickerInfoResults[index], input[index])
       );
       return orderBooks;
     }),
 
-  getOHLCV: publicProcedure.input(OHLCVInputSchema).query(async ({ input }) => {
-    const promises = getOHLCVPromiseObject(input);
-    const [data, tickerInfo] = await Promise.all([
-      promises.ohlcvPromise,
-      promises.tickerInfoPromise,
-    ]);
-    return parseOHLCVResult(data, tickerInfo, input);
-  }),
+  getOHLCV: cachedPublicProcedure("medium")
+    .input(OHLCVInputSchema)
+    .query(async ({ input, ctx }) => {
+      type TReturn = TOHLCVResult;
+
+      if (ctx.cachedResult) {
+        return ctx.cachedResult as TReturn;
+      }
+
+      const promises = getOHLCVPromiseObject(input);
+      const [data, tickerInfo] = await Promise.all([
+        promises.ohlcvPromise,
+        promises.tickerInfoPromise,
+      ]);
+      const result: TReturn = parseOHLCVResult(data, tickerInfo, input);
+      return result;
+    }),
 
   getOHLCVs: publicProcedure
     .input(z.array(OHLCVInputSchema))
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
+      type TReturn = TOHLCVResult[];
+
+      if (ctx.cachedResult) {
+        return ctx.cachedResult as TReturn;
+      }
+
       const promises = input.map(getOHLCVPromiseObject);
       const ohlcvPromises = promises.map((p) => p.ohlcvPromise);
       const tickerInfoPromises = promises.map((p) => p.tickerInfoPromise);
@@ -88,10 +119,10 @@ export const exchangeRouter = createTRPCRouter({
         allRes.length
       ) as Ticker[];
 
-      let ohlcvResults = ohlcvRes.map((data, index) =>
+      let result: TReturn = ohlcvRes.map((data, index) =>
         parseOHLCVResult(data, tickerInfoRes[index], input[index])
       );
-      return ohlcvResults;
+      return result;
     }),
 });
 
