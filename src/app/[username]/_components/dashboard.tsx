@@ -5,11 +5,13 @@ import { bananoCmcId } from "@/components/cards/banano-total-card";
 import ThreeLineCard from "@/components/cards/three-line-card";
 import { CardParser } from "@/components/cards/utils/card-parser";
 import DashboardWrapper from "@/components/dashboard-wrapper";
+import { EditButton } from "@/components/edit-button";
 import CmcCryptoInfosProvider from "@/components/providers/cmc/cmc-crypto-infos-provider";
 import CmcGlobalMetricsProvider from "@/components/providers/cmc/cmc-global-metrics-provider";
 import CurrencyPreferenceProvider, {
   TCurrencyPreference,
 } from "@/components/providers/currency-preference-provider";
+import CurrentDashboardProvider from "@/components/providers/current-dashboard-provider";
 import FiatCurrencyRateProvider from "@/components/providers/fiat-currency-rates-provider";
 import NanoBananoBalancesProvider, {
   TNanoBananoAccountFull,
@@ -258,38 +260,43 @@ export default function Dashboard({
   }
 
   return (
-    <Providers
-      cardTypeIds={cards.map((c) => c.cardType.id)}
-      nanoBananoAccounts={nanoBananoAccounts}
-      cryptoCurrencyIds={cryptoCurrencyIds}
-      currencyPreference={currencyPreference}
-    >
-      <DashboardWrapper centerItems={cards.length < 2}>
-        {cards.map((card, index) => {
-          const requiresNewRow = componentRequiresNewRow.includes(
-            card.cardType.id
-          );
-          const differentThanPrevious =
-            index !== 0 && cards[index - 1].cardType.id !== card.cardType.id;
-          const startAtNewRow = requiresNewRow && differentThanPrevious;
-          return (
-            <CardParser
-              key={card.card.id}
-              cardObject={card}
-              currencies={currencies}
-              isRemovable={true}
-              cardId={card.card.id}
-              className={
-                startAtNewRow
-                  ? "col-start-1 md:col-start-1 lg:col-start-1 xl:col-start-1 2xl:col-start-1"
-                  : undefined
-              }
-            />
-          );
-        })}
-        <AddCardButton username={username} dashboardSlug={dashboardSlug} />
-      </DashboardWrapper>
-    </Providers>
+    <CurrentDashboardProvider username={username} dashboardSlug={dashboardSlug}>
+      <Providers
+        cardTypeIds={cards.map((c) => c.cardType.id)}
+        nanoBananoAccounts={nanoBananoAccounts}
+        cryptoCurrencyIds={cryptoCurrencyIds}
+        currencyPreference={currencyPreference}
+      >
+        <DashboardWrapper centerItems={cards.length < 2}>
+          <div className="col-span-12 items-center justify-end flex p-1">
+            <EditButton />
+          </div>
+          {cards.map((card, index) => {
+            const requiresNewRow = componentRequiresNewRow.includes(
+              card.cardType.id
+            );
+            const differentThanPrevious =
+              index !== 0 && cards[index - 1].cardType.id !== card.cardType.id;
+            const startAtNewRow = requiresNewRow && differentThanPrevious;
+            return (
+              <CardParser
+                key={card.card.id}
+                cardObject={card}
+                currencies={currencies}
+                isRemovable={true}
+                cardId={card.card.id}
+                className={
+                  startAtNewRow
+                    ? "col-start-1 md:col-start-1 lg:col-start-1 xl:col-start-1 2xl:col-start-1"
+                    : undefined
+                }
+              />
+            );
+          })}
+          <AddCardButton username={username} dashboardSlug={dashboardSlug} />
+        </DashboardWrapper>
+      </Providers>
+    </CurrentDashboardProvider>
   );
 }
 

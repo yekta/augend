@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { createCard, getCards } from "@/server/db/repo/card";
+import { createCard, deleteCards, getCards } from "@/server/db/repo/card";
 import { getCardTypes } from "@/server/db/repo/card_types";
 import { createCardValues } from "@/server/db/repo/card_values";
 import { getCurrencies } from "@/server/db/repo/currencies";
@@ -195,5 +195,22 @@ export const uiRouter = createTRPCRouter({
       return {
         cardId,
       };
+    }),
+  deleteCards: publicProcedure
+    .input(
+      z.object({
+        ids: z.array(z.string()),
+      })
+    )
+    .mutation(async function ({ input: { ids }, ctx: { session } }) {
+      const userId = session?.user.id;
+      if (!userId) {
+        throw new TRPCError({
+          message: "Unauthorized",
+          code: "UNAUTHORIZED",
+        });
+      }
+      await deleteCards({ userId, ids });
+      return true;
     }),
 });

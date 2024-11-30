@@ -1,9 +1,11 @@
 "use client";
 
+import { useCurrentDashboard } from "@/components/providers/current-dashboard-provider";
 import { useEditMode } from "@/components/providers/edit-mode-provider";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { XIcon } from "lucide-react";
+import { api } from "@/server/trpc/setup/react";
+import { LoaderIcon, XIcon } from "lucide-react";
 import Link from "next/link";
 import { ComponentProps } from "react";
 
@@ -42,6 +44,21 @@ export default function CardOuterWrapper({
     className
   );
 
+  const { invalidateCards, invalidationIsPending } = useCurrentDashboard();
+
+  const { mutate: deleteCard, isPending } = api.ui.deleteCards.useMutation({
+    onSuccess: async () => {
+      await invalidateCards();
+    },
+  });
+
+  const isAnyPending = isPending || invalidationIsPending;
+
+  const onDeleteClick = async ({ cardId }: { cardId: string }) => {
+    if (!cardId) return;
+    deleteCard({ ids: [cardId] });
+  };
+
   if (isEditing && isRemovable && cardId) {
     const restDiv = rest as TCardOuterWrapperDivProps;
     return (
@@ -49,12 +66,19 @@ export default function CardOuterWrapper({
         {children}
         {isEditing && (
           <Button
-            onClick={() => console.log(cardId)}
+            state={isAnyPending ? "loading" : "default"}
+            onClick={() => onDeleteClick({ cardId })}
             size="icon"
             variant="outline"
             className="absolute left-0 top-0 size-7 rounded-full z-30 text-foreground shadow-md shadow-shadow/[var(--opacity-shadow)]"
           >
-            <XIcon className="size-4" />
+            <div className="size-4">
+              {isAnyPending ? (
+                <LoaderIcon className="size-full animate-spin" />
+              ) : (
+                <XIcon className="size-full" />
+              )}
+            </div>
           </Button>
         )}
       </div>

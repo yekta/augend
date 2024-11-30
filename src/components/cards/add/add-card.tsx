@@ -50,6 +50,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useHotkeys } from "react-hotkeys-hook";
 import { formatNumberTBMK } from "@/lib/number-formatters";
+import { useCurrentDashboard } from "@/components/providers/current-dashboard-provider";
 
 type AddCardButtonProps = {
   username: string;
@@ -97,28 +98,19 @@ export function AddCardButton({
     defaultValues, // Add default values here
   });
 
-  const utils = api.useUtils();
-  const { isPending: invalidationPending } = api.ui.getCards.useQuery(
-    {
-      username,
-      dashboardSlug,
-    },
-    {
-      enabled: false,
-    }
-  );
+  const { invalidateCards, invalidationIsPending } = useCurrentDashboard();
 
   const { mutate: createCardMutation, isPending: mutationIsPending } =
     api.ui.createCard.useMutation({
       onSuccess: async () => {
-        await utils.ui.getCards.invalidate({ username, dashboardSlug });
+        await invalidateCards();
         setOpen(false);
         setSelectedCardType(null);
         form.reset();
       },
     });
 
-  const isFormPending = invalidationPending || mutationIsPending;
+  const isFormPending = invalidationIsPending || mutationIsPending;
 
   const onSubmit = (data: FormValues) => {
     if (!selectedCardType) return;
