@@ -199,7 +199,11 @@ export default function Dashboard({
     currenciesIsLoadingError
   ) {
     return (
-      <DashboardWrapper centerItems>
+      <DashboardWrapper
+        username={username}
+        dashboardSlug={dashboardSlug}
+        centerItems
+      >
         <p className="text-destructive max-w-full px-5 text-center">
           Something went wrong :(
         </p>
@@ -217,7 +221,7 @@ export default function Dashboard({
     currencies === undefined
   ) {
     return (
-      <DashboardWrapper>
+      <DashboardWrapper username={username} dashboardSlug={dashboardSlug}>
         {Array.from({ length: 50 }).map((_, index) => (
           <ThreeLineCard
             key={index}
@@ -236,8 +240,12 @@ export default function Dashboard({
 
   if (cards.length === 0 && dashboard.isOwner) {
     return (
-      <DashboardWrapper centerItems>
-        <div className="flex flex-col items-center w-full text-center gap-4">
+      <DashboardWrapper
+        username={username}
+        dashboardSlug={dashboardSlug}
+        centerItems
+      >
+        <div className="flex flex-col items-center w-full text-center gap-3">
           <h1 className="font-bold text-lg px-5">Start by adding a card</h1>
           <AddCardButton
             username={username}
@@ -251,7 +259,11 @@ export default function Dashboard({
 
   if (cards.length === 0 && !dashboard.isOwner) {
     return (
-      <DashboardWrapper centerItems>
+      <DashboardWrapper
+        username={username}
+        dashboardSlug={dashboardSlug}
+        centerItems
+      >
         <p className="text-muted-foreground max-w-full px-5 text-center">
           This dashboard doesn't have any cards yet.
         </p>
@@ -260,43 +272,45 @@ export default function Dashboard({
   }
 
   return (
-    <CurrentDashboardProvider username={username} dashboardSlug={dashboardSlug}>
-      <Providers
-        cardTypeIds={cards.map((c) => c.cardType.id)}
-        nanoBananoAccounts={nanoBananoAccounts}
-        cryptoCurrencyIds={cryptoCurrencyIds}
-        currencyPreference={currencyPreference}
+    <Providers
+      cardTypeIds={cards.map((c) => c.cardType.id)}
+      nanoBananoAccounts={nanoBananoAccounts}
+      cryptoCurrencyIds={cryptoCurrencyIds}
+      currencyPreference={currencyPreference}
+    >
+      <DashboardWrapper
+        username={username}
+        dashboardSlug={dashboardSlug}
+        centerItems={cards.length < 2}
       >
-        <DashboardWrapper centerItems={cards.length < 2}>
-          <div className="col-span-12 items-center justify-end flex p-1">
-            <EditButton />
-          </div>
-          {cards.map((card, index) => {
-            const requiresNewRow = componentRequiresNewRow.includes(
-              card.cardType.id
-            );
-            const differentThanPrevious =
-              index !== 0 && cards[index - 1].cardType.id !== card.cardType.id;
-            const startAtNewRow = requiresNewRow && differentThanPrevious;
-            return (
-              <CardParser
-                key={card.card.id}
-                cardObject={card}
-                currencies={currencies}
-                isRemovable={true}
-                cardId={card.card.id}
-                className={
-                  startAtNewRow
-                    ? "col-start-1 md:col-start-1 lg:col-start-1 xl:col-start-1 2xl:col-start-1"
-                    : undefined
-                }
-              />
-            );
-          })}
-          <AddCardButton username={username} dashboardSlug={dashboardSlug} />
-        </DashboardWrapper>
-      </Providers>
-    </CurrentDashboardProvider>
+        <div className="col-span-12 items-center justify-end flex p-1">
+          <EditButton />
+        </div>
+        {cards.map((card, index) => {
+          const requiresNewRow = componentRequiresNewRow.includes(
+            card.cardType.id
+          );
+          const differentThanPrevious =
+            index !== 0 && cards[index - 1].cardType.id !== card.cardType.id;
+          const startAtNewRow = requiresNewRow && differentThanPrevious;
+          return (
+            <CardParser
+              key={card.card.id}
+              cardObject={card}
+              currencies={currencies}
+              isRemovable={true}
+              cardId={card.card.id}
+              className={
+                startAtNewRow
+                  ? "col-start-1 md:col-start-1 lg:col-start-1 xl:col-start-1 2xl:col-start-1"
+                  : undefined
+              }
+            />
+          );
+        })}
+        <AddCardButton username={username} dashboardSlug={dashboardSlug} />
+      </DashboardWrapper>
+    </Providers>
   );
 }
 
