@@ -23,8 +23,13 @@ export const cmcRouter = createTRPCRouter({
     .query(async ({ input: { ids, convert } }) => {
       type TReturn = TCmcGetCryptosResultEdited;
 
-      const idsStr = ids.join(",");
-      const urls = convert.map(
+      const idsSet = new Set(ids);
+      const idsCleaned = Array.from(idsSet);
+      const idsStr = idsCleaned.join(",");
+
+      const convertSet = new Set(convert);
+      const convertCleaned = Array.from(convertSet);
+      const urls = convertCleaned.map(
         (c) =>
           `${cmcApiUrl}/v2/cryptocurrency/quotes/latest?id=${idsStr}&convert=${c}`
       );

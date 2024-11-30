@@ -120,7 +120,10 @@ export default function Dashboard({
         });
       }
     });
-    return ids;
+
+    const idsSet = new Set(ids);
+    const idsCleaned = Array.from(idsSet);
+    return idsCleaned;
   }, [cards]);
 
   const { data: currencies, isLoadingError: currenciesIsLoadingError } =
@@ -322,17 +325,14 @@ function Providers({
   }
 
   if (cryptoCurrencyIds.length > 0 || cardTypeIds.includes("banano_total")) {
-    let extraIds = [];
-    if (cardTypeIds.includes("banano_total")) {
-      extraIds.push(bananoCmcId);
-    }
-    let idsWithExtras = cryptoCurrencyIds;
-    extraIds.forEach(
-      (id) => !idsWithExtras.includes(id) && idsWithExtras.push(id)
-    );
+    let allIds = cryptoCurrencyIds;
+    if (cardTypeIds.includes("banano_total")) allIds.push(bananoCmcId);
+    const idsSet = new Set(allIds);
+    const idsCleaned = Array.from(idsSet);
+
     wrappedChildren = (
       <CmcCryptoInfosProvider
-        cryptos={idsWithExtras.map((c) => ({ id: c }))}
+        cryptos={idsCleaned.map((c) => ({ id: c }))}
         dontAddUsd={dontAddUsd}
       >
         {wrappedChildren}
@@ -344,8 +344,12 @@ function Providers({
     cardTypeIds.includes("banano_balance") ||
     cardTypeIds.includes("banano_total")
   ) {
+    const accountsMap = new Map<string, TNanoBananoAccountFull>();
+    nanoBananoAccounts.forEach((a) => accountsMap.set(a.address, a));
+    const accountsCleaned = Array.from(accountsMap.values());
+
     wrappedChildren = (
-      <NanoBananoBalancesProvider accounts={nanoBananoAccounts}>
+      <NanoBananoBalancesProvider accounts={accountsCleaned}>
         {wrappedChildren}
       </NanoBananoBalancesProvider>
     );

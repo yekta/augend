@@ -1,10 +1,6 @@
-import {
-  currenciesForLira,
-  tcmbApi,
-} from "@/server/trpc/api/routers/fiat/helpers";
+import { tcmbApi } from "@/server/trpc/api/routers/fiat/helpers";
 import { createTRPCRouter, publicProcedure } from "@/server/trpc/setup/trpc";
 import { XMLParser } from "fast-xml-parser";
-import { z } from "zod";
 
 const parser = new XMLParser({
   ignoreAttributes: false,

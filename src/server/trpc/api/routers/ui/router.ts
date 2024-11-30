@@ -100,7 +100,9 @@ export const uiRouter = createTRPCRouter({
       })
     )
     .query(async function ({ input: { ids } }) {
-      const res = await getCurrencies({ ids });
+      const idsSet = new Set(ids);
+      const idsCleaned = Array.from(idsSet);
+      const res = await getCurrencies({ ids: idsCleaned });
       return res;
     }),
   getCardTypes: publicProcedure.input(z.object({})).query(async function ({

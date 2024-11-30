@@ -11,6 +11,7 @@ import {
 } from "@/server/trpc/api/routers/nano-banano/helpers";
 import {
   AccountSchema,
+  TNanoBananoAccount,
   TNanoBananoBalanceResponse,
   TNanoBananoResult,
 } from "@/server/trpc/api/routers/nano-banano/types";
@@ -24,11 +25,15 @@ export const nanoBananoRouter = createTRPCRouter({
       })
     )
     .query(async ({ input: { accounts } }) => {
+      const accountsMap = new Map<string, TNanoBananoAccount>();
+      accounts.forEach((a) => accountsMap.set(a.address, a));
+      const accountsCleaned = Array.from(accountsMap.values());
       const results: TNanoBananoResult[] = [];
-      const nanoAddresses = accounts
+
+      const nanoAddresses = accountsCleaned
         .map((a) => a.address)
         .filter((a) => isNano(a));
-      const banAddresses = accounts
+      const banAddresses = accountsCleaned
         .map((a) => a.address)
         .filter((a) => isBan(a));
 
