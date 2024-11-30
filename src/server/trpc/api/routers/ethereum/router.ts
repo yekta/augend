@@ -8,6 +8,7 @@ import {
   cachedPublicProcedure,
   createTRPCRouter,
 } from "@/server/trpc/setup/trpc";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 const baseGasLimitGwei = 21_000;
@@ -47,7 +48,10 @@ export const ethereumRouter = createTRPCRouter({
       ]);
 
       if (!ethUsdRes.ok) {
-        throw new Error(`Failed to fetch ETH price: ${ethUsdRes.statusText}`);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: `Failed to fetch ETH price: ${ethUsdRes.statusText}`,
+        });
       }
 
       const [ethUsdResJson]: [TCmcGetCryptosResult] = await Promise.all([

@@ -16,6 +16,7 @@ import {
   TNanoBananoResult,
 } from "@/server/trpc/api/routers/nano-banano/types";
 import { createTRPCRouter, publicProcedure } from "@/server/trpc/setup/trpc";
+import { TRPCError } from "@trpc/server";
 
 export const nanoBananoRouter = createTRPCRouter({
   getBalances: publicProcedure
@@ -65,7 +66,10 @@ export const nanoBananoRouter = createTRPCRouter({
         }
 
         if (!balanceObj) {
-          throw new Error("Failed to fetch NANO balances");
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to fetch NANO/BAN balances",
+          });
         }
 
         results.push({
@@ -138,11 +142,17 @@ async function getBalances({
     }),
   });
   if (!res.ok) {
-    throw new Error("Failed to fetch NANO/BAN balances");
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Failed to fetch NANO/BAN balances",
+    });
   }
   const json: TNanoBananoBalanceResponse = await res.json();
   if (json.errors) {
-    throw new Error(JSON.stringify(json.errors));
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: JSON.stringify(json.errors),
+    });
   }
   return json;
 }
@@ -166,7 +176,10 @@ async function getBalances({
     headers: isNanoAddress ? undefined : bananoHeaders,
   });
   if (!res.ok) {
-    throw new Error("Failed to fetch NANO/BAN history");
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Failed to fetch NANO/BAN history",
+    });
   }
   const json: TNanoBananoHistoryResult = await res.json();
   const result = json.history.map((h) => {

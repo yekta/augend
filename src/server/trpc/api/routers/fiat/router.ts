@@ -1,5 +1,6 @@
 import { tcmbApi } from "@/server/trpc/api/routers/fiat/helpers";
 import { createTRPCRouter, publicProcedure } from "@/server/trpc/setup/trpc";
+import { TRPCError } from "@trpc/server";
 import { XMLParser } from "fast-xml-parser";
 
 const parser = new XMLParser({
@@ -20,7 +21,10 @@ export const fiatRouter = createTRPCRouter({
       (c) => c.CurrencyCode === "USD"
     );
     if (usdTry === undefined) {
-      throw new Error("USD is missing");
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "USD is missing",
+      });
     }
     results.USD["TRY"] = {
       buy: 1 / parseFloat(usdTry.ForexBuying),

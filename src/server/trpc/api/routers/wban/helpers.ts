@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import {
   NetworkPolygonPos,
   NetworkBinanceSmartChain,
@@ -75,7 +76,10 @@ export const wbanNetworkObjects: TWbanNetworkObject[] = [
 export async function getPendingWithdrawal(url: string) {
   const result = await fetch(url);
   if (!result.ok) {
-    throw new Error(`Failed to fetch: ${url}`);
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: `Failed to fetch: ${url}`,
+    });
   }
   const data: { amount: string } = await result.json();
   return data;

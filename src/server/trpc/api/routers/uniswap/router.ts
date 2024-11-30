@@ -22,6 +22,8 @@ import {
   publicProcedure,
 } from "@/server/trpc/setup/trpc";
 import type { PositionPriceRange, SearchFilterOpts } from "@gfxlabs/oku";
+import { cachedPromise } from "@/server/redis/redis";
+import { TRPCError } from "@trpc/server";
 
 export const uniswapRouter = createTRPCRouter({
   getPools: cachedPublicProcedure("medium")
@@ -77,12 +79,18 @@ export const uniswapRouter = createTRPCRouter({
         });
 
         if (!res.ok) {
-          throw new Error(`${res.status}: Failed to fetch Uniswap pools`);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: `${res.status}: Failed to fetch Uniswap pools`,
+          });
         }
 
         const resJson: TUniswapPoolsResultRaw = await res.json();
         if (resJson.error) {
-          throw new Error(resJson.error.message);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: resJson.error.message,
+          });
         }
 
         if (
@@ -91,7 +99,10 @@ export const uniswapRouter = createTRPCRouter({
           (resJson.result.pools.length < 1 ||
             resJson.result.pools[0].address !== searchAddress)
         ) {
-          throw new Error(`No pool found for address: ${searchAddress}`);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: `No pool found for address: ${searchAddress}`,
+          });
         }
 
         const editedRes: TResult = {
@@ -141,10 +152,6 @@ export const uniswapRouter = createTRPCRouter({
     .query(async ({ input: { id, network }, ctx }) => {
       type TResult = TUniswapPositionResult;
 
-      if (ctx.cachedResult) {
-        return ctx.cachedResult as TResult;
-      }
-
       const positionManager = await getUniswapPositionManager(network);
       const networkOku = network.toLowerCase();
       const url = `${uniswapOkuApiUrl}/${networkOku}/cush/analyticsPosition`;
@@ -155,7 +162,7 @@ export const uniswapRouter = createTRPCRouter({
           },
         ],
       };
-      const nftUriPromise = positionManager.tokenURI(id);
+      const nftUriPromise: Promise<any> = positionManager.tokenURI(id);
       const positionPromise = fetch(url, {
         method: "POST",
         headers: {
@@ -164,19 +171,29 @@ export const uniswapRouter = createTRPCRouter({
         body: JSON.stringify(body),
       });
       const [nftUriRaw, positionRes] = await Promise.all([
-        nftUriPromise,
+        cachedPromise(
+          `uniswap:nftUri:${network}_${id}`,
+          nftUriPromise,
+          "veryLong"
+        ),
         positionPromise,
       ]);
 
       if (!positionRes.ok) {
-        throw new Error(`${positionRes.status}: Failed to fetch Uniswap pools`);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: `${positionRes.status}: Failed to fetch Uniswap pools`,
+        });
       }
 
       const nftUri = parseNftUri(nftUriRaw);
 
       const positionJson: TUniswapPositionResultRaw = await positionRes.json();
       if (positionJson.error) {
-        throw new Error(positionJson.error.message);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: positionJson.error.message,
+        });
       }
 
       const position = positionJson.result.position;
@@ -318,7 +335,10 @@ export const uniswapRouter = createTRPCRouter({
       ]);
 
       if (!swapsRes.ok) {
-        throw new Error(`${swapsRes.status}: Failed to fetch Uniswap swaps`);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: `${swapsRes.status}: Failed to fetch Uniswap swaps`,
+        });
       }
 
       const [swapsResJson]: [TUniswapPoolSwapsResultRaw] = await Promise.all([
@@ -326,7 +346,10 @@ export const uniswapRouter = createTRPCRouter({
       ]);
 
       if (swapsResJson.error) {
-        throw new Error(`Swap result has error: ${swapsResJson.error.message}`);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: swapsResJson.error.message,
+        });
       }
 
       const swapsResult: TResult = {

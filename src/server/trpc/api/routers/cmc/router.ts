@@ -10,6 +10,7 @@ import {
   cachedPublicProcedure,
   createTRPCRouter,
 } from "@/server/trpc/setup/trpc";
+import { TRPCError } from "@trpc/server";
 
 export const cmcRouter = createTRPCRouter({
   getCryptoInfos: cachedPublicProcedure("medium")
@@ -47,7 +48,10 @@ export const cmcRouter = createTRPCRouter({
       results.forEach((r) => {
         if (!r.data) {
           console.log(r);
-          throw new Error("Failed to fetch CMC crypto infos");
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to fetch CMC crypto infos",
+          });
         }
       });
 
@@ -97,14 +101,16 @@ export const cmcRouter = createTRPCRouter({
       ]);
 
       if (!fearGreedIndexResponse.ok) {
-        throw new Error(
-          `${fearGreedIndexResponse.status}: Failed to fetch CMC Fear and Greed Index`
-        );
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: `${fearGreedIndexResponse.status}: Failed to fetch CMC Fear and Greed Index`,
+        });
       }
       if (!metricsResponse.ok) {
-        throw new Error(
-          `${metricsResponse.status}: Failed to fetch CMC Global Metrics`
-        );
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: `${metricsResponse.status}: Failed to fetch CMC Global Metrics`,
+        });
       }
 
       const [fearGreedIndexData, metricsData]: [
@@ -151,9 +157,10 @@ export const cmcRouter = createTRPCRouter({
       ]);
 
       if (!coinListResponse.ok) {
-        throw new Error(
-          `${coinListResponse.status}: Failed to fetch CMC coin list`
-        );
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: `${coinListResponse.status}: Failed to fetch CMC coin list`,
+        });
       }
 
       const result: TReturn = {

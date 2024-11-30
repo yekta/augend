@@ -7,6 +7,7 @@ const cacheTimes = {
   short: 8,
   medium: 24,
   long: 48,
+  veryLong: 480,
 };
 
 export type TCacheTime = keyof typeof cacheTimes;
@@ -14,11 +15,11 @@ export type TCacheTime = keyof typeof cacheTimes;
 export async function setCache(
   key: string,
   value: unknown,
-  cacheType: keyof typeof cacheTimes = "medium"
+  cacheTime: keyof typeof cacheTimes = "medium"
 ) {
   const start = Date.now();
   try {
-    await redis.set(key, JSON.stringify(value), "EX", cacheTimes[cacheType]);
+    await redis.set(key, JSON.stringify(value), "EX", cacheTimes[cacheTime]);
     console.log(`[CACHE][SET]: "${key}" | ${Date.now() - start}ms`);
     return true;
   } catch (error) {
@@ -41,4 +42,19 @@ export async function getCache<T>(key: string) {
     console.log(`[CACHE][ERROR]: Getting cache for "key"`, error);
   }
   return null;
+}
+
+export async function cachedPromise<T>(
+  key: string,
+  promise: Promise<T>,
+  cacheTime: keyof typeof cacheTimes = "medium"
+) {
+  const cache = await getCache<T>(key);
+  if (cache) {
+    return cache;
+  }
+
+  const result = await promise;
+  await setCache(key, result, cacheTime);
+  return result;
 }
