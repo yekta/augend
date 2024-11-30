@@ -149,10 +149,10 @@ export function AddCardButton({
             )}
           >
             <CardInnerWrapper
-              className="flex-1 px-6 font-medium py-3 flex flex-row gap-1 items-center text-muted-foreground justify-center 
+              className="flex-1 px-8 font-medium py-3 flex flex-row gap-1 items-center text-muted-foreground justify-center 
               not-touch:group-hover/card:bg-background-secondary group-active/card:bg-background-secondary"
             >
-              <PlusIcon className="size-5 shrink-0 text-muted-foreground" />
+              <PlusIcon className="size-5 shrink-0 text-muted-foreground -ml-1" />
               <p className="min-w-0 overflow-hidden overflow-ellipsis">
                 Add card
               </p>

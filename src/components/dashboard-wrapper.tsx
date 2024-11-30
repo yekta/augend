@@ -9,7 +9,7 @@ export default function DashboardWrapper({
     >
       <div
         className="w-full grid grid-cols-12 max-w-7xl px-1 pt-1 pb-16 md:pb-20 md:px-5 md:pt-5
-        group-data-[center-items]/wrapper:flex-1 group-data-[center-items]/wrapper:justify-center group-data-[center-items]/wrapper:flex group-data-[center-items]/wrapper:items-center"
+        group-data-[center-items]/wrapper:flex-1 group-data-[center-items]/wrapper:justify-center group-data-[center-items]/wrapper:flex group-data-[center-items]/wrapper:flex-col group-data-[center-items]/wrapper:items-center"
       >
         {children}
       </div>
