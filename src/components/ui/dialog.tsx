@@ -35,7 +35,7 @@ const dialogContentVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-background border rounded-xl p-5 pt-4.5 shadow-xl shadow-shadow/[var(--opacity-shadow)]",
+          "bg-background border rounded-xl p-5 pt-4 shadow-xl shadow-shadow/[var(--opacity-shadow)]",
         styleless: "",
       },
     },
@@ -81,10 +81,7 @@ const DialogHeader = ({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div
-    className={cn("flex flex-col text-center sm:text-left gap-1", className)}
-    {...props}
-  />
+  <div className={cn("flex flex-col gap-1", className)} {...props} />
 );
 DialogHeader.displayName = "DialogHeader";
 
@@ -109,7 +106,7 @@ const DialogTitle = React.forwardRef<
   <DialogPrimitive.Title
     ref={ref}
     className={cn(
-      "text-xl px-6 font-bold leading-snug tracking-tight",
+      "text-xl font-bold leading-snug tracking-tight pr-6",
       className
     )}
     {...props}

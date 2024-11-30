@@ -2,6 +2,7 @@
 
 import CardInnerWrapper from "@/components/cards/utils/card-inner-wrapper";
 import CardOuterWrapper from "@/components/cards/utils/card-outer-wrapper";
+import { useCurrentDashboard } from "@/components/providers/current-dashboard-provider";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -14,6 +15,7 @@ import {
 import {
   Dialog,
   DialogContent,
+  DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
@@ -26,6 +28,7 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
 import { AppRouterOutputs, AppRouterQueryResult } from "@/server/trpc/api/root";
 import { TCardValueForAddCards } from "@/server/trpc/api/routers/ui/types";
@@ -34,7 +37,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   ArrowDownCircle,
   ArrowLeftIcon,
-  DownloadIcon,
   LoaderIcon,
   PlusIcon,
 } from "lucide-react";
@@ -47,10 +49,8 @@ import {
   useState,
 } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { useHotkeys } from "react-hotkeys-hook";
-import { formatNumberTBMK } from "@/lib/number-formatters";
-import { useCurrentDashboard } from "@/components/providers/current-dashboard-provider";
+import { z } from "zod";
 
 type AddCardButtonProps = {
   username: string;
@@ -159,7 +159,6 @@ export function AddCardButton({
             </CardInnerWrapper>
           </CardOuterWrapper>
         </DialogTrigger>
-        <DialogTitle className="sr-only">Add a card</DialogTitle>
         <DialogContent
           variant="styleless"
           className="max-w-md"
@@ -167,6 +166,9 @@ export function AddCardButton({
             selectedCardType !== null ? (e) => e.preventDefault() : undefined
           }
         >
+          <DialogHeader>
+            <DialogTitle className="sr-only">Add a card</DialogTitle>
+          </DialogHeader>
           <AddCardCommandPanel
             form={form}
             inputs={inputs}

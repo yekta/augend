@@ -60,7 +60,7 @@ export function SignInButton({ callbackUrl, error }: SignInButtonProps) {
       </DialogTrigger>
       <DialogContent className="w-full max-w-[22rem]">
         <DialogHeader>
-          <DialogTitle className="text-center">{title}</DialogTitle>
+          <DialogTitle className="text-center px-6">{title}</DialogTitle>
           <DialogDescription className="text-center">
             {description}
           </DialogDescription>

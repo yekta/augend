@@ -3,11 +3,19 @@
 import { useCurrentDashboard } from "@/components/providers/current-dashboard-provider";
 import { useEditMode } from "@/components/providers/edit-mode-provider";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { api } from "@/server/trpc/setup/react";
 import { LoaderIcon, XIcon } from "lucide-react";
 import Link from "next/link";
-import { ComponentProps } from "react";
+import { ComponentProps, useState } from "react";
 
 export type TCardOuterWrapperDivProps = ComponentProps<"div"> & {
   href?: undefined;
@@ -46,13 +54,16 @@ export default function CardOuterWrapper({
 
   const { invalidateCards, invalidationIsPending } = useCurrentDashboard();
 
-  const { mutate: deleteCard, isPending } = api.ui.deleteCards.useMutation({
-    onSuccess: async () => {
-      await invalidateCards();
-    },
-  });
+  const [open, setOpen] = useState(false);
 
-  const isAnyPending = isPending || invalidationIsPending;
+  const { mutate: deleteCard, isPending: isDeletePending } =
+    api.ui.deleteCards.useMutation({
+      onSuccess: async () => {
+        await invalidateCards();
+      },
+    });
+
+  const isAnyPending = isDeletePending || invalidationIsPending;
 
   const onDeleteClick = async ({ cardId }: { cardId: string }) => {
     if (!cardId) return;
@@ -65,21 +76,61 @@ export default function CardOuterWrapper({
       <div {...restDiv} className={classNameAll}>
         {children}
         {isEditing && (
-          <Button
-            state={isAnyPending ? "loading" : "default"}
-            onClick={() => onDeleteClick({ cardId })}
-            size="icon"
-            variant="outline"
-            className="absolute left-0 top-0 size-7 rounded-full z-30 text-foreground shadow-md shadow-shadow/[var(--opacity-shadow)]"
-          >
-            <div className="size-4">
-              {isAnyPending ? (
-                <LoaderIcon className="size-full animate-spin" />
-              ) : (
-                <XIcon className="size-full" />
-              )}
-            </div>
-          </Button>
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+              <Button
+                state={isAnyPending ? "loading" : "default"}
+                onClick={() => setOpen(true)}
+                size="icon"
+                variant="outline"
+                className="absolute left-0 top-0 size-7 rounded-full z-30 text-foreground shadow-md shadow-shadow/[var(--opacity-shadow)]"
+              >
+                <div className="size-4">
+                  {isAnyPending ? (
+                    <LoaderIcon className="size-full animate-spin" />
+                  ) : (
+                    <XIcon className="size-full" />
+                  )}
+                </div>
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-sm">
+              <DialogHeader>
+                <DialogTitle className="text-destructive">
+                  Are you sure?
+                </DialogTitle>
+                <DialogDescription>
+                  This action cannot be undone. Are you sure you want to delete
+                  this card?
+                </DialogDescription>
+              </DialogHeader>
+              <div className="flex justify-end flex-wrap gap-2">
+                <Button
+                  onClick={() => setOpen(false)}
+                  variant="outline"
+                  className="border-none text-muted-foreground"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={() => onDeleteClick({ cardId })}
+                  state={isAnyPending ? "loading" : "default"}
+                  data-pending={isAnyPending ? true : undefined}
+                  variant="destructive"
+                  className="group/button"
+                >
+                  {isAnyPending && (
+                    <div className="size-6 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+                      <LoaderIcon className="size-full animate-spin" />
+                    </div>
+                  )}
+                  <span className="group-data-[pending]/button:text-transparent">
+                    Delete
+                  </span>
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
         )}
       </div>
     );
