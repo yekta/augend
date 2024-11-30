@@ -1,17 +1,16 @@
 "use client";
 
+import DashboardWrapper from "@/app/[username]/[dashboard_slug]/_components/dashboard-wrapper";
 import { AddCardButton } from "@/components/cards/add/add-card";
 import { bananoCmcId } from "@/components/cards/banano-total-card";
 import ThreeLineCard from "@/components/cards/three-line-card";
 import { CardParser } from "@/components/cards/utils/card-parser";
-import DashboardWrapper from "@/components/dashboard-wrapper";
 import { EditButton } from "@/components/edit-button";
 import CmcCryptoInfosProvider from "@/components/providers/cmc/cmc-crypto-infos-provider";
 import CmcGlobalMetricsProvider from "@/components/providers/cmc/cmc-global-metrics-provider";
 import CurrencyPreferenceProvider, {
   TCurrencyPreference,
 } from "@/components/providers/currency-preference-provider";
-import CurrentDashboardProvider from "@/components/providers/current-dashboard-provider";
 import FiatCurrencyRateProvider from "@/components/providers/fiat-currency-rates-provider";
 import NanoBananoBalancesProvider, {
   TNanoBananoAccountFull,

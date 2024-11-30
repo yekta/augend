@@ -1,4 +1,4 @@
-import Dashboard from "@/app/[username]/_components/dashboard";
+import Dashboard from "@/app/[username]/[dashboard_slug]/_components/dashboard";
 import { siteTitle } from "@/lib/constants";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
 import { apiServer } from "@/server/trpc/setup/server";
