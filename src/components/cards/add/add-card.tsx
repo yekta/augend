@@ -170,7 +170,7 @@ export function AddCardButton({
         <DialogTitle className="sr-only">Add a card</DialogTitle>
         <DialogContent
           variant="styleless"
-          className="max-w-md"
+          className="max-w-lg"
           onEscapeKeyDown={
             selectedCardType !== null ? (e) => e.preventDefault() : undefined
           }
@@ -336,13 +336,13 @@ export function AddCardCommandPanel({
                   >
                     <div className="flex flex-col items-start min-w-0 shrink overflow-hidden gap-1">
                       <p
-                        className="max-w-full text-sm font-bold group-data-[pending]/command:text-transparent group-data-[pending]/command:bg-foreground
+                        className="max-w-full text-base font-bold group-data-[pending]/command:text-transparent group-data-[pending]/command:bg-foreground
                         group-data-[pending]/command:rounded group-data-[pending]/command:animate-skeleton leading-tight"
                       >
                         {cardTypeObj.cardType.title}
                       </p>
                       <p
-                        className="max-w-full text-xs text-muted-foreground group-data-[pending]/command:text-transparent group-data-[pending]/command:bg-muted-foreground
+                        className="max-w-full text-sm text-muted-foreground group-data-[pending]/command:text-transparent group-data-[pending]/command:bg-muted-foreground
                         group-data-[pending]/command:rounded group-data-[pending]/command:animate-skeleton leading-tight"
                       >
                         {cardTypeObj.cardType.description}
