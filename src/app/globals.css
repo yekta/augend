@@ -13,7 +13,7 @@ body {
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --background-secondary: 250 4% 92%;
+    --background-hover: 250 4% 92%;
     --foreground: 250 25% 4%;
     --card: 0 0% 100%;
     --card-foreground: 250 25% 4%;
@@ -66,7 +66,7 @@ body {
   }
   .dark {
     --background: 250 25% 4%;
-    --background-secondary: 250 20% 8%;
+    --background-hover: 250 20% 8%;
     --foreground: 250 50% 92%;
     --card: 250 25% 4%;
     --card-foreground: 250 50% 93%;

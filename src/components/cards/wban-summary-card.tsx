@@ -116,7 +116,7 @@ export default function WBanSummaryCard({
               <Link
                 target="_blank"
                 href={getExplorerUrl(network.coldWallet)}
-                className="flex-1 flex items-center justify-start gap-1.5 md:gap-2 px-2 md:px-5 not-touch:hover:bg-background-secondary active:bg-background-secondary py-4"
+                className="flex-1 flex items-center justify-start gap-1.5 md:gap-2 px-2 md:px-5 not-touch:hover:bg-background-hover active:bg-background-hover py-4"
               >
                 <IconWithPlaceholder
                   Icon={Snowflake}
@@ -149,7 +149,7 @@ export default function WBanSummaryCard({
               <Link
                 target="_blank"
                 href={getExplorerUrl(network.hotWallet)}
-                className="flex-1 flex items-center justify-start gap-1.5 md:gap-2 px-2 md:px-5 not-touch:hover:bg-background-secondary active:bg-background-secondary py-4"
+                className="flex-1 flex items-center justify-start gap-1.5 md:gap-2 px-2 md:px-5 not-touch:hover:bg-background-hover active:bg-background-hover py-4"
               >
                 <IconWithPlaceholder
                   Icon={Flame}

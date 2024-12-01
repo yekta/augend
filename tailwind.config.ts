@@ -13,7 +13,7 @@ const config: Config = {
       colors: {
         background: {
           DEFAULT: "hsl(var(--background))",
-          secondary: "hsl(var(--background-secondary))",
+          hover: "hsl(var(--background-hover))",
         },
         foreground: "hsl(var(--foreground))",
         card: {

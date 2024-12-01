@@ -53,7 +53,7 @@ export default function ThreeLineCard({
     >
       <CardInnerWrapper
         className="flex flex-1 flex-col justify-center items-center px-4 py-3 text-center gap-3 
-        not-touch:group-data-[has-href]/card:group-hover/card:bg-background-secondary group-data-[has-href]/card:group-active/card:bg-background-secondary relative overflow-hidden"
+        not-touch:group-data-[has-href]/card:group-hover/card:bg-background-hover group-data-[has-href]/card:group-active/card:bg-background-hover relative overflow-hidden"
       >
         <div
           className={cn(

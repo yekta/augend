@@ -178,7 +178,7 @@ export default function AsyncDataTable<T>({
                     className={cn(
                       "flex overflow-hidden",
                       header.column.getCanSort() &&
-                        "cursor-pointer not-touch:hover:bg-background-secondary active:bg-background-secondary",
+                        "cursor-pointer not-touch:hover:bg-background-hover active:bg-background-hover",
                       header.column.getIsPinned() && "bg-background",
                       // @ts-ignore
                       header.column.columnDef.meta?.className ||
@@ -214,7 +214,7 @@ export default function AsyncDataTable<T>({
                   borderless
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  className="flex absolute w-full group/row not-touch:group-data-[has-data]/table:hover:bg-background-secondary group-data-[has-data]/table:active:bg-background-secondary"
+                  className="flex absolute w-full group/row not-touch:group-data-[has-data]/table:hover:bg-background-hover group-data-[has-data]/table:active:bg-background-hover"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
@@ -228,7 +228,7 @@ export default function AsyncDataTable<T>({
                       className={cn(
                         "p-0 overflow-hidden",
                         cell.column.getIsPinned() &&
-                          "bg-background not-touch:group-data-[has-data]/table:group-hover/row:bg-background-secondary group-data-[has-data]/table:group-active/row:bg-background-secondary",
+                          "bg-background not-touch:group-data-[has-data]/table:group-hover/row:bg-background-hover group-data-[has-data]/table:group-active/row:bg-background-hover",
                         // @ts-ignore
                         cell.column.columnDef.meta?.className ||
                           "min-w-22 md:min-w-32"
@@ -268,7 +268,7 @@ export default function AsyncDataTable<T>({
                           }))
                         }
                       >
-                        <p className="min-w-0 w-full h-full overflow-hidden overflow-ellipsis rounded-md p-0.5 flex items-center justify-center not-touch:group-hover/link:bg-background-secondary group-active/link:bg-background-secondary">
+                        <p className="min-w-0 w-full h-full overflow-hidden overflow-ellipsis rounded-md p-0.5 flex items-center justify-center not-touch:group-hover/link:bg-background-hover group-active/link:bg-background-hover">
                           {adjustedPage}
                         </p>
                       </PaginationLink>
@@ -490,8 +490,8 @@ function ChangeColumn({
         {isPending
           ? "Loading"
           : !isLoadingError
-            ? formatNumberTBMK(change, 3, false, true)
-            : "Error"}
+          ? formatNumberTBMK(change, 3, false, true)
+          : "Error"}
       </p>
     </div>
   );
@@ -538,8 +538,8 @@ function getChangeInfo(change: number | undefined) {
     isNegative === true
       ? ArrowDownIcon
       : isPositive === true
-        ? ArrowUpIcon
-        : ArrowRightIcon;
+      ? ArrowUpIcon
+      : ArrowRightIcon;
   return {
     isPositive,
     isNegative,
