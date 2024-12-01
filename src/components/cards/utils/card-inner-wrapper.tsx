@@ -52,7 +52,6 @@ export default function CardInnerWrapper({
       dropTargetForElements({
         element: el,
         getData: () => ({ cardId }),
-        getIsSticky: () => true,
         canDrop: ({ source }) =>
           source.data.instanceId === instanceId &&
           source.data.type === "grid-item" &&
@@ -66,8 +65,11 @@ export default function CardInnerWrapper({
 
   const classNameAll = cn(
     "w-full border rounded-xl relative overflow-hidden group data-[dnd-dragging]:opacity-40",
+    isEditModeEnabled &&
+      "cursor-grab not-touch:hover:bg-background-secondary active:bg-background-secondary",
     className
   );
+
   return (
     <div
       className={classNameAll}
@@ -103,5 +105,7 @@ function CardPreview({
   className?: string;
   children: ReactNode;
 }) {
-  return <div className={cn(className, "bg-background")}>{children}</div>;
+  return (
+    <div className={cn(className, "bg-background-secondary")}>{children}</div>
+  );
 }
