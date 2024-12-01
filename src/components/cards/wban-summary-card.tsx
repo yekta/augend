@@ -83,7 +83,10 @@ export default function WBanSummaryCard({
       className={cn(className)}
       {...rest}
     >
-      <CardInnerWrapper className="flex flex-col items-center transition">
+      <CardInnerWrapper
+        className="flex flex-col items-center transition"
+        cardId={rest.cardId}
+      >
         {wbanNetworkObjects.map((network) => {
           const coldWallet = banBalanceData?.find(
             (i) => i.address === network.coldWallet

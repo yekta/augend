@@ -3,27 +3,27 @@
 import { createContext, FC, ReactNode, useContext, useState } from "react";
 
 type TEditModeContext = {
-  isEditing: boolean;
-  enableEditMode: () => void;
-  disableEditMode: () => void;
+  isEnabled: boolean;
+  enable: () => void;
+  disable: () => void;
 };
 
 const EditModeContext = createContext<TEditModeContext>({
-  isEditing: false,
-  enableEditMode: () => {},
-  disableEditMode: () => {},
+  isEnabled: false,
+  enable: () => {},
+  disable: () => {},
 });
 
 export const EditModeProvider: FC<{
   children: ReactNode;
 }> = ({ children }) => {
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEnabled, setIsEnabled] = useState(false);
   return (
     <EditModeContext.Provider
       value={{
-        isEditing,
-        enableEditMode: () => setIsEditing(true),
-        disableEditMode: () => setIsEditing(false),
+        isEnabled,
+        enable: () => setIsEnabled(true),
+        disable: () => setIsEnabled(false),
       }}
     >
       {children}

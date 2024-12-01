@@ -51,8 +51,8 @@ export default function MiniCryptoCard({
     isChangeNegative === true
       ? ArrowDownIcon
       : isChangePositive === true
-        ? ArrowUpIcon
-        : ArrowRightIcon;
+      ? ArrowUpIcon
+      : ArrowRightIcon;
 
   const restAsDiv = rest as TCardOuterWrapperDivProps;
   const restAsLink = rest as TCardOuterWrapperLinkProps;
@@ -70,6 +70,7 @@ export default function MiniCryptoCard({
       {...restTyped}
     >
       <CardInnerWrapper
+        cardId={rest.cardId}
         className="flex px-2.5 md:pl-3.5 md:pr-3.75 py-3 md:py-4 gap-2.25 md:gap-3 flex-row items-center text-left
         not-touch:group-data-[has-href]/card:group-hover/card:bg-background-secondary group-data-[has-href]/card:group-active/card:bg-background-secondary relative overflow-hidden"
       >
@@ -104,13 +105,13 @@ export default function MiniCryptoCard({
                   {isPending
                     ? "Load"
                     : data
-                      ? formatNumberTBMK(
-                          data.quote[convertCurrency.ticker].percent_change_24h,
-                          3,
-                          false,
-                          true
-                        )
-                      : "Error"}
+                    ? formatNumberTBMK(
+                        data.quote[convertCurrency.ticker].percent_change_24h,
+                        3,
+                        false,
+                        true
+                      )
+                    : "Error"}
                 </p>
               </div>
             </div>
@@ -132,8 +133,8 @@ export default function MiniCryptoCard({
               {isPending
                 ? "Loading"
                 : price !== undefined
-                  ? `${priceSymbol}${formatNumberTBMK(price)}`
-                  : "Error"}
+                ? `${priceSymbol}${formatNumberTBMK(price)}`
+                : "Error"}
             </p>
             <p
               className="shrink text-sm md:text-base font-semibold whitespace-nowrap overflow-hidden overflow-ellipsis leading-none md:leading-none
@@ -143,8 +144,8 @@ export default function MiniCryptoCard({
               {isPending
                 ? "Loading"
                 : marketCap !== undefined
-                  ? `${priceSymbol}${formatNumberTBMK(marketCap, 3)}`
-                  : "Error"}
+                ? `${priceSymbol}${formatNumberTBMK(marketCap, 3)}`
+                : "Error"}
             </p>
           </div>
         </div>

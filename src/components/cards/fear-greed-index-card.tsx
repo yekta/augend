@@ -33,8 +33,8 @@ export default function FearGreedIndexCard({
     isMarketCapChangePositive === true
       ? ArrowUpIcon
       : isMarketCapChangeNegative === true
-        ? ArrowDownIcon
-        : ArrowRightIcon;
+      ? ArrowDownIcon
+      : ArrowRightIcon;
 
   const restAsDiv = rest as TCardOuterWrapperDivProps;
   const restAsLink = rest as TCardOuterWrapperLinkProps;
@@ -55,6 +55,7 @@ export default function FearGreedIndexCard({
       {...restTyped}
     >
       <CardInnerWrapper
+        cardId={rest.cardId}
         className="flex flex-1 flex-col justify-center items-center border rounded-xl px-3 py-1 text-center gap-3
         not-touch:group-data-[has-href]/card:group-hover/card:bg-background-secondary group-data-[has-href]/card:group-active/card:bg-background-secondary"
       >
@@ -69,13 +70,11 @@ export default function FearGreedIndexCard({
               {isPending
                 ? "Loading"
                 : data
-                  ? data.fear_greed_index.value_classification
-                      .split(" ")
-                      .map(
-                        (word) => word.charAt(0).toUpperCase() + word.slice(1)
-                      )
-                      .join(" ")
-                  : "Error"}
+                ? data.fear_greed_index.value_classification
+                    .split(" ")
+                    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                    .join(" ")
+                : "Error"}
             </p>
           </div>
           {/* Market cap */}
@@ -84,11 +83,11 @@ export default function FearGreedIndexCard({
               {isPending
                 ? "Loading"
                 : data
-                  ? `${convertCurrency.symbol}${formatNumberTBMK(
-                      data.total_market_cap,
-                      3
-                    )}`
-                  : "Error"}
+                ? `${convertCurrency.symbol}${formatNumberTBMK(
+                    data.total_market_cap,
+                    3
+                  )}`
+                : "Error"}
             </p>
             <div className="shrink min-w-0 overflow-hidden text-center leading-none group-data-[pending]/card:bg-foreground group-data-[loading-error]/card:text-destructive group-data-[pending]/card:text-transparent group-data-[pending]/card:rounded-sm group-data-[pending]/card:animate-skeleton">
               <div
@@ -103,13 +102,13 @@ export default function FearGreedIndexCard({
                   {isPending
                     ? "Loading"
                     : data
-                      ? formatNumberTBMK(
-                          data.total_market_cap_yesterday_percentage_change,
-                          3,
-                          false,
-                          true
-                        )
-                      : "Error"}
+                    ? formatNumberTBMK(
+                        data.total_market_cap_yesterday_percentage_change,
+                        3,
+                        false,
+                        true
+                      )
+                    : "Error"}
                 </p>
               </div>
             </div>
@@ -216,8 +215,8 @@ function Gauge({
           {isPending
             ? "50"
             : adjustedValue
-              ? formatNumberTBMK(adjustedValue, 3)
-              : "00"}
+            ? formatNumberTBMK(adjustedValue, 3)
+            : "00"}
         </p>
       </div>
     </div>

@@ -244,7 +244,7 @@ export default function UniswapPoolsTableCard({
 
   return (
     <CardOuterWrapper className={cn(className)} {...rest}>
-      <CardInnerWrapper>
+      <CardInnerWrapper cardId={rest.cardId}>
         <AsyncDataTable
           className="h-167 max-h-[calc((100svh-3rem)*0.65)]"
           columnDefs={columnDefs}

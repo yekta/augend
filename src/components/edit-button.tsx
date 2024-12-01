@@ -6,18 +6,18 @@ import { PencilIcon, XIcon } from "lucide-react";
 
 type Props = {};
 export const EditButton = ({}: Props) => {
-  const { isEditing, enableEditMode, disableEditMode } = useEditMode();
+  const { isEnabled, enable, disable } = useEditMode();
   return (
     <Button
-      onClick={() => (isEditing ? disableEditMode() : enableEditMode())}
+      onClick={() => (isEnabled ? disable() : enable())}
       size="icon"
       variant="outline"
     >
       <div
-        data-editing={isEditing ? true : undefined}
+        data-editing={isEnabled ? true : undefined}
         className="size-5 transition data-[editing]:rotate-90"
       >
-        {isEditing ? (
+        {isEnabled ? (
           <XIcon className="size-full" />
         ) : (
           <PencilIcon className="size-full" />

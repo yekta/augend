@@ -189,7 +189,10 @@ export default function CryptoPriceChartCard({
       data-placeholder-data={isPlaceholderData ? true : undefined}
       {...rest}
     >
-      <CardInnerWrapper className="px-5 pt-4.5 pb-3 gap-12 flex flex-col items-start">
+      <CardInnerWrapper
+        cardId={rest.cardId}
+        className="px-5 pt-4.5 pb-3 gap-12 flex flex-col items-start"
+      >
         <Header
           config={config}
           priceInfo={priceInfo}
@@ -368,8 +371,8 @@ function Header({
     priceInfo.changeRate === 0
       ? ArrowRightIcon
       : priceInfo.changeRate < 0
-        ? ArrowDownIcon
-        : ArrowUpIcon;
+      ? ArrowDownIcon
+      : ArrowUpIcon;
 
   return (
     <div

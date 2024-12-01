@@ -1,6 +1,9 @@
 "use client";
 
 import DashboardWrapper from "@/app/[username]/[dashboard_slug]/_components/dashboard-wrapper";
+import DndProvider, {
+  useDnd,
+} from "@/app/[username]/[dashboard_slug]/_components/dnd-provider";
 import { AddCardButton } from "@/components/cards/add/add-card";
 import { bananoCmcId } from "@/components/cards/banano-total-card";
 import ThreeLineCard from "@/components/cards/three-line-card";
@@ -59,12 +62,12 @@ export default function Dashboard({
     cards !== undefined && cards !== null && cards.length === 0
       ? false
       : firstCard
-        ? {
-            primary: firstCard.primaryCurrency,
-            secondary: firstCard.secondaryCurrency,
-            tertiary: firstCard.tertiaryCurrency,
-          }
-        : undefined;
+      ? {
+          primary: firstCard.primaryCurrency,
+          secondary: firstCard.secondaryCurrency,
+          tertiary: firstCard.tertiaryCurrency,
+        }
+      : undefined;
 
   const nanoBananoAccounts = useMemo(() => {
     if (!cards) return undefined;
@@ -282,34 +285,50 @@ export default function Dashboard({
         dashboardSlug={dashboardSlug}
         centerItems={cards.length < 2}
       >
-        <div className="col-span-12 items-center justify-end flex p-1">
-          <EditButton />
-        </div>
-        {cards.map((card, index) => {
-          const requiresNewRow = componentRequiresNewRow.includes(
-            card.cardType.id
-          );
-          const differentThanPrevious =
-            index !== 0 && cards[index - 1].cardType.id !== card.cardType.id;
-          const startAtNewRow = requiresNewRow && differentThanPrevious;
-          return (
-            <CardParser
-              key={card.card.id}
-              cardObject={card}
-              currencies={currencies}
-              isRemovable={true}
-              cardId={card.card.id}
-              className={
-                startAtNewRow
-                  ? "col-start-1 md:col-start-1 lg:col-start-1 xl:col-start-1 2xl:col-start-1"
-                  : undefined
-              }
-            />
-          );
-        })}
-        <AddCardButton username={username} dashboardSlug={dashboardSlug} />
+        <DndProvider initialCards={cards}>
+          <div className="col-span-12 items-center justify-end flex p-1">
+            <EditButton />
+          </div>
+          <Cards currencies={currencies} />
+          <AddCardButton username={username} dashboardSlug={dashboardSlug} />
+        </DndProvider>
       </DashboardWrapper>
     </Providers>
+  );
+}
+
+function Cards({
+  currencies,
+}: {
+  currencies: AppRouterOutputs["ui"]["getCurrencies"];
+}) {
+  const { orderedCards } = useDnd();
+  return (
+    <>
+      {orderedCards.map((card, index) => {
+        const requiresNewRow = componentRequiresNewRow.includes(
+          card.cardType.id
+        );
+        const differentThanPrevious =
+          index !== 0 &&
+          orderedCards[index - 1].cardType.id !== card.cardType.id;
+        const startAtNewRow = requiresNewRow && differentThanPrevious;
+        return (
+          <CardParser
+            key={card.card.id}
+            cardObject={card}
+            currencies={currencies}
+            isRemovable={true}
+            cardId={card.card.id}
+            className={
+              startAtNewRow
+                ? "col-start-1 md:col-start-1 lg:col-start-1 xl:col-start-1 2xl:col-start-1"
+                : undefined
+            }
+          />
+        );
+      })}
+    </>
   );
 }
 

@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
 import { api } from "@/server/trpc/setup/react";
 import { LoaderIcon, XIcon } from "lucide-react";
 import Link from "next/link";
-import { ComponentProps, useState } from "react";
+import { ComponentProps, useRef, useState } from "react";
 
 export type TCardOuterWrapperDivProps = ComponentProps<"div"> & {
   href?: undefined;
@@ -45,7 +45,8 @@ export default function CardOuterWrapper({
   cardId,
   ...rest
 }: TCardOuterWrapperProps) {
-  const { isEditing } = useEditMode();
+  const { isEnabled: isEditModeEnabled } = useEditMode();
+  const ref = useRef<HTMLDivElement | null>(null);
 
   const classNameAll = cn(
     "flex flex-col p-1 group/card col-span-12 data-[dnd-active]:z-20 relative focus:outline-none",
@@ -70,12 +71,12 @@ export default function CardOuterWrapper({
     deleteCard({ ids: [cardId] });
   };
 
-  if (isEditing && isRemovable && cardId) {
+  if (isEditModeEnabled && isRemovable && cardId) {
     const restDiv = rest as TCardOuterWrapperDivProps;
     return (
-      <div {...restDiv} className={classNameAll}>
+      <div {...restDiv} ref={ref} className={classNameAll}>
         {children}
-        {isEditing && (
+        {isEditModeEnabled && (
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <Button
@@ -83,7 +84,7 @@ export default function CardOuterWrapper({
                 onClick={() => setOpen(true)}
                 size="icon"
                 variant="outline"
-                className="absolute left-0 top-0 size-7 rounded-full z-30 text-foreground shadow-md shadow-shadow/[var(--opacity-shadow)]"
+                className="absolute left-0 top-0 size-7 rounded-full z-30 transition text-foreground shadow-md shadow-shadow/[var(--opacity-shadow)]"
               >
                 <div className="size-4">
                   {isAnyPending ? (

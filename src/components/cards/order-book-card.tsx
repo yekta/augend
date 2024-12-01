@@ -59,8 +59,8 @@ export default function OrderBookCard({
   const currentData: TOrderBook = isPending
     ? placeholderData
     : data
-      ? limitData(data, lines)
-      : placeholderData;
+    ? limitData(data, lines)
+    : placeholderData;
 
   const href =
     config.exchange === "Coinex"
@@ -87,7 +87,10 @@ export default function OrderBookCard({
       data-pending={(isPending && true) || undefined}
       {...restTyped}
     >
-      <CardInnerWrapper className="flex flex-col items-center border rounded-xl px-4 py-4.5 text-center gap-4 group-data-[has-href]/card:not-touch:group-hover/card:bg-background-secondary group-active/card:bg-background-secondary transition text-sm relative">
+      <CardInnerWrapper
+        cardId={restTyped.cardId}
+        className="flex flex-col items-center border rounded-xl px-4 py-4.5 text-center gap-4 group-data-[has-href]/card:not-touch:group-hover/card:bg-background-secondary group-active/card:bg-background-secondary transition text-sm relative"
+      >
         {/* Top */}
         <p className="font-semibold leading-none max-w-full text-foreground whitespace-nowrap overflow-hidden overflow-ellipsis group-data-[pending]/card:bg-foreground group-data-[pending]/card:text-transparent group-data-[pending]/card:rounded-sm group-data-[pending]/card:animate-skeleton">
           {config.ticker}{" "}
@@ -117,8 +120,8 @@ export default function OrderBookCard({
                   {i.amount === -1
                     ? -1
                     : data
-                      ? amountFormatter(i.amount)
-                      : i.amount}
+                    ? amountFormatter(i.amount)
+                    : i.amount}
                 </p>
               ))}
             </div>
@@ -132,8 +135,8 @@ export default function OrderBookCard({
                   {i.price === -1
                     ? -1
                     : data
-                      ? priceFormatter(i.price)
-                      : i.price}
+                    ? priceFormatter(i.price)
+                    : i.price}
                 </p>
               ))}
             </div>
@@ -150,8 +153,8 @@ export default function OrderBookCard({
                   {i.price === -1
                     ? -1
                     : data
-                      ? priceFormatter(i.price)
-                      : i.price}
+                    ? priceFormatter(i.price)
+                    : i.price}
                 </p>
               ))}
             </div>
@@ -165,8 +168,8 @@ export default function OrderBookCard({
                   {i.amount === -1
                     ? -1
                     : data
-                      ? amountFormatter(i.amount)
-                      : i.amount}
+                    ? amountFormatter(i.amount)
+                    : i.amount}
                 </p>
               ))}
             </div>
