@@ -280,19 +280,19 @@ export default function Dashboard({
       cryptoCurrencyIds={cryptoCurrencyIds}
       currencyPreference={currencyPreference}
     >
-      <DashboardWrapper
-        username={username}
-        dashboardSlug={dashboardSlug}
-        centerItems={cards.length < 2}
-      >
-        <DndProvider initialIds={cards.map((c) => c.card.id)}>
+      <DndProvider initialIds={cards.map((c) => c.card.id)}>
+        <DashboardWrapper
+          username={username}
+          dashboardSlug={dashboardSlug}
+          centerItems={cards.length < 2}
+        >
           <div className="col-span-12 items-center justify-end flex p-1">
             <EditButton />
           </div>
           <Cards cards={cards} currencies={currencies} />
           <AddCardButton username={username} dashboardSlug={dashboardSlug} />
-        </DndProvider>
-      </DashboardWrapper>
+        </DashboardWrapper>
+      </DndProvider>
     </Providers>
   );
 }

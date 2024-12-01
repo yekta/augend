@@ -1,20 +1,12 @@
 "use client";
 
-import CardInfoProvider from "@/components/cards/utils/card-info-provider";
 import { useEditMode } from "@/components/providers/edit-mode-provider";
 
-import { cn } from "@/lib/utils";
-import Link from "next/link";
-import { ComponentProps, useEffect, useRef, useState } from "react";
-import { api } from "@/server/trpc/setup/react";
-import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine";
 import {
-  draggable,
-  dropTargetForElements,
-} from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
-import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview";
+  dndItemType,
+  useDnd,
+} from "@/app/[username]/[dashboard_slug]/_components/dnd-provider";
 import { useCurrentDashboard } from "@/components/providers/current-dashboard-provider";
-import { useDnd } from "@/app/[username]/[dashboard_slug]/_components/dnd-provider";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -24,7 +16,17 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { cn } from "@/lib/utils";
+import { api } from "@/server/trpc/setup/react";
+import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine";
+import {
+  draggable,
+  dropTargetForElements,
+} from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview";
 import { LoaderIcon, XIcon } from "lucide-react";
+import Link from "next/link";
+import { ComponentProps, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 export type TCardOuterWrapperDivProps = ComponentProps<"div"> & {
@@ -101,7 +103,7 @@ export default function CardOuterWrapper({
     return combine(
       draggable({
         element: el,
-        getInitialData: () => ({ type: "grid-item", cardId, instanceId }),
+        getInitialData: () => ({ type: dndItemType, cardId, instanceId }),
         onDragStart: () => {
           setDndState("dragging");
         },
@@ -129,7 +131,7 @@ export default function CardOuterWrapper({
         getData: () => ({ cardId }),
         canDrop: ({ source }) =>
           source.data.instanceId === instanceId &&
-          source.data.type === "grid-item" &&
+          source.data.type === dndItemType &&
           source.data.cardId !== cardId,
         onDragEnter: () => setDndState("over"),
         onDragLeave: () => setDndState("idle"),
@@ -144,7 +146,7 @@ export default function CardOuterWrapper({
       <div
         className={cn(
           classNameAll,
-          "data-[dnd-active]:data-[dnd-dragging]:opacity-40 data-[dnd-active]:cursor-grab data-[dnd-over]:z-10"
+          "data-[dnd-active]:data-[dnd-dragging]:opacity-50 data-[dnd-active]:cursor-grab data-[dnd-over]:z-10"
         )}
         data-dnd-active={isEditModeEnabled ? true : undefined}
         data-dnd-over={dndState === "over" ? true : undefined}
@@ -157,7 +159,7 @@ export default function CardOuterWrapper({
           <div className="w-full h-full inset-0 absolute z-10" />
         )}
         {isEditModeEnabled && (
-          <div className="absolute left-0 top-0 py-1 h-full">
+          <div className="absolute left-0 top-0 py-1 h-full pointer-events-none">
             <div
               className="group-data-[dnd-over]/card:scale-y-100 
                 group-data-[dnd-over]/card:opacity-100 transition rounded-full
@@ -279,12 +281,12 @@ function CardPreview({
   return (
     <div
       style={{
-        width: `${cardSize.width / 2}px`,
-        height: `${cardSize.height / 2}px`,
+        width: `${(2 * cardSize.width) / 3}px`,
+        height: `${(2 * cardSize.height) / 3}px`,
       }}
       className={cn(
         className,
-        "bg-foreground/40 border border-foreground/80 rounded-xl"
+        "bg-background border border-dashed border-foreground rounded-xl relative"
       )}
     />
   );

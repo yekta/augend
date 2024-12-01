@@ -1,5 +1,4 @@
-import { TCardOuterWrapperProps } from "@/components/cards/utils/card-outer-wrapper";
-import { AppRouterOutputs } from "@/server/trpc/api/root";
+import { autoScrollWindowForElements } from "@atlaskit/pragmatic-drag-and-drop-auto-scroll/element";
 import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import {
   createContext,
@@ -8,6 +7,8 @@ import {
   useEffect,
   useState,
 } from "react";
+
+export const dndItemType = "dnd-item";
 
 function getInstanceId() {
   return Symbol("instance-id");
@@ -63,6 +64,12 @@ export default function DndProvider({ initialIds, children }: Props) {
       },
     });
   }, [instanceId, orderedIds]);
+
+  useEffect(() => {
+    return autoScrollWindowForElements({
+      getAllowedAxis: () => "vertical",
+    });
+  }, []);
 
   return (
     <DndContext.Provider

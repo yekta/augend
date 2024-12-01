@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@atlaskit/pragmatic-drag-and-drop": "^1.4.0",
+    "@atlaskit/pragmatic-drag-and-drop-auto-scroll": "^1.4.0",
     "@auth/drizzle-adapter": "^1.7.4",
     "@gfxlabs/oku": "^1.0.130",
     "@heroicons/react": "^2.1.5",
