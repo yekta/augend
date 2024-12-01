@@ -13,20 +13,19 @@ function getInstanceId() {
   return Symbol("instance-id");
 }
 
-type TCard = NonNullable<AppRouterOutputs["ui"]["getCards"]>[number];
 const DndContext = createContext<{
   instanceId: symbol;
-  orderedCards: TCard[];
+  orderedIds: string[];
 } | null>(null);
 
-type Props = { initialCards: TCard[]; children: ReactNode };
+type Props = { initialIds: string[]; children: ReactNode };
 
-export default function DndProvider({ initialCards, children }: Props) {
-  const [orderedCards, setOrderedCards] = useState(initialCards);
+export default function DndProvider({ initialIds, children }: Props) {
+  const [orderedIds, setOrderedIds] = useState(initialIds);
 
   useEffect(() => {
-    setOrderedCards(initialCards);
-  }, [initialCards]);
+    setOrderedIds(initialIds);
+  }, [initialIds]);
 
   const [instanceId] = useState(getInstanceId);
 
@@ -51,23 +50,22 @@ export default function DndProvider({ initialCards, children }: Props) {
           return;
         }
 
-        const updated = [...orderedCards];
-        const ids = orderedCards.map((c) => c.card.id);
-        const startCardIndex = ids.indexOf(startCardId);
-        const destinationCardIndex = ids.indexOf(destinationCardId);
+        const updated = [...orderedIds];
+        const startCardIndex = orderedIds.indexOf(startCardId);
+        const destinationCardIndex = orderedIds.indexOf(destinationCardId);
         const [itemToMove] = updated.splice(startCardIndex, 1);
         updated.splice(destinationCardIndex, 0, itemToMove);
 
-        setOrderedCards(updated);
+        setOrderedIds(updated);
       },
     });
-  }, [instanceId, orderedCards]);
+  }, [instanceId, orderedIds]);
 
   return (
     <DndContext.Provider
       value={{
         instanceId,
-        orderedCards,
+        orderedIds,
       }}
     >
       {children}

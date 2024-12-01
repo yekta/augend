@@ -285,11 +285,11 @@ export default function Dashboard({
         dashboardSlug={dashboardSlug}
         centerItems={cards.length < 2}
       >
-        <DndProvider initialCards={cards}>
+        <DndProvider initialIds={cards.map((c) => c.card.id)}>
           <div className="col-span-12 items-center justify-end flex p-1">
             <EditButton />
           </div>
-          <Cards currencies={currencies} />
+          <Cards cards={cards} currencies={currencies} />
           <AddCardButton username={username} dashboardSlug={dashboardSlug} />
         </DndProvider>
       </DashboardWrapper>
@@ -298,11 +298,18 @@ export default function Dashboard({
 }
 
 function Cards({
+  cards,
   currencies,
 }: {
+  cards: NonNullable<AppRouterOutputs["ui"]["getCards"]>;
   currencies: AppRouterOutputs["ui"]["getCurrencies"];
 }) {
-  const { orderedCards } = useDnd();
+  const { orderedIds } = useDnd();
+
+  const orderedCards = orderedIds
+    .map((id) => cards.find((c) => c.card.id === id))
+    .filter((c) => c !== undefined) as NonNullable<typeof cards>;
+
   return (
     <>
       {orderedCards.map((card, index) => {
