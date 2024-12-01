@@ -7,7 +7,7 @@ import {
   dropTargetForElements,
 } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview";
-import { ComponentProps, ReactNode, useEffect, useRef, useState } from "react";
+import { ComponentProps, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 type TCardInnerWrapperProps = ComponentProps<"div"> & { cardId?: string };
