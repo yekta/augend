@@ -18,6 +18,6 @@ export const defaultQueryOptions = {
   },
 };
 
-export const siteTitle = "Centile";
-export const siteDescription = "Centile.";
+export const siteTitle = "Augend";
+export const siteDescription = "Augend.";
 export const mainDashboardSlug = "main";
