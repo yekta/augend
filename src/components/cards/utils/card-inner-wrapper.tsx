@@ -13,6 +13,12 @@ import { createPortal } from "react-dom";
 type TCardInnerWrapperProps = ComponentProps<"div"> & { cardId?: string };
 type TDndState = "idle" | "dragging" | "over" | "preview";
 
+type TSize = {
+  width: number;
+  height: number;
+};
+const defaultCardSize: TSize = { width: 100, height: 50 };
+
 export default function CardInnerWrapper({
   className,
   children,
@@ -23,6 +29,7 @@ export default function CardInnerWrapper({
 
   const [dndState, setDndState] = useState<TDndState>("idle");
   const [preview, setPreview] = useState<HTMLElement | null>(null);
+  const [cardSize, setCardSize] = useState<TSize>(defaultCardSize);
   const { instanceId } = useDnd();
   const { isEnabled: isEditModeEnabled } = useEditMode();
 
@@ -34,16 +41,23 @@ export default function CardInnerWrapper({
       draggable({
         element: el,
         getInitialData: () => ({ type: "grid-item", cardId, instanceId }),
-        onDragStart: () => setDndState("dragging"),
+        onDragStart: () => {
+          setDndState("dragging");
+        },
         onDrop: () => {
           setDndState("idle");
           setPreview(null);
+          setCardSize(defaultCardSize);
         },
 
         onGenerateDragPreview({ nativeSetDragImage }) {
           setCustomNativeDragPreview({
             nativeSetDragImage,
             render({ container }) {
+              if (ref.current) {
+                const { width, height } = ref.current.getBoundingClientRect();
+                setCardSize({ width, height });
+              }
               setPreview(container);
             },
           });
@@ -96,7 +110,7 @@ export default function CardInnerWrapper({
       {isEditModeEnabled &&
         preview &&
         createPortal(
-          <CardPreview className={classNameAll}>{children}</CardPreview>,
+          <CardPreview className={classNameAll} cardSize={cardSize} />,
           preview
         )}
     </div>
@@ -104,13 +118,19 @@ export default function CardInnerWrapper({
 }
 
 function CardPreview({
+  cardSize,
   className,
-  children,
 }: {
+  cardSize: { width: number; height: number };
   className?: string;
-  children: ReactNode;
 }) {
   return (
-    <div className={cn(className, "bg-background-secondary")}>{children}</div>
+    <div
+      style={{
+        width: `${cardSize.width / 2}px`,
+        height: `${cardSize.height / 2}px`,
+      }}
+      className={cn(className, "bg-foreground/40 border-foreground/80")}
+    ></div>
   );
 }
