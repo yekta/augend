@@ -64,7 +64,7 @@ export default function CardInnerWrapper({
   }, [instanceId, isEditModeEnabled, cardId]);
 
   const classNameAll = cn(
-    "w-full border rounded-xl relative overflow-hidden group",
+    "w-full border rounded-xl relative overflow-hidden group/card-inner",
     className
   );
 
@@ -72,7 +72,9 @@ export default function CardInnerWrapper({
     <div
       className={cn(
         classNameAll,
-        "data-[dnd-active]:data-[dnd-dragging]:opacity-40 data-[dnd-active]:cursor-grab data-[dnd-active]:not-touch:hover:bg-background-secondary data-[dnd-active]:active:bg-background-secondary data-[dnd-active]:select-none"
+        "data-[dnd-active]:data-[dnd-dragging]:opacity-40 data-[dnd-active]:cursor-grab",
+        "data-[dnd-active]:not-touch:hover:bg-background-secondary data-[dnd-active]:active:bg-background-secondary",
+        "[&_*]:data-[dnd-active]:select-none [&_*]:data-[dnd-active]:pointer-events-none"
       )}
       data-dnd-active={isEditModeEnabled ? true : undefined}
       data-dnd-over={dndState === "over" ? true : undefined}
@@ -85,7 +87,8 @@ export default function CardInnerWrapper({
         <>
           <div className="w-full h-full inset-0 absolute rounded-lg z-20" />
           <div
-            className="absolute left-0 top-0 group-data-[dnd-over]:scale-y-100 group-data-[dnd-over]:opacity-100 transition 
+            className="absolute left-0 top-0 group-data-[dnd-over]/card-inner:scale-y-100 
+            group-data-[dnd-over]/card-inner:opacity-100 transition 
             opacity-0 scale-y-0 w-[4px] h-full z-30 bg-primary"
           />
         </>
