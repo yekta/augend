@@ -5,7 +5,27 @@ import { useEditMode } from "@/components/providers/edit-mode-provider";
 
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { ComponentProps } from "react";
+import { ComponentProps, useEffect, useRef, useState } from "react";
+import { api } from "@/server/trpc/setup/react";
+import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine";
+import {
+  draggable,
+  dropTargetForElements,
+} from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview";
+import { useCurrentDashboard } from "@/components/providers/current-dashboard-provider";
+import { useDnd } from "@/app/[username]/[dashboard_slug]/_components/dnd-provider";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { LoaderIcon, XIcon } from "lucide-react";
+import { createPortal } from "react-dom";
 
 export type TCardOuterWrapperDivProps = ComponentProps<"div"> & {
   href?: undefined;
@@ -28,6 +48,14 @@ export type TCardOuterWrapperProps =
   | TCardOuterWrapperLinkProps
   | TCardOuterWrapperButtonProps;
 
+type TDndState = "idle" | "dragging" | "over" | "preview";
+
+type TSize = {
+  width: number;
+  height: number;
+};
+const defaultCardSize: TSize = { width: 100, height: 50 };
+
 export default function CardOuterWrapper({
   className,
   children,
@@ -35,27 +63,174 @@ export default function CardOuterWrapper({
   cardId,
   ...rest
 }: TCardOuterWrapperProps) {
+  const ref = useRef<HTMLDivElement | null>(null);
+
   const classNameAll = cn(
     "flex flex-col p-1 group/card col-span-12 data-[dnd-active]:z-20 relative focus:outline-none",
     className
   );
 
+  const { invalidateCards, invalidationIsPending } = useCurrentDashboard();
+
   const { isEnabled: isEditModeEnabled } = useEditMode();
 
-  const Wrapper = ({ children }: { children: React.ReactNode }) => (
-    <CardInfoProvider cardId={cardId} isRemovable={isRemovable}>
-      {children}
-    </CardInfoProvider>
-  );
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [dndState, setDndState] = useState<TDndState>("idle");
+  const [preview, setPreview] = useState<HTMLElement | null>(null);
+  const [cardSize, setCardSize] = useState<TSize>(defaultCardSize);
+  const { instanceId } = useDnd();
+
+  const { mutate: deleteCard, isPending: isDeletePending } =
+    api.ui.deleteCards.useMutation({
+      onSuccess: async () => {
+        await invalidateCards();
+      },
+    });
+
+  const isAnyPending = isDeletePending || invalidationIsPending;
+
+  const onDeleteClick = async ({ cardId }: { cardId: string }) => {
+    if (!cardId) return;
+    deleteCard({ ids: [cardId] });
+  };
+
+  useEffect(() => {
+    if (!isEditModeEnabled || !ref.current) return;
+    const el = ref.current;
+
+    return combine(
+      draggable({
+        element: el,
+        getInitialData: () => ({ type: "grid-item", cardId, instanceId }),
+        onDragStart: () => {
+          setDndState("dragging");
+        },
+        onDrop: () => {
+          setDndState("idle");
+          setPreview(null);
+          setCardSize(defaultCardSize);
+        },
+
+        onGenerateDragPreview({ nativeSetDragImage }) {
+          setCustomNativeDragPreview({
+            nativeSetDragImage,
+            render({ container }) {
+              if (ref.current) {
+                const { width, height } = ref.current.getBoundingClientRect();
+                setCardSize({ width, height });
+              }
+              setPreview(container);
+            },
+          });
+        },
+      }),
+      dropTargetForElements({
+        element: el,
+        getData: () => ({ cardId }),
+        canDrop: ({ source }) =>
+          source.data.instanceId === instanceId &&
+          source.data.type === "grid-item" &&
+          source.data.cardId !== cardId,
+        onDragEnter: () => setDndState("over"),
+        onDragLeave: () => setDndState("idle"),
+        onDrop: () => setDndState("idle"),
+      })
+    );
+  }, [instanceId, isEditModeEnabled, cardId]);
 
   if (isEditModeEnabled && cardId) {
     const restDiv = rest as TCardOuterWrapperDivProps;
     return (
-      <Wrapper>
-        <div {...restDiv} className={classNameAll}>
-          {children}
-        </div>
-      </Wrapper>
+      <div
+        className={cn(
+          classNameAll,
+          "data-[dnd-active]:data-[dnd-dragging]:opacity-40 data-[dnd-active]:cursor-grab data-[dnd-over]:z-10"
+        )}
+        data-dnd-active={isEditModeEnabled ? true : undefined}
+        data-dnd-over={dndState === "over" ? true : undefined}
+        data-dnd-dragging={dndState === "dragging" ? true : undefined}
+        {...restDiv}
+        ref={ref}
+      >
+        {children}
+        {isEditModeEnabled && (
+          <div className="w-full h-full inset-0 absolute z-10" />
+        )}
+        {isEditModeEnabled && (
+          <div className="absolute left-0 top-0 py-1 h-full">
+            <div
+              className="group-data-[dnd-over]/card:scale-y-100 
+                group-data-[dnd-over]/card:opacity-100 transition rounded-full
+                opacity-0 scale-y-0 w-[3px] h-full z-30 bg-primary"
+            />
+          </div>
+        )}
+        {isEditModeEnabled &&
+          preview &&
+          createPortal(
+            <CardPreview className={classNameAll} cardSize={cardSize} />,
+            preview
+          )}
+        {isEditModeEnabled && isRemovable && cardId && (
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+              <Button
+                state={isAnyPending ? "loading" : "default"}
+                onClick={() => setIsDialogOpen(true)}
+                size="icon"
+                variant="outline"
+                className="absolute left-0 top-0 size-7 rounded-full z-30 transition text-foreground shadow-md 
+                  shadow-shadow/[var(--opacity-shadow)] group-data-[dnd-over]/card:scale-0 group-data-[dnd-dragging]/card:scale-0
+                  group-data-[dnd-over]/card:opacity-0 group-data-[dnd-dragging]/card:opacity-0"
+              >
+                <div className="size-4">
+                  {isAnyPending ? (
+                    <LoaderIcon className="size-full animate-spin" />
+                  ) : (
+                    <XIcon className="size-full" />
+                  )}
+                </div>
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-sm">
+              <DialogHeader>
+                <DialogTitle className="text-destructive">
+                  Are you sure?
+                </DialogTitle>
+                <DialogDescription>
+                  This action cannot be undone. Are you sure you want to delete
+                  this card?
+                </DialogDescription>
+              </DialogHeader>
+              <div className="flex justify-end flex-wrap gap-2">
+                <Button
+                  onClick={() => setIsDialogOpen(false)}
+                  variant="outline"
+                  className="border-none text-muted-foreground"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={() => onDeleteClick({ cardId })}
+                  state={isAnyPending ? "loading" : "default"}
+                  data-pending={isAnyPending ? true : undefined}
+                  variant="destructive"
+                  className="group/button"
+                >
+                  {isAnyPending && (
+                    <div className="size-6 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+                      <LoaderIcon className="size-full animate-spin" />
+                    </div>
+                  )}
+                  <span className="group-data-[pending]/button:text-transparent">
+                    Delete
+                  </span>
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+        )}
+      </div>
     );
   }
 
@@ -66,36 +241,51 @@ export default function CardOuterWrapper({
       ...restLink
     } = rest as TCardOuterWrapperLinkProps;
     return (
-      <Wrapper>
-        <Link
-          data-has-href={href ? true : undefined}
-          href={href}
-          {...restLink}
-          className={classNameAll}
-          target={target}
-        >
-          {children}
-        </Link>
-      </Wrapper>
+      <Link
+        data-has-href={href ? true : undefined}
+        href={href}
+        {...restLink}
+        className={classNameAll}
+        target={target}
+      >
+        {children}
+      </Link>
     );
   }
   if ("onClick" in rest && rest.onClick) {
     const restButton = rest as TCardOuterWrapperButtonProps;
     return (
-      <Wrapper>
-        <button {...restButton} className={classNameAll}>
-          {children}
-        </button>
-      </Wrapper>
+      <button {...restButton} className={classNameAll}>
+        {children}
+      </button>
     );
   }
 
   const restDiv = rest as TCardOuterWrapperDivProps;
   return (
-    <Wrapper>
-      <div {...restDiv} className={classNameAll}>
-        {children}
-      </div>
-    </Wrapper>
+    <div {...restDiv} className={classNameAll}>
+      {children}
+    </div>
+  );
+}
+
+function CardPreview({
+  cardSize,
+  className,
+}: {
+  cardSize: { width: number; height: number };
+  className?: string;
+}) {
+  return (
+    <div
+      style={{
+        width: `${cardSize.width / 2}px`,
+        height: `${cardSize.height / 2}px`,
+      }}
+      className={cn(
+        className,
+        "bg-foreground/40 border border-foreground/80 rounded-xl"
+      )}
+    />
   );
 }
