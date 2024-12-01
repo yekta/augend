@@ -1,3 +1,3 @@
-## Centile: [centile.app](https://centile.app)
+## Augend: [augend.app](https://augend.app)
 
 A dashboard to track financial assets.
