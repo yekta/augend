@@ -1,21 +1,19 @@
 "use client";
 
 import { api } from "@/server/trpc/setup/react";
-import { createContext, FC, ReactNode, useContext } from "react";
+import { createContext, FC, ReactNode, useContext, useEffect } from "react";
 
 type TCurrentDashboardContext = {
   username?: string;
   dashboardSlug?: string;
   invalidateCards: () => Promise<void>;
-  invalidationIsPending: boolean;
+  cancelCardsQuery: () => Promise<void>;
+  isPendingCardInvalidation: boolean;
 };
 
-const CurrentDashboardContext = createContext<TCurrentDashboardContext>({
-  username: undefined,
-  dashboardSlug: undefined,
-  invalidateCards: async () => {},
-  invalidationIsPending: false,
-});
+const CurrentDashboardContext = createContext<TCurrentDashboardContext | null>(
+  null
+);
 
 export const CurrentDashboardProvider: FC<{
   username: string;
@@ -23,17 +21,14 @@ export const CurrentDashboardProvider: FC<{
   children: ReactNode;
 }> = ({ username, dashboardSlug, children }) => {
   const utils = api.useUtils();
-  const { isPending: invalidationIsPending } = api.ui.getCards.useQuery(
-    {
-      username,
-      dashboardSlug,
-    },
-    {
-      enabled: false,
-    }
-  );
+  const { isPending: isPendingCardInvalidation } = api.ui.getCards.useQuery({
+    username,
+    dashboardSlug,
+  });
   const invalidateCards = () =>
     utils.ui.getCards.invalidate({ username, dashboardSlug });
+  const cancelCardsQuery = () =>
+    utils.ui.getCards.cancel({ username, dashboardSlug });
 
   return (
     <CurrentDashboardContext.Provider
@@ -41,7 +36,8 @@ export const CurrentDashboardProvider: FC<{
         username,
         dashboardSlug,
         invalidateCards,
-        invalidationIsPending,
+        cancelCardsQuery,
+        isPendingCardInvalidation,
       }}
     >
       {children}

@@ -9,7 +9,17 @@ import {
   dashboardsTable,
   usersTable,
 } from "@/server/db/schema";
-import { and, asc, desc, eq, exists, inArray, isNull } from "drizzle-orm";
+import {
+  and,
+  asc,
+  desc,
+  eq,
+  exists,
+  inArray,
+  isNull,
+  sql,
+  SQL,
+} from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 
 const primaryCurrencyAlias = alias(currenciesTable, "primary_currency");
@@ -155,6 +165,20 @@ export async function createCard({
   return id;
 }
 
+const cardsDashboardBelongsToUser = (userId: string) =>
+  exists(
+    db
+      .select({ id: dashboardsTable.id })
+      .from(dashboardsTable)
+      .where(
+        and(
+          eq(dashboardsTable.id, cardsTable.dashboardId),
+          eq(dashboardsTable.userId, userId),
+          isNull(dashboardsTable.deletedAt)
+        )
+      )
+  );
+
 export async function deleteCards({
   userId,
   ids,
@@ -162,23 +186,45 @@ export async function deleteCards({
   userId: string;
   ids: string[];
 }) {
-  return await db.delete(cardsTable).where(
-    and(
-      inArray(cardsTable.id, ids),
-      exists(
-        db
-          .select({ id: dashboardsTable.id })
-          .from(dashboardsTable)
-          .where(
-            and(
-              eq(dashboardsTable.id, cardsTable.dashboardId),
-              eq(dashboardsTable.userId, userId),
-              isNull(dashboardsTable.deletedAt)
-            )
-          )
-      )
-    )
-  );
+  return await db
+    .delete(cardsTable)
+    .where(
+      and(inArray(cardsTable.id, ids), cardsDashboardBelongsToUser(userId))
+    );
+}
+
+export async function reorderCards({
+  userId,
+  orderObjects,
+}: {
+  userId: string;
+  orderObjects: { id: string; xOrder: number }[];
+}) {
+  if (orderObjects.length < 1) {
+    throw new Error("orderObjects array must be provided be longer than 0");
+  }
+
+  let sqlChunks: SQL[] = [];
+  let ids: string[] = [];
+
+  sqlChunks.push(sql`(case`);
+
+  for (const orderObject of orderObjects) {
+    sqlChunks.push(
+      sql`when ${cardsTable.id} = ${orderObject.id} then ${orderObject.xOrder}::integer`
+    );
+    ids.push(orderObject.id);
+  }
+  sqlChunks.push(sql`end)`);
+
+  const finalSql = sql.join(sqlChunks, sql.raw(" "));
+
+  await db
+    .update(cardsTable)
+    .set({ xOrder: finalSql })
+    .where(
+      and(inArray(cardsTable.id, ids), cardsDashboardBelongsToUser(userId))
+    );
 }
 
 type TCurrencyAlias =

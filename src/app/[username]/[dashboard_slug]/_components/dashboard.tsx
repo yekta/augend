@@ -1,14 +1,15 @@
 "use client";
 
+import CurrentDashboardProvider from "@/app/[username]/[dashboard_slug]/_components/current-dashboard-provider";
 import DashboardWrapper from "@/app/[username]/[dashboard_slug]/_components/dashboard-wrapper";
 import DndProvider, {
   useDnd,
 } from "@/app/[username]/[dashboard_slug]/_components/dnd-provider";
+import { EditBar } from "@/app/[username]/[dashboard_slug]/_components/edit-bar";
 import { AddCardButton } from "@/components/cards/add/add-card";
 import { bananoCmcId } from "@/components/cards/banano-total-card";
 import ThreeLineCard from "@/components/cards/three-line-card";
 import { CardParser } from "@/components/cards/utils/card-parser";
-import { EditButton } from "@/components/edit-button";
 import CmcCryptoInfosProvider from "@/components/providers/cmc/cmc-crypto-infos-provider";
 import CmcGlobalMetricsProvider from "@/components/providers/cmc/cmc-global-metrics-provider";
 import CurrencyPreferenceProvider, {
@@ -23,7 +24,7 @@ import { mainDashboardSlug } from "@/lib/constants";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
 import { api } from "@/server/trpc/setup/react";
 import Link from "next/link";
-import { ReactNode, useMemo } from "react";
+import { ReactNode, useEffect, useMemo } from "react";
 
 const componentRequiresNewRow = ["orderbook", "crypto_price_chart"];
 
@@ -201,11 +202,7 @@ export default function Dashboard({
     currenciesIsLoadingError
   ) {
     return (
-      <DashboardWrapper
-        username={username}
-        dashboardSlug={dashboardSlug}
-        centerItems
-      >
+      <DashboardWrapper centerItems>
         <p className="text-destructive max-w-full px-5 text-center">
           Something went wrong :(
         </p>
@@ -223,7 +220,7 @@ export default function Dashboard({
     currencies === undefined
   ) {
     return (
-      <DashboardWrapper username={username} dashboardSlug={dashboardSlug}>
+      <DashboardWrapper>
         {Array.from({ length: 50 }).map((_, index) => (
           <ThreeLineCard
             key={index}
@@ -242,11 +239,7 @@ export default function Dashboard({
 
   if (cards.length === 0 && dashboard.isOwner) {
     return (
-      <DashboardWrapper
-        username={username}
-        dashboardSlug={dashboardSlug}
-        centerItems
-      >
+      <DashboardWrapper centerItems>
         <div className="flex flex-col items-center w-full text-center gap-3">
           <h1 className="font-bold text-lg px-5">Start by adding a card</h1>
           <AddCardButton
@@ -261,11 +254,7 @@ export default function Dashboard({
 
   if (cards.length === 0 && !dashboard.isOwner) {
     return (
-      <DashboardWrapper
-        username={username}
-        dashboardSlug={dashboardSlug}
-        centerItems
-      >
+      <DashboardWrapper centerItems>
         <p className="text-muted-foreground max-w-full px-5 text-center">
           This dashboard doesn't have any cards yet.
         </p>
@@ -275,20 +264,16 @@ export default function Dashboard({
 
   return (
     <Providers
+      username={username}
+      dashboardSlug={dashboardSlug}
       cardTypeIds={cards.map((c) => c.cardType.id)}
       nanoBananoAccounts={nanoBananoAccounts}
       cryptoCurrencyIds={cryptoCurrencyIds}
       currencyPreference={currencyPreference}
     >
       <DndProvider initialIds={cards.map((c) => c.card.id)}>
-        <DashboardWrapper
-          username={username}
-          dashboardSlug={dashboardSlug}
-          centerItems={cards.length < 2}
-        >
-          <div className="col-span-12 items-center justify-end flex p-1">
-            <EditButton />
-          </div>
+        <DashboardWrapper centerItems={cards.length < 2}>
+          <EditBar />
           <Cards cards={cards} currencies={currencies} />
           <AddCardButton username={username} dashboardSlug={dashboardSlug} />
         </DashboardWrapper>
@@ -340,6 +325,8 @@ function Cards({
 }
 
 function Providers({
+  username,
+  dashboardSlug,
   cardTypeIds,
   cryptoCurrencyIds,
   children,
@@ -347,6 +334,8 @@ function Providers({
   currencyPreference,
   dontAddUsd,
 }: {
+  username: string;
+  dashboardSlug: string;
   cardTypeIds: string[];
   cryptoCurrencyIds: number[];
   children: ReactNode;
@@ -355,6 +344,13 @@ function Providers({
   dontAddUsd?: boolean;
 }) {
   let wrappedChildren = children;
+
+  wrappedChildren = (
+    <CurrentDashboardProvider username={username} dashboardSlug={dashboardSlug}>
+      {children}
+    </CurrentDashboardProvider>
+  );
+
   if (
     cardTypeIds.includes("fiat_currency") ||
     cardTypeIds.includes("banano_total_balance") ||

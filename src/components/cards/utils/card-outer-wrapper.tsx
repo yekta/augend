@@ -6,7 +6,7 @@ import {
   dndItemType,
   useDnd,
 } from "@/app/[username]/[dashboard_slug]/_components/dnd-provider";
-import { useCurrentDashboard } from "@/components/providers/current-dashboard-provider";
+import { useCurrentDashboard } from "@/app/[username]/[dashboard_slug]/_components/current-dashboard-provider";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,

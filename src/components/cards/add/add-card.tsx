@@ -2,7 +2,7 @@
 
 import CardInnerWrapper from "@/components/cards/utils/card-inner-wrapper";
 import CardOuterWrapper from "@/components/cards/utils/card-outer-wrapper";
-import { useCurrentDashboard } from "@/components/providers/current-dashboard-provider";
+import { useCurrentDashboard } from "@/app/[username]/[dashboard_slug]/_components/current-dashboard-provider";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -98,9 +98,9 @@ export function AddCardButton({
     defaultValues, // Add default values here
   });
 
-  const { invalidateCards, invalidationIsPending } = useCurrentDashboard();
+  const { invalidateCards, isPendingCardInvalidation } = useCurrentDashboard();
 
-  const { mutate: createCardMutation, isPending: mutationIsPending } =
+  const { mutate: createCardMutation, isPending: isPendingCreateCard } =
     api.ui.createCard.useMutation({
       onSuccess: async () => {
         await invalidateCards();
@@ -110,7 +110,7 @@ export function AddCardButton({
       },
     });
 
-  const isFormPending = invalidationIsPending || mutationIsPending;
+  const isFormPending = isPendingCardInvalidation || isPendingCreateCard;
 
   const onSubmit = (data: FormValues) => {
     if (!selectedCardType) return;

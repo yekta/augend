@@ -1,6 +1,11 @@
 import { z } from "zod";
 
-import { createCard, deleteCards, getCards } from "@/server/db/repo/card";
+import {
+  createCard,
+  deleteCards,
+  getCards,
+  reorderCards,
+} from "@/server/db/repo/card";
 import { getCardTypes } from "@/server/db/repo/card_types";
 import { createCardValues } from "@/server/db/repo/card_values";
 import { getCurrencies } from "@/server/db/repo/currencies";
@@ -105,12 +110,12 @@ export const uiRouter = createTRPCRouter({
       const res = await getCurrencies({ ids: idsCleaned });
       return res;
     }),
-  getCardTypes: publicProcedure.input(z.object({})).query(async function ({
-    input: {},
-  }) {
-    const res = await getCardTypes();
-    return res;
-  }),
+  getCardTypes: publicProcedure
+    .input(z.object({}))
+    .query(async function ({ input: {} }) {
+      const res = await getCardTypes();
+      return res;
+    }),
   createCard: publicProcedure
     .input(
       z.object({
@@ -211,6 +216,23 @@ export const uiRouter = createTRPCRouter({
         });
       }
       await deleteCards({ userId, ids });
+      return true;
+    }),
+  reorderCards: publicProcedure
+    .input(
+      z.object({
+        orderObjects: z.array(z.object({ id: z.string(), xOrder: z.number() })),
+      })
+    )
+    .mutation(async function ({ input: { orderObjects }, ctx: { session } }) {
+      const userId = session?.user.id;
+      if (!userId) {
+        throw new TRPCError({
+          message: "Unauthorized",
+          code: "UNAUTHORIZED",
+        });
+      }
+      await reorderCards({ userId, orderObjects });
       return true;
     }),
 });

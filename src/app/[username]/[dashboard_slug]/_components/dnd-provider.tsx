@@ -1,3 +1,6 @@
+import { useCurrentDashboard } from "@/app/[username]/[dashboard_slug]/_components/current-dashboard-provider";
+import { AppRouterInputs } from "@/server/trpc/api/root";
+import { api } from "@/server/trpc/setup/react";
 import { autoScrollWindowForElements } from "@atlaskit/pragmatic-drag-and-drop-auto-scroll/element";
 import { monitorForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import {
@@ -17,21 +20,32 @@ function getInstanceId() {
 const DndContext = createContext<{
   instanceId: symbol;
   orderedIds: string[];
-}>({
-  instanceId: getInstanceId(),
-  orderedIds: [],
-});
+  isPendingReorder: boolean;
+} | null>(null);
 
 type Props = { initialIds: string[]; children: ReactNode };
 
 export default function DndProvider({ initialIds, children }: Props) {
   const [orderedIds, setOrderedIds] = useState(initialIds);
-
-  useEffect(() => {
-    setOrderedIds(initialIds);
-  }, [initialIds]);
+  const { invalidateCards, isPendingCardInvalidation, cancelCardsQuery } =
+    useCurrentDashboard();
+  const { mutate: reorderCards, isPending: isReorderingCards } =
+    api.ui.reorderCards.useMutation({
+      onMutate: async () => {
+        await cancelCardsQuery();
+      },
+      onSuccess: async () => {
+        await invalidateCards();
+      },
+    });
+  const isPendingReorder = isReorderingCards || isPendingCardInvalidation;
 
   const [instanceId] = useState(getInstanceId);
+
+  useEffect(() => {
+    console.log("setting initial ids");
+    setOrderedIds(initialIds);
+  }, [initialIds]);
 
   useEffect(() => {
     return monitorForElements({
@@ -60,6 +74,25 @@ export default function DndProvider({ initialIds, children }: Props) {
         const [itemToMove] = updated.splice(startCardIndex, 1);
         updated.splice(destinationCardIndex, 0, itemToMove);
 
+        // If order changed, update the DB
+        let orderObjects: AppRouterInputs["ui"]["reorderCards"]["orderObjects"] =
+          [];
+        for (let i = 0; i < updated.length; i++) {
+          const updatedCardId = updated[i];
+          const originalCardId = orderedIds[i];
+          if (updatedCardId !== originalCardId) {
+            orderObjects.push({
+              id: updatedCardId,
+              xOrder: i,
+            });
+          }
+        }
+        if (orderObjects.length > 0) {
+          reorderCards({
+            orderObjects,
+          });
+        }
+
         setOrderedIds(updated);
       },
     });
@@ -76,6 +109,7 @@ export default function DndProvider({ initialIds, children }: Props) {
       value={{
         instanceId,
         orderedIds,
+        isPendingReorder,
       }}
     >
       {children}
