@@ -72,7 +72,7 @@ export default function CardOuterWrapper({
     className
   );
 
-  const { invalidateCards, invalidationIsPending } = useCurrentDashboard();
+  const { invalidateCards, isPendingCardInvalidation } = useCurrentDashboard();
 
   const { isEnabled: isEditModeEnabled } = useEditMode();
 
@@ -89,7 +89,7 @@ export default function CardOuterWrapper({
       },
     });
 
-  const isAnyPending = isDeletePending || invalidationIsPending;
+  const isAnyPending = isDeletePending || isPendingCardInvalidation;
 
   const onDeleteClick = async ({ cardId }: { cardId: string }) => {
     if (!cardId) return;
