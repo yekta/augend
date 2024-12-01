@@ -1,0 +1,36 @@
+import { createContext, ReactNode, useContext } from "react";
+
+const CardInfoContext = createContext<{
+  cardId?: string;
+  isRemovable?: boolean;
+}>({
+  cardId: undefined,
+  isRemovable: undefined,
+});
+
+type Props = { cardId?: string; isRemovable?: boolean; children: ReactNode };
+
+export default function CardInfoProvider({
+  cardId,
+  isRemovable,
+  children,
+}: Props) {
+  return (
+    <CardInfoContext.Provider
+      value={{
+        cardId,
+        isRemovable,
+      }}
+    >
+      {children}
+    </CardInfoContext.Provider>
+  );
+}
+
+export const useCardInfo = () => {
+  const context = useContext(CardInfoContext);
+  if (!context) {
+    throw new Error("CardInfoProvider is required for useCardInfo to work");
+  }
+  return context;
+};

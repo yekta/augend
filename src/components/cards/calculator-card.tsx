@@ -156,7 +156,6 @@ export default function Calculator({
       {...rest}
     >
       <CardInnerWrapper
-        cardId={rest.cardId}
         id="calculator"
         className="p-3.75 flex flex-col gap-2 relative"
       >

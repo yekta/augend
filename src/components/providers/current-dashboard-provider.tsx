@@ -1,18 +1,21 @@
 "use client";
 
 import { api } from "@/server/trpc/setup/react";
-import { createContext, FC, ReactNode, useContext, useState } from "react";
+import { createContext, FC, ReactNode, useContext } from "react";
 
 type TCurrentDashboardContext = {
-  username: string;
-  dashboardSlug: string;
+  username?: string;
+  dashboardSlug?: string;
   invalidateCards: () => Promise<void>;
   invalidationIsPending: boolean;
 };
 
-const CurrentDashboardContext = createContext<TCurrentDashboardContext | null>(
-  null
-);
+const CurrentDashboardContext = createContext<TCurrentDashboardContext>({
+  username: undefined,
+  dashboardSlug: undefined,
+  invalidateCards: async () => {},
+  invalidationIsPending: false,
+});
 
 export const CurrentDashboardProvider: FC<{
   username: string;

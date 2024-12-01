@@ -320,7 +320,7 @@ export default function UniswapPositionCard({
       }
       {...rest}
     >
-      <CardInnerWrapper cardId={rest.cardId} className="flex flex-col flex-1">
+      <CardInnerWrapper className="flex flex-col flex-1">
         <div
           className={cn(
             "w-full flex flex-1 text-sm justify-center items-center overflow-hidden"

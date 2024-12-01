@@ -52,7 +52,6 @@ export default function ThreeLineCard({
       {...rest}
     >
       <CardInnerWrapper
-        cardId={rest.cardId}
         className="flex flex-1 flex-col justify-center items-center px-4 py-3 text-center gap-3 
         not-touch:group-data-[has-href]/card:group-hover/card:bg-background-secondary group-data-[has-href]/card:group-active/card:bg-background-secondary relative overflow-hidden"
       >

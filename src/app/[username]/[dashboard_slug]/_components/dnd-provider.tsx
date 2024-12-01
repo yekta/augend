@@ -16,7 +16,10 @@ function getInstanceId() {
 const DndContext = createContext<{
   instanceId: symbol;
   orderedIds: string[];
-} | null>(null);
+}>({
+  instanceId: getInstanceId(),
+  orderedIds: [],
+});
 
 type Props = { initialIds: string[]; children: ReactNode };
 

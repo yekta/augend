@@ -189,10 +189,7 @@ export default function CryptoPriceChartCard({
       data-placeholder-data={isPlaceholderData ? true : undefined}
       {...rest}
     >
-      <CardInnerWrapper
-        cardId={rest.cardId}
-        className="px-5 pt-4.5 pb-3 gap-12 flex flex-col items-start"
-      >
+      <CardInnerWrapper className="px-5 pt-4.5 pb-3 gap-12 flex flex-col items-start">
         <Header
           config={config}
           priceInfo={priceInfo}

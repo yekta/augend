@@ -55,7 +55,6 @@ export default function FearGreedIndexCard({
       {...restTyped}
     >
       <CardInnerWrapper
-        cardId={rest.cardId}
         className="flex flex-1 flex-col justify-center items-center border rounded-xl px-3 py-1 text-center gap-3
         not-touch:group-data-[has-href]/card:group-hover/card:bg-background-secondary group-data-[has-href]/card:group-active/card:bg-background-secondary"
       >

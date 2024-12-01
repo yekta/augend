@@ -70,7 +70,6 @@ export default function MiniCryptoCard({
       {...restTyped}
     >
       <CardInnerWrapper
-        cardId={rest.cardId}
         className="flex px-2.5 md:pl-3.5 md:pr-3.75 py-3 md:py-4 gap-2.25 md:gap-3 flex-row items-center text-left
         not-touch:group-data-[has-href]/card:group-hover/card:bg-background-secondary group-data-[has-href]/card:group-active/card:bg-background-secondary relative overflow-hidden"
       >

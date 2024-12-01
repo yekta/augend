@@ -66,7 +66,6 @@ export default function EthereumGasCard({
       {...restTyped}
     >
       <CardInnerWrapper
-        cardId={rest.cardId}
         className="px-2 py-2.5 flex flex-wrap shrink min-w-0 items-center justify-center flex-row leading-none font-bold relative
         not-touch:group-data-[has-href]/card:group-hover/card:bg-background-secondary group-data-[has-href]/card:group-active/card:bg-background-secondary"
       >
