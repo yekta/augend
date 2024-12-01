@@ -45,16 +45,13 @@ export default function CardOuterWrapper({
   cardId,
   ...rest
 }: TCardOuterWrapperProps) {
-  const { isEnabled: isEditModeEnabled } = useEditMode();
-  const ref = useRef<HTMLDivElement | null>(null);
-
   const classNameAll = cn(
     "flex flex-col p-1 group/card col-span-12 data-[dnd-active]:z-20 relative focus:outline-none",
     className
   );
 
+  const { isEnabled: isEditModeEnabled } = useEditMode();
   const { invalidateCards, invalidationIsPending } = useCurrentDashboard();
-
   const [open, setOpen] = useState(false);
 
   const { mutate: deleteCard, isPending: isDeletePending } =
@@ -74,7 +71,7 @@ export default function CardOuterWrapper({
   if (isEditModeEnabled && isRemovable && cardId) {
     const restDiv = rest as TCardOuterWrapperDivProps;
     return (
-      <div {...restDiv} ref={ref} className={classNameAll}>
+      <div {...restDiv} className={classNameAll}>
         {children}
         {isEditModeEnabled && (
           <Dialog open={open} onOpenChange={setOpen}>

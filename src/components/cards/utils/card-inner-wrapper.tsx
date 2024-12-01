@@ -19,10 +19,10 @@ export default function CardInnerWrapper({
   cardId,
   ...rest
 }: TCardInnerWrapperProps) {
-  const [dndState, setDndState] = useState<TDndState>("idle");
-  const [preview, setPreview] = useState<HTMLElement | null>(null);
   const ref = useRef<HTMLDivElement | null>(null);
 
+  const [dndState, setDndState] = useState<TDndState>("idle");
+  const [preview, setPreview] = useState<HTMLElement | null>(null);
   const { instanceId } = useDnd();
   const { isEnabled: isEditModeEnabled } = useEditMode();
 
