@@ -64,15 +64,17 @@ export default function CardInnerWrapper({
   }, [instanceId, isEditModeEnabled, cardId]);
 
   const classNameAll = cn(
-    "w-full border rounded-xl relative overflow-hidden group data-[dnd-dragging]:opacity-40",
-    isEditModeEnabled &&
-      "cursor-grab not-touch:hover:bg-background-secondary active:bg-background-secondary",
+    "w-full border rounded-xl relative overflow-hidden group",
     className
   );
 
   return (
     <div
-      className={classNameAll}
+      className={cn(
+        classNameAll,
+        "data-[dnd-active]:data-[dnd-dragging]:opacity-40 data-[dnd-active]:cursor-grab data-[dnd-active]:not-touch:hover:bg-background-secondary data-[dnd-active]:active:bg-background-secondary data-[dnd-active]:select-none"
+      )}
+      data-dnd-active={isEditModeEnabled ? true : undefined}
       data-dnd-over={dndState === "over" ? true : undefined}
       data-dnd-dragging={dndState === "dragging" ? true : undefined}
       {...rest}
