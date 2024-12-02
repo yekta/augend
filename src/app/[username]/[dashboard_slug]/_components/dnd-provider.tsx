@@ -1,3 +1,5 @@
+"use client";
+
 import { useCurrentDashboard } from "@/app/[username]/[dashboard_slug]/_components/current-dashboard-provider";
 import { AppRouterInputs } from "@/server/trpc/api/root";
 import { api } from "@/server/trpc/setup/react";

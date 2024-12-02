@@ -1,3 +1,4 @@
+import { defaultCurrencyPreference } from "@/lib/constants";
 import { db } from "@/server/db/db";
 import { TCurrencyWithSelectedFields } from "@/server/db/repo/types";
 import {
@@ -110,9 +111,9 @@ export async function getCards({
     ? res
     : res.map((r) => ({
         ...r,
-        primary_currency: defaultPrimaryCurrency,
-        secondary_currency: defaultSecondaryCurrency,
-        tertiary_currency: defaultTertiaryCurrency,
+        primary_currency: defaultCurrencyPreference.primary,
+        secondary_currency: defaultCurrencyPreference.secondary,
+        tertiary_currency: defaultCurrencyPreference.tertiary,
       }));
 
   type TResItem = (typeof editedRes)[number];
@@ -234,34 +235,4 @@ type TCurrencyAlias =
 
 type TCurrencyFieldSelectors = {
   [K in keyof TCurrencyWithSelectedFields]: TCurrencyAlias[K];
-};
-
-const defaultPrimaryCurrency: TCurrencyWithSelectedFields = {
-  id: "81260265-7335-4d20-9064-0357e75690d6",
-  ticker: "USD",
-  coinId: null,
-  isCrypto: false,
-  maxDecimalsPreferred: 2,
-  name: "United States Dollar",
-  symbol: "$",
-};
-
-const defaultSecondaryCurrency: TCurrencyWithSelectedFields = {
-  id: "d11e7514-5c8e-423d-bc94-efa24bf0f423",
-  ticker: "EUR",
-  coinId: null,
-  isCrypto: false,
-  maxDecimalsPreferred: 2,
-  name: "Euro",
-  symbol: "€",
-};
-
-const defaultTertiaryCurrency: TCurrencyWithSelectedFields = {
-  id: "9710ede3-9d6e-4c3f-8c1f-3664263e4a8e",
-  ticker: "GBP",
-  coinId: null,
-  isCrypto: false,
-  maxDecimalsPreferred: 2,
-  name: "British Pound Sterling",
-  symbol: "£",
 };

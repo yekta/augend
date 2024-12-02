@@ -18,7 +18,7 @@ type SignInCardProps = ComponentProps<"div"> & {
 };
 
 const title = "Get Started";
-const description = "Track your financial assets.";
+const description = "Track financial assets.";
 
 export default function SignInCard({
   className,

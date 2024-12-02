@@ -13,7 +13,7 @@ export async function Navbar({}: Props) {
   const session = await auth();
   return (
     <NavigationMenu className="w-full flex items-center justify-center">
-      <div className="w-full max-w-7xl flex items-center justify-between p-1">
+      <div className="w-full flex items-center justify-between p-1 md:p-2">
         <NavigationMenuItem asChild>
           <Button asChild variant="outline" className="border-none p-2">
             <Link href="/">
