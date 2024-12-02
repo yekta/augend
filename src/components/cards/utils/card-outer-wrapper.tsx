@@ -155,9 +155,11 @@ export default function CardOuterWrapper({
         ref={ref}
       >
         {children}
+        {/* To block the content below */}
         {isEditModeEnabled && (
           <div className="w-full h-full inset-0 absolute z-10" />
         )}
+        {/* Vertical indicator */}
         {isEditModeEnabled && (
           <div className="absolute left-0.5 top-0 py-1 h-full pointer-events-none">
             <div
@@ -167,12 +169,14 @@ export default function CardOuterWrapper({
             />
           </div>
         )}
+        {/* Preview for the dragging element */}
         {isEditModeEnabled &&
           preview &&
           createPortal(
             <CardPreview className={classNameAll} cardSize={cardSize} />,
             preview
           )}
+        {/* Delete card button */}
         {isEditModeEnabled && isRemovable && cardId && (
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
