@@ -1,7 +1,7 @@
 "use client";
 
 import CurrentDashboardProvider from "@/app/[username]/[dashboard_slug]/_components/current-dashboard-provider";
-import DashboardWrapper from "@/app/[username]/[dashboard_slug]/_components/dashboard-wrapper";
+import DashboardGrid from "@/app/[username]/[dashboard_slug]/_components/dashboard-grid";
 import DndProvider, {
   useDnd,
 } from "@/app/[username]/[dashboard_slug]/_components/dnd-provider";
@@ -24,11 +24,11 @@ import { mainDashboardSlug } from "@/lib/constants";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
 import { api } from "@/server/trpc/setup/react";
 import Link from "next/link";
-import { ReactNode, useEffect, useMemo } from "react";
+import { ReactNode, useMemo } from "react";
 
 const componentRequiresNewRow = ["orderbook", "crypto_price_chart"];
 
-export default function Dashboard({
+export default function DashboardPage({
   username,
   dashboardSlug,
   dashboardInitialData,
@@ -202,11 +202,11 @@ export default function Dashboard({
     currenciesIsLoadingError
   ) {
     return (
-      <DashboardWrapper centerItems>
+      <DashboardGrid centerItems>
         <p className="text-destructive max-w-full px-5 text-center">
           Something went wrong :(
         </p>
-      </DashboardWrapper>
+      </DashboardGrid>
     );
   }
 
@@ -220,7 +220,7 @@ export default function Dashboard({
     currencies === undefined
   ) {
     return (
-      <DashboardWrapper>
+      <DashboardGrid>
         {Array.from({ length: 50 }).map((_, index) => (
           <ThreeLineCard
             key={index}
@@ -233,13 +233,13 @@ export default function Dashboard({
             isRefetching={false}
           />
         ))}
-      </DashboardWrapper>
+      </DashboardGrid>
     );
   }
 
   if (cards.length === 0 && dashboard.isOwner) {
     return (
-      <DashboardWrapper centerItems>
+      <DashboardGrid centerItems>
         <div className="flex flex-col items-center w-full text-center gap-3">
           <h1 className="font-bold text-lg px-5">Start by adding a card</h1>
           <AddCardButton
@@ -248,17 +248,17 @@ export default function Dashboard({
             className="w-1/2 md:w-1/3 lg:w-1/4"
           />
         </div>
-      </DashboardWrapper>
+      </DashboardGrid>
     );
   }
 
   if (cards.length === 0 && !dashboard.isOwner) {
     return (
-      <DashboardWrapper centerItems>
+      <DashboardGrid centerItems>
         <p className="text-muted-foreground max-w-full px-5 text-center">
           This dashboard doesn't have any cards yet.
         </p>
-      </DashboardWrapper>
+      </DashboardGrid>
     );
   }
 
@@ -272,11 +272,11 @@ export default function Dashboard({
       currencyPreference={currencyPreference}
     >
       <DndProvider initialIds={cards.map((c) => c.card.id)}>
-        <DashboardWrapper centerItems={cards.length < 2}>
+        <DashboardGrid centerItems={cards.length < 2}>
           <EditBar />
           <Cards cards={cards} currencies={currencies} />
           <AddCardButton username={username} dashboardSlug={dashboardSlug} />
-        </DashboardWrapper>
+        </DashboardGrid>
       </DndProvider>
     </Providers>
   );

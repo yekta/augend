@@ -8,6 +8,7 @@ const cacheTimes = {
   medium: 24,
   long: 48,
   veryLong: 480,
+  extremelyLong: 960,
 };
 
 export type TCacheTime = keyof typeof cacheTimes;

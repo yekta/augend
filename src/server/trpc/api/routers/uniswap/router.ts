@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { cachedPromise } from "@/server/redis/redis";
 import {
   EthereumAddressSchema,
   EthereumNetworkSchema,
@@ -19,10 +20,8 @@ import {
 import {
   cachedPublicProcedure,
   createTRPCRouter,
-  publicProcedure,
 } from "@/server/trpc/setup/trpc";
 import type { PositionPriceRange, SearchFilterOpts } from "@gfxlabs/oku";
-import { cachedPromise } from "@/server/redis/redis";
 import { TRPCError } from "@trpc/server";
 
 export const uniswapRouter = createTRPCRouter({
@@ -172,9 +171,9 @@ export const uniswapRouter = createTRPCRouter({
       });
       const [nftUriRaw, positionRes] = await Promise.all([
         cachedPromise(
-          `uniswap:nftUri:${network}_${id}`,
+          `uniswap:getPosition:nftUri:${network}_${id}`,
           nftUriPromise,
-          "veryLong"
+          "extremelyLong"
         ),
         positionPromise,
       ]);

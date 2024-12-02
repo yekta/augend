@@ -1,3 +1,4 @@
+import { cachedPromise } from "@/server/redis/redis";
 import { cmcApiUrl } from "@/server/trpc/api/routers/cmc/constants";
 import { cmcFetchOptions } from "@/server/trpc/api/routers/cmc/secrets";
 import { TCmcGetCryptosResult } from "@/server/trpc/api/routers/cmc/types";
@@ -39,27 +40,18 @@ export const ethereumRouter = createTRPCRouter({
       }
 
       const cmcId = ethereumNetworks[network].cmcId;
-      const ethUsdUrl = `${cmcApiUrl}/v2/cryptocurrency/quotes/latest?id=${cmcId}&convert=${convert}`;
 
-      const [gasPriceWei, block, ethUsdRes] = await Promise.all([
+      const [gasPriceWei, block, ethUsd] = await Promise.all([
         ethereumProviders[network].core.getGasPrice(),
         ethereumProviders[network].core.getBlockNumber(),
-        fetch(ethUsdUrl, cmcFetchOptions),
-      ]);
-
-      if (!ethUsdRes.ok) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: `Failed to fetch ETH price: ${ethUsdRes.statusText}`,
-        });
-      }
-
-      const [ethUsdResJson]: [TCmcGetCryptosResult] = await Promise.all([
-        ethUsdRes.json(),
+        cachedPromise(
+          `ethereum:getGasInfo:getEthPrice:${cmcId}-${convert}`,
+          getEthPrice({ cmcId, convert }),
+          "long"
+        ),
       ]);
 
       const gasPriceGwei = gasPriceWei.toNumber() / gweiToWei;
-      const ethUsd = ethUsdResJson.data[cmcId].quote[convert].price;
 
       const swapGwei = gasPriceGwei * swapGasLimitGwei;
       const uniswapV3PositionCreationGwei =
@@ -77,3 +69,22 @@ export const ethereumRouter = createTRPCRouter({
       return result;
     }),
 });
+
+async function getEthPrice({
+  cmcId,
+  convert,
+}: {
+  cmcId: number;
+  convert: string;
+}) {
+  const ethUsdUrl = `${cmcApiUrl}/v2/cryptocurrency/quotes/latest?id=${cmcId}&convert=${convert}`;
+  const ethUsdRes = await fetch(ethUsdUrl, cmcFetchOptions);
+  if (!ethUsdRes.ok) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: `Failed to fetch ETH price: ${ethUsdRes.statusText}`,
+    });
+  }
+  const ethUsdResJson: TCmcGetCryptosResult = await ethUsdRes.json();
+  return ethUsdResJson.data[cmcId].quote[convert].price;
+}

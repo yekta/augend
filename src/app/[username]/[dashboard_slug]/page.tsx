@@ -1,4 +1,4 @@
-import Dashboard from "@/app/[username]/[dashboard_slug]/_components/dashboard";
+import DashboardPage from "@/app/[username]/[dashboard_slug]/_components/dashboard-page";
 import { siteTitle } from "@/lib/constants";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
 import { apiServer } from "@/server/trpc/setup/server";
@@ -70,7 +70,7 @@ export default async function Page({ params }: Props) {
   }
 
   return (
-    <Dashboard
+    <DashboardPage
       username={username}
       dashboardSlug={dashboard_slug}
       cardsInitialData={cardsInitialData}
