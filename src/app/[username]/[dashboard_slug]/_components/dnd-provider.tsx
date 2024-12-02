@@ -45,7 +45,6 @@ export default function DndProvider({ initialIds, children }: Props) {
   const [instanceId] = useState(getInstanceId);
 
   useEffect(() => {
-    console.log("setting initial ids");
     setOrderedIds(initialIds);
   }, [initialIds]);
 
