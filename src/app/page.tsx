@@ -98,15 +98,15 @@ export default async function Home() {
             <EthereumGasCard network="Ethereum" />
             <CryptoPriceChartCard
               config={{
-                exchange: "Binance",
+                exchange: "Kucoin",
                 ticker: "DOGE/USDT",
               }}
             />
             <CryptoPriceChartCard
               className="hidden lg:flex"
               config={{
-                exchange: "Binance",
-                ticker: "UNI/BTC",
+                exchange: "Kucoin",
+                ticker: "LINK/BTC",
               }}
             />
           </Providers>
