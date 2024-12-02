@@ -17,12 +17,11 @@ import FiatCurrencyRateProvider from "@/components/providers/fiat-currency-rates
 import NanoBananoBalancesProvider, {
   TNanoBananoAccountFull,
 } from "@/components/providers/nano-banano-balance-provider";
-import { Button } from "@/components/ui/button";
+import { LinkButton } from "@/components/ui/button";
 import { mainDashboardSlug } from "@/lib/constants";
 import { cleanAndSortArray } from "@/server/redis/cache-utils";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
 import { api } from "@/server/trpc/setup/react";
-import Link from "next/link";
 import { ReactNode, useMemo } from "react";
 
 const componentRequiresNewRow = ["orderbook", "crypto_price_chart"];
@@ -193,14 +192,12 @@ export default function DashboardPage({
           <h1 className="text-muted-foreground text-xl max-w-full">
             This dashboard doesn't exist.
           </h1>
-          <Button asChild>
-            <Link
-              href={`/${username}/${mainDashboardSlug}`}
-              className="mt-8 max-w-full"
-            >
-              Return Home
-            </Link>
-          </Button>
+          <LinkButton
+            href={`/${username}/${mainDashboardSlug}`}
+            className="mt-8 max-w-full"
+          >
+            Return Home
+          </LinkButton>
         </div>
       </MainProviders>
     );

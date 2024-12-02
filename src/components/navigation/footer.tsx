@@ -5,11 +5,13 @@ export default function Footer({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "w-full flex items-center justify-center py-4 px-4 border-t text-center",
+        "w-full flex items-center justify-center text-center px-2",
         className
       )}
     >
-      <p className="text-muted-foreground text-sm">Augend © 2024</p>
+      <div className="w-full flex items-center justify-center max-w-7xl py-3 px-4 ring-1 ring-border rounded-t-xl">
+        <p className="text-muted-foreground text-sm">Augend © 2024</p>
+      </div>
     </div>
   );
 }

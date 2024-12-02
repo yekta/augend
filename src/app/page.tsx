@@ -6,12 +6,11 @@ import EthereumGasCard from "@/components/cards/ethereum-gas-card";
 import FearGreedIndexCard from "@/components/cards/fear-greed-index-card";
 import FiatCurrencyCard from "@/components/cards/fiat-currency-card";
 import MiniCryptoCard from "@/components/cards/mini-crypto-card";
-import UniswapPositionCard from "@/components/cards/uniswap-position-card";
 import CmcCryptoInfosProvider from "@/components/providers/cmc/cmc-crypto-infos-provider";
 import CmcGlobalMetricsProvider from "@/components/providers/cmc/cmc-global-metrics-provider";
 import CurrencyPreferenceProvider from "@/components/providers/currency-preference-provider";
 import FiatCurrencyRatesProvider from "@/components/providers/fiat-currency-rates-provider";
-import { Button } from "@/components/ui/button";
+import { LinkButton } from "@/components/ui/button";
 import {
   defaultCurrencyPreference,
   mainDashboardSlug,
@@ -22,7 +21,6 @@ import { auth } from "@/server/auth";
 import { getUser } from "@/server/db/repo/user";
 import { cleanAndSortArray } from "@/server/redis/cache-utils";
 import { Metadata } from "next";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ReactNode } from "react";
 
@@ -45,7 +43,7 @@ export default async function Home() {
 
   return (
     <div className="w-full flex-1 flex flex-col items-center">
-      <div className="w-full max-w-7xl flex-1 flex flex-col justify-center items-center pt-8 pb-[calc((100vh-3rem)*0.08+1rem)]">
+      <div className="w-full max-w-7xl flex-1 flex flex-col justify-center items-center pt-8 pb-[calc(5vh+2rem)]">
         <div className="flex flex-col items-center max-w-full px-5 md:px-8">
           <h1 className="text-4xl md:text-5xl font-bold text-center leading-none tracking-tight">
             Track financial assets
@@ -54,9 +52,9 @@ export default async function Home() {
             Track crypto, NFTs, Uniswap positions, stocks, financial trends, and
             more with highly customizable dashboards.
           </p>
-          <Button className="mt-4">
-            <Link href="/sign-in">Get Started</Link>
-          </Button>
+          <LinkButton className="mt-4" href="/sign-in">
+            Get Started
+          </LinkButton>
         </div>
         <div className="w-full grid grid-cols-12 mt-5 px-1 md:px-8">
           <Providers cryptoIds={[...cryptoIds, ...miniCryptoIds]}>
