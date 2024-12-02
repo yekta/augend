@@ -15,9 +15,7 @@ export const NanoBananoBalancesProvider: React.FC<{
 }> = ({ children, accounts }) => {
   const query = api.nanoBanano.getBalances.useQuery(
     {
-      accounts: accounts
-        .sort((a, b) => a.address.localeCompare(b.address, "en-US"))
-        .map((i) => ({ address: i.address })),
+      accounts: accounts.map((i) => ({ address: i.address })),
     },
     defaultQueryOptions.slow
   );

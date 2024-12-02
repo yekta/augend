@@ -26,7 +26,7 @@ export const CmcCryptoInfosProvider: React.FC<{
   const query = api.cmc.getCryptoInfos.useQuery(
     {
       convert,
-      ids: cryptos.sort((a, b) => a.id - b.id).map((i) => i.id),
+      ids: cryptos.map((i) => i.id),
     },
     defaultQueryOptions.slow
   );
