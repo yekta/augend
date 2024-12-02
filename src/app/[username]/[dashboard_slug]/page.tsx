@@ -63,9 +63,15 @@ export default async function Page({ params }: Props) {
     }
   });
 
-  if (currencyIdsForFetch.length > 0) {
+  const currencyIdsForFetchSet = new Set(currencyIdsForFetch);
+  const currencyIdsForFetchCleaned = Array.from(currencyIdsForFetchSet);
+  const currencyIdsForFetchOrdered = currencyIdsForFetchCleaned.sort((a, b) =>
+    a.localeCompare(b, "en-US")
+  );
+
+  if (currencyIdsForFetchOrdered.length > 0) {
     [currenciesInitialData] = await Promise.all([
-      apiServer.ui.getCurrencies({ ids: currencyIdsForFetch }),
+      apiServer.ui.getCurrencies({ ids: currencyIdsForFetchOrdered }),
     ]);
   }
 

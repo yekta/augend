@@ -128,7 +128,8 @@ export default function DashboardPage({
 
     const idsSet = new Set(ids);
     const idsCleaned = Array.from(idsSet);
-    return idsCleaned;
+    const idsOrdered = idsCleaned.sort((a, b) => a.localeCompare(b, "en-US"));
+    return idsOrdered;
   }, [cards]);
 
   const { data: currencies, isLoadingError: currenciesIsLoadingError } =
