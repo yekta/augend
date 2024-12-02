@@ -2,9 +2,7 @@
 
 import CurrentDashboardProvider from "@/app/[username]/[dashboard_slug]/_components/current-dashboard-provider";
 import DashboardGrid from "@/app/[username]/[dashboard_slug]/_components/dashboard-grid";
-import DndProvider, {
-  useDnd,
-} from "@/app/[username]/[dashboard_slug]/_components/dnd-provider";
+import { useDnd } from "@/app/[username]/[dashboard_slug]/_components/dnd-provider";
 import { EditBar } from "@/app/[username]/[dashboard_slug]/_components/edit-bar";
 import { AddCardButton } from "@/components/cards/add/add-card";
 import { bananoCmcId } from "@/components/cards/banano-total-card";
@@ -21,6 +19,7 @@ import NanoBananoBalancesProvider, {
 } from "@/components/providers/nano-banano-balance-provider";
 import { Button } from "@/components/ui/button";
 import { mainDashboardSlug } from "@/lib/constants";
+import { cleanAndSortArray } from "@/server/redis/cache-utils";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
 import { api } from "@/server/trpc/setup/react";
 import Link from "next/link";
@@ -126,10 +125,7 @@ export default function DashboardPage({
       }
     });
 
-    const idsSet = new Set(ids);
-    const idsCleaned = Array.from(idsSet);
-    const idsOrdered = idsCleaned.sort((a, b) => a.localeCompare(b, "en-US"));
-    return idsOrdered;
+    return cleanAndSortArray(ids);
   }, [cards]);
 
   const { data: currencies, isLoadingError: currenciesIsLoadingError } =
@@ -386,10 +382,7 @@ function ConditionalProviders({
   if (cryptoCurrencyIds.length > 0 || cardTypeIds.includes("banano_total")) {
     let allIds = cryptoCurrencyIds;
     if (cardTypeIds.includes("banano_total")) allIds.push(bananoCmcId);
-    const idsSet = new Set(allIds);
-    const idsCleaned = Array.from(idsSet);
-    const idsOrdered = idsCleaned.sort((a, b) => a - b);
-    const cryptos = idsOrdered.map((c) => ({ id: c }));
+    const cryptos = cleanAndSortArray(allIds).map((c) => ({ id: c }));
 
     wrappedChildren = (
       <CmcCryptoInfosProvider cryptos={cryptos} dontAddUsd={dontAddUsd}>

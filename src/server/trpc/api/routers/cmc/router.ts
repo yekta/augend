@@ -11,6 +11,7 @@ import {
   createTRPCRouter,
 } from "@/server/trpc/setup/trpc";
 import { TRPCError } from "@trpc/server";
+import { cleanAndSortArray } from "@/server/redis/cache-utils";
 
 export const cmcRouter = createTRPCRouter({
   getCryptoInfos: cachedPublicProcedure("medium")
@@ -22,18 +23,14 @@ export const cmcRouter = createTRPCRouter({
     )
     .query(async ({ input: { ids, convert }, ctx }) => {
       type TReturn = TCmcGetCryptosResultEdited;
-
       if (ctx.cachedResult) {
         return ctx.cachedResult as TReturn;
       }
 
-      const idsSet = new Set(ids);
-      const idsCleaned = Array.from(idsSet);
-      const idsStr = idsCleaned.join(",");
+      const idsStr = cleanAndSortArray(ids).join(",");
 
-      const convertSet = new Set(convert);
-      const convertCleaned = Array.from(convertSet);
-      const urls = convertCleaned.map(
+      const convertArray = cleanAndSortArray(convert);
+      const urls = convertArray.map(
         (c) =>
           `${cmcApiUrl}/v2/cryptocurrency/quotes/latest?id=${idsStr}&convert=${c}`
       );
@@ -115,7 +112,7 @@ export const cmcRouter = createTRPCRouter({
 
       const [fearGreedIndexData, metricsData]: [
         TCmcFearGreedIndexResult,
-        TCmcGlobalMetricsResult,
+        TCmcGlobalMetricsResult
       ] = await Promise.all([
         fearGreedIndexResponse.json(),
         metricsResponse.json(),

@@ -44,11 +44,12 @@ export const ethereumRouter = createTRPCRouter({
       const [gasPriceWei, block, ethUsd] = await Promise.all([
         ethereumProviders[network].core.getGasPrice(),
         ethereumProviders[network].core.getBlockNumber(),
-        cachedPromise(
-          `ethereum:getGasInfo:getEthPrice:${cmcId}-${convert}`,
-          getEthPrice({ cmcId, convert }),
-          "long"
-        ),
+        cachedPromise({
+          path: "ethereum.getGasInfo:getEthPrice",
+          value: { cmcId, convert },
+          promise: getEthPrice({ cmcId, convert }),
+          cacheTime: "long",
+        }),
       ]);
 
       const gasPriceGwei = gasPriceWei.toNumber() / gweiToWei;

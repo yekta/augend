@@ -19,6 +19,7 @@ import { CardValueForAddCardsSchema } from "@/server/trpc/api/routers/ui/types";
 import { createTRPCRouter, publicProcedure } from "@/server/trpc/setup/trpc";
 import { TRPCError } from "@trpc/server";
 import { Session } from "next-auth";
+import { cleanAndSortArray } from "@/server/redis/cache-utils";
 
 function getIsOwner({
   session,
@@ -105,9 +106,7 @@ export const uiRouter = createTRPCRouter({
       })
     )
     .query(async function ({ input: { ids } }) {
-      const idsSet = new Set(ids);
-      const idsCleaned = Array.from(idsSet);
-      const res = await getCurrencies({ ids: idsCleaned });
+      const res = await getCurrencies({ ids: cleanAndSortArray(ids) });
       return res;
     }),
   getCardTypes: publicProcedure

@@ -1,5 +1,6 @@
 import DashboardPage from "@/app/[username]/[dashboard_slug]/_components/dashboard-page";
 import { siteTitle } from "@/lib/constants";
+import { cleanAndSortArray } from "@/server/redis/cache-utils";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
 import { apiServer } from "@/server/trpc/setup/server";
 import { Metadata } from "next";
@@ -63,15 +64,11 @@ export default async function Page({ params }: Props) {
     }
   });
 
-  const currencyIdsForFetchSet = new Set(currencyIdsForFetch);
-  const currencyIdsForFetchCleaned = Array.from(currencyIdsForFetchSet);
-  const currencyIdsForFetchOrdered = currencyIdsForFetchCleaned.sort((a, b) =>
-    a.localeCompare(b, "en-US")
-  );
+  const currencyIdsForFetchFinal = cleanAndSortArray(currencyIdsForFetch);
 
-  if (currencyIdsForFetchOrdered.length > 0) {
+  if (currencyIdsForFetchFinal.length > 0) {
     [currenciesInitialData] = await Promise.all([
-      apiServer.ui.getCurrencies({ ids: currencyIdsForFetchOrdered }),
+      apiServer.ui.getCurrencies({ ids: currencyIdsForFetchFinal }),
     ]);
   }
 

@@ -20,6 +20,7 @@ import {
 } from "@/lib/constants";
 import { auth } from "@/server/auth";
 import { getUser } from "@/server/db/repo/user";
+import { cleanAndSortArray } from "@/server/redis/cache-utils";
 import { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -123,14 +124,12 @@ function Providers({
   cryptoIds: number[];
   children: ReactNode;
 }) {
-  const cryptoIdsSet = new Set(cryptoIds);
-  const cleanedCryptoIds = Array.from(cryptoIdsSet);
-  const sortedCryptoIds = cleanedCryptoIds.sort((a, b) => a - b);
+  const finalCryptoIds = cleanAndSortArray(cryptoIds);
   return (
     <CurrencyPreferenceProvider currencyPreference={defaultCurrencyPreference}>
       <CmcGlobalMetricsProvider>
         <CmcCryptoInfosProvider
-          cryptos={sortedCryptoIds.map((i) => ({ id: i }))}
+          cryptos={finalCryptoIds.map((i) => ({ id: i }))}
         >
           <FiatCurrencyRatesProvider>
             <CurrentDashboardProvider username="main" dashboardSlug="main">

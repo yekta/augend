@@ -12,6 +12,10 @@ import { ZodError } from "zod";
 import { auth } from "@/server/auth";
 import { getCache, setCache, TCacheTime } from "@/server/redis/redis";
 import { Session } from "next-auth";
+import {
+  cleanAndSortArray,
+  createCacheKeyForTRPCRoute,
+} from "@/server/redis/cache-utils";
 
 /**
  * 1. CONTEXT
@@ -107,30 +111,10 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
   return result;
 });
 
-const createCacheKey: (path: string, rawInput: unknown) => string = (
-  path,
-  rawInput
-) => {
-  function normalizeValue(value: unknown): unknown {
-    if (Array.isArray(value)) {
-      return [...value].sort();
-    }
-    if (value && typeof value === "object") {
-      return Object.fromEntries(
-        Object.entries(value).map(([k, v]) => [k, normalizeValue(v)])
-      );
-    }
-    return value;
-  }
-
-  const normalizedInput = normalizeValue(rawInput);
-  return `${path}:${JSON.stringify(normalizedInput)}`;
-};
-
 const cacheMiddleware = (cacheTime: TCacheTime) =>
   t.middleware(async ({ path, next, getRawInput, ctx }) => {
     const rawInput = await getRawInput();
-    const cacheKey = createCacheKey(path, rawInput);
+    const cacheKey = createCacheKeyForTRPCRoute(path, rawInput);
     const cachedResult = await getCache(cacheKey);
 
     const result = await next({ ctx: { ...ctx, cachedResult } });

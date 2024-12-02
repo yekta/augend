@@ -1,4 +1,5 @@
 import { env } from "@/lib/env";
+import { createCacheKeyForTRPCRoute } from "@/server/redis/cache-utils";
 import { Redis } from "ioredis";
 
 const redis = new Redis(env.REDIS_URL + "?family=0");
@@ -45,11 +46,18 @@ export async function getCache<T>(key: string) {
   return null;
 }
 
-export async function cachedPromise<T>(
-  key: string,
-  promise: Promise<T>,
-  cacheTime: keyof typeof cacheTimes = "medium"
-) {
+export async function cachedPromise<T>({
+  path,
+  value,
+  promise,
+  cacheTime = "medium",
+}: {
+  path: string;
+  value: any;
+  promise: Promise<T>;
+  cacheTime: keyof typeof cacheTimes;
+}) {
+  const key = createCacheKeyForTRPCRoute(path, value);
   const cache = await getCache<T>(key);
   if (cache) {
     return cache;

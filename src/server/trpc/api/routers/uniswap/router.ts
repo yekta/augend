@@ -170,11 +170,12 @@ export const uniswapRouter = createTRPCRouter({
         body: JSON.stringify(body),
       });
       const [nftUriRaw, positionRes] = await Promise.all([
-        cachedPromise(
-          `uniswap:getPosition:nftUri:${network}_${id}`,
-          nftUriPromise,
-          "extremelyLong"
-        ),
+        cachedPromise({
+          path: "uniswap.getPosition:nftUri",
+          value: { network, id },
+          promise: nftUriPromise,
+          cacheTime: "extremelyLong",
+        }),
         positionPromise,
       ]);
 
