@@ -19,7 +19,7 @@ export default function CardInnerWrapper({
         classNameAll,
         "group-data-[dnd-active]/card:overflow-visible group-data-[dnd-over]/card:bg-background group-data-[dnd-over]/card:transition",
         "group-data-[dnd-active]/card:not-touch:group-hover/card:bg-background-hover",
-        "[&_*]:group-data-[dnd-active]/card:select-none group-data-[dnd-over]/card:translate-x-[3px]"
+        "[&_*]:group-data-[dnd-active]/card:select-none group-data-[dnd-over]/card:translate-x-1"
       )}
       {...rest}
     >

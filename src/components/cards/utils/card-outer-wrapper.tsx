@@ -68,7 +68,7 @@ export default function CardOuterWrapper({
   const ref = useRef<HTMLDivElement | null>(null);
 
   const classNameAll = cn(
-    "flex flex-col p-1 group/card col-span-12 data-[dnd-active]:z-20 relative focus:outline-none",
+    "flex flex-col p-1 group/card col-span-12 relative focus:outline-none",
     className
   );
 
@@ -146,7 +146,7 @@ export default function CardOuterWrapper({
       <div
         className={cn(
           classNameAll,
-          "data-[dnd-active]:data-[dnd-dragging]:opacity-50 data-[dnd-active]:cursor-grab data-[dnd-over]:z-10"
+          "data-[dnd-active]:data-[dnd-dragging]:opacity-50 relative data-[dnd-active]:cursor-grab data-[dnd-over]:z-20"
         )}
         data-dnd-active={isEditModeEnabled ? true : undefined}
         data-dnd-over={dndState === "over" ? true : undefined}
@@ -159,11 +159,11 @@ export default function CardOuterWrapper({
           <div className="w-full h-full inset-0 absolute z-10" />
         )}
         {isEditModeEnabled && (
-          <div className="absolute left-0 top-0 py-1 h-full pointer-events-none">
+          <div className="absolute left-0.5 top-0 py-1 h-full pointer-events-none">
             <div
               className="group-data-[dnd-over]/card:scale-y-100 
                 group-data-[dnd-over]/card:opacity-100 transition rounded-full
-                opacity-0 scale-y-0 w-[3px] h-full z-30 bg-primary"
+                opacity-0 scale-y-0 w-1 -translate-x-1/2 h-full z-10 bg-primary"
             />
           </div>
         )}
@@ -181,7 +181,7 @@ export default function CardOuterWrapper({
                 onClick={() => setIsDialogOpen(true)}
                 size="icon"
                 variant="outline"
-                className="absolute left-0 top-0 size-7 rounded-full z-30 transition text-foreground shadow-md 
+                className="absolute left-0 top-0 size-7 rounded-full z-10 transition text-foreground shadow-md 
                   shadow-shadow/[var(--opacity-shadow)] group-data-[dnd-over]/card:scale-0 group-data-[dnd-dragging]/card:scale-0
                   group-data-[dnd-over]/card:opacity-0 group-data-[dnd-dragging]/card:opacity-0"
               >
