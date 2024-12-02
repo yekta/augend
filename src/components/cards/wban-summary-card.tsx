@@ -37,10 +37,10 @@ export default function WBanSummaryCard({
 }: TCardOuterWrapperProps) {
   const {
     data: banBalanceData,
-    isError: isBanBalanceError,
-    isLoadingError: isBanBalanceLoadingError,
-    isPending: isBanBalancePending,
-    isRefetching: isBanBalanceRefetching,
+    isError: isErrorBanBalance,
+    isLoadingError: isLoadingErrorBanBalance,
+    isPending: isPendingBanBalance,
+    isRefetching: isRefetchingBanBalance,
   } = api.nanoBanano.getBalances.useQuery(
     wbanBalanceQueryInput,
     defaultQueryOptions.fast
@@ -48,21 +48,21 @@ export default function WBanSummaryCard({
 
   const {
     data: wbanPendingWithdrawalsData,
-    isError: isWbanPendingWithdrawalsError,
-    isLoadingError: isWbanPendingWithdrawalsLoadingError,
-    isPending: isWbanPendingWithdrawalsPending,
-    isRefetching: isWbanPendingWithdrawalsRefetching,
+    isError: isErrorWbanPendingWithdrawals,
+    isLoadingError: isLoadingErrorWbanPendingWithdrawals,
+    isPending: isPendingWbanPendingWithdrawals,
+    isRefetching: isRefetchingWbanPendingWithdrawals,
   } = api.wban.getPendingWithdrawals.useQuery(
     undefined,
     defaultQueryOptions.fast
   );
 
-  const isError = isBanBalanceError || isWbanPendingWithdrawalsError;
-  const isPending = isBanBalancePending || isWbanPendingWithdrawalsPending;
+  const isError = isErrorBanBalance || isErrorWbanPendingWithdrawals;
+  const isPending = isPendingBanBalance || isPendingWbanPendingWithdrawals;
   const isRefetching =
-    isBanBalanceRefetching || isWbanPendingWithdrawalsRefetching;
+    isRefetchingBanBalance || isRefetchingWbanPendingWithdrawals;
   const isLoadingError =
-    isBanBalanceLoadingError || isWbanPendingWithdrawalsLoadingError;
+    isLoadingErrorBanBalance || isLoadingErrorWbanPendingWithdrawals;
   const hasData =
     banBalanceData !== undefined && wbanPendingWithdrawalsData !== undefined;
 

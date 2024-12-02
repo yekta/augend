@@ -82,14 +82,14 @@ export default function CardOuterWrapper({
   const [cardSize, setCardSize] = useState<TSize>(defaultCardSize);
   const { instanceId } = useDnd();
 
-  const { mutate: deleteCard, isPending: isDeletePending } =
+  const { mutate: deleteCard, isPending: isPendingDelete } =
     api.ui.deleteCards.useMutation({
       onSuccess: async () => {
         await invalidateCards();
       },
     });
 
-  const isAnyPending = isDeletePending || isPendingCardInvalidation;
+  const isPendingAny = isPendingDelete || isPendingCardInvalidation;
 
   const onDeleteClick = async ({ cardId }: { cardId: string }) => {
     if (!cardId) return;
@@ -177,7 +177,7 @@ export default function CardOuterWrapper({
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
               <Button
-                state={isAnyPending ? "loading" : "default"}
+                state={isPendingAny ? "loading" : "default"}
                 onClick={() => setIsDialogOpen(true)}
                 size="icon"
                 variant="outline"
@@ -186,7 +186,7 @@ export default function CardOuterWrapper({
                   group-data-[dnd-over]/card:opacity-0 group-data-[dnd-dragging]/card:opacity-0"
               >
                 <div className="size-4">
-                  {isAnyPending ? (
+                  {isPendingAny ? (
                     <LoaderIcon className="size-full animate-spin" />
                   ) : (
                     <XIcon className="size-full" />
@@ -214,12 +214,12 @@ export default function CardOuterWrapper({
                 </Button>
                 <Button
                   onClick={() => onDeleteClick({ cardId })}
-                  state={isAnyPending ? "loading" : "default"}
-                  data-pending={isAnyPending ? true : undefined}
+                  state={isPendingAny ? "loading" : "default"}
+                  data-pending={isPendingAny ? true : undefined}
                   variant="destructive"
                   className="group/button"
                 >
-                  {isAnyPending && (
+                  {isPendingAny && (
                     <div className="size-6 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
                       <LoaderIcon className="size-full animate-spin" />
                     </div>
