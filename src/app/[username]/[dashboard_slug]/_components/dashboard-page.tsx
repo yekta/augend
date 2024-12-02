@@ -178,22 +178,35 @@ export default function DashboardPage({
     setDndCards(cards.map((c) => ({ ...c, id: c.card.id })));
   }, [cards]); */
 
+  const MainProviders = ({ children }: { children: ReactNode }) => {
+    return (
+      <CurrentDashboardProvider
+        username={username}
+        dashboardSlug={dashboardSlug}
+      >
+        {children}
+      </CurrentDashboardProvider>
+    );
+  };
+
   if ((!dashboardIsPending && !dashboard) || cards === null) {
     return (
-      <div className="w-full flex-1 flex flex-col items-center justify-center p-5 pb-[calc(5vh+1.5rem)] text-center break-words">
-        <h1 className="font-bold text-8xl max-w-full">404</h1>
-        <h1 className="text-muted-foreground text-xl max-w-full">
-          This dashboard doesn't exist.
-        </h1>
-        <Button asChild>
-          <Link
-            href={`/${username}/${mainDashboardSlug}`}
-            className="mt-8 max-w-full"
-          >
-            Return Home
-          </Link>
-        </Button>
-      </div>
+      <MainProviders>
+        <div className="w-full flex-1 flex flex-col items-center justify-center p-5 pb-[calc(5vh+1.5rem)] text-center break-words">
+          <h1 className="font-bold text-8xl max-w-full">404</h1>
+          <h1 className="text-muted-foreground text-xl max-w-full">
+            This dashboard doesn't exist.
+          </h1>
+          <Button asChild>
+            <Link
+              href={`/${username}/${mainDashboardSlug}`}
+              className="mt-8 max-w-full"
+            >
+              Return Home
+            </Link>
+          </Button>
+        </div>
+      </MainProviders>
     );
   }
 
@@ -203,11 +216,13 @@ export default function DashboardPage({
     currenciesIsLoadingError
   ) {
     return (
-      <DashboardGrid centerItems>
-        <p className="text-destructive max-w-full px-5 text-center">
-          Something went wrong :(
-        </p>
-      </DashboardGrid>
+      <MainProviders>
+        <DashboardGrid centerItems initialIds={[]}>
+          <p className="text-destructive max-w-full px-5 text-center">
+            Something went wrong :(
+          </p>
+        </DashboardGrid>
+      </MainProviders>
     );
   }
 
@@ -221,65 +236,74 @@ export default function DashboardPage({
     currencies === undefined
   ) {
     return (
-      <DashboardGrid>
-        {Array.from({ length: 50 }).map((_, index) => (
-          <ThreeLineCard
-            key={index}
-            top="Loading"
-            middle="Loading"
-            bottom="Loading"
-            isPending={true}
-            isError={false}
-            isLoadingError={false}
-            isRefetching={false}
-          />
-        ))}
-      </DashboardGrid>
+      <MainProviders>
+        <DashboardGrid initialIds={[]}>
+          {Array.from({ length: 50 }).map((_, index) => (
+            <ThreeLineCard
+              key={index}
+              top="Loading"
+              middle="Loading"
+              bottom="Loading"
+              isPending={true}
+              isError={false}
+              isLoadingError={false}
+              isRefetching={false}
+            />
+          ))}
+        </DashboardGrid>
+      </MainProviders>
     );
   }
 
   if (cards.length === 0 && dashboard.isOwner) {
     return (
-      <DashboardGrid centerItems>
-        <div className="flex flex-col items-center w-full text-center gap-3">
-          <h1 className="font-bold text-lg px-5">Start by adding a card</h1>
-          <AddCardButton
-            username={username}
-            dashboardSlug={dashboardSlug}
-            className="w-1/2 md:w-1/3 lg:w-1/4"
-          />
-        </div>
-      </DashboardGrid>
+      <MainProviders>
+        <DashboardGrid centerItems initialIds={cards.map((c) => c.card.id)}>
+          <div className="flex flex-col items-center w-full text-center gap-3">
+            <h1 className="font-bold text-lg px-5">Start by adding a card</h1>
+            <AddCardButton
+              username={username}
+              dashboardSlug={dashboardSlug}
+              className="w-1/2 md:w-1/3 lg:w-1/4"
+            />
+          </div>
+        </DashboardGrid>
+      </MainProviders>
     );
   }
 
   if (cards.length === 0 && !dashboard.isOwner) {
     return (
-      <DashboardGrid centerItems>
-        <p className="text-muted-foreground max-w-full px-5 text-center">
-          This dashboard doesn't have any cards yet.
-        </p>
-      </DashboardGrid>
+      <MainProviders>
+        <DashboardGrid centerItems initialIds={[]}>
+          <p className="text-muted-foreground max-w-full px-5 text-center">
+            This dashboard doesn't have any cards yet.
+          </p>
+        </DashboardGrid>
+      </MainProviders>
     );
   }
 
   return (
-    <Providers
-      username={username}
-      dashboardSlug={dashboardSlug}
-      cardTypeIds={cards.map((c) => c.cardType.id)}
-      nanoBananoAccounts={nanoBananoAccounts}
-      cryptoCurrencyIds={cryptoCurrencyIds}
-      currencyPreference={currencyPreference}
-    >
-      <DndProvider initialIds={cards.map((c) => c.card.id)}>
-        <DashboardGrid centerItems={cards.length < 2}>
+    <MainProviders>
+      <Providers
+        username={username}
+        dashboardSlug={dashboardSlug}
+        cardTypeIds={cards.map((c) => c.cardType.id)}
+        nanoBananoAccounts={nanoBananoAccounts}
+        cryptoCurrencyIds={cryptoCurrencyIds}
+        currencyPreference={currencyPreference}
+      >
+        <DashboardGrid
+          centerItems={cards.length < 2}
+          initialIds={cards.map((c) => c.card.id)}
+        >
           <EditBar />
           <Cards cards={cards} currencies={currencies} />
           <AddCardButton username={username} dashboardSlug={dashboardSlug} />
         </DashboardGrid>
-      </DndProvider>
-    </Providers>
+      </Providers>
+    </MainProviders>
   );
 }
 
@@ -326,8 +350,6 @@ function Cards({
 }
 
 function Providers({
-  username,
-  dashboardSlug,
   cardTypeIds,
   cryptoCurrencyIds,
   children,
@@ -345,12 +367,6 @@ function Providers({
   dontAddUsd?: boolean;
 }) {
   let wrappedChildren = children;
-
-  wrappedChildren = (
-    <CurrentDashboardProvider username={username} dashboardSlug={dashboardSlug}>
-      {children}
-    </CurrentDashboardProvider>
-  );
 
   if (
     cardTypeIds.includes("fiat_currency") ||

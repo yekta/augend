@@ -5,6 +5,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { siteDescription, siteTitle } from "@/lib/constants";
 import NextTopLoader from "nextjs-toploader";
+import { Navbar } from "@/components/navigation/navbar";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -42,6 +43,7 @@ export default async function RootLayout({
               height={2}
             />
             <div className="w-full flex flex-col min-h-[100svh]">
+              <Navbar />
               {children}
             </div>
           </HydrateClient>

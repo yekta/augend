@@ -284,10 +284,10 @@ export function AddCardCommandPanel({
       )}
       {selectedCardType === null && (
         <Command
-          className={`shadow-xl shadow-shadow/[var(--opacity-shadow)] ${cn(
-            "w-full rounded-xl border",
+          className={cn(
+            "w-full rounded-xl border shadow-xl shadow-shadow/[var(--opacity-shadow)]",
             className
-          )}`}
+          )}
         >
           <CommandInput ref={inputRef} placeholder="Search for a card..." />
           {!isPending && data && (

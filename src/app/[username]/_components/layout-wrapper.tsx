@@ -1,6 +1,6 @@
 "use client";
 
-import Navbar, { TRoute } from "@/components/navigation/navbar";
+import DashboardTabs, { TRoute } from "@/components/navigation/dashboard-tabs";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
 import { api } from "@/server/trpc/setup/react";
 
@@ -32,7 +32,7 @@ export default function LayoutWrapper({
 
   return (
     <>
-      <Navbar
+      <DashboardTabs
         routes={routes}
         isPending={isPending}
         isLoadingError={isLoadingError}
