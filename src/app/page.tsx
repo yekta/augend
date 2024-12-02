@@ -22,13 +22,13 @@ export default async function Home() {
   return (
     <div className="w-full flex-1 flex flex-col items-center">
       <div className="w-full max-w-7xl flex justify-center items-start">
-        <div className="flex flex-col items-center max-w-full px-4 md:px-8 pt-8 md:pt-16">
-          <h1 className="text-5xl font-bold text-center leading-none tracking-tight">
+        <div className="flex flex-col items-center max-w-full px-5 md:px-8 pt-8 md:pt-16">
+          <h1 className="text-4xl md:text-5xl font-bold text-center leading-none tracking-tight">
             Track financial assets
           </h1>
           <p className="text-lg text-center mt-2 max-w-lg text-muted-foreground">
-            Track cryptocurrencies, NFTs, Uniswap positions, stocks, financial
-            trends and more with highly customizable dashboards.
+            Track crypto, NFTs, Uniswap positions, stocks, financial trends, and
+            more with highly customizable dashboards.
           </p>
           <Button className="mt-4">
             <Link href="/sign-in">Get Started</Link>

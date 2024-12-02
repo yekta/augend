@@ -4,11 +4,13 @@ import {
   NavigationMenu,
   NavigationMenuItem,
 } from "@/components/ui/navigation-menu";
+import { auth } from "@/server/auth";
 import Link from "next/link";
 
 type Props = {};
 
-export function Navbar({}: Props) {
+export async function Navbar({}: Props) {
+  const session = await auth();
   return (
     <NavigationMenu className="w-full flex items-center justify-center">
       <div className="w-full max-w-7xl flex items-center justify-between p-1">
@@ -20,11 +22,13 @@ export function Navbar({}: Props) {
           </Button>
         </NavigationMenuItem>
         <div className="pr-1">
-          <NavigationMenuItem asChild>
-            <Button size="sm">
-              <Link href="/sign-in">Get Started</Link>
-            </Button>
-          </NavigationMenuItem>
+          {!session && (
+            <NavigationMenuItem asChild>
+              <Button size="sm">
+                <Link href="/sign-in">Get Started</Link>
+              </Button>
+            </NavigationMenuItem>
+          )}
         </div>
       </div>
     </NavigationMenu>

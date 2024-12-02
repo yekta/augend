@@ -286,7 +286,7 @@ export default function DashboardPage({
 
   return (
     <MainProviders>
-      <Providers
+      <ConditionalProviders
         username={username}
         dashboardSlug={dashboardSlug}
         cardTypeIds={cards.map((c) => c.cardType.id)}
@@ -302,7 +302,7 @@ export default function DashboardPage({
           <Cards cards={cards} currencies={currencies} />
           <AddCardButton username={username} dashboardSlug={dashboardSlug} />
         </DashboardGrid>
-      </Providers>
+      </ConditionalProviders>
     </MainProviders>
   );
 }
@@ -349,7 +349,7 @@ function Cards({
   );
 }
 
-function Providers({
+function ConditionalProviders({
   cardTypeIds,
   cryptoCurrencyIds,
   children,

@@ -37,7 +37,6 @@ export default function LayoutWrapper({
         isPending={isPending}
         isLoadingError={isLoadingError}
       />
-      <div className="h-13 hidden md:block" />
       {children}
       <div className="h-13 block md:hidden" />
     </>
