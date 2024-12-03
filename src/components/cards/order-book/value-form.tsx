@@ -9,7 +9,7 @@ import {
 import { api } from "@/server/trpc/setup/react";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
-export function CryptoPriceChartValueForm({
+export function CryptoOrderBookValueForm({
   onFormSubmit,
   isPendingForm,
 }: TValueFormProps) {
@@ -51,11 +51,11 @@ export function CryptoPriceChartValueForm({
     }
     onFormSubmit([
       {
-        cardTypeInputId: "crypto_price_chart_exchange",
+        cardTypeInputId: "order_book_exchange",
         value: exchangeValue,
       },
       {
-        cardTypeInputId: "crypto_price_chart_pair",
+        cardTypeInputId: "order_book_pair",
         value: pair,
       },
     ]);

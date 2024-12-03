@@ -17,7 +17,8 @@ import {
 import { api } from "@/server/trpc/setup/react";
 import { ChartNoAxesCombinedIcon } from "lucide-react";
 
-const lines = 10;
+const lines = 20;
+const uiLines = 10;
 const placeholderData: TOrderBook = {
   bids: Array.from({ length: lines }, (_, i) => ({
     price: 1000,
@@ -59,7 +60,7 @@ export default function OrderBookCard({
   const currentData: TOrderBook = isPending
     ? placeholderData
     : data
-    ? limitData(data, lines)
+    ? limitData(data, uiLines)
     : placeholderData;
 
   const href =

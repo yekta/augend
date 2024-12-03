@@ -16,7 +16,7 @@ import { OHLCV, OrderBook, Ticker } from "ccxt";
 const OrderBookInputSchema = z.object({
   exchange: ExchangeSchema,
   pair: z.string(),
-  limit: z.number(),
+  limit: z.number().min(20).max(100).default(20),
 });
 
 const OHLCVInputSchema = z.object({

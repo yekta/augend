@@ -287,7 +287,8 @@ export function AddCardCommandPanel({
             data-has-inputs={inputs ? true : undefined}
             className="w-full px-4 pt-3.5 pb-4 data-[has-inputs]:pt-3"
           >
-            {selectedCardType.cardType.id === "crypto_price_chart" ? (
+            {selectedCardType.cardType.id === "crypto_price_chart" ||
+            selectedCardType.cardType.id === "order_book" ? (
               <CardValuesFormParser
                 onFormSubmit={onSubmitNew}
                 isPendingForm={isFormPending}

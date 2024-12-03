@@ -54,7 +54,7 @@ export function CardParser({
     return <CalculatorCard currencies={selectedCurrencies} {...rest} />;
   }
 
-  if (cardObject.cardType.id === "orderbook") {
+  if (cardObject.cardType.id === "order_book") {
     const values = cardObject.values;
     if (!values) return null;
     const exchange = values.find(

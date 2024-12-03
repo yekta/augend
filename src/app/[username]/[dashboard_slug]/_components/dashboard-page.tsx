@@ -24,7 +24,7 @@ import { AppRouterOutputs } from "@/server/trpc/api/root";
 import { api } from "@/server/trpc/setup/react";
 import { ReactNode, useMemo } from "react";
 
-const componentRequiresNewRow = ["orderbook", "crypto_price_chart"];
+const componentRequiresNewRow = ["order_book", "crypto_price_chart"];
 
 export default function DashboardPage({
   username,
