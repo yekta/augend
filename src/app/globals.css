@@ -3,11 +3,11 @@
 @tailwind utilities;
 
 body {
-  font-family: var(--font-geist-sans);
+  font-family: var(--font-sans);
 }
 
 .font-mono {
-  font-family: var(--font-geist-mono);
+  font-family: var(--font-mono);
 }
 
 @layer base {

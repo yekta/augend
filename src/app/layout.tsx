@@ -1,21 +1,21 @@
+import Footer from "@/components/navigation/footer";
+import { Navbar } from "@/components/navigation/navbar";
 import Providers from "@/components/providers/providers";
+import { siteDescription, siteTitle } from "@/lib/constants";
 import { HydrateClient } from "@/server/trpc/setup/server";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import "./globals.css";
-import { siteDescription, siteTitle } from "@/lib/constants";
 import NextTopLoader from "nextjs-toploader";
-import { Navbar } from "@/components/navigation/navbar";
-import Footer from "@/components/navigation/footer";
+import "./globals.css";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
+const sans = localFont({
+  src: "./fonts/DMSansVF.woff2",
+  variable: "--font-sans",
+  weight: "100 1000",
 });
-const geistMono = localFont({
+const mono = localFont({
   src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
+  variable: "--font-mono",
   weight: "100 900",
 });
 
@@ -32,7 +32,7 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased break-words`}
+        className={`${sans.variable} ${mono.variable} antialiased break-words`}
       >
         <Providers>
           <HydrateClient>

@@ -70,7 +70,7 @@ export default function ThreeLineCard({
         </div>
         <div
           className={cn(
-            "max-w-full font-semibold text-2xl whitespace-nowrap overflow-hidden overflow-ellipsis group-data-[loading-error]/card:text-destructive group-data-[pending]/card:text-transparent group-data-[pending]/card:rounded-md group-data-[pending]/card:animate-skeleton",
+            "max-w-full font-bold text-2xl whitespace-nowrap overflow-hidden overflow-ellipsis group-data-[loading-error]/card:text-destructive group-data-[pending]/card:text-transparent group-data-[pending]/card:rounded-md group-data-[pending]/card:animate-skeleton",
             "leading-none",
             classNameMiddle,
             isPending && isPendingParagraphClassName
