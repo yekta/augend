@@ -23,6 +23,7 @@ import {
 } from "@/server/trpc/setup/trpc";
 import type { PositionPriceRange, SearchFilterOpts } from "@gfxlabs/oku";
 import { TRPCError } from "@trpc/server";
+import { ethereumNetworks } from "@/server/trpc/api/routers/ethereum/constants";
 
 export const uniswapRouter = createTRPCRouter({
   getPools: cachedPublicProcedure("seconds-medium")
@@ -53,8 +54,7 @@ export const uniswapRouter = createTRPCRouter({
         }
 
         const endpoint = searchAddress ? "searchPoolsByAddress" : "topPools";
-        const networkOku = network.toLowerCase();
-        const url = `${uniswapOkuApiUrl}/${networkOku}/cush/${endpoint}`;
+        const url = `${uniswapOkuApiUrl}/${ethereumNetworks[network].okuSlug}/cush/${endpoint}`;
         let body: { params: (SearchFilterOpts | string)[] } = {
           params: [
             {
@@ -156,8 +156,7 @@ export const uniswapRouter = createTRPCRouter({
       }
 
       const positionManager = await getUniswapPositionManager(network);
-      const networkOku = network.toLowerCase();
-      const url = `${uniswapOkuApiUrl}/${networkOku}/cush/analyticsPosition`;
+      const url = `${uniswapOkuApiUrl}/${ethereumNetworks[network].okuSlug}/cush/analyticsPosition`;
       const body = {
         params: [
           {
@@ -305,7 +304,7 @@ export const uniswapRouter = createTRPCRouter({
         return ctx.cachedResult as TResult;
       }
 
-      const networkOku = network.toLowerCase();
+      const networkOku = ethereumNetworks[network].okuSlug;
       const url = `${uniswapOkuApiUrl}/${networkOku}/cush/poolSwaps`;
       const poolUrl = `${uniswapOkuApiUrl}/${networkOku}/cush/searchPoolsByAddress`;
       const body = {

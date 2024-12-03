@@ -7,6 +7,7 @@ export const ethereumNetworks: Record<
     address: (s: string) => string;
     gasTracker: string;
     cmcId: number;
+    okuSlug: string;
   }
 > = {
   Ethereum: {
@@ -14,11 +15,20 @@ export const ethereumNetworks: Record<
     address: (address: string) => `https://etherscan.io/address/${address}`,
     gasTracker: "https://etherscan.io/gastracker",
     cmcId: 1027,
+    okuSlug: "ethereum",
+  },
+  BSC: {
+    id: 56,
+    address: (address: string) => `https://bscscan.com/address/${address}`,
+    gasTracker: "https://bscscan.com/gastracker",
+    cmcId: 1839,
+    okuSlug: "bsc",
   },
   Polygon: {
     id: 137,
     address: (address: string) => `https://polygonscan.com/address/${address}`,
     gasTracker: "https://polygonscan.com/gastracker",
     cmcId: 3890,
+    okuSlug: "polygon",
   },
 };
