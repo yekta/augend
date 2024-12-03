@@ -4,7 +4,7 @@ import CardOuterWrapper, {
   TCardOuterWrapperDivProps,
   TCardOuterWrapperLinkProps,
   TCardOuterWrapperProps,
-} from "@/components/cards/utils/card-outer-wrapper";
+} from "@/components/cards/_utils/card-outer-wrapper";
 import Indicator from "@/components/ui/indicator";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import { defaultLocale, defaultQueryOptions } from "@/lib/constants";
@@ -21,7 +21,7 @@ import {
   SendIcon,
 } from "lucide-react";
 import { ElementType } from "react";
-import CardInnerWrapper from "@/components/cards/utils/card-inner-wrapper";
+import CardInnerWrapper from "@/components/cards/_utils/card-inner-wrapper";
 import { useCurrencyPreference } from "@/components/providers/currency-preference-provider";
 
 export default function EthereumGasCard({

@@ -1,7 +1,7 @@
-import CardInnerWrapper from "@/components/cards/utils/card-inner-wrapper";
+import CardInnerWrapper from "@/components/cards/_utils/card-inner-wrapper";
 import CardOuterWrapper, {
   TCardOuterWrapperProps,
-} from "@/components/cards/utils/card-outer-wrapper";
+} from "@/components/cards/_utils/card-outer-wrapper";
 import Indicator from "@/components/ui/indicator";
 import { cn } from "@/lib/utils";
 import React, { ReactNode } from "react";

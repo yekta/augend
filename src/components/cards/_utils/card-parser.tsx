@@ -1,22 +1,22 @@
-import BananoTotalCard from "@/components/cards/banano-total-card";
-import Calculator from "@/components/cards/calculator-card";
-import CryptoCard from "@/components/cards/crypto-card";
-import CryptoTableCard from "@/components/cards/crypto-table-card";
-import EthereumGasCard from "@/components/cards/ethereum-gas-card";
-import FearGreedIndexCard from "@/components/cards/fear-greed-index-card";
-import FiatCurrencyCard from "@/components/cards/fiat-currency-card";
-import MiniCryptoCard from "@/components/cards/mini-crypto-card";
-import NanoBananoCard from "@/components/cards/nano-banano-card";
+import BananoTotalCard from "@/components/cards/banano-total/card";
+import CalculatorCard from "@/components/cards/calculator/card";
+import CryptoCard from "@/components/cards/crypto/card";
+import CryptoTableCard from "@/components/cards/crypto-table/card";
+import EthereumGasCard from "@/components/cards/ethereum-gas/card";
+import FearGreedIndexCard from "@/components/cards/fear-greed-index/card";
+import FiatCurrencyCard from "@/components/cards/fiat-currency/card";
+import MiniCryptoCard from "@/components/cards/mini-crypto/card";
+import NanoBananoCard from "@/components/cards/nano-banano/card";
 import CryptoPriceChartCard, {
   TOhlcvChartConfig,
-} from "@/components/cards/crypto-price-chart-card";
+} from "@/components/cards/crypto-price-chart/card";
 import OrderBookCard, {
   TOrderBookConfig,
-} from "@/components/cards/order-book-card";
-import UniswapPoolsTableCard from "@/components/cards/uniswap-pools-table-card";
-import UniswapPositionCard from "@/components/cards/uniswap-position-card";
-import { TCardOuterWrapperProps } from "@/components/cards/utils/card-outer-wrapper";
-import WBanSummaryCard from "@/components/cards/wban-summary-card";
+} from "@/components/cards/order-book/card";
+import UniswapPoolsTableCard from "@/components/cards/uniswap-pools-table/card";
+import UniswapPositionCard from "@/components/cards/uniswap-position/card";
+import { TCardOuterWrapperProps } from "@/components/cards/_utils/card-outer-wrapper";
+import WBanSummaryCard from "@/components/cards/wban-summary/card";
 import { TCurrencyWithSelectedFields } from "@/server/db/repo/types";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
 import { TEthereumNetwork } from "@/server/trpc/api/routers/ethereum/types";
@@ -51,7 +51,7 @@ export function CardParser({
     const selectedCurrencies = currencies
       .filter((c) => ids.includes(c.id))
       .sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id));
-    return <Calculator currencies={selectedCurrencies} {...rest} />;
+    return <CalculatorCard currencies={selectedCurrencies} {...rest} />;
   }
 
   if (cardObject.cardType.id === "orderbook") {
@@ -127,8 +127,9 @@ export function CardParser({
   if (cardObject.cardType.id === "crypto") {
     const values = cardObject.values;
     if (!values) return null;
-    const coinId = values.find((v) => v.cardTypeInputId === "crypto_coin_id")
-      ?.value;
+    const coinId = values.find(
+      (v) => v.cardTypeInputId === "crypto_coin_id"
+    )?.value;
     if (!coinId) return null;
     return <CryptoCard config={{ id: Number(coinId) }} {...rest} />;
   }

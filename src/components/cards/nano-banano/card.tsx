@@ -1,11 +1,11 @@
 "use client";
 
-import ThreeLineCard from "@/components/cards/three-line-card";
+import ThreeLineCard from "@/components/cards/_utils/three-line-card";
 import {
   TCardOuterWrapperDivProps,
   TCardOuterWrapperLinkProps,
   TCardOuterWrapperProps,
-} from "@/components/cards/utils/card-outer-wrapper";
+} from "@/components/cards/_utils/card-outer-wrapper";
 import { useNanoBananoBalances } from "@/components/providers/nano-banano-balance-provider";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";

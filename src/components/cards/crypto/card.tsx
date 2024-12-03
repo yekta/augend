@@ -1,11 +1,11 @@
 "use client";
 
-import ThreeLineCard from "@/components/cards/three-line-card";
+import ThreeLineCard from "@/components/cards/_utils/three-line-card";
 import {
   TCardOuterWrapperDivProps,
   TCardOuterWrapperLinkProps,
   TCardOuterWrapperProps,
-} from "@/components/cards/utils/card-outer-wrapper";
+} from "@/components/cards/_utils/card-outer-wrapper";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import { useCmcCryptoInfos } from "@/components/providers/cmc/cmc-crypto-infos-provider";
 import { useCurrencyPreference } from "@/components/providers/currency-preference-provider";

@@ -1,10 +1,10 @@
 "use client";
 
-import CardInnerWrapper from "@/components/cards/utils/card-inner-wrapper";
+import CardInnerWrapper from "@/components/cards/_utils/card-inner-wrapper";
 import CardOuterWrapper, {
   TCardOuterWrapperProps,
-} from "@/components/cards/utils/card-outer-wrapper";
-import { getNumberColorClass } from "@/components/cards/utils/helpers";
+} from "@/components/cards/_utils/card-outer-wrapper";
+import { getNumberColorClass } from "@/components/cards/_utils/helpers";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import AsyncDataTable, {
   TAsyncDataTableColumnDef,

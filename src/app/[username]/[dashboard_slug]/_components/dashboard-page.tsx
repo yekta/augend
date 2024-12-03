@@ -4,10 +4,10 @@ import CurrentDashboardProvider from "@/app/[username]/[dashboard_slug]/_compone
 import DashboardGrid from "@/app/[username]/[dashboard_slug]/_components/dashboard-grid";
 import { useDnd } from "@/app/[username]/[dashboard_slug]/_components/dnd-provider";
 import { EditBar } from "@/app/[username]/[dashboard_slug]/_components/edit-bar";
-import { AddCardButton } from "@/components/cards/add/add-card";
-import { bananoCmcId } from "@/components/cards/banano-total-card";
-import ThreeLineCard from "@/components/cards/three-line-card";
-import { CardParser } from "@/components/cards/utils/card-parser";
+import { AddCardButton } from "@/components/cards/_utils/add-card";
+import { bananoCmcId } from "@/components/cards/banano-total/card";
+import ThreeLineCard from "@/components/cards/_utils/three-line-card";
+import { CardParser } from "@/components/cards/_utils/card-parser";
 import CmcCryptoInfosProvider from "@/components/providers/cmc/cmc-crypto-infos-provider";
 import CmcGlobalMetricsProvider from "@/components/providers/cmc/cmc-global-metrics-provider";
 import CurrencyPreferenceProvider, {

@@ -1,9 +1,9 @@
 "use client";
 
-import CardInnerWrapper from "@/components/cards/utils/card-inner-wrapper";
+import CardInnerWrapper from "@/components/cards/_utils/card-inner-wrapper";
 import CardOuterWrapper, {
   TCardOuterWrapperProps,
-} from "@/components/cards/utils/card-outer-wrapper";
+} from "@/components/cards/_utils/card-outer-wrapper";
 import Indicator from "@/components/ui/indicator";
 import { defaultQueryOptions } from "@/lib/constants";
 import { useConditionalValue } from "@/lib/hooks/use-conditional-value";

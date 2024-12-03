@@ -1,7 +1,7 @@
 "use client";
 
-import ThreeLineCard from "@/components/cards/three-line-card";
-import { TCardOuterWrapperProps } from "@/components/cards/utils/card-outer-wrapper";
+import ThreeLineCard from "@/components/cards/_utils/three-line-card";
+import { TCardOuterWrapperProps } from "@/components/cards/_utils/card-outer-wrapper";
 import { useFiatCurrencyRates } from "@/components/providers/fiat-currency-rates-provider";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";

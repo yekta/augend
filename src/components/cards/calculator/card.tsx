@@ -1,9 +1,9 @@
 "use client";
 
-import CardInnerWrapper from "@/components/cards/utils/card-inner-wrapper";
+import CardInnerWrapper from "@/components/cards/_utils/card-inner-wrapper";
 import CardOuterWrapper, {
   TCardOuterWrapperProps,
-} from "@/components/cards/utils/card-outer-wrapper";
+} from "@/components/cards/_utils/card-outer-wrapper";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import { useCmcCryptoInfos } from "@/components/providers/cmc/cmc-crypto-infos-provider";
 import { useFiatCurrencyRates } from "@/components/providers/fiat-currency-rates-provider";
@@ -20,7 +20,7 @@ const tickerToIcon: Record<string, ReactNode> = {
   BAN: <CryptoIcon ticker="BAN" className="size-6 -ml-1.25" />,
 };
 
-export default function Calculator({
+export default function CalculatorCard({
   currencies,
   className,
   ...rest

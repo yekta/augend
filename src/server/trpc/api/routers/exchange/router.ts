@@ -124,13 +124,26 @@ export const exchangeRouter = createTRPCRouter({
       );
       return result;
     }),
+  getPairs: publicProcedure
+    .input(
+      z.object({
+        exchange: ExchangeSchema,
+        page: z.number().default(1),
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      const { exchange } = input;
+      const exchangeInstance = getExchangeInstance(exchange);
+      const pairs = await exchangeInstance.fetchMarkets();
+      return pairs;
+    }),
 });
 
 function getOrderbookPromiseObject(
   input: z.infer<typeof OrderbookInputSchema>
 ) {
   const { exchange, ticker, limit } = input;
-  let exchangeInstance = getExchangeInstance(exchange);
+  const exchangeInstance = getExchangeInstance(exchange);
   return {
     orderBookPromise: exchangeInstance.fetchOrderBook(ticker, limit),
     tickerInfoPromise: exchangeInstance.fetchTicker(ticker),
@@ -173,7 +186,7 @@ function parseOrderbookResult(
 
 function getOHLCVPromiseObject(input: z.infer<typeof OHLCVInputSchema>) {
   const { exchange, ticker, timeframe, since } = input;
-  let exchangeInstance = getExchangeInstance(exchange);
+  const exchangeInstance = getExchangeInstance(exchange);
   return {
     ohlcvPromise: exchangeInstance.fetchOHLCV(ticker, timeframe, since),
     tickerInfoPromise: exchangeInstance.fetchTicker(ticker),

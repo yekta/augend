@@ -2,7 +2,7 @@
 
 import CardOuterWrapper, {
   TCardOuterWrapperProps,
-} from "@/components/cards/utils/card-outer-wrapper";
+} from "@/components/cards/_utils/card-outer-wrapper";
 import Indicator from "@/components/ui/indicator";
 import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
 import {
@@ -29,7 +29,7 @@ import {
   ValueType,
 } from "recharts/types/component/DefaultTooltipContent";
 import { z } from "zod";
-import CardInnerWrapper from "@/components/cards/utils/card-inner-wrapper";
+import CardInnerWrapper from "@/components/cards/_utils/card-inner-wrapper";
 
 const baseChartContainerConfig = {
   label: "Price",
