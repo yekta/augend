@@ -1,8 +1,9 @@
 "use client";
 
+import { useCurrentDashboard } from "@/app/[username]/[dashboard_slug]/_components/current-dashboard-provider";
 import CardInnerWrapper from "@/components/cards/_utils/card-inner-wrapper";
 import CardOuterWrapper from "@/components/cards/_utils/card-outer-wrapper";
-import { useCurrentDashboard } from "@/app/[username]/[dashboard_slug]/_components/current-dashboard-provider";
+import CardValuesFormParser from "@/components/cards/_utils/values-form/card-values-form-parser";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -51,7 +52,6 @@ import {
 import { useForm } from "react-hook-form";
 import { useHotkeys } from "react-hotkeys-hook";
 import { z } from "zod";
-import CardInputFormParser from "@/components/cards/_utils/value-form/card-value-form-parser";
 
 type AddCardButtonProps = {
   username: string;
@@ -129,6 +129,18 @@ export function AddCardButton({
     });
   };
 
+  const onSubmitNew = (values: TCardValueForAddCards[]) => {
+    const _values = values.map((value) => ({
+      ...value,
+      xOrder: 0,
+    }));
+    createCardMutation({
+      cardTypeId: selectedCardType?.cardType.id ?? "",
+      values: _values,
+      dashboardSlug,
+    });
+  };
+
   const onSubmitWithNoValues = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!selectedCardType) return;
@@ -177,6 +189,7 @@ export function AddCardButton({
             setSelectedCardType={setSelectedCardType}
             isFormPending={isFormPending}
             onSubmit={form.handleSubmit(onSubmit)}
+            onSubmitNew={onSubmitNew}
             onSubmitWithNoValues={onSubmitWithNoValues}
             getCardTypesQuery={getCardTypesQuery}
             className="h-96 max-h-[calc((100vh-3rem)*0.6)]"
@@ -197,6 +210,7 @@ type AddCardCommandPanelProps = {
   selectedCardType: TSelectedCardType | null;
   setSelectedCardType: Dispatch<SetStateAction<TSelectedCardType | null>>;
   onSubmit: (e: FormEvent<HTMLFormElement>) => void;
+  onSubmitNew: (values: TCardValueForAddCards[]) => void;
   onSubmitWithNoValues: (e: FormEvent<HTMLFormElement>) => void;
   className?: string;
 };
@@ -209,6 +223,7 @@ export function AddCardCommandPanel({
   selectedCardType,
   setSelectedCardType,
   onSubmit,
+  onSubmitNew,
   onSubmitWithNoValues,
   className,
 }: AddCardCommandPanelProps) {
@@ -273,7 +288,11 @@ export function AddCardCommandPanel({
             className="w-full px-4 pt-3.5 pb-4 data-[has-inputs]:pt-3"
           >
             {selectedCardType.cardType.id === "crypto_price_chart" ? (
-              <CardInputFormParser cardTypeId={selectedCardType.cardType.id} />
+              <CardValuesFormParser
+                onFormSubmit={onSubmitNew}
+                isPendingForm={isFormPending}
+                cardTypeId={selectedCardType.cardType.id}
+              />
             ) : (
               <AddCardForm
                 form={form}

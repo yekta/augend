@@ -39,6 +39,7 @@ type Props = {
   setValue: Dispatch<SetStateAction<string | null>>;
   inputLabel: string;
   errorMessage: string | null;
+  disabled?: boolean;
 };
 
 export function CardValueCombobox<T>({
@@ -56,6 +57,7 @@ export function CardValueCombobox<T>({
   setValue,
   inputLabel,
   errorMessage,
+  disabled,
 }: Props) {
   const [open, setOpen] = useState(false);
 
@@ -74,7 +76,7 @@ export function CardValueCombobox<T>({
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
-            disabled={isPending || isHardError}
+            disabled={isPending || isHardError || disabled}
             variant="outline"
             role="combobox"
             aria-expanded={open}

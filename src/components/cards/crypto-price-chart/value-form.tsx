@@ -1,15 +1,23 @@
-import { CardValueCombobox } from "@/components/cards/_utils/value-form/card-value-combobox";
+import { CardValueCombobox } from "@/components/cards/_utils/values-form/card-value-combobox";
+import CardValuesFormSubmitButton from "@/components/cards/_utils/values-form/card-values-form-submit-button";
 import { Button } from "@/components/ui/button";
 import {
   ExchangeSchema,
   TExchange,
 } from "@/server/trpc/api/routers/exchange/types";
+import { TCardValueForAddCards } from "@/server/trpc/api/routers/ui/types";
 import { api } from "@/server/trpc/setup/react";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
-type Props = {};
+type Props = {
+  onFormSubmit: (values: TCardValueForAddCards[]) => void;
+  isPendingForm: boolean;
+};
 
-export function CryptoPriceChartValueForm({}: Props) {
+export function CryptoPriceChartValueForm({
+  onFormSubmit,
+  isPendingForm,
+}: Props) {
   const exchanges = Object.values(ExchangeSchema.Enum);
   const defaultExchange = exchanges[0];
   const [exchange, setExchange] = useState<TExchange>(defaultExchange);
@@ -24,7 +32,7 @@ export function CryptoPriceChartValueForm({}: Props) {
   const [exchangeError, setExchangeError] = useState<string | null>(null);
   const [pairError, setPairError] = useState<string | null>(null);
 
-  const onFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const onFormSubmitLocal = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("submit");
     let exchangeValue: TExchange | null = null;
@@ -46,6 +54,16 @@ export function CryptoPriceChartValueForm({}: Props) {
       setPairError("The pair is not available on the exchange.");
       return;
     }
+    onFormSubmit([
+      {
+        cardTypeInputId: "crypto_price_chart_exchange",
+        value: exchangeValue,
+      },
+      {
+        cardTypeInputId: "crypto_price_chart_pair",
+        value: pair,
+      },
+    ]);
   };
 
   const clearErrors = () => {
@@ -73,7 +91,7 @@ export function CryptoPriceChartValueForm({}: Props) {
   return (
     <div className="w-full flex flex-col">
       <form
-        onSubmit={onFormSubmit}
+        onSubmit={onFormSubmitLocal}
         className="w-full flex flex-col gap-4 pt-0.5"
       >
         <CardValueCombobox
@@ -82,6 +100,7 @@ export function CryptoPriceChartValueForm({}: Props) {
           value={exchange}
           onValueChange={() => clearErrors()}
           setValue={setExchange as Dispatch<SetStateAction<string | null>>}
+          disabled={isPendingForm}
           items={exchanges.map((e) => ({
             label: e,
             value: e,
@@ -96,6 +115,7 @@ export function CryptoPriceChartValueForm({}: Props) {
           value={pair}
           onValueChange={() => clearErrors()}
           setValue={setPair}
+          disabled={isPendingForm}
           isPending={isPendingPairs}
           isLoadingError={isLoadingErrorPairs}
           items={(pairs || []).map((e) => ({
@@ -108,7 +128,10 @@ export function CryptoPriceChartValueForm({}: Props) {
           inputPlaceholder="Search pair..."
           noValueFoundLabel="No pair found..."
         />
-        <Button className="w-full mt-2">Add Card</Button>
+        <CardValuesFormSubmitButton
+          isPending={isPendingForm}
+          className="mt-2"
+        />
       </form>
     </div>
   );
