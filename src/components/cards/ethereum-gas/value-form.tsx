@@ -8,7 +8,7 @@ import {
   EthereumNetworkSchema,
   TEthereumNetwork,
 } from "@/server/trpc/api/routers/ethereum/types";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useMemo, useState } from "react";
 
 export function GasCardValueForm({
   onFormSubmit,
@@ -19,9 +19,12 @@ export function GasCardValueForm({
   const [network, setNetwork] = useState<TEthereumNetwork>(defaultNetwork);
   const [networkError, setNetworkError] = useState<string | null>(null);
 
+  const items = useMemo(() => {
+    return networks.map((e) => ({ label: e, value: e }));
+  }, [networks]);
+
   const onFormSubmitLocal = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("submit");
     let networkValue: TEthereumNetwork | null = null;
     try {
       networkValue = EthereumNetworkSchema.parse(network);
@@ -53,15 +56,14 @@ export function GasCardValueForm({
         inputErrorMessage={networkError}
         value={network}
         Icon={({ value, className }) => (
-          <CryptoIcon
-            cryptoName={value}
-            className={cn("text-foreground", className)}
-          />
+          <div className={cn("text-foreground p-0.25", className)}>
+            <CryptoIcon cryptoName={value} className="size-full" />
+          </div>
         )}
         onValueChange={() => clearErrors()}
         setValue={setNetwork as Dispatch<SetStateAction<string | null>>}
         disabled={isPendingForm}
-        items={networks.map((e) => ({ label: e, value: e }))}
+        items={items}
         placeholder="Select network..."
         inputPlaceholder="Search networks..."
         noValueFoundLabel="No network found..."

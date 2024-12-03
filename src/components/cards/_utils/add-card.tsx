@@ -259,7 +259,13 @@ export function AddCardCommandPanel({
     }
   }, [selectedCardType]);
 
-  const newCardTypeIds = ["crypto_price_chart", "order_book", "gas_tracker"];
+  const newCardTypeIds = [
+    "crypto_price_chart",
+    "order_book",
+    "gas_tracker",
+    "crypto",
+    "mini_crypto",
+  ];
 
   return (
     <>

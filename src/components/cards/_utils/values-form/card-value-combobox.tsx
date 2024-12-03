@@ -13,18 +13,15 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import {
-  ChevronsUpDownIcon,
-  LoaderIcon,
-  TriangleAlertIcon,
-  CheckIcon,
-} from "lucide-react";
+import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
 import { Dispatch, ReactNode, SetStateAction, useMemo, useState } from "react";
 
 type TItem = {
   label: string;
   value: string;
+  iconValue?: string;
 };
+
 type Props = {
   items: TItem[] | undefined;
   placeholder: string;
@@ -32,17 +29,21 @@ type Props = {
   noValueFoundLabel: string;
   onValueChange?: (value: string) => void;
   isPending?: boolean;
-  isPendingPlaceholder?: string;
   isLoadingError?: boolean;
   isLoadingErrorMessage?: string | null;
   inputErrorMessage?: string | null;
   className?: string;
   value: string | null;
+  iconValue?: string | null;
   setValue: Dispatch<SetStateAction<string | null>>;
   inputTitle: string;
   inputDescription: string;
   disabled?: boolean;
-  Icon?: React.ComponentType<{ value: string | null; className?: string }>;
+  Icon?: React.ComponentType<{
+    value: string | null;
+    className?: string;
+    iconValue?: string;
+  }>;
 };
 
 const itemsPlaceholder: TItem[] = Array.from({ length: 20 }).map(
@@ -64,6 +65,7 @@ export function CardValueCombobox<T>({
   isLoadingErrorMessage,
   className,
   value,
+  iconValue,
   setValue,
   inputTitle,
   inputDescription,
@@ -106,8 +108,11 @@ export function CardValueCombobox<T>({
             )}
           >
             <div className="flex-shrink min-w-0 overflow-hidden flex items-center gap-1.5 group-data-[has-icon]/button:-ml-1">
-              {!isPending && !isLoadingError && Icon && (
-                <Icon value={value} className="shrink-0 size-5 -my-1" />
+              {!isPending && !isLoadingError && Icon && value && (
+                <Icon
+                  value={iconValue ?? value}
+                  className="shrink-0 size-5 -my-1"
+                />
               )}
               <p className="min-w-0 group-data-[showing-placeholder]/button:text-muted-foreground overflow-hidden overflow-ellipsis shrink whitespace-nowrap">
                 {value ? label : placeholder}
@@ -137,14 +142,14 @@ export function CardValueCombobox<T>({
               {!isLoadingError && (
                 <CommandGroup>
                   {!isLoadingError &&
-                    itemsOrPlaceholder.map((item) => (
+                    itemsOrPlaceholder.map((item, index) => (
                       <CommandItem
                         disabled={isPending}
                         data-item-selected={
                           value === item.value ? true : undefined
                         }
                         className="w-full font-medium group/command-item px-3 py-2 gap-1.5"
-                        key={item.value}
+                        key={`${item.value}-${index}`}
                         value={item.value}
                         onSelect={(currentValue) => {
                           setValue(currentValue);
@@ -154,7 +159,7 @@ export function CardValueCombobox<T>({
                       >
                         {!isPending && !isLoadingError && Icon && (
                           <Icon
-                            value={item.value}
+                            value={item.iconValue ?? item.value}
                             className="shrink-0 size-5 -ml-1 -my-1"
                           />
                         )}

@@ -9,7 +9,7 @@ import {
   TExchange,
 } from "@/server/trpc/api/routers/exchange/types";
 import { api } from "@/server/trpc/setup/react";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 
 export function CryptoOrderBookValueForm({
   onFormSubmit,
@@ -29,9 +29,16 @@ export function CryptoOrderBookValueForm({
   const [exchangeError, setExchangeError] = useState<string | null>(null);
   const [pairError, setPairError] = useState<string | null>(null);
 
+  const exchangeItems = useMemo(() => {
+    return exchanges.map((e) => ({ label: e, value: e }));
+  }, [exchanges]);
+
+  const pairItems = useMemo(() => {
+    return pairs?.map((p) => ({ label: p, value: p })) ?? undefined;
+  }, [pairs]);
+
   const onFormSubmitLocal = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("submit");
     let exchangeValue: TExchange | null = null;
     try {
       exchangeValue = ExchangeSchema.parse(exchange);
@@ -102,7 +109,7 @@ export function CryptoOrderBookValueForm({
         onValueChange={() => clearErrors()}
         setValue={setExchange as Dispatch<SetStateAction<string | null>>}
         disabled={isPendingForm}
-        items={exchanges.map((e) => ({ label: e, value: e }))}
+        items={exchangeItems}
         placeholder="Select exchange..."
         inputPlaceholder="Search exchanges..."
         noValueFoundLabel="No exchange found..."
@@ -118,8 +125,7 @@ export function CryptoOrderBookValueForm({
         isPending={isPendingPairs}
         isLoadingError={isLoadingErrorPairs}
         isLoadingErrorMessage="Failed to load pairs :("
-        items={pairs?.map((p) => ({ label: p, value: p })) ?? undefined}
-        isPendingPlaceholder="Loading pairs..."
+        items={pairItems}
         placeholder="Select pair..."
         inputPlaceholder="Search pairs..."
         noValueFoundLabel="No pair found..."

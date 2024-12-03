@@ -166,6 +166,64 @@ export const cmcRouter = createTRPCRouter({
 
       return result;
     }),
+  getCoinIdMaps: cachedPublicProcedure("hours-medium")
+    .input(
+      z.object({
+        limit: z
+          .number()
+          .int()
+          .max(1500)
+          .min(1500)
+          .positive()
+          .optional()
+          .default(1500),
+        sortBy: z.enum(["cmc_rank", "id"]).optional().default("cmc_rank"),
+      })
+    )
+    .query(async ({ input: { limit, sortBy } }) => {
+      type TReturn = {
+        id: number;
+        name: string;
+        rank: number;
+        symbol: string;
+      }[];
+      const url = `${cmcApiUrl}/v1/cryptocurrency/map?sort=${sortBy}&limit=${limit}`;
+      const res = await fetch(url, cmcFetchOptions);
+
+      if (!res.ok) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: `${res.status}: Failed to fetch CMC ID maps`,
+        });
+      }
+
+      const resJson: TCmcCoinIdMapsResult = await res.json();
+
+      if (!resJson.data) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: `No data in CMC ID maps`,
+        });
+      }
+
+      const unfilteredResult: TReturn = resJson.data.map((d) => ({
+        id: d.id,
+        name: d.name,
+        rank: d.rank,
+        symbol: d.symbol,
+      }));
+
+      // Filter results with the same name using a Map
+      const map = new Map<string, TReturn[0]>();
+      for (const item of unfilteredResult) {
+        if (!map.has(item.name)) {
+          map.set(item.name, item);
+        }
+      }
+      const result: TReturn = Array.from(map.values());
+
+      return result;
+    }),
 });
 
 type TCmcFearGreedIndexResult = {
@@ -218,5 +276,15 @@ type TCmcCoinListResult = {
         last_updated: string;
       };
     };
+  }[];
+};
+
+type TCmcCoinIdMapsResult = {
+  data: {
+    id: number;
+    name: string;
+    rank: number;
+    symbol: string;
+    is_active: number;
   }[];
 };
