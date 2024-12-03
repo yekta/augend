@@ -20,11 +20,11 @@ import { ChartNoAxesCombinedIcon } from "lucide-react";
 const lines = 20;
 const uiLines = 10;
 const placeholderData: TOrderBook = {
-  bids: Array.from({ length: lines }, (_, i) => ({
+  bids: Array.from({ length: uiLines }, (_, i) => ({
     price: 1000,
     amount: 1000000,
   })),
-  asks: Array.from({ length: lines }, (_, i) => ({
+  asks: Array.from({ length: uiLines }, (_, i) => ({
     price: 1000,
     amount: 1000000,
   })),
