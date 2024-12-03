@@ -2,6 +2,8 @@ import { CardValueCombobox } from "@/components/cards/_utils/values-form/card-va
 import CardValuesFormSubmitButton from "@/components/cards/_utils/values-form/card-values-form-submit-button";
 import CardValuesFormWrapper from "@/components/cards/_utils/values-form/card-values-form-wrapper";
 import { TValueFormProps } from "@/components/cards/_utils/values-form/types";
+import CryptoIcon from "@/components/icons/crypto-icon";
+import { cn } from "@/lib/utils";
 import {
   ExchangeSchema,
   TExchange,
@@ -86,9 +88,17 @@ export function CryptoOrderBookValueForm({
   return (
     <CardValuesFormWrapper onSubmit={onFormSubmitLocal}>
       <CardValueCombobox
-        inputLabel="Exchange"
+        inputTitle="Exchange"
+        inputDescription="The cryptocurrency exchange for the pair."
         inputErrorMessage={exchangeError}
         value={exchange}
+        Icon={({ value, className }) => (
+          <CryptoIcon
+            cryptoName={value}
+            category="exchanges"
+            className={cn("text-foreground", className)}
+          />
+        )}
         onValueChange={() => clearErrors()}
         setValue={setExchange as Dispatch<SetStateAction<string | null>>}
         disabled={isPendingForm}
@@ -98,7 +108,8 @@ export function CryptoOrderBookValueForm({
         noValueFoundLabel="No exchange found..."
       />
       <CardValueCombobox
-        inputLabel="Pair"
+        inputTitle="Pair"
+        inputDescription="The pair to get the order book for."
         inputErrorMessage={pairError}
         value={pair}
         onValueChange={() => clearErrors()}

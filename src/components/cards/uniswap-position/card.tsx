@@ -859,7 +859,7 @@ function TickerTextAmount({
               tickerIcon
             ) : (
               <CryptoIcon
-                name={ticker}
+                cryptoName={ticker}
                 className="size-full bg-muted-foreground text-background rounded-full p-0.25 md:p-0.5 group-data-[pending]/card:hidden group-data-[loading-error]/card:hidden"
               />
             )}

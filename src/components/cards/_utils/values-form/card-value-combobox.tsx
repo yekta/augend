@@ -39,8 +39,10 @@ type Props = {
   className?: string;
   value: string | null;
   setValue: Dispatch<SetStateAction<string | null>>;
-  inputLabel: string;
+  inputTitle: string;
+  inputDescription: string;
   disabled?: boolean;
+  Icon?: React.ComponentType<{ value: string | null; className?: string }>;
 };
 
 const itemsPlaceholder: TItem[] = Array.from({ length: 20 }).map(
@@ -63,8 +65,10 @@ export function CardValueCombobox<T>({
   className,
   value,
   setValue,
-  inputLabel,
+  inputTitle,
+  inputDescription,
   disabled,
+  Icon,
 }: Props) {
   const [open, setOpen] = useState(false);
 
@@ -82,9 +86,9 @@ export function CardValueCombobox<T>({
   return (
     <div
       data-error={inputErrorMessage ? true : undefined}
-      className="w-full flex flex-col gap-2 group/input"
+      className="w-full flex flex-col gap-2.5 group/input"
     >
-      <Label>{inputLabel}</Label>
+      <TitleAndDescription title={inputTitle} description={inputDescription} />
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
@@ -95,12 +99,16 @@ export function CardValueCombobox<T>({
             data-pending={isPending ? true : undefined}
             data-loading-error={isHardError ? true : undefined}
             data-showing-placeholder={!label ? true : undefined}
+            data-has-icon={Icon ? true : undefined}
             className={cn(
               "w-full font-semibold justify-between group/button",
               className
             )}
           >
-            <div className="flex-shrink min-w-0 overflow-hidden flex items-center gap-2">
+            <div className="flex-shrink min-w-0 overflow-hidden flex items-center gap-1.5 group-data-[has-icon]/button:-ml-1">
+              {!isPending && !isLoadingError && Icon && (
+                <Icon value={value} className="shrink-0 size-5 -my-1" />
+              )}
               <p className="min-w-0 group-data-[showing-placeholder]/button:text-muted-foreground overflow-hidden overflow-ellipsis shrink whitespace-nowrap">
                 {value ? label : placeholder}
               </p>
@@ -135,7 +143,7 @@ export function CardValueCombobox<T>({
                         data-item-selected={
                           value === item.value ? true : undefined
                         }
-                        className="w-full data-[item-selected]:font-semibold group/command-item px-3 py-2"
+                        className="w-full font-medium group/command-item px-3 py-2 gap-1.5"
                         key={item.value}
                         value={item.value}
                         onSelect={(currentValue) => {
@@ -144,6 +152,12 @@ export function CardValueCombobox<T>({
                           onValueChange?.(currentValue);
                         }}
                       >
+                        {!isPending && !isLoadingError && Icon && (
+                          <Icon
+                            value={item.value}
+                            className="shrink-0 size-5 -ml-1 -my-1"
+                          />
+                        )}
                         <p
                           className="shrink leading-tight min-w-0 overflow-hidden overflow-ellipsis 
                           group-data-[pending]/command:text-transparent group-data-[pending]/command:bg-foreground group-data-[pending]/command:rounded group-data-[pending]/command:animate-skeleton"
@@ -169,11 +183,20 @@ export function CardValueCombobox<T>({
   );
 }
 
-function Label({ children }: { children: ReactNode }) {
+function TitleAndDescription({
+  title,
+  description,
+}: {
+  title: string;
+  description: string;
+}) {
   return (
-    <p className="text-muted-foreground px-1 leading-tight group-data-[error]/input:text-destructive">
-      {children}
-    </p>
+    <div className="w-full flex flex-col px-1 leading-tight gap-0.5">
+      <p className="w-full text-foreground font-bold group-data-[error]/input:text-destructive">
+        {title}
+      </p>
+      <p className="text-sm text-muted-foreground">{description}</p>
+    </div>
   );
 }
 

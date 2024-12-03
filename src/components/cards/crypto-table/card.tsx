@@ -228,7 +228,7 @@ function NameColumn({
             <div className="size-full rounded-full bg-foreground animate-skeleton" />
           ) : hasData ? (
             <CryptoIcon
-              name={ticker}
+              cryptoName={ticker}
               variant="branded"
               className="size-full bg-border rounded-full p-1"
             />

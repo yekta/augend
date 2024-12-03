@@ -14,10 +14,10 @@ import { TCurrencyWithSelectedFields } from "@/server/db/repo/types";
 import React, { ReactNode, useEffect, useRef, useState } from "react";
 
 const tickerToIcon: Record<string, ReactNode> = {
-  ETH: <CryptoIcon name="ETH" className="size-6 -ml-1.25" />,
-  BTC: <CryptoIcon name="BTC" className="size-6 -ml-1.25" />,
-  XNO: <CryptoIcon name="XNO" className="size-6 -ml-1.25" />,
-  BAN: <CryptoIcon name="BAN" className="size-6 -ml-1.25" />,
+  ETH: <CryptoIcon cryptoName="ETH" className="size-6 -ml-1.25" />,
+  BTC: <CryptoIcon cryptoName="BTC" className="size-6 -ml-1.25" />,
+  XNO: <CryptoIcon cryptoName="XNO" className="size-6 -ml-1.25" />,
+  BAN: <CryptoIcon cryptoName="BAN" className="size-6 -ml-1.25" />,
 };
 
 export default function CalculatorCard({

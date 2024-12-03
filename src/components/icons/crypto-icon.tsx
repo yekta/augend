@@ -21,16 +21,16 @@ const nameAlts: Record<string, string> = {
 };
 
 export default function CryptoIcon({
-  name,
+  cryptoName,
   className,
   variant = "mono",
-  category,
+  category = "tokens",
 }: ComponentProps<"svg"> & {
-  name: string | undefined;
+  cryptoName: string | undefined | null;
   variant?: "branded" | "mono";
   category?: "tokens" | "exchanges";
 }) {
-  const _name = name ? nameAlts[name] || name : name;
+  const _name = cryptoName ? nameAlts[cryptoName] || cryptoName : cryptoName;
   const defaultClassName = "shrink-0 size-6";
   const [hasError, setHasError] = useState(false);
   const divClassName = useMemo(() => {

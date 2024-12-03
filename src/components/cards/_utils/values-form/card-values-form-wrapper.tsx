@@ -12,7 +12,7 @@ export default function CardValuesFormWrapper({
 }: Props) {
   return (
     <div className={cn("w-full flex flex-col", className)}>
-      <form onSubmit={onSubmit} className="w-full flex flex-col gap-4 pt-0.5">
+      <form onSubmit={onSubmit} className="w-full flex flex-col gap-5 pt-0.5">
         {children}
       </form>
     </div>
