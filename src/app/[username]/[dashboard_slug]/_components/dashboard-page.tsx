@@ -290,9 +290,11 @@ export default function DashboardPage({
         currencyPreference={currencyPreference}
       >
         <DashboardGrid initialIds={cards.map((c) => c.card.id)}>
-          <EditBar />
+          {dashboard.isOwner && <EditBar />}
           <Cards cards={cards} currencies={currencies} />
-          <AddCardButton username={username} dashboardSlug={dashboardSlug} />
+          {dashboard.isOwner && (
+            <AddCardButton username={username} dashboardSlug={dashboardSlug} />
+          )}
         </DashboardGrid>
       </ConditionalProviders>
     </MainProviders>
