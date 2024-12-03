@@ -20,7 +20,7 @@ import WBanSummaryCard from "@/components/cards/wban-summary/card";
 import { TCurrencyWithSelectedFields } from "@/server/db/repo/types";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
 import { TEthereumNetwork } from "@/server/trpc/api/routers/ethereum/types";
-import { TAvailableExchange } from "@/server/trpc/api/routers/exchange/types";
+import { TExchange } from "@/server/trpc/api/routers/exchange/types";
 
 export function CardParser({
   cardObject,
@@ -58,19 +58,16 @@ export function CardParser({
     const values = cardObject.values;
     if (!values) return null;
     const exchange = values.find(
-      (v) => v.cardTypeInputId === "orderbook_exchange"
+      (v) => v.cardTypeInputId === "order_book_exchange"
     )?.value;
-    const tickerBase = values.find(
-      (v) => v.cardTypeInputId === "orderbook_ticker_base"
+    const pair = values.find(
+      (v) => v.cardTypeInputId === "order_book_pair"
     )?.value;
-    const tickerQuote = values.find(
-      (v) => v.cardTypeInputId === "orderbook_ticker_quote"
-    )?.value;
-    if (!exchange || !tickerBase || !tickerQuote) return null;
+    if (!exchange || !pair) return null;
     const config: TOrderBookConfig = {
-      exchange: exchange as TAvailableExchange,
+      exchange: exchange as TExchange,
       limit: 10,
-      ticker: `${tickerBase}/${tickerQuote}`,
+      pair: pair,
     };
     return <OrderBookCard config={config} {...rest} />;
   }
@@ -81,16 +78,13 @@ export function CardParser({
     const exchange = values.find(
       (v) => v.cardTypeInputId === "crypto_price_chart_exchange"
     )?.value;
-    const tickerBase = values.find(
-      (v) => v.cardTypeInputId === "crypto_price_chart_ticker_base"
+    const pair = values.find(
+      (v) => v.cardTypeInputId === "crypto_price_chart_pair"
     )?.value;
-    const tickerQuote = values.find(
-      (v) => v.cardTypeInputId === "crypto_price_chart_ticker_quote"
-    )?.value;
-    if (!exchange || !tickerBase || !tickerQuote) return null;
+    if (!exchange || !pair) return null;
     const config: TOhlcvChartConfig = {
-      exchange: exchange as TAvailableExchange,
-      ticker: `${tickerBase}/${tickerQuote}`,
+      exchange: exchange as TExchange,
+      pair: pair,
     };
     return <CryptoPriceChartCard config={config} {...rest} />;
   }

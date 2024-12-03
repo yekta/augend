@@ -6,16 +6,13 @@
  * TL;DR - This is where all the tRPC server stuff is created and plugged in. The pieces you will
  * need to use are documented accordingly near the end.
  */
+import { auth } from "@/server/auth";
+import { createCacheKeyForTRPCRoute } from "@/server/redis/cache-utils";
+import { getCache, setCache, TCacheTime } from "@/server/redis/redis";
 import { initTRPC } from "@trpc/server";
+import { Session } from "next-auth";
 import superjson from "superjson";
 import { ZodError } from "zod";
-import { auth } from "@/server/auth";
-import { getCache, setCache, TCacheTime } from "@/server/redis/redis";
-import { Session } from "next-auth";
-import {
-  cleanAndSortArray,
-  createCacheKeyForTRPCRoute,
-} from "@/server/redis/cache-utils";
 
 /**
  * 1. CONTEXT
@@ -135,5 +132,6 @@ const cacheMiddleware = (cacheTime: TCacheTime) =>
  * are logged in.
  */
 export const publicProcedure = t.procedure.use(timingMiddleware);
-export const cachedPublicProcedure = (cacheTime: TCacheTime) =>
-  publicProcedure.use(cacheMiddleware(cacheTime));
+export const cachedPublicProcedure = (
+  cacheTime: TCacheTime = "seconds-medium"
+) => publicProcedure.use(cacheMiddleware(cacheTime));

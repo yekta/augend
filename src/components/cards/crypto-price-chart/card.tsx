@@ -59,7 +59,7 @@ const fallbackData: TOHLCVResult = {
   })),
   metadata: {
     exchange: "Binance",
-    ticker: "BTC/USDT",
+    pair: "BTC/USDT",
     currentPrice: 1000,
   },
   isFallback: true,
@@ -114,7 +114,7 @@ export default function CryptoPriceChartCard({
   } = api.exchange.getOHLCV.useQuery(
     {
       exchange: config.exchange,
-      ticker: config.ticker,
+      pair: config.pair,
       since: interval.since,
       timeframe: interval.timeframe,
     },
@@ -388,7 +388,7 @@ function Header({
         ) : (
           <div className="w-full flex items-center justify-start">
             <p className="shrink min-w-0 overflow-hidden overflow-ellipsis">
-              {config.ticker}{" "}
+              {config.pair}{" "}
               <span className="text-muted-foreground font-medium">
                 ({config.exchange})
               </span>
@@ -511,7 +511,7 @@ function timestampFormatter(i: string, interval: string) {
 
 const OhclvChartConfigSchema = z.object({
   exchange: ExchangeSchema,
-  ticker: z.string(),
+  pair: z.string(),
 });
 
 export type TOhlcvChartConfig = z.infer<typeof OhclvChartConfigSchema>;

@@ -51,6 +51,7 @@ import {
 import { useForm } from "react-hook-form";
 import { useHotkeys } from "react-hotkeys-hook";
 import { z } from "zod";
+import CardInputFormParser from "@/components/cards/_utils/value-form/card-value-form-parser";
 
 type AddCardButtonProps = {
   username: string;
@@ -271,14 +272,18 @@ export function AddCardCommandPanel({
             data-has-inputs={inputs ? true : undefined}
             className="w-full px-4 pt-3.5 pb-4 data-[has-inputs]:pt-3"
           >
-            <AddCardForm
-              form={form}
-              formRef={formRef}
-              inputs={inputs}
-              isPending={isFormPending}
-              onSubmit={onSubmit}
-              onSubmitWithNoValues={onSubmitWithNoValues}
-            />
+            {selectedCardType.cardType.id === "crypto_price_chart" ? (
+              <CardInputFormParser cardTypeId={selectedCardType.cardType.id} />
+            ) : (
+              <AddCardForm
+                form={form}
+                formRef={formRef}
+                inputs={inputs}
+                isPending={isFormPending}
+                onSubmit={onSubmit}
+                onSubmitWithNoValues={onSubmitWithNoValues}
+              />
+            )}
           </div>
         </div>
       )}

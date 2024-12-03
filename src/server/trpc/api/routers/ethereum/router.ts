@@ -19,7 +19,7 @@ const ethToGwei = Math.pow(10, 9);
 const gweiToWei = Math.pow(10, 9);
 
 export const ethereumRouter = createTRPCRouter({
-  getGasInfo: cachedPublicProcedure("short")
+  getGasInfo: cachedPublicProcedure("seconds-short")
     .input(
       z.object({
         network: EthereumNetworkSchema.optional().default("Ethereum"),
@@ -48,7 +48,7 @@ export const ethereumRouter = createTRPCRouter({
           path: "ethereum.getGasInfo:getEthPrice",
           value: { cmcId, convert },
           promise: getEthPrice({ cmcId, convert }),
-          cacheTime: "long",
+          cacheTime: "seconds-long",
         }),
       ]);
 

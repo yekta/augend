@@ -14,7 +14,7 @@ import { TRPCError } from "@trpc/server";
 import { cleanAndSortArray } from "@/server/redis/cache-utils";
 
 export const cmcRouter = createTRPCRouter({
-  getCryptoInfos: cachedPublicProcedure("medium")
+  getCryptoInfos: cachedPublicProcedure()
     .input(
       z.object({
         ids: z.array(z.number()),
@@ -69,7 +69,7 @@ export const cmcRouter = createTRPCRouter({
       }
       return editedResult;
     }),
-  getGlobalMetrics: cachedPublicProcedure("medium")
+  getGlobalMetrics: cachedPublicProcedure()
     .input(
       z.object({
         convert: z.string().optional().default("USD"),
@@ -127,7 +127,7 @@ export const cmcRouter = createTRPCRouter({
 
       return result;
     }),
-  getCoinList: cachedPublicProcedure("medium")
+  getCoinList: cachedPublicProcedure()
     .input(
       z.object({
         convert: z.string().optional().default("USD"),

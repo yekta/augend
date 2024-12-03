@@ -25,7 +25,7 @@ import type { PositionPriceRange, SearchFilterOpts } from "@gfxlabs/oku";
 import { TRPCError } from "@trpc/server";
 
 export const uniswapRouter = createTRPCRouter({
-  getPools: cachedPublicProcedure("medium")
+  getPools: cachedPublicProcedure()
     .input(
       z.object({
         page: z.number().int().positive().default(1),
@@ -141,7 +141,7 @@ export const uniswapRouter = createTRPCRouter({
         return editedRes;
       }
     ),
-  getPosition: cachedPublicProcedure("short")
+  getPosition: cachedPublicProcedure("seconds-short")
     .input(
       z.object({
         id: z.number(),
@@ -174,7 +174,7 @@ export const uniswapRouter = createTRPCRouter({
           path: "uniswap.getPosition:nftUri",
           value: { network, id },
           promise: nftUriPromise,
-          cacheTime: "extremelyLong",
+          cacheTime: "hours-short",
         }),
         positionPromise,
       ]);
@@ -285,7 +285,7 @@ export const uniswapRouter = createTRPCRouter({
       };
       return editedRes;
     }),
-  getSwaps: cachedPublicProcedure("short")
+  getSwaps: cachedPublicProcedure("seconds-short")
     .input(
       z.object({
         network: EthereumNetworkSchema.optional().default("Ethereum"),

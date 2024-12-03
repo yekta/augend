@@ -5,11 +5,11 @@ import {
   NavigationMenuItem,
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
-import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import {
   BananaIcon,
   CalculatorIcon,
   LucideLayoutDashboard,
+  TriangleAlertIcon,
 } from "lucide-react";
 
 import Link from "next/link";
@@ -47,7 +47,7 @@ export default function DashboardTabs({
         )}
         {isLoadingError && (
           <div className="text-destructive flex items-center text-sm justify-center flex-1 font-semibold px-3 md:px-4 py-4 text-center gap-2 group relative">
-            <ExclamationTriangleIcon className="shrink-0 size-5 md:size-4 transition" />
+            <TriangleAlertIcon className="shrink-0 size-5 md:size-4 transition" />
             <p className="hidden md:block shrink min-w-0 overflow-hidden overflow-ellipsis transition">
               Error
             </p>

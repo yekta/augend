@@ -2,13 +2,13 @@ import { z } from "zod";
 
 export const ExchangeSchema = z.enum([
   "Binance",
-  "Coinex",
-  "Kucoin",
   "Coinbase",
-  "OKX",
   "Kraken",
+  "Kucoin",
+  "OKX",
+  "Coinex",
 ]);
-export type TAvailableExchange = z.infer<typeof ExchangeSchema>;
+export type TExchange = z.infer<typeof ExchangeSchema>;
 
 export type TOrderBook = {
   asks: {
@@ -20,7 +20,7 @@ export type TOrderBook = {
     amount: number;
   }[];
   metadata: {
-    exchange: TAvailableExchange;
+    exchange: TExchange;
     ticker: string;
     volumeBase24h: number;
     volumeQuote24h: number | null;
@@ -40,8 +40,8 @@ export type TOHLCV = {
 export type TOHLCVResult = {
   data: TOHLCV[];
   metadata: {
-    exchange: TAvailableExchange;
-    ticker: string;
+    exchange: TExchange;
+    pair: string;
     currentPrice: number;
   };
   isFallback?: boolean;

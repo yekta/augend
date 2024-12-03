@@ -13,22 +13,22 @@ import {
 } from "@/server/trpc/setup/trpc";
 import { OHLCV, OrderBook, Ticker } from "ccxt";
 
-const OrderbookInputSchema = z.object({
+const OrderBookInputSchema = z.object({
   exchange: ExchangeSchema,
-  ticker: z.string(),
+  pair: z.string(),
   limit: z.number(),
 });
 
 const OHLCVInputSchema = z.object({
   exchange: ExchangeSchema,
-  ticker: z.string(),
+  pair: z.string(),
   timeframe: z.string().default("1d"),
   since: z.number().default(Date.now() - 1000 * 60 * 60 * 24 * 30),
 });
 
 export const exchangeRouter = createTRPCRouter({
-  getOrderBook: cachedPublicProcedure("medium")
-    .input(OrderbookInputSchema)
+  getOrderBook: cachedPublicProcedure()
+    .input(OrderBookInputSchema)
     .query(async ({ input, ctx }) => {
       type TReturn = TOrderBook;
 
@@ -45,8 +45,8 @@ export const exchangeRouter = createTRPCRouter({
       return result;
     }),
 
-  getOrderBooks: cachedPublicProcedure("medium")
-    .input(z.array(OrderbookInputSchema))
+  getOrderBooks: cachedPublicProcedure()
+    .input(z.array(OrderBookInputSchema))
     .query(async ({ input, ctx }) => {
       type TReturn = TOrderBook[];
 
@@ -77,7 +77,7 @@ export const exchangeRouter = createTRPCRouter({
       return orderBooks;
     }),
 
-  getOHLCV: cachedPublicProcedure("medium")
+  getOHLCV: cachedPublicProcedure()
     .input(OHLCVInputSchema)
     .query(async ({ input, ctx }) => {
       type TReturn = TOHLCVResult;
@@ -124,7 +124,7 @@ export const exchangeRouter = createTRPCRouter({
       );
       return result;
     }),
-  getPairs: publicProcedure
+  getPairs: cachedPublicProcedure("hours-short")
     .input(
       z.object({
         exchange: ExchangeSchema,
@@ -135,32 +135,35 @@ export const exchangeRouter = createTRPCRouter({
       const { exchange } = input;
       const exchangeInstance = getExchangeInstance(exchange);
       const pairs = await exchangeInstance.fetchMarkets();
-      return pairs;
+      const pairsStr: string[] = pairs
+        .map((pair) => pair?.symbol)
+        .filter((i) => i !== undefined);
+      return pairsStr;
     }),
 });
 
 function getOrderbookPromiseObject(
-  input: z.infer<typeof OrderbookInputSchema>
+  input: z.infer<typeof OrderBookInputSchema>
 ) {
-  const { exchange, ticker, limit } = input;
+  const { exchange, pair, limit } = input;
   const exchangeInstance = getExchangeInstance(exchange);
   return {
-    orderBookPromise: exchangeInstance.fetchOrderBook(ticker, limit),
-    tickerInfoPromise: exchangeInstance.fetchTicker(ticker),
+    orderBookPromise: exchangeInstance.fetchOrderBook(pair, limit),
+    tickerInfoPromise: exchangeInstance.fetchTicker(pair),
   };
 }
 
 function parseOrderbookResult(
   book: OrderBook,
   tickerInfo: Ticker,
-  input: z.infer<typeof OrderbookInputSchema>
+  input: z.infer<typeof OrderBookInputSchema>
 ): TOrderBook {
   let orderBook: TOrderBook = {
     asks: [],
     bids: [],
     metadata: {
       exchange: input.exchange,
-      ticker: input.ticker,
+      ticker: input.pair,
       volumeBase24h: Number(tickerInfo.baseVolume),
       volumeQuote24h: tickerInfo.quoteVolume
         ? Number(tickerInfo.quoteVolume)
@@ -185,11 +188,11 @@ function parseOrderbookResult(
 }
 
 function getOHLCVPromiseObject(input: z.infer<typeof OHLCVInputSchema>) {
-  const { exchange, ticker, timeframe, since } = input;
+  const { exchange, pair, timeframe, since } = input;
   const exchangeInstance = getExchangeInstance(exchange);
   return {
-    ohlcvPromise: exchangeInstance.fetchOHLCV(ticker, timeframe, since),
-    tickerInfoPromise: exchangeInstance.fetchTicker(ticker),
+    ohlcvPromise: exchangeInstance.fetchOHLCV(pair, timeframe, since),
+    tickerInfoPromise: exchangeInstance.fetchTicker(pair),
   };
 }
 
@@ -209,7 +212,7 @@ function parseOHLCVResult(
     })),
     metadata: {
       exchange: input.exchange,
-      ticker: input.ticker,
+      pair: input.pair,
       currentPrice: Number(tickerInfo.last),
     },
   };

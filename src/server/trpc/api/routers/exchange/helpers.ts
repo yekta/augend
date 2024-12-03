@@ -1,10 +1,10 @@
 import "server-only";
 
-import { TAvailableExchange } from "@/server/trpc/api/routers/exchange/types";
+import { TExchange } from "@/server/trpc/api/routers/exchange/types";
 import ccxt, { Exchange } from "ccxt";
 import { env } from "@/lib/env";
 
-export function getExchangeInstance(exchange: TAvailableExchange): Exchange {
+export function getExchangeInstance(exchange: TExchange): Exchange {
   if (exchange === "Coinex") return new ccxt.coinex();
   if (exchange === "Kucoin") return new ccxt.kucoin();
   if (exchange === "Coinbase") return new ccxt.coinbaseadvanced();

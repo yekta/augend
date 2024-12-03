@@ -11,7 +11,7 @@ import { defaultQueryOptions } from "@/lib/constants";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
 import {
-  TAvailableExchange,
+  TExchange,
   TOrderBook,
 } from "@/server/trpc/api/routers/exchange/types";
 import { api } from "@/server/trpc/setup/react";
@@ -47,7 +47,7 @@ export default function OrderBookCard({
     api.exchange.getOrderBook.useQuery(
       {
         exchange: config.exchange,
-        ticker: config.ticker,
+        pair: config.pair,
         limit: lines,
       },
       defaultQueryOptions.normal
@@ -64,7 +64,7 @@ export default function OrderBookCard({
 
   const href =
     config.exchange === "Coinex"
-      ? `https://www.coinex.com/en/exchange/${config.ticker
+      ? `https://www.coinex.com/en/exchange/${config.pair
           .toLowerCase()
           .replace("/", "-")}`
       : undefined;
@@ -90,7 +90,7 @@ export default function OrderBookCard({
       <CardInnerWrapper className="flex flex-col items-center border rounded-xl px-4 py-4.5 text-center gap-4 group-data-[has-href]/card:not-touch:group-hover/card:bg-background-hover group-active/card:bg-background-hover transition text-sm relative">
         {/* Top */}
         <p className="font-semibold leading-none max-w-full text-foreground whitespace-nowrap overflow-hidden overflow-ellipsis group-data-[pending]/card:bg-foreground group-data-[pending]/card:text-transparent group-data-[pending]/card:rounded-sm group-data-[pending]/card:animate-skeleton">
-          {config.ticker}{" "}
+          {config.pair}{" "}
           <span className="text-muted-foreground group-data-[pending]/card:text-transparent font-medium">
             ({config.exchange})
           </span>
@@ -234,7 +234,7 @@ function limitData(data: TOrderBook, length: number): TOrderBook {
 }
 
 export type TOrderBookConfig = {
-  exchange: TAvailableExchange;
-  ticker: string;
+  exchange: TExchange;
+  pair: string;
   limit: number;
 };

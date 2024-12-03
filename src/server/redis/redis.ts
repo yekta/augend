@@ -5,11 +5,15 @@ import { Redis } from "ioredis";
 const redis = new Redis(env.REDIS_URL + "?family=0");
 
 const cacheTimes = {
-  short: 8,
-  medium: 24,
-  long: 48,
-  veryLong: 480,
-  extremelyLong: 960,
+  "seconds-short": 8,
+  "seconds-medium": 24,
+  "seconds-long": 48,
+  "minutes-short": 60 * 3,
+  "minutes-medium": 60 * 10,
+  "minutes-long": 60 * 45,
+  "hours-short": 60 * 60 * 2,
+  "hours-medium": 60 * 60 * 6,
+  "hours-long": 60 * 60 * 12,
 };
 
 export type TCacheTime = keyof typeof cacheTimes;
@@ -17,7 +21,7 @@ export type TCacheTime = keyof typeof cacheTimes;
 export async function setCache(
   key: string,
   value: unknown,
-  cacheTime: keyof typeof cacheTimes = "medium"
+  cacheTime: TCacheTime
 ) {
   const start = Date.now();
   try {
@@ -25,7 +29,7 @@ export async function setCache(
     console.log(`[CACHE][SET]: "${key}" | ${Date.now() - start}ms`);
     return true;
   } catch (error) {
-    console.log(`[CACHE][ERROR]: Setting cache for "key"`, error);
+    console.log(`[CACHE][ERROR]: Setting cache for "${key}"`, error);
   }
   return false;
 }
@@ -41,7 +45,7 @@ export async function getCache<T>(key: string) {
     console.log(`[CACHE][HIT]: "${key}" | ${Date.now() - start}ms`);
     return JSON.parse(value) as T;
   } catch (error) {
-    console.log(`[CACHE][ERROR]: Getting cache for "key"`, error);
+    console.log(`[CACHE][ERROR]: Getting cache for "${key}"`, error);
   }
   return null;
 }
@@ -50,12 +54,12 @@ export async function cachedPromise<T>({
   path,
   value,
   promise,
-  cacheTime = "medium",
+  cacheTime = "seconds-medium",
 }: {
   path: string;
   value: any;
   promise: Promise<T>;
-  cacheTime: keyof typeof cacheTimes;
+  cacheTime: TCacheTime;
 }) {
   const key = createCacheKeyForTRPCRoute(path, value);
   const cache = await getCache<T>(key);
