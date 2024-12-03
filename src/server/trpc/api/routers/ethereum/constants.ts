@@ -24,11 +24,4 @@ export const ethereumNetworks: Record<
     cmcId: 1839,
     okuSlug: "bsc",
   },
-  Polygon: {
-    id: 137,
-    address: (address: string) => `https://polygonscan.com/address/${address}`,
-    gasTracker: "https://polygonscan.com/gastracker",
-    cmcId: 3890,
-    okuSlug: "polygon",
-  },
 };

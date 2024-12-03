@@ -19,11 +19,4 @@ export const ethereumProviders: Record<TEthereumNetwork, Alchemy> = {
       skipFetchSetup: true,
     },
   }),
-  Polygon: new Alchemy({
-    apiKey: env.ALCHEMY_API_KEY,
-    network: Network.MATIC_MAINNET,
-    connectionInfoOverrides: {
-      skipFetchSetup: true,
-    },
-  }),
 };
