@@ -5,7 +5,7 @@ import ccxt, { Exchange } from "ccxt";
 import { env } from "@/lib/env";
 
 export function getExchangeInstance(exchange: TExchange): Exchange {
-  if (exchange === "Coinex") return new ccxt.coinex();
+  if (exchange === "CoinEx") return new ccxt.coinex();
   if (exchange === "Kucoin") return new ccxt.kucoin();
   if (exchange === "Coinbase") return new ccxt.coinbaseadvanced();
   if (exchange === "OKX") return new ccxt.okx();

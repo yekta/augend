@@ -64,7 +64,7 @@ export default function OrderBookCard({
     : placeholderData;
 
   const href =
-    config.exchange === "Coinex"
+    config.exchange === "CoinEx"
       ? `https://www.coinex.com/en/exchange/${config.pair
           .toLowerCase()
           .replace("/", "-")}`

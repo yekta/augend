@@ -6,7 +6,7 @@ export const ExchangeSchema = z.enum([
   "Kraken",
   "Kucoin",
   "OKX",
-  "Coinex",
+  "CoinEx",
 ]);
 export type TExchange = z.infer<typeof ExchangeSchema>;
 
