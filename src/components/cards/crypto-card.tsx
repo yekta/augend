@@ -49,14 +49,15 @@ export default function CryptoCard({
     isChangeNegative === true
       ? ArrowDownIcon
       : isChangePositive === true
-        ? ArrowUpIcon
-        : ArrowRightIcon;
+      ? ArrowUpIcon
+      : ArrowRightIcon;
 
   const restAsDiv = rest as TCardOuterWrapperDivProps;
   const restAsLink = rest as TCardOuterWrapperLinkProps;
-  const restTyped = data
-    ? { ...restAsLink, href: rest.href || getCmcUrl(data.slug) }
-    : restAsDiv;
+  const restTyped =
+    data && !rest.noHref
+      ? { ...restAsLink, href: rest.href || getCmcUrl(data.slug) }
+      : restAsDiv;
 
   return (
     <ThreeLineCard
@@ -81,13 +82,13 @@ export default function CryptoCard({
                 {isPending
                   ? "Load"
                   : data
-                    ? formatNumberTBMK(
-                        data.quote[convertCurrency.ticker].percent_change_24h,
-                        3,
-                        false,
-                        true
-                      )
-                    : "Error"}
+                  ? formatNumberTBMK(
+                      data.quote[convertCurrency.ticker].percent_change_24h,
+                      3,
+                      false,
+                      true
+                    )
+                  : "Error"}
               </p>
             </div>
           </div>

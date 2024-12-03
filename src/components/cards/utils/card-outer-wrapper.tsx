@@ -29,21 +29,22 @@ import Link from "next/link";
 import { ComponentProps, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
-export type TCardOuterWrapperDivProps = ComponentProps<"div"> & {
-  href?: undefined;
-  isRemovable?: boolean;
+type TSharedProps = {
   cardId?: string;
-};
-export type TCardOuterWrapperLinkProps = ComponentProps<typeof Link> & {
   isRemovable?: boolean;
-  cardId?: string;
+  noHref?: boolean;
 };
-export type TCardOuterWrapperButtonProps = ComponentProps<"button"> & {
-  href?: undefined;
-  onClick?: () => void;
-  isRemovable?: boolean;
-  cardId?: string;
-};
+export type TCardOuterWrapperDivProps = ComponentProps<"div"> &
+  TSharedProps & {
+    href?: undefined;
+  };
+export type TCardOuterWrapperLinkProps = ComponentProps<typeof Link> &
+  TSharedProps & {};
+export type TCardOuterWrapperButtonProps = ComponentProps<"button"> &
+  TSharedProps & {
+    href?: undefined;
+    onClick?: () => void;
+  };
 
 export type TCardOuterWrapperProps =
   | TCardOuterWrapperDivProps
@@ -62,6 +63,7 @@ export default function CardOuterWrapper({
   className,
   children,
   isRemovable,
+  noHref,
   cardId,
   ...rest
 }: TCardOuterWrapperProps) {
@@ -240,7 +242,7 @@ export default function CardOuterWrapper({
     );
   }
 
-  if ("href" in rest && rest.href) {
+  if (!noHref && "href" in rest && rest.href) {
     const {
       target = "_blank",
       href,

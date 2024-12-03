@@ -43,29 +43,30 @@ export default async function Home() {
 
   return (
     <div className="w-full flex-1 flex flex-col items-center">
-      <div className="w-full max-w-7xl flex-1 flex flex-col justify-center items-center pt-8 pb-[calc(5vh+2rem)]">
+      <div className="w-full max-w-7xl flex-1 flex flex-col justify-center items-center pt-8 pb-[calc(6vh+2rem)]">
         <div className="flex flex-col items-center max-w-full px-5 md:px-8">
           <h1 className="text-4xl md:text-5xl font-bold text-center leading-none tracking-tight">
             Track financial assets
           </h1>
-          <p className="text-base md:text-lg text-center mt-2 max-w-lg text-muted-foreground">
+          <p className="text-base md:text-lg text-center mt-3 max-w-lg text-muted-foreground">
             Track crypto, NFTs, Uniswap positions, stocks, financial trends, and
             more with highly customizable dashboards.
           </p>
-          <LinkButton className="mt-4" href="/sign-in">
+          <LinkButton className="mt-5" href="/sign-in">
             Get Started
           </LinkButton>
         </div>
-        <div className="w-full grid grid-cols-12 mt-5 px-1 md:px-8">
+        <div className="w-full grid grid-cols-12 mt-6 px-1 md:px-5">
           <Providers cryptoIds={[...cryptoIds, ...miniCryptoIds]}>
             {cryptoIds.map((id, index) => (
               <CryptoCard
+                noHref
                 key={id}
                 config={{ id }}
                 className={index === 1 ? "hidden lg:flex" : ""}
               />
             ))}
-            <FearGreedIndexCard />
+            <FearGreedIndexCard noHref />
             <FiatCurrencyCard
               className="hidden md:flex"
               baseCurrency={{
@@ -83,6 +84,7 @@ export default async function Home() {
             />
             {miniCryptoIds.map((id, index) => (
               <MiniCryptoCard
+                noHref
                 key={id}
                 coinId={id}
                 className={
@@ -94,7 +96,7 @@ export default async function Home() {
                 }
               />
             ))}
-            <EthereumGasCard network="Ethereum" />
+            <EthereumGasCard noHref network="Ethereum" />
             <CryptoPriceChartCard
               config={{
                 exchange: "Kucoin",
