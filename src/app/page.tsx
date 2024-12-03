@@ -100,14 +100,14 @@ export default async function Home() {
             <CryptoPriceChartCard
               config={{
                 exchange: "Kucoin",
-                ticker: "DOGE/USDT",
+                pair: "DOGE/USDT",
               }}
             />
             <CryptoPriceChartCard
               className="hidden lg:flex"
               config={{
                 exchange: "Kucoin",
-                ticker: "LINK/BTC",
+                pair: "LINK/BTC",
               }}
             />
           </Providers>
