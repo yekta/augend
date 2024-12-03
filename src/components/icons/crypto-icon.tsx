@@ -12,7 +12,7 @@ const classInverter: Record<string, string> = {
   "text-secondary": "bg-secondary",
 };
 
-const tickerAlts: Record<string, string> = {
+const nameAlts: Record<string, string> = {
   Ethereum: "ETH",
   "Wrapped Ether": "ETH",
   WETH: "ETH",
@@ -21,14 +21,16 @@ const tickerAlts: Record<string, string> = {
 };
 
 export default function CryptoIcon({
-  ticker,
+  name,
   className,
   variant = "mono",
+  category,
 }: ComponentProps<"svg"> & {
-  ticker: string | undefined;
+  name: string | undefined;
   variant?: "branded" | "mono";
+  category?: "tokens" | "exchanges";
 }) {
-  const _ticker = ticker ? tickerAlts[ticker] || ticker : ticker;
+  const _name = name ? nameAlts[name] || name : name;
   const defaultClassName = "shrink-0 size-6";
   const [hasError, setHasError] = useState(false);
   const divClassName = useMemo(() => {
@@ -41,7 +43,7 @@ export default function CryptoIcon({
     return divClassName;
   }, [className]);
 
-  if (!_ticker) {
+  if (!_name) {
     return <BanIcon className={cn(defaultClassName, className)} />;
   }
 
@@ -64,7 +66,7 @@ export default function CryptoIcon({
           className="font-extrabold"
           fontSize={21}
         >
-          {_ticker.slice(0, 1).toUpperCase()}
+          {_name.slice(0, 1).toUpperCase()}
         </text>
       </svg>
     );
@@ -77,7 +79,7 @@ export default function CryptoIcon({
           className={cn("bg-foreground size-full", divClassName)}
           style={{
             maskSize: "100%",
-            maskImage: `url(${env.NEXT_PUBLIC_BUCKET_URL}/icons/crypto/tokens/mono/${_ticker}.svg)`,
+            maskImage: `url(${env.NEXT_PUBLIC_BUCKET_URL}/icons/crypto/${category}/mono/${_name}.svg)`,
           }}
         />
       </div>
@@ -86,9 +88,9 @@ export default function CryptoIcon({
   return (
     <img
       loading="lazy"
-      src={`${env.NEXT_PUBLIC_BUCKET_URL}/icons/crypto/tokens/branded/${_ticker}.svg`}
+      src={`${env.NEXT_PUBLIC_BUCKET_URL}/icons/crypto/${category}/branded/${_name}.svg`}
       className={cn(defaultClassName, className)}
-      alt={_ticker}
+      alt={_name}
       onError={() => setHasError(true)}
     />
   );

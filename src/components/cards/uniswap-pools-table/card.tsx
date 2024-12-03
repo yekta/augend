@@ -119,8 +119,8 @@ export default function UniswapPoolsTableCard({
                       PendingIcon
                     ) : data ? (
                       <CryptoIcon
+                        name={row.original.token0.symbol}
                         variant="branded"
-                        ticker={row.original.token0.symbol}
                         className={`${iconSizeClassName} bg-border p-1 rounded-full`}
                       />
                     ) : (
@@ -132,8 +132,8 @@ export default function UniswapPoolsTableCard({
                       PendingIcon
                     ) : data ? (
                       <CryptoIcon
+                        name={row.original.token1.symbol}
                         variant="branded"
-                        ticker={row.original.token1.symbol}
                         className={`${iconSizeClassName} bg-border p-1 rounded-full`}
                       />
                     ) : (

@@ -67,7 +67,7 @@ export default function CryptoCard({
         data ? (
           <div className="min-w-0 shrink overflow-hidden max-w-full flex items-center justify-center gap-1.25">
             <div className="flex items-center gap-0.5 justify-start min-w-0 shrink overflow-hidden overflow-ellipsis">
-              <CryptoIcon className="size-4 -my-1" ticker={data.symbol} />
+              <CryptoIcon name={data.symbol} className="size-4 -my-1" />
               <p className="min-w-0 shrink overflow-hidden overflow-ellipsis">
                 {data.symbol}
               </p>

@@ -74,7 +74,7 @@ export default function EthereumGasCard({
             text={conditionalValue(
               `${(data?.block || 10_000_000).toLocaleString(defaultLocale)}`
             )}
-            Icon={() => <CryptoIcon ticker={network} className="size-full" />}
+            Icon={() => <CryptoIcon name={network} className="size-full" />}
           />
         </div>
         <div className="flex flex-wrap shrink min-w-0 overflow-hidden items-center justify-center">

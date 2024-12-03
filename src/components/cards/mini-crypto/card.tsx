@@ -77,7 +77,7 @@ export default function MiniCryptoCard({
           <div className="size-5 md:size-6 rounded-md bg-foreground animate-skeleton shrink-0" />
         ) : (
           <CryptoIcon
-            ticker={ticker}
+            name={ticker}
             className="size-5 md:size-6 shrink-0 group-data-[loading-error]/card:text-destructive"
           />
         )}
