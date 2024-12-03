@@ -10,7 +10,9 @@ export default function Footer({ className }: { className?: string }) {
       )}
     >
       <div className="w-full flex items-center justify-center max-w-7xl py-3 px-4 ring-1 ring-border rounded-t-xl">
-        <p className="text-muted-foreground text-sm">Augend © 2024</p>
+        <p className="text-muted-foreground text-sm font-medium">
+          Augend © 2024
+        </p>
       </div>
     </div>
   );
