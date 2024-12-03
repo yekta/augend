@@ -18,6 +18,7 @@ const nameAlts: Record<string, string> = {
   WETH: "ETH",
   "Wrapped BTC": "WBTC",
   WBTC: "BTC",
+  Polygon: "MATIC",
 };
 
 export default function CryptoIcon({

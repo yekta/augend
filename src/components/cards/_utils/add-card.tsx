@@ -259,6 +259,8 @@ export function AddCardCommandPanel({
     }
   }, [selectedCardType]);
 
+  const newCardTypeIds = ["crypto_price_chart", "order_book", "gas_tracker"];
+
   return (
     <>
       {selectedCardType !== null && (
@@ -287,8 +289,7 @@ export function AddCardCommandPanel({
             data-has-inputs={inputs ? true : undefined}
             className="w-full px-4 pt-3.5 pb-4 data-[has-inputs]:pt-3"
           >
-            {selectedCardType.cardType.id === "crypto_price_chart" ||
-            selectedCardType.cardType.id === "order_book" ? (
+            {newCardTypeIds.includes(selectedCardType.cardType.id) ? (
               <CardValuesFormParser
                 onFormSubmit={onSubmitNew}
                 isPendingForm={isFormPending}
@@ -357,13 +358,13 @@ export function AddCardCommandPanel({
                       <div className="flex flex-col items-start min-w-0 shrink overflow-hidden gap-1">
                         <p
                           className="max-w-full text-sm font-bold group-data-[pending]/command:text-transparent group-data-[pending]/command:bg-foreground
-                        group-data-[pending]/command:rounded group-data-[pending]/command:animate-skeleton leading-tight"
+                          group-data-[pending]/command:rounded group-data-[pending]/command:animate-skeleton leading-tight"
                         >
                           {cardTypeObj.cardType.title}
                         </p>
                         <p
                           className="max-w-full text-xs text-muted-foreground group-data-[pending]/command:text-transparent group-data-[pending]/command:bg-muted-foreground
-                        group-data-[pending]/command:rounded group-data-[pending]/command:animate-skeleton leading-tight"
+                          group-data-[pending]/command:rounded group-data-[pending]/command:animate-skeleton leading-tight"
                         >
                           {cardTypeObj.cardType.description}
                         </p>
@@ -371,12 +372,12 @@ export function AddCardCommandPanel({
                       <div className="shrink-0 flex text-muted-foreground text-sm items-center justify-end text-right gap-1">
                         <ArrowDownCircle
                           className="size-3 -my-1 group-data-[pending]/command:text-transparent group-data-[pending]/command:rounded-full
-                        group-data-[pending]/command:bg-muted-foreground group-data-[pending]/command:animate-skeleton"
+                          group-data-[pending]/command:bg-muted-foreground group-data-[pending]/command:animate-skeleton"
                         />
                         <p
                           className="leading-none font-medium 
-                        group-data-[pending]/command:text-transparent group-data-[pending]/command:bg-muted-foreground
-                        group-data-[pending]/command:rounded group-data-[pending]/command:animate-skeleton"
+                          group-data-[pending]/command:text-transparent group-data-[pending]/command:bg-muted-foreground
+                          group-data-[pending]/command:rounded group-data-[pending]/command:animate-skeleton"
                         >
                           {formatNumberTBMK(
                             cardTypeObj.cardType.alltimeCounter

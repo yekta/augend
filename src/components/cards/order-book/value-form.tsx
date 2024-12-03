@@ -104,7 +104,7 @@ export function CryptoOrderBookValueForm({
         disabled={isPendingForm}
         items={exchanges.map((e) => ({ label: e, value: e }))}
         placeholder="Select exchange..."
-        inputPlaceholder="Search exchange..."
+        inputPlaceholder="Search exchanges..."
         noValueFoundLabel="No exchange found..."
       />
       <CardValueCombobox
@@ -121,7 +121,7 @@ export function CryptoOrderBookValueForm({
         items={pairs?.map((p) => ({ label: p, value: p })) ?? undefined}
         isPendingPlaceholder="Loading pairs..."
         placeholder="Select pair..."
-        inputPlaceholder="Search pair..."
+        inputPlaceholder="Search pairs..."
         noValueFoundLabel="No pair found..."
       />
       <CardValuesFormSubmitButton isPending={isPendingForm} className="mt-2" />
