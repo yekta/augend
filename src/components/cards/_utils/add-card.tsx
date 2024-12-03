@@ -265,6 +265,11 @@ export function AddCardCommandPanel({
     "gas_tracker",
     "crypto",
     "mini_crypto",
+    "banano_total",
+    "crypto_table",
+    "uniswap_pools_table",
+    "wban_summary",
+    "fear_greed_index",
   ];
 
   return (
