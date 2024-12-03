@@ -15,9 +15,9 @@ export default function ThemeButton() {
   const Icon =
     theme === "system"
       ? MonitorSmartphoneIcon
-      : theme === "dark"
-        ? MoonIcon
-        : SunIcon;
+      : theme === "light"
+      ? SunIcon
+      : MoonIcon;
   return (
     <Button
       className="p-1.5 rounded-full"

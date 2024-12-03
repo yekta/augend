@@ -210,7 +210,7 @@ export default function DashboardPage({
   ) {
     return (
       <MainProviders>
-        <DashboardGrid centerItems initialIds={[]}>
+        <DashboardGrid initialIds={[]}>
           <p className="text-destructive max-w-full px-5 text-center">
             Something went wrong :(
           </p>
@@ -252,7 +252,7 @@ export default function DashboardPage({
     return (
       <MainProviders>
         <DashboardGrid centerItems initialIds={cards.map((c) => c.card.id)}>
-          <div className="flex flex-col items-center w-full text-center gap-3">
+          <div className="flex col-span-12 flex-col items-center justify-center w-full text-center gap-3">
             <h1 className="font-bold text-lg px-5">Start by adding a card</h1>
             <AddCardButton
               username={username}
@@ -269,9 +269,11 @@ export default function DashboardPage({
     return (
       <MainProviders>
         <DashboardGrid centerItems initialIds={[]}>
-          <p className="text-muted-foreground max-w-full px-5 text-center">
-            This dashboard doesn't have any cards yet.
-          </p>
+          <div className="flex col-span-12 flex-col items-center justify-center w-full text-center gap-3">
+            <p className="w-full text-muted-foreground max-w-full px-5">
+              This dashboard doesn't have any cards yet.
+            </p>
+          </div>
         </DashboardGrid>
       </MainProviders>
     );
@@ -287,10 +289,7 @@ export default function DashboardPage({
         cryptoCurrencyIds={cryptoCurrencyIds}
         currencyPreference={currencyPreference}
       >
-        <DashboardGrid
-          centerItems={cards.length < 2}
-          initialIds={cards.map((c) => c.card.id)}
-        >
+        <DashboardGrid initialIds={cards.map((c) => c.card.id)}>
           <EditBar />
           <Cards cards={cards} currencies={currencies} />
           <AddCardButton username={username} dashboardSlug={dashboardSlug} />
