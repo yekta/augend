@@ -130,7 +130,7 @@ export function CryptoPriceChartValueForm({
         inputPlaceholder="Search pairs..."
         noValueFoundLabel="No pair found..."
       />
-      <CardValuesFormSubmitButton isPending={isPendingForm} className="mt-2" />
+      <CardValuesFormSubmitButton isPending={isPendingForm} />
     </CardValuesFormWrapper>
   );
 }

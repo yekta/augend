@@ -88,7 +88,7 @@ export function CryptoValueForm({
         inputPlaceholder="Search cryptos..."
         noValueFoundLabel="No crypto found..."
       />
-      <CardValuesFormSubmitButton isPending={isPendingForm} className="mt-2" />
+      <CardValuesFormSubmitButton isPending={isPendingForm} />
     </CardValuesFormWrapper>
   );
 }

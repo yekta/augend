@@ -68,7 +68,7 @@ export function GasCardValueForm({
         inputPlaceholder="Search networks..."
         noValueFoundLabel="No network found..."
       />
-      <CardValuesFormSubmitButton isPending={isPendingForm} className="mt-2" />
+      <CardValuesFormSubmitButton isPending={isPendingForm} />
     </CardValuesFormWrapper>
   );
 }
