@@ -87,34 +87,28 @@ export function CryptoOrderBookValueForm({
     <CardValuesFormWrapper onSubmit={onFormSubmitLocal}>
       <CardValueCombobox
         inputLabel="Exchange"
-        errorMessage={exchangeError}
+        inputErrorMessage={exchangeError}
         value={exchange}
         onValueChange={() => clearErrors()}
         setValue={setExchange as Dispatch<SetStateAction<string | null>>}
         disabled={isPendingForm}
-        items={exchanges.map((e) => ({
-          label: e,
-          value: e,
-        }))}
+        items={exchanges.map((e) => ({ label: e, value: e }))}
         placeholder="Select exchange..."
         inputPlaceholder="Search exchange..."
         noValueFoundLabel="No exchange found..."
       />
       <CardValueCombobox
         inputLabel="Pair"
-        errorMessage={pairError}
+        inputErrorMessage={pairError}
         value={pair}
         onValueChange={() => clearErrors()}
         setValue={setPair}
         disabled={isPendingForm}
         isPending={isPendingPairs}
         isLoadingError={isLoadingErrorPairs}
-        items={(pairs || []).map((e) => ({
-          label: e,
-          value: e,
-        }))}
+        isLoadingErrorMessage="Failed to load pairs :("
+        items={pairs?.map((p) => ({ label: p, value: p })) ?? undefined}
         isPendingPlaceholder="Loading pairs..."
-        isLoadingErrorPlaceholder="Failed to load pairs"
         placeholder="Select pair..."
         inputPlaceholder="Search pair..."
         noValueFoundLabel="No pair found..."

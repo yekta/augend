@@ -25,7 +25,7 @@ import type { PositionPriceRange, SearchFilterOpts } from "@gfxlabs/oku";
 import { TRPCError } from "@trpc/server";
 
 export const uniswapRouter = createTRPCRouter({
-  getPools: cachedPublicProcedure()
+  getPools: cachedPublicProcedure("seconds-medium")
     .input(
       z.object({
         page: z.number().int().positive().default(1),
@@ -150,6 +150,10 @@ export const uniswapRouter = createTRPCRouter({
     )
     .query(async ({ input: { id, network }, ctx }) => {
       type TResult = TUniswapPositionResult;
+
+      if (ctx.cachedResult) {
+        return ctx.cachedResult as TResult;
+      }
 
       const positionManager = await getUniswapPositionManager(network);
       const networkOku = network.toLowerCase();

@@ -315,76 +315,80 @@ export function AddCardCommandPanel({
           )}
         >
           <CommandInput ref={inputRef} placeholder="Search for a card..." />
-          {!isPending && data && (
+          {!isLoadingError && (
             <CommandEmpty className="text-muted-foreground w-full text-center text-sm py-6">
               No cards found.
             </CommandEmpty>
           )}
-          <CommandList>
-            {!isPending && isLoadingError && (
-              <p className="w-full py-5 px-8 text-destructive text-sm text-center">
-                Couldn't load cards :(
-              </p>
-            )}
-            {!isLoadingError && (
-              <CommandGroup data-pending={isPending ? true : undefined}>
-                {(
-                  data ||
-                  Array.from({ length: 20 }).map((_, index) => ({
-                    cardType: {
-                      id: `loading-${index}`,
-                      title: `Loading title ${index}`,
-                      description: `Loading description ${index}`,
-                      alltimeCounter: 10,
-                      currentCounter: 10,
-                    },
-                  }))
-                ).map((cardTypeObj, i) => (
-                  <CommandItem
-                    className="px-3 py-3 flex flex-row w-full items-center justify-between text-left gap-4"
-                    key={`${cardTypeObj.cardType.id}-${i}`}
-                    state={isPending ? "pending" : undefined}
-                    onSelect={(e) => {
-                      if (!data) return;
-                      const cardType = data.find(
-                        (c) => c.cardType.id === cardTypeObj.cardType.id
-                      );
-                      if (!cardType) return;
-                      setSelectedCardType(cardType);
-                    }}
-                  >
-                    <div className="flex flex-col items-start min-w-0 shrink overflow-hidden gap-1">
-                      <p
-                        className="max-w-full text-sm font-bold group-data-[pending]/command:text-transparent group-data-[pending]/command:bg-foreground
+          {!isPending && isLoadingError && (
+            <p className="w-full py-5 px-8 text-destructive text-sm text-center">
+              Couldn't load cards :(
+            </p>
+          )}
+          {!isLoadingError && (
+            <CommandList>
+              {!isLoadingError && (
+                <CommandGroup data-pending={isPending ? true : undefined}>
+                  {(
+                    data ||
+                    Array.from({ length: 20 }).map((_, index) => ({
+                      cardType: {
+                        id: `loading-${index}`,
+                        title: `Loading title ${index}`,
+                        description: `Loading description ${index}`,
+                        alltimeCounter: 10,
+                        currentCounter: 10,
+                      },
+                    }))
+                  ).map((cardTypeObj, i) => (
+                    <CommandItem
+                      className="px-3 py-3 flex flex-row w-full items-center justify-between text-left gap-4"
+                      key={`${cardTypeObj.cardType.id}-${i}`}
+                      state={isPending ? "pending" : undefined}
+                      onSelect={(e) => {
+                        if (!data) return;
+                        const cardType = data.find(
+                          (c) => c.cardType.id === cardTypeObj.cardType.id
+                        );
+                        if (!cardType) return;
+                        setSelectedCardType(cardType);
+                      }}
+                    >
+                      <div className="flex flex-col items-start min-w-0 shrink overflow-hidden gap-1">
+                        <p
+                          className="max-w-full text-sm font-bold group-data-[pending]/command:text-transparent group-data-[pending]/command:bg-foreground
                         group-data-[pending]/command:rounded group-data-[pending]/command:animate-skeleton leading-tight"
-                      >
-                        {cardTypeObj.cardType.title}
-                      </p>
-                      <p
-                        className="max-w-full text-xs text-muted-foreground group-data-[pending]/command:text-transparent group-data-[pending]/command:bg-muted-foreground
+                        >
+                          {cardTypeObj.cardType.title}
+                        </p>
+                        <p
+                          className="max-w-full text-xs text-muted-foreground group-data-[pending]/command:text-transparent group-data-[pending]/command:bg-muted-foreground
                         group-data-[pending]/command:rounded group-data-[pending]/command:animate-skeleton leading-tight"
-                      >
-                        {cardTypeObj.cardType.description}
-                      </p>
-                    </div>
-                    <div className="shrink-0 flex text-muted-foreground text-sm items-center justify-end text-right gap-1">
-                      <ArrowDownCircle
-                        className="size-3 -my-1 group-data-[pending]/command:text-transparent group-data-[pending]/command:rounded-full
+                        >
+                          {cardTypeObj.cardType.description}
+                        </p>
+                      </div>
+                      <div className="shrink-0 flex text-muted-foreground text-sm items-center justify-end text-right gap-1">
+                        <ArrowDownCircle
+                          className="size-3 -my-1 group-data-[pending]/command:text-transparent group-data-[pending]/command:rounded-full
                         group-data-[pending]/command:bg-muted-foreground group-data-[pending]/command:animate-skeleton"
-                      />
-                      <p
-                        className="leading-none font-medium 
+                        />
+                        <p
+                          className="leading-none font-medium 
                         group-data-[pending]/command:text-transparent group-data-[pending]/command:bg-muted-foreground
                         group-data-[pending]/command:rounded group-data-[pending]/command:animate-skeleton"
-                      >
-                        {formatNumberTBMK(cardTypeObj.cardType.alltimeCounter)}
-                      </p>
-                    </div>
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            )}
-          </CommandList>
+                        >
+                          {formatNumberTBMK(
+                            cardTypeObj.cardType.alltimeCounter
+                          )}
+                        </p>
+                      </div>
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              )}
+            </CommandList>
+          )}
         </Command>
       )}
     </>

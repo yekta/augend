@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 export const ExchangeSchema = z.enum([
-  "Binance",
   "Coinbase",
+  "Binance",
   "Kraken",
   "Kucoin",
   "OKX",

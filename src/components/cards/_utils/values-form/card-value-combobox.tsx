@@ -21,11 +21,12 @@ import {
 } from "lucide-react";
 import { Dispatch, ReactNode, SetStateAction, useMemo, useState } from "react";
 
+type TItem = {
+  label: string;
+  value: string;
+};
 type Props = {
-  items: {
-    label: string;
-    value: string;
-  }[];
+  items: TItem[] | undefined;
   placeholder: string;
   inputPlaceholder: string;
   noValueFoundLabel: string;
@@ -33,14 +34,21 @@ type Props = {
   isPending?: boolean;
   isPendingPlaceholder?: string;
   isLoadingError?: boolean;
-  isLoadingErrorPlaceholder?: string;
+  isLoadingErrorMessage?: string | null;
+  inputErrorMessage?: string | null;
   className?: string;
   value: string | null;
   setValue: Dispatch<SetStateAction<string | null>>;
   inputLabel: string;
-  errorMessage: string | null;
   disabled?: boolean;
 };
+
+const itemsPlaceholder: TItem[] = Array.from({ length: 20 }).map(
+  (i, index) => ({
+    label: `Loading ${index}`,
+    value: `${index}`,
+  })
+);
 
 export function CardValueCombobox<T>({
   items,
@@ -49,103 +57,114 @@ export function CardValueCombobox<T>({
   inputPlaceholder,
   noValueFoundLabel,
   isPending,
-  isPendingPlaceholder,
+  inputErrorMessage,
   isLoadingError,
-  isLoadingErrorPlaceholder,
+  isLoadingErrorMessage,
   className,
   value,
   setValue,
   inputLabel,
-  errorMessage,
   disabled,
 }: Props) {
   const [open, setOpen] = useState(false);
 
   const isHardError = !isPending && isLoadingError;
 
+  const itemsOrPlaceholder = useMemo(() => {
+    if (isPending || !items) return itemsPlaceholder;
+    return items;
+  }, [items, isPending, isHardError]);
+
   const label = useMemo(() => {
-    return items.find((item) => item.value === value)?.label;
+    return itemsOrPlaceholder.find((item) => item.value === value)?.label;
   }, [value]);
 
   return (
     <div
-      data-error={errorMessage ? true : undefined}
+      data-error={inputErrorMessage ? true : undefined}
       className="w-full flex flex-col gap-2 group/input"
     >
       <Label>{inputLabel}</Label>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
-            disabled={isPending || isHardError || disabled}
+            disabled={disabled}
             variant="outline"
             role="combobox"
             aria-expanded={open}
             data-pending={isPending ? true : undefined}
             data-loading-error={isHardError ? true : undefined}
-            data-showing-label={
-              !isPending && !isHardError && !label ? true : undefined
-            }
+            data-showing-placeholder={!label ? true : undefined}
             className={cn(
-              "w-full font-semibold justify-between group/button data-[loading-error]:text-destructive",
+              "w-full font-semibold justify-between group/button",
               className
             )}
           >
-            <div className="flex-shrink min-w-0 overflow-hidden flex items-center gap-2 group-data-[pending]/button:-ml-1 group-data-[loading-error]/button:-ml-1">
-              {isPending && (
-                <LoaderIcon className="size-5 animate-spin opacity-50" />
-              )}
-              {isHardError && <TriangleAlertIcon className="size-5" />}
-              <p className="min-w-0 group-data-[pending]/button:text-muted-foreground group-data-[showing-label]/button:text-muted-foreground overflow-hidden overflow-ellipsis shrink whitespace-nowrap">
-                {isPending && isPendingPlaceholder
-                  ? isPendingPlaceholder
-                  : isLoadingError && isLoadingErrorPlaceholder
-                  ? isLoadingErrorPlaceholder
-                  : value
-                  ? label
-                  : placeholder}
+            <div className="flex-shrink min-w-0 overflow-hidden flex items-center gap-2">
+              <p className="min-w-0 group-data-[showing-placeholder]/button:text-muted-foreground overflow-hidden overflow-ellipsis shrink whitespace-nowrap">
+                {value ? label : placeholder}
               </p>
             </div>
-            {!isHardError && (
-              <ChevronsUpDownIcon
-                strokeWidth={1.5}
-                className="opacity-50 size-5 -mr-2"
-              />
-            )}
+            <ChevronsUpDownIcon
+              strokeWidth={1.5}
+              className="opacity-50 size-5 -mr-2"
+            />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
-          <Command className="max-h-[15.5rem]">
+          <Command
+            data-pending={isPending ? true : undefined}
+            className="max-h-[15.5rem] group/command"
+          >
             <CommandInput placeholder={inputPlaceholder} />
             <CommandList>
-              <CommandEmpty>{noValueFoundLabel}</CommandEmpty>
-              <CommandGroup>
-                {items.map((item) => (
-                  <CommandItem
-                    data-item-selected={value === item.value ? true : undefined}
-                    className="w-full data-[item-selected]:font-semibold group/command-item px-3"
-                    key={item.value}
-                    value={item.value}
-                    onSelect={(currentValue) => {
-                      setValue(currentValue);
-                      setOpen(false);
-                      onValueChange?.(currentValue);
-                    }}
-                  >
-                    <p className="shrink min-w-0 overflow-hidden overflow-ellipsis">
-                      {item.label}
-                    </p>
-                    <CheckIcon
-                      strokeWidth={2.5}
-                      className="ml-auto -mr-1 size-5 shrink-0 opacity-0 group-data-[item-selected]/command-item:opacity-100"
-                    />
-                  </CommandItem>
-                ))}
-              </CommandGroup>
+              {!isLoadingError && (
+                <CommandEmpty>{noValueFoundLabel}</CommandEmpty>
+              )}
+              {!isPending && isLoadingError && (
+                <p className="w-full py-5 px-8 text-destructive text-sm text-center">
+                  {isLoadingErrorMessage}
+                </p>
+              )}
+              {!isLoadingError && (
+                <CommandGroup>
+                  {!isLoadingError &&
+                    itemsOrPlaceholder.map((item) => (
+                      <CommandItem
+                        disabled={isPending}
+                        data-item-selected={
+                          value === item.value ? true : undefined
+                        }
+                        className="w-full data-[item-selected]:font-semibold group/command-item px-3 py-2"
+                        key={item.value}
+                        value={item.value}
+                        onSelect={(currentValue) => {
+                          setValue(currentValue);
+                          setOpen(false);
+                          onValueChange?.(currentValue);
+                        }}
+                      >
+                        <p
+                          className="shrink leading-tight min-w-0 overflow-hidden overflow-ellipsis 
+                          group-data-[pending]/command:text-transparent group-data-[pending]/command:bg-foreground group-data-[pending]/command:rounded group-data-[pending]/command:animate-skeleton"
+                        >
+                          {item.label}
+                        </p>
+                        {!isPending && (
+                          <CheckIcon
+                            strokeWidth={2.5}
+                            className="ml-auto -mr-0.75 size-4 shrink-0 opacity-0 group-data-[item-selected]/command-item:opacity-100"
+                          />
+                        )}
+                      </CommandItem>
+                    ))}
+                </CommandGroup>
+              )}
             </CommandList>
           </Command>
         </PopoverContent>
       </Popover>
-      {errorMessage && <ErrorLine>{errorMessage}</ErrorLine>}
+      {inputErrorMessage && <ErrorLine>{inputErrorMessage}</ErrorLine>}
     </div>
   );
 }

@@ -27,7 +27,7 @@ const OHLCVInputSchema = z.object({
 });
 
 export const exchangeRouter = createTRPCRouter({
-  getOrderBook: cachedPublicProcedure()
+  getOrderBook: cachedPublicProcedure("seconds-short")
     .input(OrderBookInputSchema)
     .query(async ({ input, ctx }) => {
       type TReturn = TOrderBook;
@@ -45,7 +45,7 @@ export const exchangeRouter = createTRPCRouter({
       return result;
     }),
 
-  getOrderBooks: cachedPublicProcedure()
+  getOrderBooks: cachedPublicProcedure("seconds-short")
     .input(z.array(OrderBookInputSchema))
     .query(async ({ input, ctx }) => {
       type TReturn = TOrderBook[];
@@ -53,6 +53,7 @@ export const exchangeRouter = createTRPCRouter({
       if (ctx.cachedResult) {
         return ctx.cachedResult as TReturn;
       }
+
       const promises = input.map(getOrderbookPromiseObject);
       const orderBookPromises = promises.map((p) => p.orderBookPromise);
       const tickerInfoPromises = promises.map((p) => p.tickerInfoPromise);
@@ -77,7 +78,7 @@ export const exchangeRouter = createTRPCRouter({
       return orderBooks;
     }),
 
-  getOHLCV: cachedPublicProcedure()
+  getOHLCV: cachedPublicProcedure("seconds-short")
     .input(OHLCVInputSchema)
     .query(async ({ input, ctx }) => {
       type TReturn = TOHLCVResult;
@@ -132,13 +133,19 @@ export const exchangeRouter = createTRPCRouter({
       })
     )
     .query(async ({ input, ctx }) => {
+      type TReturn = string[];
+
+      if (ctx.cachedResult) {
+        return ctx.cachedResult as TReturn;
+      }
+
       const { exchange } = input;
       const exchangeInstance = getExchangeInstance(exchange);
       const pairs = await exchangeInstance.fetchMarkets();
-      const pairsStr: string[] = pairs
+      const result: TReturn = pairs
         .map((pair) => pair?.symbol)
         .filter((i) => i !== undefined);
-      return pairsStr;
+      return result;
     }),
 });
 
