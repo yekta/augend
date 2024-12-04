@@ -11,7 +11,9 @@ export function CryptoValueForm({
   onFormSubmit,
   isPendingForm,
 }: TValueFormProps) {
-  const [coinName, setCoinName] = useState<string | null>(null);
+  const [coinNameAndTicker, setCoinNameAndTicker] = useState<string | null>(
+    null
+  );
   const {
     data: idMaps,
     isPending: isPendingIdMaps,
@@ -23,31 +25,36 @@ export function CryptoValueForm({
     return idMaps?.map((p) => ({ ...p, id: p.id.toString() }));
   }, [idMaps]);
 
+  const getValue = (c: { name: string; symbol: string }) =>
+    `${c.name} (${c.symbol})`;
+
   const items = useMemo(() => {
     return (
       shapedIdMaps?.map((p) => ({
-        label: p.name,
-        value: p.name,
+        label: getValue(p),
+        value: getValue(p),
         iconValue: p.symbol,
       })) ?? undefined
     );
   }, [shapedIdMaps]);
 
   const iconValue = useMemo(() => {
-    return shapedIdMaps?.find((i) => i.name === coinName)?.symbol;
-  }, [coinName, shapedIdMaps]);
+    return shapedIdMaps?.find((i) => getValue(i) === coinNameAndTicker)?.symbol;
+  }, [coinNameAndTicker, shapedIdMaps]);
 
   const onFormSubmitLocal = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (coinName === null || coinName === "") {
+    if (coinNameAndTicker === null || coinNameAndTicker === "") {
       setIdMapError("Select a cryptocurrency.");
       return;
     }
-    if (!shapedIdMaps?.map((i) => i.name).includes(coinName)) {
+    if (!shapedIdMaps?.map((i) => getValue(i)).includes(coinNameAndTicker)) {
       setIdMapError("Invalid cryptocurrency.");
       return;
     }
-    let coinId = shapedIdMaps?.find((i) => i.name === coinName)?.id;
+    let coinId = shapedIdMaps?.find(
+      (i) => getValue(i) === coinNameAndTicker
+    )?.id;
     if (coinId === undefined) {
       setIdMapError("Invalid cryptocurrency.");
       return;
@@ -70,10 +77,10 @@ export function CryptoValueForm({
         inputTitle="Crypto"
         inputDescription="The cryptocurrency to track."
         inputErrorMessage={idMapError}
-        value={coinName}
+        value={coinNameAndTicker}
         iconValue={iconValue}
         onValueChange={() => clearErrors()}
-        setValue={setCoinName}
+        setValue={setCoinNameAndTicker}
         Icon={({ className, value }) => (
           <div className={cn("text-foreground p-0.25", className)}>
             <CryptoIcon cryptoName={value} className="size-full" />

@@ -122,7 +122,9 @@ export function CardValueCombobox<T>({
                 />
               )}
               <p className="min-w-0 group-data-[showing-placeholder]/button:text-muted-foreground overflow-hidden overflow-ellipsis shrink whitespace-nowrap">
-                {value ? label : placeholder}
+                <WithHighlightedParentheses
+                  text={label ? label : placeholder}
+                />
               </p>
             </div>
             <ChevronsUpDownIcon
@@ -174,7 +176,7 @@ export function CardValueCombobox<T>({
                           className="shrink leading-tight min-w-0 overflow-hidden overflow-ellipsis 
                           group-data-[pending]/command:text-transparent group-data-[pending]/command:bg-foreground group-data-[pending]/command:rounded group-data-[pending]/command:animate-skeleton"
                         >
-                          {item.label}
+                          <WithHighlightedParentheses text={item.label} />
                         </p>
                         {!isPending && (
                           <CheckIcon
@@ -221,5 +223,26 @@ function ErrorLine({ children }: { children: ReactNode }) {
     <p className="text-destructive text-sm font-medium leading-tight px-1">
       {children}
     </p>
+  );
+}
+
+function WithHighlightedParentheses({ text }: { text: string }) {
+  const regex = /\(([^)]+)\)$/; // Matches '(content)' at the end of the string
+  const match = text.match(regex);
+
+  if (!match) {
+    // If no match, return the text as-is
+    return <>{text}</>;
+  }
+
+  // Extract the content outside and inside the parentheses
+  const before = text.slice(0, match.index); // Text before the parentheses
+  const inside = match[1]; // Content inside the parentheses
+
+  return (
+    <>
+      {before}
+      <span className="opacity-75 font-normal">({inside})</span>
+    </>
   );
 }

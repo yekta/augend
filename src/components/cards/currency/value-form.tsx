@@ -33,7 +33,7 @@ export function CurrencyValueForm({
   const getValue = (c: { name: string; ticker: string }) =>
     `${c.name} (${c.ticker})`;
 
-  const currencyItems = useMemo(() => {
+  const baseCurrencyItems = useMemo(() => {
     return currencies?.map((c) => ({
       label: getValue(c),
       value: getValue(c),
@@ -41,22 +41,39 @@ export function CurrencyValueForm({
     }));
   }, [currencies]);
 
+  const quoteCurrencyItems = useMemo(() => {
+    return currencies
+      ?.map((c) => ({
+        label: getValue(c),
+        value: getValue(c),
+        iconValue: c.ticker,
+      }))
+      .filter((c) => c.value !== baseCurrencyValue);
+  }, [currencies, baseCurrencyValue]);
+
   const onFormSubmitLocal = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const baseId = currencies?.find(
       (c) => getValue(c) === baseCurrencyValue
     )?.id;
     if (!baseId) {
-      setBaseCurrencyError("Base currency is required");
+      setBaseCurrencyError("Base currency is required.");
       return;
     }
     const quoteId = currencies?.find(
       (c) => getValue(c) === quoteCurrencyValue
     )?.id;
     if (!quoteId) {
-      setQuoteCurrencyError("Quote currency is required");
+      setQuoteCurrencyError("Quote currency is required.");
       return;
     }
+
+    if (baseId === quoteId) {
+      setBaseCurrencyError("Currencies must be different.");
+      setQuoteCurrencyError("Currencies must be different.");
+      return;
+    }
+
     onFormSubmit([
       {
         cardTypeInputId: "currency_currency_id_base",
@@ -77,7 +94,7 @@ export function CurrencyValueForm({
     <CardValuesFormWrapper onSubmit={onFormSubmitLocal}>
       <CardValueCombobox
         inputTitle="Base Currency"
-        inputDescription="Select the base currency"
+        inputDescription="Select the base currency."
         iconValue={
           currencies?.find((c) => getValue(c) === baseCurrencyValue)?.ticker
         }
@@ -115,14 +132,14 @@ export function CurrencyValueForm({
         isPending={isPending}
         isLoadingError={isLoadingError}
         isLoadingErrorMessage="Failed to load currencies :("
-        items={currencyItems}
+        items={baseCurrencyItems}
         placeholder="Select currency..."
         inputPlaceholder="Search currencies..."
         noValueFoundLabel="No currency found..."
       />
       <CardValueCombobox
         inputTitle="Quote Currency"
-        inputDescription="Select the quote currency"
+        inputDescription="Select the quote currency."
         iconValue={
           currencies?.find((c) => getValue(c) === quoteCurrencyValue)?.ticker
         }
@@ -160,7 +177,7 @@ export function CurrencyValueForm({
         isPending={isPending}
         isLoadingError={isLoadingError}
         isLoadingErrorMessage="Failed to load currencies :("
-        items={currencyItems}
+        items={quoteCurrencyItems}
         placeholder="Select currency..."
         inputPlaceholder="Search currencies..."
         noValueFoundLabel="No currency found..."
