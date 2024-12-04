@@ -4,7 +4,7 @@ import CryptoCard from "@/components/cards/crypto/card";
 import CryptoTableCard from "@/components/cards/crypto-table/card";
 import GasTrackerCard from "@/components/cards/gas-tracker/card";
 import FearGreedIndexCard from "@/components/cards/fear-greed-index/card";
-import FiatCurrencyCard from "@/components/cards/fiat-currency/card";
+import CurrencyCard from "@/components/cards/currency/card";
 import MiniCryptoCard from "@/components/cards/mini-crypto/card";
 import NanoBananoCard from "@/components/cards/nano-banano/card";
 import CryptoPriceChartCard, {
@@ -132,21 +132,21 @@ export function CardParser({
     return <CryptoCard config={{ id: Number(coinId) }} {...rest} />;
   }
 
-  if (cardObject.cardType.id === "fiat_currency") {
+  if (cardObject.cardType.id === "currency") {
     const values = cardObject.values;
     if (!values) return null;
     const baseId = values.find(
-      (v) => v.cardTypeInputId === "fiat_currency_currency_id_base"
+      (v) => v.cardTypeInputId === "currency_currency_id_base"
     )?.value;
     const quoteId = values.find(
-      (v) => v.cardTypeInputId === "fiat_currency_currency_id_quote"
+      (v) => v.cardTypeInputId === "currency_currency_id_quote"
     )?.value;
     if (!baseId || !quoteId) return null;
     const baseCurrency = currencies?.find((c) => c.id === baseId);
     const quoteCurrency = currencies?.find((c) => c.id === quoteId);
     if (!baseCurrency || !quoteCurrency) return null;
     return (
-      <FiatCurrencyCard
+      <CurrencyCard
         baseCurrency={baseCurrency}
         quoteCurrency={quoteCurrency}
         {...rest}

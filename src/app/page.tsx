@@ -4,7 +4,7 @@ import CryptoCard from "@/components/cards/crypto/card";
 import CryptoPriceChartCard from "@/components/cards/crypto-price-chart/card";
 import GasTrackerCard from "@/components/cards/gas-tracker/card";
 import FearGreedIndexCard from "@/components/cards/fear-greed-index/card";
-import FiatCurrencyCard from "@/components/cards/fiat-currency/card";
+import CurrencyCard from "@/components/cards/currency/card";
 import MiniCryptoCard from "@/components/cards/mini-crypto/card";
 import CmcCryptoInfosProvider from "@/components/providers/cmc/cmc-crypto-infos-provider";
 import CmcGlobalMetricsProvider from "@/components/providers/cmc/cmc-global-metrics-provider";
@@ -67,7 +67,7 @@ export default async function Home() {
               />
             ))}
             <FearGreedIndexCard noHref />
-            <FiatCurrencyCard
+            <CurrencyCard
               className="hidden md:flex"
               baseCurrency={{
                 id: "d11e7514-5c8e-423d-bc94-efa24bf0f423",

@@ -13,7 +13,7 @@ type TCurrency = {
   symbol: string;
 };
 
-export default function FiatCurrencyCard({
+export default function CurrencyCard({
   baseCurrency,
   quoteCurrency,
   className,

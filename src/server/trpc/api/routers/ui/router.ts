@@ -107,13 +107,13 @@ export const uiRouter = createTRPCRouter({
             currencyIdsForFetch.push(v.value);
           });
         }
-        if (cardObj.cardType.id === "fiat_currency") {
+        if (cardObj.cardType.id === "currency") {
           const values = cardObj.values;
           if (!values) return;
           values.forEach((v) => {
             if (
-              v.cardTypeInputId !== "fiat_currency_currency_id_base" &&
-              v.cardTypeInputId !== "fiat_currency_currency_id_quote"
+              v.cardTypeInputId !== "currency_currency_id_base" &&
+              v.cardTypeInputId !== "currency_currency_id_quote"
             )
               return;
             currencyIdsForFetch.push(v.value);

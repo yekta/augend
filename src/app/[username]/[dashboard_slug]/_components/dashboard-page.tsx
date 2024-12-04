@@ -111,13 +111,13 @@ export default function DashboardPage({
           ids.push(v.value);
         });
       }
-      if (cardObj.cardType.id === "fiat_currency") {
+      if (cardObj.cardType.id === "currency") {
         const values = cardObj.values;
         if (!values) return;
         values.forEach((v) => {
           if (
-            v.cardTypeInputId !== "fiat_currency_currency_id_base" &&
-            v.cardTypeInputId !== "fiat_currency_currency_id_quote"
+            v.cardTypeInputId !== "currency_currency_id_base" &&
+            v.cardTypeInputId !== "currency_currency_id_quote"
           )
             return;
           ids.push(v.value);
@@ -343,7 +343,7 @@ function ConditionalProviders({
   let wrappedChildren = children;
 
   if (
-    cardTypeIds.includes("fiat_currency") ||
+    cardTypeIds.includes("currency") ||
     cardTypeIds.includes("banano_total_balance") ||
     cardTypeIds.includes("calculator")
   ) {
