@@ -6,17 +6,10 @@ import { useDnd } from "@/app/[username]/[dashboard_slug]/_components/dnd-provid
 import { EditBar } from "@/app/[username]/[dashboard_slug]/_components/edit-bar";
 import { AddCardButton } from "@/components/cards/_utils/add-card";
 import { CardParser } from "@/components/cards/_utils/card-parser";
+import { ProvidersForCardTypes } from "@/components/cards/_utils/providers-for-card-types";
 import ThreeLineCard from "@/components/cards/_utils/three-line-card";
-import { bananoCmcId } from "@/components/cards/banano-total/card";
-import CmcCryptoInfosProvider from "@/components/providers/cmc/cmc-crypto-infos-provider";
-import CmcGlobalMetricsProvider from "@/components/providers/cmc/cmc-global-metrics-provider";
-import CurrencyPreferenceProvider, {
-  TCurrencyPreference,
-} from "@/components/providers/currency-preference-provider";
-import FiatCurrencyRateProvider from "@/components/providers/fiat-currency-rates-provider";
-import NanoBananoBalancesProvider, {
-  TNanoBananoAccountFull,
-} from "@/components/providers/nano-banano-balance-provider";
+import { TCurrencyPreference } from "@/components/providers/currency-preference-provider";
+import { TNanoBananoAccountFull } from "@/components/providers/nano-banano-balance-provider";
 import { LinkButton } from "@/components/ui/button";
 import { mainDashboardSlug } from "@/lib/constants";
 import { cleanAndSortArray } from "@/server/redis/cache-utils";
@@ -137,11 +130,13 @@ export default function DashboardPage({
       .map((c) => {
         const values = c.values;
         if (!values) return null;
-        return values.find(
+        const value = values.find(
           (v) =>
             v.cardTypeInputId === "crypto_coin_id" ||
             v.cardTypeInputId === "mini_crypto_coin_id"
         )?.value;
+        if (!value) return null;
+        return value;
       })
       .filter((v) => v !== null)
       .map((v) => Number(v));
@@ -261,7 +256,7 @@ export default function DashboardPage({
 
   return (
     <MainProviders>
-      <ConditionalProviders
+      <ProvidersForCardTypes
         username={username}
         dashboardSlug={dashboardSlug}
         cardTypeIds={cards.map((c) => c.cardType.id)}
@@ -276,7 +271,7 @@ export default function DashboardPage({
             <AddCardButton username={username} dashboardSlug={dashboardSlug} />
           )}
         </DashboardGrid>
-      </ConditionalProviders>
+      </ProvidersForCardTypes>
     </MainProviders>
   );
 }
@@ -321,84 +316,4 @@ function Cards({
       })}
     </>
   );
-}
-
-function ConditionalProviders({
-  cardTypeIds,
-  cryptoCurrencyIds,
-  children,
-  nanoBananoAccounts,
-  currencyPreference,
-  dontAddUsd,
-}: {
-  username: string;
-  dashboardSlug: string;
-  cardTypeIds: string[];
-  cryptoCurrencyIds: number[];
-  children: ReactNode;
-  nanoBananoAccounts: TNanoBananoAccountFull[];
-  currencyPreference: TCurrencyPreference | false;
-  dontAddUsd?: boolean;
-}) {
-  let wrappedChildren = children;
-
-  if (
-    cardTypeIds.includes("currency") ||
-    cardTypeIds.includes("banano_total_balance") ||
-    cardTypeIds.includes("calculator")
-  ) {
-    wrappedChildren = (
-      <FiatCurrencyRateProvider>{wrappedChildren}</FiatCurrencyRateProvider>
-    );
-  }
-  if (cardTypeIds.includes("fear_greed_index")) {
-    wrappedChildren = (
-      <CmcGlobalMetricsProvider>{wrappedChildren}</CmcGlobalMetricsProvider>
-    );
-  }
-
-  if (
-    cryptoCurrencyIds.length > 0 ||
-    cardTypeIds.includes("banano_total") ||
-    cardTypeIds.includes("calculator")
-  ) {
-    let allIds = cryptoCurrencyIds;
-    if (cardTypeIds.includes("banano_total")) allIds.push(bananoCmcId);
-    const cryptos = cleanAndSortArray(allIds).map((c) => ({ id: c }));
-
-    wrappedChildren = (
-      <CmcCryptoInfosProvider cryptos={cryptos} dontAddUsd={dontAddUsd}>
-        {wrappedChildren}
-      </CmcCryptoInfosProvider>
-    );
-  }
-
-  if (
-    cardTypeIds.includes("nano_balance") ||
-    cardTypeIds.includes("banano_balance") ||
-    cardTypeIds.includes("banano_total")
-  ) {
-    const accountsMap = new Map<string, TNanoBananoAccountFull>();
-    nanoBananoAccounts.forEach((a) => accountsMap.set(a.address, a));
-    const accountsCleaned = Array.from(accountsMap.values());
-    const accountsOrdered = accountsCleaned.sort((a, b) =>
-      a.address.localeCompare(b.address, "en-US")
-    );
-
-    wrappedChildren = (
-      <NanoBananoBalancesProvider accounts={accountsOrdered}>
-        {wrappedChildren}
-      </NanoBananoBalancesProvider>
-    );
-  }
-
-  // General wrappers
-  if (currencyPreference !== false) {
-    wrappedChildren = (
-      <CurrencyPreferenceProvider currencyPreference={currencyPreference}>
-        {wrappedChildren}
-      </CurrencyPreferenceProvider>
-    );
-  }
-  return wrappedChildren;
 }

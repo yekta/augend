@@ -20,27 +20,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
 import { AppRouterOutputs, AppRouterQueryResult } from "@/server/trpc/api/root";
 import { TCardValueForAddCards } from "@/server/trpc/api/routers/ui/types";
 import { api } from "@/server/trpc/setup/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  ArrowDownCircle,
-  ArrowLeftIcon,
-  LoaderIcon,
-  PlusIcon,
-} from "lucide-react";
+import { ArrowDownCircle, ArrowLeftIcon, PlusIcon } from "lucide-react";
 import {
   Dispatch,
   FormEvent,
@@ -67,6 +53,8 @@ export function AddCardButton({
   className,
 }: AddCardButtonProps) {
   const [open, setOpen] = useState(false);
+  const [selectedCardType, setSelectedCardType] =
+    useState<TSelectedCardType | null>(null);
 
   const getCardTypesQuery = api.ui.getCardTypes.useQuery(
     {},
@@ -75,29 +63,7 @@ export function AddCardButton({
     }
   );
 
-  const [selectedCardType, setSelectedCardType] =
-    useState<TSelectedCardType | null>(null);
-
   const inputs = selectedCardType?.inputs;
-
-  type SchemaShape = { [K: string]: z.ZodString };
-  const schemaObject: SchemaShape = {};
-  const defaultValues: { [key: string]: string } = {};
-
-  if (inputs) {
-    inputs.forEach((input) => {
-      schemaObject[input.id] = z.string().min(1, `${input.title} is required`);
-      defaultValues[input.id] = "";
-    });
-  }
-  const formSchema = z.object(schemaObject);
-
-  type FormValues = z.infer<typeof formSchema>;
-
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues, // Add default values here
-  });
 
   const { invalidateCards, isPendingCardInvalidation } = useCurrentDashboard();
 
@@ -107,29 +73,12 @@ export function AddCardButton({
         await invalidateCards();
         setOpen(false);
         setSelectedCardType(null);
-        form.reset();
       },
     });
 
-  const isFormPending = isPendingCardInvalidation || isPendingCreateCard;
+  const isPendingForm = isPendingCardInvalidation || isPendingCreateCard;
 
-  const onSubmit = (data: FormValues) => {
-    if (!selectedCardType) return;
-    const values: TCardValueForAddCards[] = Object.entries(data).map(
-      ([key, value]) => ({
-        cardTypeInputId: key,
-        value,
-        xOrder: inputs?.find((i) => i.id === key)?.xOrder ?? 0,
-      })
-    );
-    createCardMutation({
-      cardTypeId: selectedCardType.cardType.id,
-      values,
-      dashboardSlug,
-    });
-  };
-
-  const onSubmitNew = (values: TCardValueForAddCards[]) => {
+  const onSubmit = (values: TCardValueForAddCards[]) => {
     const _values = values.map((value) => ({
       ...value,
       xOrder: value.xOrder ?? 0,
@@ -138,16 +87,6 @@ export function AddCardButton({
       cardTypeId: selectedCardType?.cardType.id ?? "",
       values: _values,
       dashboardSlug,
-    });
-  };
-
-  const onSubmitWithNoValues = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!selectedCardType) return;
-    createCardMutation({
-      cardTypeId: selectedCardType.cardType.id,
-      dashboardSlug,
-      values: [],
     });
   };
 
@@ -183,14 +122,11 @@ export function AddCardButton({
             <DialogTitle className="sr-only">Add a card</DialogTitle>
           </DialogHeader>
           <AddCardCommandPanel
-            form={form}
             inputs={inputs}
             selectedCardType={selectedCardType}
             setSelectedCardType={setSelectedCardType}
-            isFormPending={isFormPending}
-            onSubmit={form.handleSubmit(onSubmit)}
-            onSubmitNew={onSubmitNew}
-            onSubmitWithNoValues={onSubmitWithNoValues}
+            isPendingForm={isPendingForm}
+            onSubmit={onSubmit}
             getCardTypesQuery={getCardTypesQuery}
             className="h-96 max-h-[calc((100vh-3rem)*0.6)]"
           />
@@ -204,32 +140,23 @@ type AddCardCommandPanelProps = {
   getCardTypesQuery: AppRouterQueryResult<
     AppRouterOutputs["ui"]["getCardTypes"]
   >;
-  form: ReturnType<typeof useForm>;
   inputs?: AppRouterOutputs["ui"]["getCardTypes"][number]["inputs"];
-  isFormPending: boolean;
+  isPendingForm: boolean;
   selectedCardType: TSelectedCardType | null;
   setSelectedCardType: Dispatch<SetStateAction<TSelectedCardType | null>>;
-  onSubmit: (e: FormEvent<HTMLFormElement>) => void;
-  onSubmitNew: (values: TCardValueForAddCards[]) => void;
-  onSubmitWithNoValues: (e: FormEvent<HTMLFormElement>) => void;
+  onSubmit: (values: TCardValueForAddCards[]) => void;
   className?: string;
 };
 
 export function AddCardCommandPanel({
   getCardTypesQuery,
-  form,
   inputs,
-  isFormPending,
+  isPendingForm,
   selectedCardType,
   setSelectedCardType,
   onSubmit,
-  onSubmitNew,
-  onSubmitWithNoValues,
   className,
 }: AddCardCommandPanelProps) {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const formRef = useRef<HTMLFormElement>(null);
-
   const { data, isPending, isLoadingError } = getCardTypesQuery;
 
   useHotkeys(
@@ -241,40 +168,6 @@ export function AddCardCommandPanel({
     },
     { enableOnFormTags: true }
   );
-
-  useEffect(() => {
-    if (selectedCardType === null) {
-      inputRef.current?.focus();
-    } else {
-      const firstInput = formRef.current?.querySelector("input");
-      if (firstInput) {
-        firstInput.focus();
-        return;
-      }
-      const firstButton = formRef.current?.querySelector("button");
-      if (firstButton) {
-        firstButton.focus();
-        return;
-      }
-    }
-  }, [selectedCardType]);
-
-  const newCardTypeIds = [
-    "crypto_price_chart",
-    "order_book",
-    "gas_tracker",
-    "crypto",
-    "mini_crypto",
-    "banano_total",
-    "crypto_table",
-    "uniswap_pools_table",
-    "wban_summary",
-    "fear_greed_index",
-    "calculator",
-    "nano_balance",
-    "banano_balance",
-    "uniswap_position",
-  ];
 
   return (
     <>
@@ -304,22 +197,11 @@ export function AddCardCommandPanel({
             data-has-inputs={inputs ? true : undefined}
             className="w-full flex flex-col px-4 pt-3.5 pb-4 data-[has-inputs]:pt-3"
           >
-            {newCardTypeIds.includes(selectedCardType.cardType.id) ? (
-              <CardValuesFormParser
-                onFormSubmit={onSubmitNew}
-                isPendingForm={isFormPending}
-                cardTypeId={selectedCardType.cardType.id}
-              />
-            ) : (
-              <AddCardForm
-                form={form}
-                formRef={formRef}
-                inputs={inputs}
-                isPending={isFormPending}
-                onSubmit={onSubmit}
-                onSubmitWithNoValues={onSubmitWithNoValues}
-              />
-            )}
+            <CardValuesFormParser
+              onFormSubmit={onSubmit}
+              isPendingForm={isPendingForm}
+              cardTypeId={selectedCardType.cardType.id}
+            />
           </div>
         </div>
       )}
@@ -330,7 +212,7 @@ export function AddCardCommandPanel({
             className
           )}
         >
-          <CommandInput ref={inputRef} placeholder="Search for a card..." />
+          <CommandInput placeholder="Search for a card..." />
           {!isLoadingError && (
             <CommandEmpty className="text-muted-foreground w-full text-center text-sm py-6">
               No cards found.
@@ -408,93 +290,5 @@ export function AddCardCommandPanel({
         </Command>
       )}
     </>
-  );
-}
-
-export function AddCardForm({
-  form,
-  inputs,
-  isPending,
-  onSubmit,
-  onSubmitWithNoValues,
-  formRef,
-}: {
-  form: ReturnType<typeof useForm>;
-  inputs?: AppRouterOutputs["ui"]["getCardTypes"][number]["inputs"];
-  isPending: boolean;
-  onSubmit: (e: FormEvent<HTMLFormElement>) => void;
-  onSubmitWithNoValues: (e: FormEvent<HTMLFormElement>) => void;
-  formRef: React.RefObject<HTMLFormElement>;
-}) {
-  if (!inputs) {
-    return (
-      <form ref={formRef} onSubmit={onSubmitWithNoValues}>
-        <AddCardFormSubmitButton isPending={isPending} />
-      </form>
-    );
-  }
-
-  return (
-    <Form {...form}>
-      <form ref={formRef} onSubmit={onSubmit}>
-        {inputs
-          .sort((a, b) => a.xOrder - b.xOrder)
-          .map((input, index) => {
-            return (
-              <FormField
-                key={input.id}
-                name={input.id}
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem
-                    data-first={index === 0 ? true : undefined}
-                    className="mt-5 data-[first]:mt-0"
-                  >
-                    <FormLabel className="text-base font-bold leading-tight">
-                      {input.title}
-                    </FormLabel>
-                    <FormDescription className="text-sm leading-tight mt-0.5">
-                      {input.description}
-                    </FormDescription>
-                    <FormControl className="mt-3">
-                      <Input
-                        {...field}
-                        placeholder={input.placeholder}
-                        value={field.value ?? ""}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              ></FormField>
-            );
-          })}
-        <AddCardFormSubmitButton isPending={isPending} className="mt-5" />
-      </form>
-    </Form>
-  );
-}
-
-function AddCardFormSubmitButton({
-  isPending,
-  className,
-}: {
-  isPending: boolean;
-  className?: string;
-}) {
-  return (
-    <Button
-      className={cn("w-full", className)}
-      state={isPending ? "loading" : undefined}
-    >
-      {isPending && (
-        <>
-          <p className="text-transparent select-none">Add Card</p>
-          <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
-            <LoaderIcon className="size-full animate-spin" />
-          </div>
-        </>
-      )}
-      {!isPending && "Add Card"}
-    </Button>
   );
 }

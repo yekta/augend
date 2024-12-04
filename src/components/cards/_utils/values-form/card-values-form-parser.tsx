@@ -12,6 +12,7 @@ import { UniswapPoolsTableValueForm } from "@/components/cards/uniswap-pools-tab
 import { UniswapPositionValueForm } from "@/components/cards/uniswap-position/value-form";
 import { WbanSummaryValueForm } from "@/components/cards/wban-summary/value-form";
 import { TCardValueForAddCards } from "@/server/trpc/api/routers/ui/types";
+import { CurrencyValueForm } from "@/components/cards/currency/value-form";
 
 type Props = {
   cardTypeId: string;
@@ -52,6 +53,7 @@ export default function CardValuesFormParser({
     return <NanoBananoValueForm network="banano" {...sharedProps} />;
   if (cardTypeId === "uniswap_position")
     return <UniswapPositionValueForm {...sharedProps} />;
+  if (cardTypeId === "currency") return <CurrencyValueForm {...sharedProps} />;
   return (
     <p className="w-full py-2 text-center text-destructive">
       No matching card type ID. Something is wrong.
