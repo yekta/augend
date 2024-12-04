@@ -218,6 +218,8 @@ function TitleAndDescription({
 
 function ErrorLine({ children }: { children: ReactNode }) {
   return (
-    <p className="text-destructive text-sm leading-tight px-1">{children}</p>
+    <p className="text-destructive text-sm font-medium leading-tight px-1">
+      {children}
+    </p>
   );
 }

@@ -6,6 +6,7 @@ import { CryptoValueForm } from "@/components/cards/crypto/value-form";
 import { GasCardValueForm } from "@/components/cards/ethereum-gas/value-form";
 import { FearGreedIndexValueForm } from "@/components/cards/fear-greed-index/value-form";
 import { MiniCryptoValueForm } from "@/components/cards/mini-crypto/value-form";
+import { NanoBananoValueForm } from "@/components/cards/nano-banano/value-form";
 import { CryptoOrderBookValueForm } from "@/components/cards/order-book/value-form";
 import { UniswapPoolsTableValueForm } from "@/components/cards/uniswap-pools-table/value-form";
 import { WbanSummaryValueForm } from "@/components/cards/wban-summary/value-form";
@@ -44,6 +45,10 @@ export default function CardValuesFormParser({
     return <WbanSummaryValueForm {...sharedProps} />;
   if (cardTypeId === "calculator")
     return <CalculatorValueForm {...sharedProps} />;
+  if (cardTypeId === "nano_balance")
+    return <NanoBananoValueForm network="nano" {...sharedProps} />;
+  if (cardTypeId === "banano_balance")
+    return <NanoBananoValueForm network="banano" {...sharedProps} />;
   return (
     <p className="w-full py-2 text-center text-destructive">
       No matching card type ID. Something is wrong.

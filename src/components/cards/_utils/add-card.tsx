@@ -271,6 +271,8 @@ export function AddCardCommandPanel({
     "wban_summary",
     "fear_greed_index",
     "calculator",
+    "nano_balance",
+    "banano_balance",
   ];
 
   return (
