@@ -1,6 +1,6 @@
+import { EthereumNetworkSchema } from "@/server/trpc/api/routers/ethereum/constants";
 import { z } from "zod";
 
-export const EthereumNetworkSchema = z.enum(["Ethereum", "BSC"]);
 export type TEthereumNetwork = z.infer<typeof EthereumNetworkSchema>;
 
 export type TGasInfoResultRaw = {

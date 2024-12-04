@@ -1,10 +1,7 @@
 import { z } from "zod";
 
 import { cachedPromise } from "@/server/redis/redis";
-import {
-  EthereumAddressSchema,
-  EthereumNetworkSchema,
-} from "@/server/trpc/api/routers/ethereum/types";
+import { EthereumAddressSchema } from "@/server/trpc/api/routers/ethereum/types";
 import {
   getUniswapPositionManager,
   uniswapOkuApiUrl,
@@ -23,7 +20,10 @@ import {
 } from "@/server/trpc/setup/trpc";
 import type { PositionPriceRange, SearchFilterOpts } from "@gfxlabs/oku";
 import { TRPCError } from "@trpc/server";
-import { ethereumNetworks } from "@/server/trpc/api/routers/ethereum/constants";
+import {
+  ethereumNetworks,
+  EthereumNetworkSchema,
+} from "@/server/trpc/api/routers/ethereum/constants";
 
 export const uniswapRouter = createTRPCRouter({
   getPools: cachedPublicProcedure("seconds-medium")

@@ -24,7 +24,7 @@ import { ElementType } from "react";
 import CardInnerWrapper from "@/components/cards/_utils/card-inner-wrapper";
 import { useCurrencyPreference } from "@/components/providers/currency-preference-provider";
 
-export default function EthereumGasCard({
+export default function GasTrackerCard({
   network,
   className,
   ...rest
@@ -51,12 +51,13 @@ export default function EthereumGasCard({
 
   const restAsDiv = rest as TCardOuterWrapperDivProps;
   const restAsLink = rest as TCardOuterWrapperLinkProps;
-  const restTyped = data
-    ? {
-        ...restAsLink,
-        href: restAsLink.href || ethereumNetworks[network].gasTracker,
-      }
-    : restAsDiv;
+  const restTyped =
+    data && ethereumNetworks[network].gasTracker
+      ? {
+          ...restAsLink,
+          href: restAsLink.href || ethereumNetworks[network].gasTracker,
+        }
+      : restAsDiv;
 
   return (
     <CardOuterWrapper

@@ -5,16 +5,19 @@ import { TValueFormProps } from "@/components/cards/_utils/values-form/types";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import { cn } from "@/lib/utils";
 import {
+  ethereumNetworks,
   EthereumNetworkSchema,
-  TEthereumNetwork,
-} from "@/server/trpc/api/routers/ethereum/types";
+} from "@/server/trpc/api/routers/ethereum/constants";
+import { TEthereumNetwork } from "@/server/trpc/api/routers/ethereum/types";
 import { Dispatch, SetStateAction, useMemo, useState } from "react";
 
-export function GasCardValueForm({
+export function GasTrackerValueForm({
   onFormSubmit,
   isPendingForm,
 }: TValueFormProps) {
-  const networks = Object.values(EthereumNetworkSchema.Enum);
+  const networks = Object.values(EthereumNetworkSchema.Enum).filter(
+    (v) => ethereumNetworks[v].gasTracker !== null
+  );
   const defaultNetwork = networks[0];
   const [network, setNetwork] = useState<TEthereumNetwork>(defaultNetwork);
   const [networkError, setNetworkError] = useState<string | null>(null);

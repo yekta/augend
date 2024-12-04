@@ -4,7 +4,7 @@ import { cmcFetchOptions } from "@/server/trpc/api/routers/cmc/secrets";
 import { TCmcGetCryptosResult } from "@/server/trpc/api/routers/cmc/types";
 import { ethereumNetworks } from "@/server/trpc/api/routers/ethereum/constants";
 import { ethereumProviders } from "@/server/trpc/api/routers/ethereum/secrets";
-import { EthereumNetworkSchema } from "@/server/trpc/api/routers/ethereum/types";
+import { EthereumNetworkSchema } from "@/server/trpc/api/routers/ethereum/constants";
 import {
   cachedPublicProcedure,
   createTRPCRouter,

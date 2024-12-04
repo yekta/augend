@@ -3,7 +3,7 @@ import { CalculatorValueForm } from "@/components/cards/calculator/value-form";
 import { CryptoPriceChartValueForm } from "@/components/cards/crypto-price-chart/value-form";
 import { CryptoTableValueForm } from "@/components/cards/crypto-table/value-form";
 import { CryptoValueForm } from "@/components/cards/crypto/value-form";
-import { GasCardValueForm } from "@/components/cards/ethereum-gas/value-form";
+import { GasTrackerValueForm } from "@/components/cards/gas-tracker/value-form";
 import { FearGreedIndexValueForm } from "@/components/cards/fear-greed-index/value-form";
 import { MiniCryptoValueForm } from "@/components/cards/mini-crypto/value-form";
 import { NanoBananoValueForm } from "@/components/cards/nano-banano/value-form";
@@ -30,7 +30,7 @@ export default function CardValuesFormParser({
   if (cardTypeId === "order_book")
     return <CryptoOrderBookValueForm {...sharedProps} />;
   if (cardTypeId === "gas_tracker")
-    return <GasCardValueForm {...sharedProps} />;
+    return <GasTrackerValueForm {...sharedProps} />;
   if (cardTypeId === "crypto") return <CryptoValueForm {...sharedProps} />;
   if (cardTypeId === "mini_crypto")
     return <MiniCryptoValueForm {...sharedProps} />;

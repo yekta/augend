@@ -2,7 +2,7 @@ import BananoTotalCard from "@/components/cards/banano-total/card";
 import CalculatorCard from "@/components/cards/calculator/card";
 import CryptoCard from "@/components/cards/crypto/card";
 import CryptoTableCard from "@/components/cards/crypto-table/card";
-import EthereumGasCard from "@/components/cards/ethereum-gas/card";
+import GasTrackerCard from "@/components/cards/gas-tracker/card";
 import FearGreedIndexCard from "@/components/cards/fear-greed-index/card";
 import FiatCurrencyCard from "@/components/cards/fiat-currency/card";
 import MiniCryptoCard from "@/components/cards/mini-crypto/card";
@@ -189,7 +189,7 @@ export function CardParser({
       (v) => v.cardTypeInputId === "gas_tracker_network"
     )?.value;
     if (!network) return null;
-    return <EthereumGasCard network={network as TEthereumNetwork} {...rest} />;
+    return <GasTrackerCard network={network as TEthereumNetwork} {...rest} />;
   }
 
   if (cardObject.cardType.id === "banano_total") {

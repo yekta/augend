@@ -2,7 +2,7 @@ import CurrentDashboardProvider from "@/app/[username]/[dashboard_slug]/_compone
 import DndProvider from "@/app/[username]/[dashboard_slug]/_components/dnd-provider";
 import CryptoCard from "@/components/cards/crypto/card";
 import CryptoPriceChartCard from "@/components/cards/crypto-price-chart/card";
-import EthereumGasCard from "@/components/cards/ethereum-gas/card";
+import GasTrackerCard from "@/components/cards/gas-tracker/card";
 import FearGreedIndexCard from "@/components/cards/fear-greed-index/card";
 import FiatCurrencyCard from "@/components/cards/fiat-currency/card";
 import MiniCryptoCard from "@/components/cards/mini-crypto/card";
@@ -96,7 +96,7 @@ export default async function Home() {
                 }
               />
             ))}
-            <EthereumGasCard noHref network="Ethereum" />
+            <GasTrackerCard noHref network="Ethereum" />
             <CryptoPriceChartCard
               config={{
                 exchange: "Kucoin",

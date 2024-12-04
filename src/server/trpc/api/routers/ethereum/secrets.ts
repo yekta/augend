@@ -12,6 +12,13 @@ export const ethereumProviders: Record<TEthereumNetwork, Alchemy> = {
       skipFetchSetup: true,
     },
   }),
+  Arbitrum: new Alchemy({
+    apiKey: env.ALCHEMY_API_KEY,
+    network: Network.ARB_MAINNET,
+    connectionInfoOverrides: {
+      skipFetchSetup: true,
+    },
+  }),
   BSC: new Alchemy({
     apiKey: env.ALCHEMY_API_KEY,
     network: Network.BNB_MAINNET,

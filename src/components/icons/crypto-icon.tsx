@@ -20,6 +20,8 @@ const nameAlts: Record<string, string> = {
   WBTC: "BTC",
   Polygon: "MATIC",
   BSC: "BNB",
+  Arbitrum: "ARB",
+  Optimism: "OP",
 };
 
 export default function CryptoIcon({
@@ -30,7 +32,7 @@ export default function CryptoIcon({
 }: ComponentProps<"svg"> & {
   cryptoName: string | undefined | null;
   variant?: "branded" | "mono";
-  category?: "tokens" | "exchanges";
+  category?: "tokens" | "exchanges" | "networks";
 }) {
   const _name = cryptoName ? nameAlts[cryptoName] || cryptoName : cryptoName;
   const defaultClassName = "shrink-0 size-6";
