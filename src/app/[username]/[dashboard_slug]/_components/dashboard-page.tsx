@@ -357,7 +357,11 @@ function ConditionalProviders({
     );
   }
 
-  if (cryptoCurrencyIds.length > 0 || cardTypeIds.includes("banano_total")) {
+  if (
+    cryptoCurrencyIds.length > 0 ||
+    cardTypeIds.includes("banano_total") ||
+    cardTypeIds.includes("calculator")
+  ) {
     let allIds = cryptoCurrencyIds;
     if (cardTypeIds.includes("banano_total")) allIds.push(bananoCmcId);
     const cryptos = cleanAndSortArray(allIds).map((c) => ({ id: c }));
@@ -368,6 +372,7 @@ function ConditionalProviders({
       </CmcCryptoInfosProvider>
     );
   }
+
   if (
     cardTypeIds.includes("nano_balance") ||
     cardTypeIds.includes("banano_balance") ||
