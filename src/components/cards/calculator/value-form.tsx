@@ -2,7 +2,9 @@ import { CardValueCombobox } from "@/components/cards/_utils/values-form/card-va
 import CardValuesFormSubmitButton from "@/components/cards/_utils/values-form/card-values-form-submit-button";
 import CardValuesFormWrapper from "@/components/cards/_utils/values-form/card-values-form-wrapper";
 import { TValueFormProps } from "@/components/cards/_utils/values-form/types";
+import CryptoIcon from "@/components/icons/crypto-icon";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { cleanArray } from "@/server/redis/cache-utils";
 import { api } from "@/server/trpc/setup/react";
 import { XIcon } from "lucide-react";
@@ -28,21 +30,24 @@ export function CalculatorValueForm({
     null
   );
 
+  const getValue = (c: { name: string; ticker: string }) =>
+    `${c.name} (${c.ticker})`;
+
   const currencyItems = useMemo(() => {
-    return currencies?.map((p) => ({
-      label: p.name,
-      value: p.name,
-      iconValue: p.symbol,
+    return currencies?.map((c) => ({
+      label: getValue(c),
+      value: getValue(c),
+      iconValue: c.ticker,
     }));
   }, [currencies]);
 
   const lastCurrencyItems = useMemo(() => {
     return currencies
-      ?.filter((c) => !selectedCurrencies.includes(c.name))
-      ?.map((p) => ({
-        label: p.name,
-        value: p.name,
-        iconValue: p.symbol,
+      ?.filter((c) => !selectedCurrencies.includes(getValue(c)))
+      ?.map((c) => ({
+        label: getValue(c),
+        value: getValue(c),
+        iconValue: c.ticker,
       }));
   }, [currencies, selectedCurrencies]);
 
@@ -52,7 +57,9 @@ export function CalculatorValueForm({
     const cleanedCurrencies = cleanArray(selectedCurrencies);
     let currencyIds: string[] = [];
     for (let i = 0; i < cleanedCurrencies.length; i++) {
-      const id = currencies?.find((c) => c.name === cleanedCurrencies[i])?.id;
+      const id = currencies?.find(
+        (c) => getValue(c) === cleanedCurrencies[i]
+      )?.id;
       if (!id) continue;
       currencyIds.push(id);
     }
@@ -79,44 +86,73 @@ export function CalculatorValueForm({
 
   return (
     <CardValuesFormWrapper onSubmit={onFormSubmitLocal}>
-      {selectedCurrencies.map((currency, index) => (
-        <div className="w-full relative">
-          <CardValueCombobox
-            key={`${currency}-${index}`}
-            inputTitle={`Currency #${index + 1}`}
-            value={currency}
-            setValue={(value) => null}
-            onValueChange={(value) => {
-              clearErrors();
-              if (value === null || value === undefined) return;
-              let newCurrencyList = [...selectedCurrencies];
-              newCurrencyList[index] = value;
-              setSelectedCurrencies(newCurrencyList);
-            }}
-            disabled={isPendingForm}
-            isPending={isPending}
-            isLoadingError={isLoadingError}
-            isLoadingErrorMessage="Failed to load currencies :("
-            items={currencyItems}
-            placeholder="Select currency..."
-            inputPlaceholder="Search currencies..."
-            noValueFoundLabel="No currency found..."
-          />
-          <Button
-            variant="outline"
-            size="icon"
-            type="button"
-            className="size-8 border-none text-muted-more-foreground absolute -right-0.5 -top-1.5"
-            onClick={() => {
-              let newCurrencyList = [...selectedCurrencies];
-              newCurrencyList.splice(index, 1);
-              setSelectedCurrencies(newCurrencyList);
-            }}
-          >
-            <XIcon className="size-5" />
-          </Button>
+      {selectedCurrencies.length > 0 && (
+        <div className="w-full flex flex-col gap-2">
+          {selectedCurrencies.map((currency, index) => (
+            <div
+              key={`${currency}-${index}`}
+              className="w-full flex items-center justify-between relative gap-1"
+            >
+              <CardValueCombobox
+                iconValue={
+                  currencies?.find((c) => getValue(c) === currency)?.ticker
+                }
+                Icon={({ value, className }) => {
+                  if (!currencies) return null;
+                  const idx = currencies.findIndex((c) => c.ticker === value);
+                  if (idx === -1) return null;
+                  const currency = currencies[idx];
+                  if (currency.isCrypto) {
+                    return (
+                      <CryptoIcon
+                        cryptoName={currency.ticker}
+                        className={cn("text-foreground", className)}
+                      />
+                    );
+                  }
+                  return (
+                    <div
+                      className={cn("text-foreground text-center", className)}
+                    >
+                      {currency.symbol}
+                    </div>
+                  );
+                }}
+                value={currency}
+                setValue={(value) => null}
+                onValueChange={(value) => {
+                  clearErrors();
+                  if (value === null || value === undefined) return;
+                  let newCurrencyList = [...selectedCurrencies];
+                  newCurrencyList[index] = value;
+                  setSelectedCurrencies(newCurrencyList);
+                }}
+                disabled={isPendingForm}
+                isPending={isPending}
+                isLoadingError={isLoadingError}
+                isLoadingErrorMessage="Failed to load currencies :("
+                items={currencyItems}
+                placeholder="Select currency..."
+                inputPlaceholder="Search currencies..."
+                noValueFoundLabel="No currency found..."
+              />
+              <Button
+                variant="outline"
+                size="icon"
+                type="button"
+                className="size-9 shrink-0 border-none text-muted-more-foreground -mr-2"
+                onClick={() => {
+                  let newCurrencyList = [...selectedCurrencies];
+                  newCurrencyList.splice(index, 1);
+                  setSelectedCurrencies(newCurrencyList);
+                }}
+              >
+                <XIcon className="size-5" />
+              </Button>
+            </div>
+          ))}
         </div>
-      ))}
+      )}
       {/* The Extra Field */}
       {(!lastCurrencyItems || lastCurrencyItems.length > 0) &&
         selectedCurrencies.length < maxCurrencies && (
@@ -129,6 +165,28 @@ export function CalculatorValueForm({
                 ? "Add a currency."
                 : "Add another currency."
             }
+            iconValue={
+              currencies?.find((c) => getValue(c) === lastCurrencyValue)?.ticker
+            }
+            Icon={({ value, className }) => {
+              if (!currencies) return null;
+              const idx = currencies.findIndex((c) => c.ticker === value);
+              if (idx === -1) return null;
+              const currency = currencies[idx];
+              if (currency.isCrypto) {
+                return (
+                  <CryptoIcon
+                    cryptoName={currency.ticker}
+                    className={cn("text-foreground", className)}
+                  />
+                );
+              }
+              return (
+                <div className={cn("text-foreground text-center", className)}>
+                  {currency.symbol}
+                </div>
+              );
+            }}
             inputErrorMessage={lastCurrencyError}
             value={lastCurrencyValue}
             onValueChange={(value) => {

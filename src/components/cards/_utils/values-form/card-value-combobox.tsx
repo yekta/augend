@@ -36,7 +36,7 @@ type Props = {
   value: string | null;
   iconValue?: string | null;
   setValue: Dispatch<SetStateAction<string | null>>;
-  inputTitle: string;
+  inputTitle?: string;
   inputDescription?: string;
   disabled?: boolean;
   Icon?: React.ComponentType<{
@@ -88,9 +88,17 @@ export function CardValueCombobox<T>({
   return (
     <div
       data-error={inputErrorMessage ? true : undefined}
-      className="w-full flex flex-col gap-2.5 group/input"
+      className={cn(
+        "w-full min-w-0 flex flex-col gap-2.5 group/input",
+        className
+      )}
     >
-      <TitleAndDescription title={inputTitle} description={inputDescription} />
+      {(inputTitle || inputDescription) && (
+        <TitleAndDescription
+          title={inputTitle}
+          description={inputDescription}
+        />
+      )}
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
@@ -102,10 +110,9 @@ export function CardValueCombobox<T>({
             data-loading-error={isHardError ? true : undefined}
             data-showing-placeholder={!label ? true : undefined}
             data-has-icon={Icon ? true : undefined}
-            className={cn(
-              "w-full font-semibold justify-between group/button",
-              className
-            )}
+            className={
+              "w-full min-w-0 overflow-hidden font-semibold justify-between group/button"
+            }
           >
             <div className="flex-shrink min-w-0 overflow-hidden flex items-center gap-1.5 group-data-[has-icon]/button:-ml-1">
               {!isPending && !isLoadingError && Icon && value && (
@@ -192,14 +199,16 @@ function TitleAndDescription({
   title,
   description,
 }: {
-  title: string;
+  title?: string;
   description?: string;
 }) {
   return (
     <div className="w-full flex flex-col px-1 leading-tight gap-0.5 pr-10">
-      <p className="w-full text-foreground font-semibold group-data-[error]/input:text-destructive">
-        {title}
-      </p>
+      {title && (
+        <p className="w-full text-foreground font-semibold group-data-[error]/input:text-destructive">
+          {title}
+        </p>
+      )}
       {description && (
         <p className="text-sm text-muted-foreground">{description}</p>
       )}
