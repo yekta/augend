@@ -27,7 +27,7 @@ export function CardParser({
   currencies,
   ...rest
 }: {
-  cardObject: NonNullable<AppRouterOutputs["ui"]["getCards"]>[number];
+  cardObject: NonNullable<AppRouterOutputs["ui"]["getCards"]>["cards"][number];
   currencies: TCurrencyWithSelectedFields[] | null;
 } & TCardOuterWrapperProps) {
   if (cardObject.cardType.id === "fear_greed_index") {
