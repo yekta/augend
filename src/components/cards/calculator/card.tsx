@@ -11,14 +11,8 @@ import Indicator from "@/components/ui/indicator";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { TCurrencyWithSelectedFields } from "@/server/db/repo/types";
+import { LoaderIcon } from "lucide-react";
 import React, { ReactNode, useEffect, useRef, useState } from "react";
-
-const tickerToIcon: Record<string, ReactNode> = {
-  ETH: <CryptoIcon cryptoName="ETH" className="size-6 -ml-1.25" />,
-  BTC: <CryptoIcon cryptoName="BTC" className="size-6 -ml-1.25" />,
-  XNO: <CryptoIcon cryptoName="XNO" className="size-6 -ml-1.25" />,
-  BAN: <CryptoIcon cryptoName="BAN" className="size-6 -ml-1.25" />,
-};
 
 export default function CalculatorCard({
   currencies,
@@ -29,21 +23,24 @@ export default function CalculatorCard({
 }) {
   const {
     data: fiatData,
-    isError: fiatIsError,
-    isPending: fiatIsPending,
-    isRefetching: fiatIsRefetching,
+    isLoadingError: isLoadingErrorFiat,
+    isError: isErrorFiat,
+    isPending: isPendingFiat,
+    isRefetching: isRefetchingFiat,
   } = useFiatCurrencyRates();
 
   const {
     data: cryptoData,
-    isError: cryptoIsError,
-    isPending: cryptoIsPending,
-    isRefetching: cryptoIsRefetching,
+    isLoadingError: isLoadingErrorCrypto,
+    isError: isErrorCrypto,
+    isPending: isPendingCrypto,
+    isRefetching: isRefetchingCrypto,
   } = useCmcCryptoInfos();
 
-  const isPending = fiatIsPending || cryptoIsPending;
-  const isError = fiatIsError || cryptoIsError;
-  const isRefetching = fiatIsRefetching || cryptoIsRefetching;
+  const isPending = isPendingFiat || isPendingCrypto;
+  const isLoadingError = isLoadingErrorFiat || isLoadingErrorCrypto;
+  const isRefetching = isRefetchingFiat || isRefetchingCrypto;
+  const isError = isErrorFiat || isErrorCrypto;
 
   const inputRefs = useRef<(HTMLInputElement | null)[]>(
     currencies.map(() => null)
@@ -159,36 +156,48 @@ export default function CalculatorCard({
         id="calculator"
         className="p-3.75 flex flex-col gap-2 relative"
       >
-        {currencies.map((c, index) => {
-          const Icon = tickerToIcon[c.ticker];
-          return (
-            <div key={c.ticker} className="w-full relative">
-              <Input
-                ref={(e) => {
-                  inputRefs.current[index] = e;
-                }}
-                onFocus={(e) => setLastActiveInput(e.target)}
-                onInput={onInput}
-                data-ticker={c.ticker}
-                data-id={c.id}
-                data-coin-id={c.coinId !== null ? c.coinId : undefined}
-                className="text-xl pl-11 py-2.5 h-auto font-semibold rounded-lg"
-              />
-
-              <div className="absolute left-4 top-1/2 text-xl transform -translate-y-1/2 font-semibold">
-                {Icon || c.symbol}
-              </div>
+        {currencies.map((c, index) => (
+          <div
+            data-pending={isPending ? true : undefined}
+            key={c.ticker}
+            className="w-full relative group/input"
+          >
+            <Input
+              disabled={isLoadingError}
+              ref={(e) => {
+                inputRefs.current[index] = e;
+              }}
+              onFocus={(e) => setLastActiveInput(e.target)}
+              onInput={onInput}
+              data-ticker={c.ticker}
+              data-id={c.id}
+              data-coin-id={c.coinId !== null ? c.coinId : undefined}
+              className="text-xl pl-11 py-2.5 h-auto font-semibold rounded-lg group-data-[pending]/input:pr-10"
+            />
+            <div className="absolute left-4 top-1/2 text-xl transform -translate-y-1/2 font-semibold">
+              {c.isCrypto ? (
+                <CryptoIcon cryptoName={c.ticker} className="size-6 -ml-1.25" />
+              ) : (
+                c.symbol
+              )}
             </div>
-          );
-        })}
+            {isPending && (
+              <div className="absolute top-1/2 right-3 -translate-y-1/2 size-4">
+                <LoaderIcon className="animate-spin text-border size-full" />
+              </div>
+            )}
+          </div>
+        ))}
+        {isLoadingError && (
+          <div className="w-full inset-0 rounded-xl flex flex-col items-center justify-center text-center absolute h-full bg-background/75 text-destructive px-8 z-20">
+            Something went wrong :(
+          </div>
+        )}
         <Indicator
           isRefetching={isRefetching}
           isError={isError}
           isPending={isPending}
           hasData={fiatData !== undefined && cryptoData !== undefined}
-          showOnIsPending
-          showOnHasData
-          showOnError="all"
         />
       </CardInnerWrapper>
     </CardOuterWrapper>

@@ -1,5 +1,8 @@
 import { tcmbApi } from "@/server/trpc/api/routers/fiat/helpers";
-import { createTRPCRouter, publicProcedure } from "@/server/trpc/setup/trpc";
+import {
+  cachedPublicProcedure,
+  createTRPCRouter,
+} from "@/server/trpc/setup/trpc";
 import { TRPCError } from "@trpc/server";
 import { XMLParser } from "fast-xml-parser";
 
@@ -9,7 +12,7 @@ const parser = new XMLParser({
 });
 
 export const fiatRouter = createTRPCRouter({
-  getRates: publicProcedure.query(async () => {
+  getRates: cachedPublicProcedure("seconds-short").query(async () => {
     const result = await fetch(tcmbApi);
     const data = await result.text();
     const parsed: TParsedPage = parser.parse(data);
@@ -42,10 +45,10 @@ export const fiatRouter = createTRPCRouter({
             ? 1 / res.CrossRateUSD
             : parseFloat(res.CrossRateUSD)
           : res.CrossRateOther !== ""
-            ? typeof res.CrossRateOther === "number"
-              ? res.CrossRateOther
-              : parseFloat(res.CrossRateOther)
-            : undefined;
+          ? typeof res.CrossRateOther === "number"
+            ? res.CrossRateOther
+            : parseFloat(res.CrossRateOther)
+          : undefined;
       if (usdRate !== undefined) {
         results.USD[currencyCode] = { buy: usdRate };
       }
