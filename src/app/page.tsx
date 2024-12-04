@@ -74,12 +74,18 @@ export default async function Home() {
                 ticker: "EUR",
                 symbol: "€",
                 name: "Euro",
+                coinId: null,
+                isCrypto: false,
+                maxDecimalsPreferred: 2,
               }}
               quoteCurrency={{
                 id: "81260265-7335-4d20-9064-0357e75690d6",
                 ticker: "USD",
                 symbol: "$",
                 name: "US Dollar",
+                coinId: null,
+                isCrypto: false,
+                maxDecimalsPreferred: 2,
               }}
             />
             {miniCryptoIds.map((id, index) => (
