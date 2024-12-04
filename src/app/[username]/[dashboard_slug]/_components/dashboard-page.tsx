@@ -5,9 +5,9 @@ import DashboardGrid from "@/app/[username]/[dashboard_slug]/_components/dashboa
 import { useDnd } from "@/app/[username]/[dashboard_slug]/_components/dnd-provider";
 import { EditBar } from "@/app/[username]/[dashboard_slug]/_components/edit-bar";
 import { AddCardButton } from "@/components/cards/_utils/add-card";
-import { bananoCmcId } from "@/components/cards/banano-total/card";
-import ThreeLineCard from "@/components/cards/_utils/three-line-card";
 import { CardParser } from "@/components/cards/_utils/card-parser";
+import ThreeLineCard from "@/components/cards/_utils/three-line-card";
+import { bananoCmcId } from "@/components/cards/banano-total/card";
 import CmcCryptoInfosProvider from "@/components/providers/cmc/cmc-crypto-infos-provider";
 import CmcGlobalMetricsProvider from "@/components/providers/cmc/cmc-global-metrics-provider";
 import CurrencyPreferenceProvider, {
@@ -31,30 +31,31 @@ export default function DashboardPage({
   dashboardSlug,
   dashboardInitialData,
   cardsInitialData,
-  currenciesInitialData,
 }: {
   username: string;
   dashboardSlug: string;
   dashboardInitialData?: AppRouterOutputs["ui"]["getDashboard"];
   cardsInitialData?: AppRouterOutputs["ui"]["getCards"];
-  currenciesInitialData?: AppRouterOutputs["ui"]["getCurrencies"];
 }) {
   const {
     data: dashboard,
     isPending: dashboardIsPending,
-    isLoadingError: dashboardIsLoadingError,
+    isLoadingError: isLoadingErrorDashboard,
   } = api.ui.getDashboard.useQuery(
     { username, dashboardSlug },
     { initialData: dashboardInitialData }
   );
 
-  const { data: cards, isLoadingError: cardsIsLoadingError } =
+  const { data: cardsData, isLoadingError: isLoadingErrorCards } =
     api.ui.getCards.useQuery(
       { username, dashboardSlug },
       {
         initialData: cardsInitialData,
       }
     );
+
+  const cards = cardsData?.cards;
+  const currencies = cardsData?.currencies;
 
   const firstCard = cards && cards.length > 0 ? cards[0] : undefined;
   const currencyPreference: TCurrencyPreference | false | undefined =
@@ -127,15 +128,6 @@ export default function DashboardPage({
     return cleanAndSortArray(ids);
   }, [cards]);
 
-  const { data: currencies, isLoadingError: currenciesIsLoadingError } =
-    api.ui.getCurrencies.useQuery(
-      { ids: currencyIdsForFetch || [] },
-      {
-        enabled: currencyIdsForFetch !== undefined,
-        initialData: currenciesInitialData,
-      }
-    );
-
   let cryptoCurrencyIds = useMemo(() => {
     if (!cards || !currencies) return undefined;
     let ids = cards
@@ -164,14 +156,6 @@ export default function DashboardPage({
 
     return ids;
   }, [cards, currencies]);
-
-  /* type TCard = NonNullable<typeof cards>[number] & { id: string };
-  const [dndCards, setDndCards] = useState<TCard[]>([]);
-
-  useEffect(() => {
-    if (!cards) return;
-    setDndCards(cards.map((c) => ({ ...c, id: c.card.id })));
-  }, [cards]); */
 
   const MainProviders = ({ children }: { children: ReactNode }) => {
     return (
@@ -203,11 +187,7 @@ export default function DashboardPage({
     );
   }
 
-  if (
-    cardsIsLoadingError ||
-    dashboardIsLoadingError ||
-    currenciesIsLoadingError
-  ) {
+  if (isLoadingErrorCards || isLoadingErrorDashboard) {
     return (
       <MainProviders>
         <DashboardGrid initialIds={[]}>
@@ -305,8 +285,8 @@ function Cards({
   cards,
   currencies,
 }: {
-  cards: NonNullable<AppRouterOutputs["ui"]["getCards"]>;
-  currencies: AppRouterOutputs["ui"]["getCurrencies"];
+  cards: NonNullable<AppRouterOutputs["ui"]["getCards"]>["cards"];
+  currencies: NonNullable<AppRouterOutputs["ui"]["getCards"]>["currencies"];
 }) {
   const { orderedIds } = useDnd();
 

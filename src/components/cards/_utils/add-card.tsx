@@ -103,7 +103,7 @@ export function AddCardButton({
 
   const { mutate: createCardMutation, isPending: isPendingCreateCard } =
     api.ui.createCard.useMutation({
-      onSuccess: async () => {
+      onSuccess: async (c) => {
         await invalidateCards();
         setOpen(false);
         setSelectedCardType(null);
@@ -132,7 +132,7 @@ export function AddCardButton({
   const onSubmitNew = (values: TCardValueForAddCards[]) => {
     const _values = values.map((value) => ({
       ...value,
-      xOrder: 0,
+      xOrder: value.xOrder ?? 0,
     }));
     createCardMutation({
       cardTypeId: selectedCardType?.cardType.id ?? "",
@@ -270,6 +270,7 @@ export function AddCardCommandPanel({
     "uniswap_pools_table",
     "wban_summary",
     "fear_greed_index",
+    "calculator",
   ];
 
   return (

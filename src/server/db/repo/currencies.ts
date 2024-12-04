@@ -2,7 +2,7 @@ import { db } from "@/server/db/db";
 import { currenciesTable } from "@/server/db/schema";
 import { inArray } from "drizzle-orm";
 
-export async function getCurrencies({ ids }: { ids: string[] }) {
+export async function getCurrencies({ ids }: { ids?: string[] }) {
   const res = await db
     .select({
       id: currenciesTable.id,
@@ -14,7 +14,7 @@ export async function getCurrencies({ ids }: { ids: string[] }) {
       maxDecimalsPreferred: currenciesTable.maxDecimalsPreferred,
     })
     .from(currenciesTable)
-    .where(inArray(currenciesTable.id, ids));
+    .where(ids ? inArray(currenciesTable.id, ids) : undefined);
   return res;
 }
 

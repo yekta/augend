@@ -8,11 +8,16 @@ function compare<T>(a: T, b: T): number {
   return 0;
 }
 
+export function cleanArray<T>(arr: T[]) {
+  if (arr.length === 0) return [];
+
+  return Array.from(new Set(arr));
+}
+
 export function cleanAndSortArray<T>(arr: T[]) {
   if (arr.length === 0) return [];
 
-  const arrSet = new Set(arr);
-  const cleanedArr = Array.from(arrSet);
+  const cleanedArr = cleanArray(arr);
   const firstEl = cleanedArr[0];
 
   if (typeof firstEl === "number" || typeof firstEl === "string") {

@@ -37,7 +37,7 @@ type Props = {
   iconValue?: string | null;
   setValue: Dispatch<SetStateAction<string | null>>;
   inputTitle: string;
-  inputDescription: string;
+  inputDescription?: string;
   disabled?: boolean;
   Icon?: React.ComponentType<{
     value: string | null;
@@ -193,14 +193,16 @@ function TitleAndDescription({
   description,
 }: {
   title: string;
-  description: string;
+  description?: string;
 }) {
   return (
-    <div className="w-full flex flex-col px-1 leading-tight gap-0.5">
-      <p className="w-full text-foreground font-bold group-data-[error]/input:text-destructive">
+    <div className="w-full flex flex-col px-1 leading-tight gap-0.5 pr-10">
+      <p className="w-full text-foreground font-semibold group-data-[error]/input:text-destructive">
         {title}
       </p>
-      <p className="text-sm text-muted-foreground">{description}</p>
+      {description && (
+        <p className="text-sm text-muted-foreground">{description}</p>
+      )}
     </div>
   );
 }

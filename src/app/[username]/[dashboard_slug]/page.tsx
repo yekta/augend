@@ -1,7 +1,5 @@
 import DashboardPage from "@/app/[username]/[dashboard_slug]/_components/dashboard-page";
 import { siteTitle } from "@/lib/constants";
-import { cleanAndSortArray } from "@/server/redis/cache-utils";
-import { AppRouterOutputs } from "@/server/trpc/api/root";
 import { apiServer } from "@/server/trpc/setup/server";
 import { Metadata } from "next";
 
@@ -38,47 +36,12 @@ export default async function Page({ params }: Props) {
     apiServer.ui.getDashboard({ username, dashboardSlug: dashboard_slug }),
   ]);
 
-  let currencyIdsForFetch: string[] = [];
-  let currenciesInitialData: AppRouterOutputs["ui"]["getCurrencies"] = [];
-
-  (cardsInitialData || []).forEach((cardObj, index) => {
-    if (cardObj.cardType.id === "calculator") {
-      const values = cardObj.values;
-      if (!values) return;
-      values.forEach((v) => {
-        if (v.cardTypeInputId !== "calculator_currency_id") return;
-        currencyIdsForFetch.push(v.value);
-      });
-    }
-    if (cardObj.cardType.id === "fiat_currency") {
-      const values = cardObj.values;
-      if (!values) return;
-      values.forEach((v) => {
-        if (
-          v.cardTypeInputId !== "fiat_currency_currency_id_base" &&
-          v.cardTypeInputId !== "fiat_currency_currency_id_quote"
-        )
-          return;
-        currencyIdsForFetch.push(v.value);
-      });
-    }
-  });
-
-  const currencyIdsForFetchFinal = cleanAndSortArray(currencyIdsForFetch);
-
-  if (currencyIdsForFetchFinal.length > 0) {
-    [currenciesInitialData] = await Promise.all([
-      apiServer.ui.getCurrencies({ ids: currencyIdsForFetchFinal }),
-    ]);
-  }
-
   return (
     <DashboardPage
       username={username}
       dashboardSlug={dashboard_slug}
       cardsInitialData={cardsInitialData}
       dashboardInitialData={dashboardInitialData}
-      currenciesInitialData={currenciesInitialData}
     />
   );
 }

@@ -1,4 +1,5 @@
 import { BananoTotalValueForm } from "@/components/cards/banano-total/value-form";
+import { CalculatorValueForm } from "@/components/cards/calculator/value-form";
 import { CryptoPriceChartValueForm } from "@/components/cards/crypto-price-chart/value-form";
 import { CryptoTableValueForm } from "@/components/cards/crypto-table/value-form";
 import { CryptoValueForm } from "@/components/cards/crypto/value-form";
@@ -41,6 +42,8 @@ export default function CardValuesFormParser({
     return <UniswapPoolsTableValueForm {...sharedProps} />;
   if (cardTypeId === "wban_summary")
     return <WbanSummaryValueForm {...sharedProps} />;
+  if (cardTypeId === "calculator")
+    return <CalculatorValueForm {...sharedProps} />;
   return (
     <p className="w-full py-2 text-center text-destructive">
       No matching card type ID. Something is wrong.

@@ -97,16 +97,50 @@ export const uiRouter = createTRPCRouter({
         isOwner,
       });
 
-      return result;
+      let currencyIdsForFetch: string[] = [];
+      result.forEach((cardObj, index) => {
+        if (cardObj.cardType.id === "calculator") {
+          const values = cardObj.values;
+          if (!values) return;
+          values.forEach((v) => {
+            if (v.cardTypeInputId !== "calculator_currency_id") return;
+            currencyIdsForFetch.push(v.value);
+          });
+        }
+        if (cardObj.cardType.id === "fiat_currency") {
+          const values = cardObj.values;
+          if (!values) return;
+          values.forEach((v) => {
+            if (
+              v.cardTypeInputId !== "fiat_currency_currency_id_base" &&
+              v.cardTypeInputId !== "fiat_currency_currency_id_quote"
+            )
+              return;
+            currencyIdsForFetch.push(v.value);
+          });
+        }
+      });
+
+      const currencyIdsForFetchFinal = cleanAndSortArray(currencyIdsForFetch);
+      const currencies = await getCurrencies({
+        ids: currencyIdsForFetchFinal,
+      });
+
+      return {
+        cards: result,
+        currencies,
+      };
     }),
   getCurrencies: publicProcedure
     .input(
       z.object({
-        ids: z.array(z.string()),
+        ids: z.array(z.string()).optional(),
       })
     )
     .query(async function ({ input: { ids } }) {
-      const res = await getCurrencies({ ids: cleanAndSortArray(ids) });
+      const res = await getCurrencies({
+        ids: ids ? cleanAndSortArray(ids) : undefined,
+      });
       return res;
     }),
   getCardTypes: publicProcedure
@@ -198,6 +232,7 @@ export const uiRouter = createTRPCRouter({
 
       return {
         cardId,
+        cardTypeId,
       };
     }),
   deleteCards: publicProcedure
