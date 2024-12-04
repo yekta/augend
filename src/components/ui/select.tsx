@@ -24,7 +24,7 @@ const SelectTrigger = React.forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      "flex h-9 before:w-full before:h-full before:min-w-[48px] before:min-h-[48px] before:z-[-1] select-none z-0 before:bg-transparent before:absolute touch-manipulation gap-1.5 w-full items-center justify-between whitespace-nowrap rounded-md not-touch:hover:bg-border active:bg-border border border-input bg-transparent px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
+      "flex h-9 before:w-full before:h-full before:min-w-[48px] before:min-h-[48px] before:z-[-1] select-none z-0 before:bg-transparent before:absolute touch-manipulation gap-1.5 w-full items-center justify-between whitespace-nowrap rounded-md not-touch:hover:bg-border active:bg-border border border-input bg-transparent px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-foreground/50 ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
       className
     )}
     {...props}
@@ -32,7 +32,7 @@ const SelectTrigger = React.forwardRef<
     {children}
     {!hideChevron && (
       <SelectPrimitive.Icon asChild>
-        <ChevronDownIcon className="h-4 w-4 shrink-0 text-muted-foreground" />
+        <ChevronDownIcon className="h-4 w-4 shrink-0 text-muted-more-foreground" />
       </SelectPrimitive.Icon>
     )}
   </SelectPrimitive.Trigger>
@@ -190,7 +190,7 @@ const SelectItem = React.forwardRef<
     {!hideTick && (
       <span className="absolute right-2 flex h-3.5 w-3.5 items-center justify-center">
         <SelectPrimitive.ItemIndicator>
-          <CheckIcon className="h-4 w-4" />
+          <CheckIcon strokeWidth={2.5} className="size-4" />
         </SelectPrimitive.ItemIndicator>
       </span>
     )}

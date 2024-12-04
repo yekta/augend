@@ -6,7 +6,7 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "relative inline-flex items-center select-none before:w-full before:h-full before:min-w-[48px] before:min-h-[48px] before:z-[-1] z-0 before:bg-transparent before:absolute touch-manipulation justify-center gap-2 rounded-lg text-base font-bold focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0",
+  "relative inline-flex items-center select-none before:w-full before:h-full before:min-w-[48px] before:min-h-[48px] before:z-[-1] z-0 before:bg-transparent before:absolute touch-manipulation justify-center gap-2 rounded-lg text-base font-bold focus-visible:outline-none focus-visible:ring-1 ring-offset-2 ring-offset-background focus-visible:ring-foreground/50 disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0",
   {
     variants: {
       variant: {
@@ -15,11 +15,11 @@ const buttonVariants = cva(
         destructive:
           "bg-destructive text-destructive-foreground not-touch:hover:bg-destructive/90 active:bg-destructive/90",
         outline:
-          "border border-input bg-background not-touch:hover:bg-accent active:bg-accent not-touch:hover:text-accent-foreground active:text-accent-foreground",
+          "border border-input bg-background not-touch:hover:bg-border active:bg-border not-touch:hover:text-foreground active:text-foreground",
         secondary:
           "bg-secondary text-secondary-foreground not-touch:hover:bg-secondary/80 active:bg-secondary/80",
         ghost:
-          "not-touch:hover:bg-accent not-touch:hover:text-accent-foreground active:bg-accent active:text-accent-foreground",
+          "not-touch:hover:bg-border not-touch:hover:text-foreground active:bg-border active:text-foreground",
         link: "text-primary underline-offset-4 not-touch:hover:underline active:underline",
         google:
           "bg-google text-google-foreground not-touch:hover:bg-google/90 active:bg-google/90",

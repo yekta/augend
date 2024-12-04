@@ -127,7 +127,7 @@ export function CardValueCombobox<T>({
             </div>
             <ChevronsUpDownIcon
               strokeWidth={1.5}
-              className="opacity-50 size-5 -mr-2"
+              className="text-muted-more-foreground size-5 -mr-2"
             />
           </Button>
         </PopoverTrigger>

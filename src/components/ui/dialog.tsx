@@ -61,16 +61,18 @@ const DialogContent = React.forwardRef<
         )}
         {...props}
       >
-        {children}
-        {variant !== "styleless" && (
-          <DialogPrimitive.Close
-            className="absolute right-0 top-0 rounded-xl p-2.5 opacity-50 transition-opacity not-touch:hover:opacity-100 active:opacity-100 ring-1 ring-transparent 
-            focus-visible:outline-none focus-visible:ring-foreground disabled:pointer-events-none text-muted-foreground"
-          >
-            <Cross2Icon className="h-5 w-5" />
-            <span className="sr-only">Close</span>
-          </DialogPrimitive.Close>
-        )}
+        <div className="w-full flex flex-col max-w-[calc(100vw-1rem)]">
+          {children}
+          {variant !== "styleless" && (
+            <DialogPrimitive.Close
+              className="absolute right-0 top-0 rounded-xl p-2.5 opacity-50 transition-opacity not-touch:hover:opacity-100 active:opacity-100 ring-1 ring-transparent 
+              focus-visible:outline-none focus-visible:ring-foreground disabled:pointer-events-none text-muted-foreground"
+            >
+              <Cross2Icon className="h-5 w-5" />
+              <span className="sr-only">Close</span>
+            </DialogPrimitive.Close>
+          )}
+        </div>
       </DialogPrimitive.Content>
     </DialogOverlay>
   </DialogPortal>

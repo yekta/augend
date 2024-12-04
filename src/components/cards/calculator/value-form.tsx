@@ -87,11 +87,11 @@ export function CalculatorValueForm({
   return (
     <CardValuesFormWrapper onSubmit={onFormSubmitLocal}>
       {selectedCurrencies.length > 0 && (
-        <div className="w-full flex flex-col gap-2">
+        <div className="w-full flex flex-col gap-2 pt-0.5">
           {selectedCurrencies.map((currency, index) => (
             <div
               key={`${currency}-${index}`}
-              className="w-full flex items-center justify-between relative gap-1"
+              className="w-full flex items-stretch justify-between relative gap-1"
             >
               <CardValueCombobox
                 iconValue={
@@ -111,11 +111,14 @@ export function CalculatorValueForm({
                     );
                   }
                   return (
-                    <div
-                      className={cn("text-foreground text-center", className)}
+                    <p
+                      className={cn(
+                        "text-foreground text-center leading-tight",
+                        className
+                      )}
                     >
                       {currency.symbol}
-                    </div>
+                    </p>
                   );
                 }}
                 value={currency}
@@ -140,7 +143,7 @@ export function CalculatorValueForm({
                 variant="outline"
                 size="icon"
                 type="button"
-                className="size-9 shrink-0 border-none text-muted-more-foreground -mr-2"
+                className="w-10 h-auto shrink-0 self-stretch text-muted-more-foreground"
                 onClick={() => {
                   let newCurrencyList = [...selectedCurrencies];
                   newCurrencyList.splice(index, 1);
@@ -182,9 +185,14 @@ export function CalculatorValueForm({
                 );
               }
               return (
-                <div className={cn("text-foreground text-center", className)}>
+                <p
+                  className={cn(
+                    "text-foreground text-center leading-tight",
+                    className
+                  )}
+                >
                   {currency.symbol}
-                </div>
+                </p>
               );
             }}
             inputErrorMessage={lastCurrencyError}

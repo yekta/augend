@@ -276,7 +276,7 @@ export function AddCardCommandPanel({
   return (
     <>
       {selectedCardType !== null && (
-        <div className="w-full bg-background border rounded-xl shadow-xl shadow-shadow/[var(--opacity-shadow)]">
+        <div className="w-full bg-background border rounded-xl shadow-dialog shadow-shadow/[var(--opacity-shadow)]">
           <div className="w-full flex flex-row p-1">
             <Button
               onClick={() => setSelectedCardType(null)}
@@ -299,7 +299,7 @@ export function AddCardCommandPanel({
           <div className="w-full bg-border h-px" />
           <div
             data-has-inputs={inputs ? true : undefined}
-            className="w-full px-4 pt-3.5 pb-4 data-[has-inputs]:pt-3"
+            className="w-full flex flex-col px-4 pt-3.5 pb-4 data-[has-inputs]:pt-3"
           >
             {newCardTypeIds.includes(selectedCardType.cardType.id) ? (
               <CardValuesFormParser
