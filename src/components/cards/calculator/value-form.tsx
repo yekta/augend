@@ -8,7 +8,7 @@ import { api } from "@/server/trpc/setup/react";
 import { XIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 
-const maxCurrencies = 4;
+const maxCurrencies = 10;
 
 export function CalculatorValueForm({
   onFormSubmit,
@@ -85,7 +85,7 @@ export function CalculatorValueForm({
             key={`${currency}-${index}`}
             inputTitle={`Currency #${index + 1}`}
             value={currency}
-            setValue={(value) => {}}
+            setValue={(value) => null}
             onValueChange={(value) => {
               clearErrors();
               if (value === null || value === undefined) return;
@@ -117,7 +117,7 @@ export function CalculatorValueForm({
           </Button>
         </div>
       ))}
-      {/* The Extra */}
+      {/* The Extra Field */}
       {(!lastCurrencyItems || lastCurrencyItems.length > 0) &&
         selectedCurrencies.length < maxCurrencies && (
           <CardValueCombobox
