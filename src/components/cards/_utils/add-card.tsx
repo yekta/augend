@@ -273,6 +273,7 @@ export function AddCardCommandPanel({
     "calculator",
     "nano_balance",
     "banano_balance",
+    "uniswap_position",
   ];
 
   return (

@@ -1,6 +1,8 @@
+import { CardValueCombobox } from "@/components/cards/_utils/values-form/card-value-combobox";
 import CardValuesFormSubmitButton from "@/components/cards/_utils/values-form/card-values-form-submit-button";
 import CardValuesFormWrapper from "@/components/cards/_utils/values-form/card-values-form-wrapper";
 import { TValueFormProps } from "@/components/cards/_utils/values-form/types";
+import CryptoIcon from "@/components/icons/crypto-icon";
 import {
   Form,
   FormControl,
@@ -12,50 +14,39 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
+import { cn } from "@/lib/utils";
+import {
+  EthereumNetworkSchema,
+  TEthereumNetwork,
+} from "@/server/trpc/api/routers/ethereum/types";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Dispatch, SetStateAction, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-export function NanoBananoValueForm({
+export function UniswapPositionValueForm({
   onFormSubmit,
   isPendingForm,
-  network,
-}: TValueFormProps & { network: "nano" | "banano" }) {
-  const characterCount = network === "nano" ? 65 : 64;
-  const prefix = network === "nano" ? "nano_" : "ban_";
+}: TValueFormProps) {
+  const networks = Object.values(EthereumNetworkSchema.Enum);
+  const defaultNetwork = networks[0];
+  const [network, setNetwork] = useState<TEthereumNetwork>(defaultNetwork);
+  const [networkError, setNetworkError] = useState<string | null>(null);
+
+  const networkItems = useMemo(() => {
+    return networks.map((e) => ({ label: e, value: e }));
+  }, [networks]);
+
   const FormSchema = z.object({
-    address: z
+    positionId: z
       .string()
-      .length(
-        characterCount,
-        `Address should be ${characterCount} characters long.`
-      )
       .refine(
-        (address) => {
-          const publicKey = address.slice(prefix.length);
-          return /^[13]/.test(publicKey);
-        },
+        (val) =>
+          !isNaN(Number(val)) &&
+          Number.isInteger(Number(val)) &&
+          Number(val) > 0,
         {
-          message: `Address should start with "${prefix}_1" or "${prefix}_3".`,
-        }
-      )
-      .refine(
-        (address) => {
-          const publicKey = address.slice(prefix.length);
-          const isValidPublicKey = /^[a-z0-9]+$/.test(publicKey);
-          return isValidPublicKey;
-        },
-        {
-          message: "Address has an invalid character.",
-        }
-      )
-      .refine(
-        (address) => {
-          const publicKey = address.slice(prefix.length);
-          return !/[0l]/.test(publicKey); // Must not contain '0' or 'l'
-        },
-        {
-          message: `Address can't contain "0" or "l".`,
+          message: "Position ID must be a valid integer.",
         }
       ),
     is_owner: z.boolean().default(false).optional(),
@@ -64,19 +55,38 @@ export function NanoBananoValueForm({
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      address: "",
+      positionId: "",
       is_owner: true,
     },
   });
 
+  const clearErrors = () => {
+    setNetworkError(null);
+  };
+
   const onFormSubmitLocal = (data: z.infer<typeof FormSchema>) => {
+    let networkValue: TEthereumNetwork | null = null;
+    try {
+      networkValue = EthereumNetworkSchema.parse(network);
+    } catch {
+      setNetworkError("Invalid network.");
+      return;
+    }
+    if (networkValue === null) {
+      setNetworkError("Select a network.");
+      return;
+    }
     onFormSubmit([
       {
-        cardTypeInputId: `${network}_balance_address`,
-        value: data.address,
+        cardTypeInputId: "uniswap_position_network",
+        value: networkValue,
       },
       {
-        cardTypeInputId: `${network}_balance_is_owner`,
+        cardTypeInputId: "uniswap_position_position_id",
+        value: `${data.positionId}`,
+      },
+      {
+        cardTypeInputId: "uniswap_position_is_owner",
         value: `${data.is_owner}`,
       },
     ]);
@@ -85,32 +95,43 @@ export function NanoBananoValueForm({
   return (
     <Form {...form}>
       <CardValuesFormWrapper onSubmit={form.handleSubmit(onFormSubmitLocal)}>
+        <CardValueCombobox
+          inputTitle="Network"
+          inputDescription="The network of the Uniswap position."
+          inputErrorMessage={networkError}
+          value={network}
+          Icon={({ value, className }) => (
+            <div className={cn("text-foreground p-0.25", className)}>
+              <CryptoIcon cryptoName={value} className="size-full" />
+            </div>
+          )}
+          onValueChange={() => clearErrors()}
+          setValue={setNetwork as Dispatch<SetStateAction<string | null>>}
+          disabled={isPendingForm}
+          items={networkItems}
+          placeholder="Select network..."
+          inputPlaceholder="Search networks..."
+          noValueFoundLabel="No network found."
+        />
         <FormField
           control={form.control}
-          name="address"
+          name="positionId"
           render={({ field }) => (
             <FormItem className="w-full flex flex-col gap-2.5">
               <div className="shrink min-w-0 overflow-hidden flex flex-col gap-0.5">
-                <FormLabel className="w-full">Address</FormLabel>
+                <FormLabel className="w-full">Position ID</FormLabel>
                 <FormDescription className="w-full">
-                  Address of the account. Starts with{" "}
-                  <span className="font-semibold bg-muted-foreground/15 rounded px-1">
-                    {prefix}
-                  </span>
-                  {" ."}
+                  ID of the Uniswap position.
                 </FormDescription>
               </div>
               <FormControl>
                 <Input
+                  type="number"
                   className="w-full"
                   autoCapitalize="none"
                   autoComplete="off"
                   autoCorrect="off"
-                  placeholder={
-                    network === "nano"
-                      ? "nano_1natrium1o3z5519ifou7xii8crpxpk8y65qmkih8e8bpsjri651oza8imdd"
-                      : "ban_1ka1ium4pfue3uxtntqsrib8mumxgazsjf58gidh1xeo5te3whsq8z476goo"
-                  }
+                  placeholder="10101"
                   {...field}
                 />
               </FormControl>

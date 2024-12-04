@@ -22,7 +22,7 @@ type TItem = {
   iconValue?: string;
 };
 
-type Props = {
+export type TValueComboboxProps = {
   items: TItem[] | undefined;
   placeholder: string;
   inputPlaceholder: string;
@@ -71,7 +71,7 @@ export function CardValueCombobox<T>({
   inputDescription,
   disabled,
   Icon,
-}: Props) {
+}: TValueComboboxProps) {
   const [open, setOpen] = useState(false);
 
   const isHardError = !isPending && isLoadingError;

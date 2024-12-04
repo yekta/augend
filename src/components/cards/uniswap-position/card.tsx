@@ -57,11 +57,13 @@ const errorClassesStats = "group-data-[loading-error]/stats:text-destructive";
 export default function UniswapPositionCard({
   positionId,
   network,
+  isOwner,
   className,
   ...rest
 }: TCardOuterWrapperProps & {
   positionId: number;
   network: TEthereumNetwork;
+  isOwner: boolean;
 }) {
   const { data, isPending, isError, isLoadingError, isRefetching } =
     api.uniswap.getPosition.useQuery(

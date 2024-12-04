@@ -2,15 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  font-family: var(--font-sans);
-}
-
-.font-mono {
-  font-family: var(--font-mono);
-}
-
 @layer base {
+  body {
+    font-family: var(--font-sans);
+  }
+
+  .font-mono {
+    font-family: var(--font-mono);
+  }
+
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
   :root {
     --background: 0 0% 100%;
     --background-hover: 250 4% 92%;

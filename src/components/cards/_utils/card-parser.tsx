@@ -98,11 +98,15 @@ export function CardParser({
     const positionId = values.find(
       (v) => v.cardTypeInputId === "uniswap_position_position_id"
     )?.value;
-    if (!network || !positionId) return null;
+    const isOwner = values.find(
+      (v) => v.cardTypeInputId === "uniswap_position_is_owner"
+    )?.value;
+    if (!network || !positionId || !isOwner) return null;
     return (
       <UniswapPositionCard
         positionId={Number(positionId)}
         network={network as TEthereumNetwork}
+        isOwner={isOwner === "true"}
         {...rest}
       />
     );

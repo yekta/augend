@@ -33,7 +33,7 @@ export function GasCardValueForm({
       return;
     }
     if (networkValue === null) {
-      setNetworkError("Select an network.");
+      setNetworkError("Select a network.");
       return;
     }
     onFormSubmit([
@@ -66,7 +66,7 @@ export function GasCardValueForm({
         items={items}
         placeholder="Select network..."
         inputPlaceholder="Search networks..."
-        noValueFoundLabel="No network found..."
+        noValueFoundLabel="No network found."
       />
       <CardValuesFormSubmitButton isPending={isPendingForm} />
     </CardValuesFormWrapper>
