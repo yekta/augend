@@ -290,7 +290,7 @@ export default function CryptoPriceChartCard({
               )
             }
             value={interval.value}
-            className="absolute right-2 top-2 w-14"
+            className="absolute right-2 top-2"
             options={intervalOptions}
           />
         )}
