@@ -328,16 +328,20 @@ function SelectCustom({
       onOpenChange={setOpen}
     >
       <SelectTrigger
-        hideChevron
-        className={cn("font-medium justify-center text-center", className)}
+        className={cn("font-semibold font-mono pl-2.5", className)}
       >
         <SelectValue placeholder={value} />
       </SelectTrigger>
-      <SelectContent className={cn("font-medium", contentClassName)}>
+      <SelectContent
+        className={cn(
+          "font-semibold w-[var(--radix-select-trigger-width)]",
+          contentClassName
+        )}
+      >
         {options.map((option) => (
           <SelectItem
             hideTick
-            className="text-center items-center justify-center"
+            className="truncate font-mono text-center"
             key={option.value}
             value={option.value}
           >
@@ -380,14 +384,14 @@ function Header({
       className="w-full flex flex-col items-start justify-start gap-2.5 pr-14 group/header"
     >
       <div
-        className="max-w-full text-sm leading-none whitespace-nowrap overflow-hidden overflow-ellipsis font-semibold flex items-end justify-left 
+        className="max-w-full text-sm leading-none truncate font-semibold flex items-end justify-left 
           group-data-[pending]/header:text-transparent group-data-[pending]/header:bg-foreground group-data-[pending]/header:animate-skeleton group-data-[pending]/header:rounded"
       >
         {isPending ? (
           "Loading data"
         ) : (
           <div className="w-full flex items-center justify-start">
-            <p className="shrink min-w-0 overflow-hidden overflow-ellipsis">
+            <p className="shrink min-w-0 truncate">
               {config.pair}{" "}
               <span className="text-muted-foreground font-medium">
                 ({config.exchange})
@@ -397,12 +401,12 @@ function Header({
         )}
       </div>
       <div className="w-full relative flex justify-start items-start">
-        <div className="max-w-full gap-2 justify-start text-2xl leading-none font-extrabold font-mono whitespace-nowrap overflow-hidden overflow-ellipsis group-data-[pending]/header:text-transparent group-data-[pending]/header:bg-foreground group-data-[pending]/header:animate-skeleton group-data-[pending]/header:rounded-md group-data-[hard-error]/header:text-destructive flex items-end justify-left">
+        <div className="max-w-full gap-2 justify-start text-2xl leading-none font-extrabold font-mono truncate group-data-[pending]/header:text-transparent group-data-[pending]/header:bg-foreground group-data-[pending]/header:animate-skeleton group-data-[pending]/header:rounded-md group-data-[hard-error]/header:text-destructive flex items-end justify-left">
           {isPending ? (
             "Loading data"
           ) : !priceInfo.isFallback ? (
             <>
-              <p className="shrink min-w-0 overflow-hidden overflow-ellipsis">
+              <p className="shrink min-w-0 truncate">
                 {priceFormatter(priceInfo.price, 4, true)}
               </p>
               <div
@@ -413,7 +417,7 @@ function Header({
                 <div className="size-4.5 shrink-0 -mb-0.25">
                   <ChangeIcon className="size-full" />
                 </div>
-                <p className="text-base font-semibold leading-none shrink min-w-0 overflow-hidden overflow-ellipsis">
+                <p className="text-base font-semibold leading-none shrink min-w-0 truncate">
                   {formatNumberTBMK(
                     Math.abs(priceInfo.changeRate * 100),
                     3,
@@ -429,7 +433,7 @@ function Header({
           )}
         </div>
         {priceInfo.dateStr && (
-          <p className="max-w-full text-muted-foreground absolute left-0 -bottom-6 text-sm whitespace-nowrap leading-none shrink min-w-0 overflow-hidden overflow-ellipsis font-medium">
+          <p className="max-w-full text-muted-foreground absolute left-0 -bottom-6 text-sm whitespace-nowrap leading-none shrink min-w-0 truncate font-medium">
             {priceInfo.dateStr}
           </p>
         )}

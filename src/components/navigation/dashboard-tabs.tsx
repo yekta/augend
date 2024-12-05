@@ -40,7 +40,7 @@ export default function DashboardTabs({
         {isPending && (
           <div className="text-transparent animate-skeleton flex items-center text-sm justify-center flex-1 font-semibold px-3 md:px-4 py-4 text-center gap-2 group relative">
             <div className="shrink-0 size-5 md:size-4 bg-foreground rounded-full" />
-            <p className="hidden md:block shrink min-w-0 overflow-hidden overflow-ellipsis transition bg-foreground rounded-md">
+            <p className="hidden md:block shrink min-w-0 truncate transition bg-foreground rounded-md">
               Loading
             </p>
           </div>
@@ -48,7 +48,7 @@ export default function DashboardTabs({
         {isLoadingError && (
           <div className="text-destructive flex items-center text-sm justify-center flex-1 font-semibold px-3 md:px-4 py-4 text-center gap-2 group relative">
             <TriangleAlertIcon className="shrink-0 size-5 md:size-4 transition" />
-            <p className="hidden md:block shrink min-w-0 overflow-hidden overflow-ellipsis transition">
+            <p className="hidden md:block shrink min-w-0 truncate transition">
               Error
             </p>
           </div>
@@ -70,7 +70,7 @@ export default function DashboardTabs({
                   className="flex items-center text-sm justify-center flex-1 font-semibold px-3 md:px-4 py-4 text-center gap-2 group active:bg-background-hover not-touch:hover:bg-background-hover relative"
                 >
                   <Icon className="shrink-0 size-5 md:size-4 transition text-muted-foreground group-data-[active]:text-foreground" />
-                  <p className="hidden md:block shrink min-w-0 overflow-hidden overflow-ellipsis transition text-muted-foreground group-data-[active]:text-foreground">
+                  <p className="hidden md:block shrink min-w-0 truncate transition text-muted-foreground group-data-[active]:text-foreground">
                     {route.label}
                   </p>
                 </Link>

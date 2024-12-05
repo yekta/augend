@@ -3,11 +3,7 @@
 import * as React from "react";
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { cn } from "@/lib/utils";
-import {
-  CheckIcon,
-  ChevronDownIcon,
-  ChevronUpIcon,
-} from "@radix-ui/react-icons";
+import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 
 const Select = SelectPrimitive.Root;
 
@@ -24,15 +20,15 @@ const SelectTrigger = React.forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      "flex h-9 before:w-full before:h-full before:min-w-[48px] before:min-h-[48px] before:z-[-1] select-none z-0 before:bg-transparent before:absolute touch-manipulation gap-1.5 w-full items-center justify-between whitespace-nowrap rounded-md not-touch:hover:bg-border active:bg-border border border-input bg-transparent px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus-visible:ring-1 focus-visible:ring-offset-2 focus-visible:ring-foreground/50 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
+      "flex px-3 group/trigger before:w-full before:h-full before:min-w-[48px] before:min-h-[48px] before:z-[-1] select-none z-0 before:bg-transparent before:absolute touch-manipulation gap-1 w-full items-center justify-between whitespace-nowrap rounded-md not-touch:hover:bg-border active:bg-border border border-input bg-transparent leading-tight py-1.5 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus-visible:ring-1 focus-visible:ring-offset-2 focus-visible:ring-foreground/50 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
       className
     )}
     {...props}
   >
-    {children}
+    <div className="shrink min-w-0 truncate">{children}</div>
     {!hideChevron && (
       <SelectPrimitive.Icon asChild>
-        <ChevronDownIcon className="h-4 w-4 shrink-0 text-muted-more-foreground" />
+        <ChevronDownIcon className="size-4 -my-1 -mr-1.5 shrink-0 text-muted-more-foreground group-data-[state=open]/trigger:rotate-180 transition-transform" />
       </SelectPrimitive.Icon>
     )}
   </SelectPrimitive.Trigger>
@@ -51,7 +47,7 @@ const SelectScrollUpButton = React.forwardRef<
     )}
     {...props}
   >
-    <ChevronUpIcon className="h-4 w-4" />
+    <ChevronUpIcon className="size-4 -my-1" />
   </SelectPrimitive.ScrollUpButton>
 ));
 SelectScrollUpButton.displayName = SelectPrimitive.ScrollUpButton.displayName;
@@ -68,7 +64,7 @@ const SelectScrollDownButton = React.forwardRef<
     )}
     {...props}
   >
-    <ChevronDownIcon className="h-4 w-4" />
+    <ChevronDownIcon className="size-4 -my-1" />
   </SelectPrimitive.ScrollDownButton>
 ));
 SelectScrollDownButton.displayName =
@@ -147,7 +143,7 @@ const SelectContent = React.forwardRef<
             className={cn(
               "p-1",
               position === "popper" &&
-                "h-[var(--radix-select-trigger-height)] w-full min-w-[calc(var(--radix-select-trigger-width)-2px)]"
+                "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)-2px)]"
             )}
           >
             {children}
@@ -181,16 +177,16 @@ const SelectItem = React.forwardRef<
   <SelectPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex w-full cursor-default select-none items-center pl-2 pr-8 rounded-sm py-1.5 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
-      hideTick && "px-3",
+      "relative w-full cursor-default select-none items-center pl-2 pr-8 rounded-sm py-1.5 leading-tight text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      hideTick && "px-2",
       className
     )}
     {...props}
   >
     {!hideTick && (
-      <span className="absolute right-2 flex h-3.5 w-3.5 items-center justify-center">
+      <span className="absolute right-2 top-1/2 -translate-y-1/2 flex size-4 items-center justify-center">
         <SelectPrimitive.ItemIndicator>
-          <CheckIcon strokeWidth={2.5} className="size-4" />
+          <CheckIcon strokeWidth={2.5} className="size-full" />
         </SelectPrimitive.ItemIndicator>
       </span>
     )}

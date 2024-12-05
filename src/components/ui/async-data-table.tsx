@@ -268,7 +268,7 @@ export default function AsyncDataTable<T>({
                           }))
                         }
                       >
-                        <p className="min-w-0 w-full h-full overflow-hidden overflow-ellipsis rounded-md p-0.5 flex items-center justify-center not-touch:group-hover/link:bg-background-hover group-active/link:bg-background-hover">
+                        <p className="min-w-0 w-full h-full truncate rounded-md p-0.5 flex items-center justify-center not-touch:group-hover/link:bg-background-hover group-active/link:bg-background-hover">
                           {adjustedPage}
                         </p>
                       </PaginationLink>
@@ -447,7 +447,7 @@ function HeaderColumn({
       />
       <p
         className={cn(
-          `overflow-hidden overflow-ellipsis text-right text-xs md:text-sm leading-none md:leading-none`,
+          `truncate text-right text-xs md:text-sm leading-none md:leading-none`,
           innerClassName,
           "overflow-ellipsis"
         )}
@@ -477,7 +477,7 @@ function ChangeColumn({
       data-positive={isPositive ? true : undefined}
       className={cn(
         "w-full",
-        `${paddingLeft} ${paddingRight} ${paddingY} ${defaultColumnClasses} text-xs md:text-sm md:leading-none break-words leading-none font-medium flex text-right overflow-hidden overflow-ellipsis items-center justify-end text-muted-foreground data-[loading-error]:text-destructive data-[negative]:text-destructive data-[positive]:text-success`,
+        `${paddingLeft} ${paddingRight} ${paddingY} ${defaultColumnClasses} text-xs md:text-sm md:leading-none break-words leading-none font-medium flex text-right truncate items-center justify-end text-muted-foreground data-[loading-error]:text-destructive data-[negative]:text-destructive data-[positive]:text-success`,
         className
       )}
     >
@@ -485,7 +485,7 @@ function ChangeColumn({
         <Icon className="size-3.5 md:size-4 shrink-0 -my-0.5" />
       )}
       <p
-        className={`${pendingClasses} shrink min-w-0 overflow-hidden overflow-ellipsis group-data-[loading-error]/table:text-destructive`}
+        className={`${pendingClasses} shrink min-w-0 truncate group-data-[loading-error]/table:text-destructive`}
       >
         {isPending
           ? "Loading"
@@ -520,7 +520,7 @@ function RegularColumn({
     >
       <p
         className={cn(
-          `${pendingClasses} max-w-full break-words leading-none text-right overflow-hidden overflow-ellipsis group-data-[loading-error]/table:text-destructive`,
+          `${pendingClasses} max-w-full break-words leading-none text-right truncate group-data-[loading-error]/table:text-destructive`,
           classNameParagraph
         )}
       >

@@ -63,7 +63,7 @@ export default function FearGreedIndexCard({
           {/* Description */}
           <div className="w-full flex items-center justify-center min-w-0 overflow-hidden">
             <p
-              className="max-w-full font-semibold text-sm md:leading-none shrink min-w-0 text-center leading-none whitespace-nowrap overflow-hidden overflow-ellipsis text-foreground 
+              className="max-w-full font-semibold text-sm md:leading-none shrink min-w-0 text-center leading-none truncate text-foreground 
               group-data-[pending]/card:bg-foreground group-data-[loading-error]/card:text-destructive group-data-[pending]/card:text-transparent group-data-[pending]/card:rounded-sm group-data-[pending]/card:animate-skeleton"
             >
               {isPending
@@ -78,7 +78,7 @@ export default function FearGreedIndexCard({
           </div>
           {/* Market cap */}
           <div className="w-full flex items-center justify-center gap-1 text-sm">
-            <p className="shrink min-w-0 overflow-hidden overflow-ellipsis text-center leading-none group-data-[pending]/card:font-normal group-data-[pending]/card:bg-foreground group-data-[loading-error]/card:text-destructive group-data-[pending]/card:text-transparent group-data-[pending]/card:rounded-sm group-data-[pending]/card:animate-skeleton">
+            <p className="shrink min-w-0 truncate text-center leading-none group-data-[pending]/card:font-normal group-data-[pending]/card:bg-foreground group-data-[loading-error]/card:text-destructive group-data-[pending]/card:text-transparent group-data-[pending]/card:rounded-sm group-data-[pending]/card:animate-skeleton">
               {isPending
                 ? "Loading"
                 : data
@@ -92,12 +92,12 @@ export default function FearGreedIndexCard({
               <div
                 data-negative={isMarketCapChangeNegative ? true : undefined}
                 data-positive={isMarketCapChangePositive ? true : undefined}
-                className="flex shrink min-w-0 overflow-hidden overflow-ellipsis items-center justify-start text-muted-foreground group-data-[loading-error]/card:text-destructive data-[negative]:text-destructive data-[positive]:text-success"
+                className="flex shrink min-w-0 truncate items-center justify-start text-muted-foreground group-data-[loading-error]/card:text-destructive data-[negative]:text-destructive data-[positive]:text-success"
               >
                 {!isPending && data && (
                   <MarketCapChangeIcon className="size-4 shrink-0 -my-0.5 group-data-[pending]/card:text-transparent" />
                 )}
-                <p className="shrink min-w-0 overflow-hidden overflow-ellipsis leading-none group-data-[pending]/card:text-transparent">
+                <p className="shrink min-w-0 truncate leading-none group-data-[pending]/card:text-transparent">
                   {isPending
                     ? "Loading"
                     : data
@@ -208,7 +208,7 @@ function Gauge({
       {/* Value */}
       <div className="w-full z-10 px-3 pt-3.75 flex items-center justify-center overflow-hidden">
         <p
-          className="shrink min-w-0 text-center font-bold text-2xl group-data-[pending]/card:bg-foreground leading-none whitespace-nowrap overflow-hidden overflow-ellipsis 
+          className="shrink min-w-0 text-center font-bold text-2xl group-data-[pending]/card:bg-foreground leading-none truncate 
           group-data-[loading-error]/card:text-destructive group-data-[pending]/card:text-transparent group-data-[pending]/card:rounded-md group-data-[pending]/card:animate-skeleton"
         >
           {isPending

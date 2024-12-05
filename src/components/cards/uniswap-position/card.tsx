@@ -246,7 +246,7 @@ export default function UniswapPositionCard({
                 />
               )}
               <p
-                className="min-w-0 leading-none flex-shrink whitespace-nowrap max-w-[4rem] overflow-hidden overflow-ellipsis
+                className="min-w-0 leading-none flex-shrink whitespace-nowrap max-w-[4rem] truncate
                 group-data-[pending]/table:text-transparent group-data-[pending]/table:animate-skeleton group-data-[pending]/table:bg-foreground
                 group-data-[pending]/table:rounded"
               >
@@ -756,7 +756,7 @@ function Section({
       >
         <p
           className={cn(
-            "shrink min-w-0 whitespace-nowrap overflow-hidden overflow-ellipsis font-bold text-xl md:text-2xl leading-none md:leading-none",
+            "shrink min-w-0 truncate font-bold text-xl md:text-2xl leading-none md:leading-none",
             pendingClasses,
             errorClasses,
             "group-data-[pending]/card:rounded-md",
@@ -768,7 +768,7 @@ function Section({
         {titleSecondary && (
           <div
             className={cn(
-              "shrink min-w-0 flex items-center justify-start whitespace-nowrap overflow-hidden overflow-ellipsis font-semibold text-lg md:text-xl leading-none md:leading-none",
+              "shrink min-w-0 flex items-center justify-start truncate font-semibold text-lg md:text-xl leading-none md:leading-none",
               pendingClasses,
               errorClasses,
               "group-data-[pending]/card:rounded-md",
@@ -783,9 +783,7 @@ function Section({
                 )}
               />
             )}
-            <p className="shrink min-w-0 overflow-hidden overflow-ellipsis">
-              {titleSecondary}
-            </p>
+            <p className="shrink min-w-0 truncate">{titleSecondary}</p>
           </div>
         )}
         {chip && (
@@ -795,7 +793,7 @@ function Section({
                 <div
                   key={i}
                   className={cn(
-                    "font-medium whitespace-nowrap shrink min-w-0 overflow-hidden overflow-ellipsis text-xs text-center md:text-sm leading-none md:leading-none px-1.5 py-1 md:py-1.25 rounded-md",
+                    "font-medium whitespace-nowrap shrink min-w-0 truncate text-xs text-center md:text-sm leading-none md:leading-none px-1.5 py-1 md:py-1.25 rounded-md",
                     pendingClasses,
                     "group-data-[pending]/card:bg-muted-foreground/36",
                     errorClasses,
@@ -872,7 +870,7 @@ function TickerTextAmount({
         <div className="shrink min-w-0 h-3.5 md:h-4 overflow-hidden flex items-center">
           <p
             className={cn(
-              "whitespace-nowrap shrink min-w-0 text-muted-foreground max-w-full overflow-hidden overflow-ellipsis",
+              "whitespace-nowrap shrink min-w-0 text-muted-foreground max-w-full truncate",
               pendingClasses,
               "group-data-[pending]/card:bg-muted-foreground",
               errorClasses
@@ -885,7 +883,7 @@ function TickerTextAmount({
       <div className="flex flex-row items-center gap-1.5 md:gap-2 max-w-full font-mono shrink min-w-0 overflow-hidden">
         <p
           className={cn(
-            "font-semibold whitespace-nowrap max-w-full overflow-hidden overflow-ellipsis shrink min-w-0",
+            "font-semibold whitespace-nowrap max-w-full truncate shrink min-w-0",
             pendingClasses,
             errorClasses
           )}
@@ -895,7 +893,7 @@ function TickerTextAmount({
         {chip !== undefined && (
           <p
             className={cn(
-              "text-muted-foreground whitespace-nowrap shrink min-w-0 max-w-full overflow-hidden overflow-ellipsis",
+              "text-muted-foreground whitespace-nowrap shrink min-w-0 max-w-full truncate",
               pendingClasses,
               "group-data-[pending]/card:bg-muted-foreground",
               errorClasses,
@@ -923,7 +921,7 @@ function StatColumn({
     <div className="px-3 md:px-4 lg:px-5 flex flex-col first-of-type:pl-0 last-of-type:pr-0">
       <div className="flex flex-1 flex-col items-start gap-1.5 md:gap-2 flex-shrink">
         <p
-          className="shrink min-w-0 overflow-hidden overflow-ellipsis whitespace-nowrap text-xs md:text-sm font-medium text-muted-foreground leading-none md:leading-none
+          className="shrink min-w-0 truncate whitespace-nowrap text-xs md:text-sm font-medium text-muted-foreground leading-none md:leading-none
           group-data-[pending]/stats:text-transparent group-data-[pending]/stats:animate-skeleton group-data-[pending]/stats:bg-muted-foreground group-data-[pending]/stats:rounded"
         >
           {title}
@@ -934,7 +932,7 @@ function StatColumn({
             <p
               data-node={typeof value !== "string" || undefined}
               className={cn(
-                "shrink min-w-0 overflow-hidden overflow-ellipsis whitespace-nowrap text-base md:text-lg font-bold leading-none md:leading-none",
+                "shrink min-w-0 truncate whitespace-nowrap text-base md:text-lg font-bold leading-none md:leading-none",
                 pendingClassesStats,
                 errorClassesStats,
                 valueClassName
@@ -997,7 +995,7 @@ function NFTImageLink({
           <div className="w-full px-1 pb-1 flex gap-1 items-center justify-center absolute bottom-0 left-0">
             <p
               className={cn(
-                "w-full font-medium whitespace-nowrap shrink min-w-0 overflow-hidden overflow-ellipsis text-xs text-center md:text-sm leading-none md:leading-none px-1.5 py-1 rounded-md text-white bg-black/60"
+                "w-full font-medium whitespace-nowrap shrink min-w-0 truncate text-xs text-center md:text-sm leading-none md:leading-none px-1.5 py-1 rounded-md text-white bg-black/60"
               )}
             >
               {timeAgo(createdAt, true)}

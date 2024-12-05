@@ -105,9 +105,7 @@ export function AddCardButton({
               not-touch:group-hover/card:bg-background-hover group-active/card:bg-background-hover"
             >
               <PlusIcon className="size-5 shrink-0 text-muted-foreground -ml-1" />
-              <p className="min-w-0 overflow-hidden overflow-ellipsis">
-                Add card
-              </p>
+              <p className="min-w-0 truncate">Add card</p>
             </CardInnerWrapper>
           </CardOuterWrapper>
         </DialogTrigger>

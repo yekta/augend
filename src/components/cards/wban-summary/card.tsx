@@ -96,7 +96,7 @@ export default function WBanSummaryCard({
           return (
             <div
               key={network.chain}
-              className="w-full flex items-center justify-start first-of-type:border-t-0 border-t"
+              className="w-full overflow-hidden min-w-0 flex items-center justify-start first-of-type:border-t-0 border-t"
             >
               <div className="md:flex-1 flex items-center justify-start gap-2 pl-4 pr-1 md:px-5 py-5">
                 <IconWithPlaceholder
@@ -106,7 +106,7 @@ export default function WBanSummaryCard({
                 />
                 <p
                   className={cn(
-                    `hidden md:block shrink font-semibold min-w-0 overflow-hidden overflow-ellipsis ${skeletonParagraphClasses}`,
+                    `hidden md:block shrink font-semibold min-w-0 truncate ${skeletonParagraphClasses}`,
                     "leading-none md:leading-none"
                   )}
                 >
@@ -116,17 +116,17 @@ export default function WBanSummaryCard({
               <Link
                 target="_blank"
                 href={getExplorerUrl(network.coldWallet)}
-                className="flex-1 flex items-center justify-start gap-1.5 md:gap-2 px-2 md:px-5 not-touch:hover:bg-background-hover active:bg-background-hover py-4"
+                className="flex-1 flex items-center justify-start gap-1.5 md:gap-2 px-2 md:px-5 not-touch:hover:bg-background-hover active:bg-background-hover py-4 min-w-0"
               >
                 <IconWithPlaceholder
                   Icon={Snowflake}
                   isPending={isPending}
                   className="shrink-0 size-4 md:size-5 text-nano rounded-sm md:rounded-md"
                 />
-                <div className="flex flex-col shrink min-w-0 gap-1.5">
+                <div className="flex flex-col shrink min-w-0 gap-1.5 overflow-hidden">
                   <p
                     className={cn(
-                      `text-sm md:text-base w-full overflow-hidden overflow-ellipsis font-semibold group-data-[loading-error]/card:text-destructive ${skeletonParagraphClasses}`,
+                      `text-sm md:text-base w-full truncate font-semibold group-data-[loading-error]/card:text-destructive ${skeletonParagraphClasses}`,
                       "leading-none md:leading-none"
                     )}
                   >
@@ -136,7 +136,7 @@ export default function WBanSummaryCard({
                   </p>
                   <p
                     className={cn(
-                      `w-full overflow-hidden overflow-ellipsis text-xs text-muted-foreground group-data-[loading-error]/card:text-destructive ${skeletonSmallParagraphClasses}`,
+                      `w-full truncate text-xs text-muted-foreground group-data-[loading-error]/card:text-destructive ${skeletonSmallParagraphClasses}`,
                       "leading-none md:leading-none"
                     )}
                   >
@@ -149,17 +149,17 @@ export default function WBanSummaryCard({
               <Link
                 target="_blank"
                 href={getExplorerUrl(network.hotWallet)}
-                className="flex-1 flex items-center justify-start gap-1.5 md:gap-2 px-2 md:px-5 not-touch:hover:bg-background-hover active:bg-background-hover py-4"
+                className="flex-1 flex items-center justify-start gap-1.5 md:gap-2 px-2 md:px-5 not-touch:hover:bg-background-hover active:bg-background-hover py-4 min-w-0"
               >
                 <IconWithPlaceholder
                   Icon={Flame}
                   isPending={isPending}
                   className="shrink-0 size-4 md:size-5 text-destructive rounded md:rounded-md"
                 />
-                <div className="flex flex-col shrink min-w-0 gap-1.5">
+                <div className="flex flex-col shrink min-w-0 gap-1.5 overflow-hidden">
                   <p
                     className={cn(
-                      `text-sm md:text-base w-full overflow-hidden overflow-ellipsis font-semibold group-data-[loading-error]/card:text-destructive ${skeletonParagraphClasses}`,
+                      `text-sm md:text-base w-full truncate font-semibold group-data-[loading-error]/card:text-destructive ${skeletonParagraphClasses}`,
                       "leading-none md:leading-none"
                     )}
                   >
@@ -169,7 +169,7 @@ export default function WBanSummaryCard({
                   </p>
                   <p
                     className={cn(
-                      `w-full overflow-hidden overflow-ellipsis text-xs text-muted-foreground group-data-[loading-error]/card:text-destructive ${skeletonSmallParagraphClasses}`,
+                      `w-full truncate text-xs text-muted-foreground group-data-[loading-error]/card:text-destructive ${skeletonSmallParagraphClasses}`,
                       "leading-none md:leading-none"
                     )}
                   >
@@ -187,17 +187,17 @@ export default function WBanSummaryCard({
                     ? true
                     : undefined
                 }
-                className="flex-1 flex items-center justify-start gap-1.5 md:gap-2 px-2 md:px-5 rounded-lg py-4 group/pending"
+                className="flex-1 flex items-center justify-start gap-1.5 md:gap-2 px-2 md:px-5 rounded-lg py-4 group/pending min-w-0 overflow-hidden"
               >
                 <IconWithPlaceholder
                   Icon={Hourglass}
                   isPending={isPending}
                   className="shrink-0 size-4 md:size-5 text-banano group-data-[warning]/pending:text-destructive rounded md:rounded-md"
                 />
-                <div className="flex flex-col shrink min-w-0 gap-1.5">
+                <div className="flex flex-col shrink min-w-0 gap-1.5 overflow-hidden">
                   <p
                     className={cn(
-                      `w-full overflow-hidden overflow-ellipsis text-xs text-muted-foreground group-data-[warning]/pending:text-destructive ${skeletonSmallParagraphClasses}`,
+                      `w-full truncate text-xs text-muted-foreground group-data-[warning]/pending:text-destructive ${skeletonSmallParagraphClasses}`,
                       "leading-none md:leading-none"
                     )}
                   >
@@ -205,7 +205,7 @@ export default function WBanSummaryCard({
                   </p>
                   <p
                     className={cn(
-                      `text-sm md:text-base w-full overflow-hidden overflow-ellipsis font-semibold group-data-[warning]/pending:text-destructive group-data-[loading-error]/card:text-destructive ${skeletonParagraphClasses}`,
+                      `text-sm md:text-base w-full truncate font-semibold group-data-[warning]/pending:text-destructive group-data-[loading-error]/card:text-destructive ${skeletonParagraphClasses}`,
                       "leading-none md:leading-none"
                     )}
                   >

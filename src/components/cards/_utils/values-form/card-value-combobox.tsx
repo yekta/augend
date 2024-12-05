@@ -121,7 +121,7 @@ export function CardValueCombobox<T>({
                   className="shrink-0 size-5 -my-1"
                 />
               )}
-              <p className="min-w-0 group-data-[showing-placeholder]/button:text-muted-foreground overflow-hidden overflow-ellipsis shrink whitespace-nowrap">
+              <p className="min-w-0 group-data-[showing-placeholder]/button:text-muted-foreground truncate shrink whitespace-nowrap">
                 <WithHighlightedParentheses
                   text={label ? label : placeholder}
                 />
@@ -173,7 +173,7 @@ export function CardValueCombobox<T>({
                           />
                         )}
                         <p
-                          className="shrink leading-tight min-w-0 overflow-hidden overflow-ellipsis 
+                          className="shrink leading-tight min-w-0 truncate 
                           group-data-[pending]/command:text-transparent group-data-[pending]/command:bg-foreground group-data-[pending]/command:rounded group-data-[pending]/command:animate-skeleton"
                         >
                           <WithHighlightedParentheses text={item.label} />

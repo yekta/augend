@@ -160,7 +160,7 @@ function IconAndText({
         <Icon className="size-full group-data-[pending]/card:opacity-0 group-data-[loading-error]/card:opacity-0" />
       </div>
       <p
-        className="shrink text-sm md:text-base md:leading-none leading-none min-w-0 overflow-hidden overflow-ellipsis whitespace-nowrap
+        className="shrink text-sm md:text-base md:leading-none leading-none min-w-0 truncate whitespace-nowrap
         group-data-[pending]/card:bg-foreground group-data-[pending]/card:animate-skeleton group-data-[pending]/card:rounded
         group-data-[loading-error]/card:text-destructive"
       >

@@ -240,7 +240,7 @@ function NameColumn({
           className={`w-6.5 overflow-hidden flex items-center justify-center`}
         >
           <p
-            className={`${pendingClassesMuted} max-w-full overflow-hidden overflow-ellipsis text-xs leading-none font-medium text-muted-foreground text-center group-data-[loading-error]/table:text-destructive`}
+            className={`${pendingClassesMuted} max-w-full truncate text-xs leading-none font-medium text-muted-foreground text-center group-data-[loading-error]/table:text-destructive`}
           >
             {isPending ? "#" : hasData ? rank : "E"}
           </p>
@@ -251,7 +251,7 @@ function NameColumn({
       >
         <div className="max-w-full flex items-center justify-start gap-1 md:gap-1.5">
           <p
-            className={`${pendingClasses} shrink min-w-0 font-semibold text-xs md:text-sm md:leading-none leading-none whitespace-nowrap overflow-hidden overflow-ellipsis group-data-[loading-error]/table:text-destructive`}
+            className={`${pendingClasses} shrink min-w-0 font-semibold text-xs md:text-sm md:leading-none leading-none truncate group-data-[loading-error]/table:text-destructive`}
           >
             {isPending ? "Loading" : hasData ? value : "Error"}
           </p>
@@ -262,7 +262,7 @@ function NameColumn({
           />
         </div>
         <p
-          className={`${pendingClassesMuted} max-w-full whitespace-nowrap overflow-hidden overflow-ellipsis text-muted-foreground leading-none text-xs group-data-[loading-error]/table:text-destructive`}
+          className={`${pendingClassesMuted} max-w-full truncate text-muted-foreground leading-none text-xs group-data-[loading-error]/table:text-destructive`}
         >
           {isPending ? "Loading" : hasData ? ticker : "Error"}
         </p>

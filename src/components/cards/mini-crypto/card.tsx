@@ -85,22 +85,22 @@ export default function MiniCryptoCard({
           {/* Top line */}
           <div className="w-full flex flex-row items-center justify-between gap-3">
             <div
-              className="shrink min-w-0 flex items-center justify-start gap-1.25 text-muted-foreground text-xs md:text-sm whitespace-nowrap overflow-hidden overflow-ellipsis leading-none md:leading-none
+              className="shrink min-w-0 flex items-center justify-start gap-1.25 text-muted-foreground text-xs md:text-sm truncate leading-none md:leading-none
               group-data-[pending]/card:rounded-sm group-data-[pending]/card:text-transparent group-data-[pending]/card:bg-muted-foreground group-data-[pending]/card:animate-skeleton
               group-data-[loading-error]/card:text-destructive/60"
             >
-              <p className="shrink min-w-0 overflow-hidden overflow-ellipsis">
+              <p className="shrink min-w-0 truncate">
                 {isPending ? "Load" : ticker ? ticker : "Error"}
               </p>
               <div
                 data-negative={isChangeNegative ? true : undefined}
                 data-positive={isChangePositive ? true : undefined}
-                className="flex shrink min-w-0 overflow-hidden overflow-ellipsis items-center justify-start text-muted-foreground group-data-[loading-error]/card:text-destructive data-[negative]/card:text-destructive data-[positive]/card:text-success"
+                className="flex shrink min-w-0 truncate items-center justify-start text-muted-foreground group-data-[loading-error]/card:text-destructive data-[negative]/card:text-destructive data-[positive]/card:text-success"
               >
                 {data && (
                   <ChangeIcon className="size-3.5 md:size-4 shrink-0 -my-0.5" />
                 )}
-                <p className="shrink min-w-0 overflow-hidden overflow-ellipsis">
+                <p className="shrink min-w-0 truncate">
                   {isPending
                     ? "Load"
                     : data
@@ -115,7 +115,7 @@ export default function MiniCryptoCard({
               </div>
             </div>
             <p
-              className="shrink-0 text-muted-foreground text-xs md:text-sm whitespace-nowrap overflow-hidden overflow-ellipsis leading-none md:leading-none
+              className="shrink-0 text-muted-foreground text-xs md:text-sm truncate leading-none md:leading-none
               group-data-[pending]/card:rounded-sm group-data-[pending]/card:text-transparent group-data-[pending]/card:bg-muted-foreground group-data-[pending]/card:animate-skeleton
               group-data-[loading-error]/card:text-destructive/60"
             >
@@ -125,7 +125,7 @@ export default function MiniCryptoCard({
           {/* Bottom line */}
           <div className="w-full flex flex-row items-center justify-between gap-3">
             <p
-              className="shrink text-sm md:text-base font-semibold whitespace-nowrap overflow-hidden overflow-ellipsis leading-none md:leading-none
+              className="shrink text-sm md:text-base font-semibold truncate leading-none md:leading-none
               group-data-[pending]/card:rounded-sm group-data-[pending]/card:text-transparent group-data-[pending]/card:bg-foreground group-data-[pending]/card:animate-skeleton
               group-data-[loading-error]/card:text-destructive"
             >
@@ -136,7 +136,7 @@ export default function MiniCryptoCard({
                 : "Error"}
             </p>
             <p
-              className="shrink text-sm md:text-base font-semibold whitespace-nowrap overflow-hidden overflow-ellipsis leading-none md:leading-none
+              className="shrink text-sm md:text-base font-semibold truncate leading-none md:leading-none
               group-data-[pending]/card:rounded-sm group-data-[pending]/card:text-transparent group-data-[pending]/card:bg-foreground group-data-[pending]/card:animate-skeleton
               group-data-[loading-error]/card:text-destructive"
             >

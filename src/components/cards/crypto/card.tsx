@@ -66,19 +66,17 @@ export default function CryptoCard({
       top={
         data ? (
           <div className="min-w-0 shrink overflow-hidden max-w-full flex items-center justify-center gap-1.25">
-            <div className="flex items-center gap-1 justify-start min-w-0 shrink overflow-hidden overflow-ellipsis">
+            <div className="flex items-center gap-1 justify-start min-w-0 shrink truncate">
               <CryptoIcon cryptoName={data.symbol} className="size-4 -my-1" />
-              <p className="min-w-0 shrink overflow-hidden overflow-ellipsis">
-                {data.symbol}
-              </p>
+              <p className="min-w-0 shrink truncate">{data.symbol}</p>
             </div>
             <div
               data-negative={isChangeNegative ? true : undefined}
               data-positive={isChangePositive ? true : undefined}
-              className="flex shrink min-w-0 overflow-hidden overflow-ellipsis items-center justify-start text-muted-foreground group-data-[loading-error]:text-destructive data-[negative]:text-destructive data-[positive]:text-success"
+              className="flex shrink min-w-0 truncate items-center justify-start text-muted-foreground group-data-[loading-error]:text-destructive data-[negative]:text-destructive data-[positive]:text-success"
             >
               {data && <ChangeIcon className="size-4 shrink-0 -my-0.5" />}
-              <p className="shrink min-w-0 overflow-hidden overflow-ellipsis">
+              <p className="shrink min-w-0 truncate">
                 {isPending
                   ? "Load"
                   : data
@@ -106,7 +104,7 @@ export default function CryptoCard({
       bottom={
         data ? (
           <div className="w-full flex items-center justify-center gap-1.25">
-            <p className="shrink min-w-0 overflow-hidden overflow-ellipsis">
+            <p className="shrink min-w-0 truncate">
               {convertCurrency.symbol}
               {formatNumberTBMK(
                 data.quote[convertCurrency.ticker].market_cap,
@@ -114,9 +112,7 @@ export default function CryptoCard({
               )}
             </p>
             <p>•</p>
-            <p className="min-w-0 shrink overflow-hidden overflow-ellipsis">
-              #{data.cmc_rank}
-            </p>
+            <p className="min-w-0 shrink truncate">#{data.cmc_rank}</p>
           </div>
         ) : undefined
       }
