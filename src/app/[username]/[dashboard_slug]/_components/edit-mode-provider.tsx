@@ -1,6 +1,14 @@
 "use client";
 
-import { createContext, FC, ReactNode, useContext, useState } from "react";
+import { useCurrentDashboard } from "@/app/[username]/[dashboard_slug]/_components/current-dashboard-provider";
+import {
+  createContext,
+  FC,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 type TEditModeContext = {
   isEnabled: boolean;
@@ -18,6 +26,14 @@ export const EditModeProvider: FC<{
   children: ReactNode;
 }> = ({ children }) => {
   const [isEnabled, setIsEnabled] = useState(false);
+  const { hasCards } = useCurrentDashboard();
+
+  useEffect(() => {
+    if (!hasCards) {
+      setIsEnabled(false);
+    }
+  }, [hasCards]);
+
   return (
     <EditModeContext.Provider
       value={{

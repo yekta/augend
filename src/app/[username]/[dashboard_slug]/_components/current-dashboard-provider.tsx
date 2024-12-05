@@ -9,6 +9,10 @@ type TCurrentDashboardContext = {
   invalidateCards: () => Promise<void>;
   cancelCardsQuery: () => Promise<void>;
   isPendingCardInvalidation: boolean;
+  dashboardName?: string;
+  isPendingDashboardName: boolean;
+  isLoadingErrorDashboardName: boolean;
+  hasCards?: boolean;
 };
 
 const CurrentDashboardContext = createContext<TCurrentDashboardContext | null>(
@@ -21,10 +25,15 @@ export const CurrentDashboardProvider: FC<{
   children: ReactNode;
 }> = ({ username, dashboardSlug, children }) => {
   const utils = api.useUtils();
-  const { isPending: isPendingCardInvalidation } = api.ui.getCards.useQuery({
+  const {
+    data: dataCard,
+    isPending: isPendingCards,
+    isLoadingError: isLoadingErrorCards,
+  } = api.ui.getCards.useQuery({
     username,
     dashboardSlug,
   });
+  const dashboardName = dataCard?.dashboard?.data.dashboard.title;
   const invalidateCards = () =>
     utils.ui.getCards.invalidate({ username, dashboardSlug });
   const cancelCardsQuery = () =>
@@ -37,7 +46,18 @@ export const CurrentDashboardProvider: FC<{
         dashboardSlug,
         invalidateCards,
         cancelCardsQuery,
-        isPendingCardInvalidation,
+        isPendingCardInvalidation: isPendingCards,
+        dashboardName,
+        isPendingDashboardName: isPendingCards,
+        isLoadingErrorDashboardName: isLoadingErrorCards,
+        hasCards:
+          dataCard === null
+            ? false
+            : dataCard !== undefined
+            ? dataCard.cards.length > 0
+              ? true
+              : false
+            : undefined,
       }}
     >
       {children}

@@ -70,6 +70,7 @@ export async function getCards({
       },
       dashboard: {
         id: dashboardsTable.id,
+        title: dashboardsTable.title,
       },
       value: {
         cardTypeInputId: cardValuesTable.cardTypeInputId,

@@ -162,8 +162,7 @@ const config: Config = {
         3: "3px",
       },
       boxShadow: {
-        navbar:
-          "0rem 0rem 0.5rem 0rem, 0rem 0rem 0.75rem 0rem, 0rem 0rem 1.5rem 0rem",
+        navbar: "0rem 0rem 0.5rem 0rem, 0rem 0rem 0.75rem 0rem",
         dialog: "0rem 0.5rem 1rem 0rem",
       },
     },

@@ -3,7 +3,7 @@
 import CurrentDashboardProvider from "@/app/[username]/[dashboard_slug]/_components/current-dashboard-provider";
 import DashboardGrid from "@/app/[username]/[dashboard_slug]/_components/dashboard-grid";
 import { useDnd } from "@/app/[username]/[dashboard_slug]/_components/dnd-provider";
-import { EditBar } from "@/app/[username]/[dashboard_slug]/_components/edit-bar";
+import { DashboardTitleBar } from "@/app/[username]/[dashboard_slug]/_components/dashboard-title-bar";
 import { AddCardButton } from "@/components/cards/_utils/add-card";
 import { CardParser } from "@/components/cards/_utils/card-parser";
 import { ProvidersForCardTypes } from "@/components/cards/_utils/providers-for-card-types";
@@ -16,6 +16,7 @@ import { cleanAndSortArray } from "@/server/redis/cache-utils";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
 import { api } from "@/server/trpc/setup/react";
 import { ReactNode, useMemo } from "react";
+import EditModeProvider from "@/app/[username]/[dashboard_slug]/_components/edit-mode-provider";
 
 const componentRequiresNewRow = ["order_book", "crypto_price_chart"];
 
@@ -152,16 +153,20 @@ export default function DashboardPage({
     return ids;
   }, [cards, currencies]);
 
-  const MainProviders = ({ children }: { children: ReactNode }) => {
-    return (
-      <CurrentDashboardProvider
-        username={username}
-        dashboardSlug={dashboardSlug}
-      >
-        {children}
-      </CurrentDashboardProvider>
-    );
-  };
+  const MainProviders = useMemo(
+    () =>
+      ({ children }: { children: ReactNode }) => {
+        return (
+          <CurrentDashboardProvider
+            username={username}
+            dashboardSlug={dashboardSlug}
+          >
+            <EditModeProvider>{children}</EditModeProvider>
+          </CurrentDashboardProvider>
+        );
+      },
+    [username, dashboardSlug]
+  );
 
   if ((!dashboardIsPending && !dashboard) || cards === null) {
     return (
@@ -185,11 +190,12 @@ export default function DashboardPage({
   if (isLoadingErrorCards || isLoadingErrorDashboard) {
     return (
       <MainProviders>
-        <DashboardGrid initialIds={[]}>
-          <p className="text-destructive max-w-full px-5 text-center">
-            Something went wrong :(
-          </p>
-        </DashboardGrid>
+        <DashboardGrid
+          initialIds={[]}
+          placeholder={
+            <span className="text-destructive">Something went wrong :(</span>
+          }
+        ></DashboardGrid>
       </MainProviders>
     );
   }
@@ -226,15 +232,9 @@ export default function DashboardPage({
   if (cards.length === 0 && dashboard.isOwner) {
     return (
       <MainProviders>
-        <DashboardGrid centerItems initialIds={cards.map((c) => c.card.id)}>
-          <div className="flex col-span-12 flex-col items-center justify-center w-full text-center gap-3">
-            <h1 className="font-bold text-lg px-5">Start by adding a card</h1>
-            <AddCardButton
-              username={username}
-              dashboardSlug={dashboardSlug}
-              className="w-1/2 md:w-1/3 lg:w-1/4"
-            />
-          </div>
+        <DashboardGrid initialIds={cards.map((c) => c.card.id)}>
+          <DashboardTitleBar isOwner={dashboard.isOwner} hasCards={false} />
+          <AddCardButton username={username} dashboardSlug={dashboardSlug} />
         </DashboardGrid>
       </MainProviders>
     );
@@ -243,12 +243,14 @@ export default function DashboardPage({
   if (cards.length === 0 && !dashboard.isOwner) {
     return (
       <MainProviders>
-        <DashboardGrid centerItems initialIds={[]}>
-          <div className="flex col-span-12 flex-col items-center justify-center w-full text-center gap-3">
-            <p className="w-full text-muted-foreground max-w-full px-5">
-              This dashboard doesn't have any cards yet.
-            </p>
-          </div>
+        <DashboardGrid
+          initialIds={[]}
+          placeholder="This dashboard doesn't have any cards yet."
+        >
+          <DashboardTitleBar
+            isOwner={dashboard.isOwner}
+            hasCards={cards.length > 0}
+          />
         </DashboardGrid>
       </MainProviders>
     );
@@ -265,7 +267,10 @@ export default function DashboardPage({
         currencyPreference={currencyPreference}
       >
         <DashboardGrid initialIds={cards.map((c) => c.card.id)}>
-          {dashboard.isOwner && <EditBar />}
+          <DashboardTitleBar
+            isOwner={dashboard.isOwner}
+            hasCards={cards.length > 0}
+          />
           <Cards cards={cards} currencies={currencies} />
           {dashboard.isOwner && (
             <AddCardButton username={username} dashboardSlug={dashboardSlug} />

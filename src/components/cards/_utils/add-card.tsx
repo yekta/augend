@@ -96,7 +96,7 @@ export function AddCardButton({
         <DialogTrigger asChild>
           <CardOuterWrapper
             className={cn(
-              "col-span-6 md:col-span-4 lg:col-span-3 h-32",
+              "col-span-12 md:col-span-6 lg:col-span-4 xl:col-span-3 h-32",
               className
             )}
           >

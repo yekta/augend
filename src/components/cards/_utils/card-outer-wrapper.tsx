@@ -1,6 +1,6 @@
 "use client";
 
-import { useEditMode } from "@/components/providers/edit-mode-provider";
+import { useEditMode } from "@/app/[username]/[dashboard_slug]/_components/edit-mode-provider";
 
 import {
   dndItemType,
@@ -74,9 +74,11 @@ export default function CardOuterWrapper({
     className
   );
 
-  const { invalidateCards, isPendingCardInvalidation } = useCurrentDashboard();
+  const { invalidateCards, isPendingCardInvalidation, hasCards } =
+    useCurrentDashboard();
 
-  const { isEnabled: isEditModeEnabled } = useEditMode();
+  const { isEnabled: isEditModeEnabled, disable: disableEditMode } =
+    useEditMode();
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [dndState, setDndState] = useState<TDndState>("idle");
