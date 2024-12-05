@@ -4,6 +4,7 @@ import { useCurrentDashboard } from "@/app/[username]/[dashboard_slug]/_componen
 import CardInnerWrapper from "@/components/cards/_utils/card-inner-wrapper";
 import CardOuterWrapper from "@/components/cards/_utils/card-outer-wrapper";
 import CardValuesFormParser from "@/components/cards/_utils/values-form/card-values-form-parser";
+import { AddCardIcon } from "@/components/icons/add-card-icon";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -25,24 +26,16 @@ import { cn } from "@/lib/utils";
 import { AppRouterOutputs, AppRouterQueryResult } from "@/server/trpc/api/root";
 import { TCardValueForAddCards } from "@/server/trpc/api/routers/ui/types";
 import { api } from "@/server/trpc/setup/react";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowDownCircle, ArrowLeftIcon, PlusIcon } from "lucide-react";
-import {
-  Dispatch,
-  FormEvent,
-  SetStateAction,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import { useForm } from "react-hook-form";
+import { Dispatch, SetStateAction, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
-import { z } from "zod";
 
 type AddCardButtonProps = {
   username: string;
   dashboardSlug: string;
   className?: string;
+  variant?: "full" | "icon";
+  xOrderPreference?: "first" | "last";
 };
 
 type TSelectedCardType = AppRouterOutputs["ui"]["getCardTypes"][number];
@@ -51,6 +44,8 @@ export function AddCardButton({
   dashboardSlug,
   username,
   className,
+  variant = "full",
+  xOrderPreference = "last",
 }: AddCardButtonProps) {
   const [open, setOpen] = useState(false);
   const [selectedCardType, setSelectedCardType] =
@@ -87,6 +82,7 @@ export function AddCardButton({
       cardTypeId: selectedCardType?.cardType.id ?? "",
       values: _values,
       dashboardSlug,
+      xOrderPreference: xOrderPreference,
     });
   };
 
@@ -94,20 +90,28 @@ export function AddCardButton({
     <>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <CardOuterWrapper
-            className={cn(
-              "col-span-12 md:col-span-6 lg:col-span-4 xl:col-span-3 h-32",
-              className
-            )}
-          >
-            <CardInnerWrapper
-              className="flex-1 px-8 font-medium py-3 flex flex-row gap-1 items-center text-muted-foreground justify-center 
-              not-touch:group-hover/card:bg-background-hover group-active/card:bg-background-hover"
+          {variant === "icon" ? (
+            <Button size="icon" variant="outline" className="size-9">
+              <div className="size-5 transition data-[editing]:rotate-90">
+                <AddCardIcon className="size-full" />
+              </div>
+            </Button>
+          ) : (
+            <CardOuterWrapper
+              className={cn(
+                "col-span-12 md:col-span-6 lg:col-span-4 xl:col-span-3 h-32",
+                className
+              )}
             >
-              <PlusIcon className="size-5 shrink-0 text-muted-foreground -ml-1" />
-              <p className="min-w-0 truncate">Add card</p>
-            </CardInnerWrapper>
-          </CardOuterWrapper>
+              <CardInnerWrapper
+                className="flex-1 px-8 font-medium py-3 flex flex-row gap-1 items-center text-muted-foreground justify-center 
+                not-touch:group-hover/card:bg-background-hover group-active/card:bg-background-hover"
+              >
+                <PlusIcon className="size-5 shrink-0 text-muted-foreground -ml-1" />
+                <p className="min-w-0 truncate">Add card</p>
+              </CardInnerWrapper>
+            </CardOuterWrapper>
+          )}
         </DialogTrigger>
         <DialogContent
           variant="styleless"

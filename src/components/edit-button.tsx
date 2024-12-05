@@ -15,11 +15,11 @@ export const EditButton = ({ className }: Props) => {
       onClick={() => (isEnabled ? disable() : enable())}
       size="icon"
       variant="outline"
-      className={cn("size-8", className)}
+      className={cn("size-9", className)}
     >
       <div
         data-editing={isEnabled ? true : undefined}
-        className="size-4 transition data-[editing]:rotate-90"
+        className="size-5 transition data-[editing]:rotate-90"
       >
         {isEnabled ? (
           <XIcon className="size-full" />

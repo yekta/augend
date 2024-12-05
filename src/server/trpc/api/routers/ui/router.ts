@@ -163,11 +163,12 @@ export const uiRouter = createTRPCRouter({
         cardTypeId: z.string(),
         dashboardSlug: z.string(),
         xOrder: z.number().optional(),
+        xOrderPreference: z.enum(["first", "last"]).optional(),
         values: z.array(CardValueForAddCardsSchema),
       })
     )
     .mutation(async function ({
-      input: { cardTypeId, dashboardSlug, xOrder, values },
+      input: { cardTypeId, dashboardSlug, xOrder, values, xOrderPreference },
       ctx: { session },
     }) {
       // If there is no user
@@ -208,7 +209,9 @@ export const uiRouter = createTRPCRouter({
       }
 
       let xOrderSelected = xOrder;
-      if (xOrder === undefined) {
+      if (xOrder === undefined && xOrderPreference === "first") {
+        xOrderSelected = 0;
+      } else if (xOrder === undefined) {
         const maximumXOrder = await getMaximumXOrderForDashboard({
           dashboardId: dashboard.data.dashboard.id,
         });
