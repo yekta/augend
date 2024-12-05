@@ -23,23 +23,12 @@ const componentRequiresNewRow = ["order_book", "crypto_price_chart"];
 export default function DashboardPage({
   username,
   dashboardSlug,
-  dashboardInitialData,
   cardsInitialData,
 }: {
   username: string;
   dashboardSlug: string;
-  dashboardInitialData?: AppRouterOutputs["ui"]["getDashboard"];
   cardsInitialData?: AppRouterOutputs["ui"]["getCards"];
 }) {
-  const {
-    data: dashboard,
-    isPending: dashboardIsPending,
-    isLoadingError: isLoadingErrorDashboard,
-  } = api.ui.getDashboard.useQuery(
-    { username, dashboardSlug },
-    { initialData: dashboardInitialData }
-  );
-
   const { data: cardsData, isLoadingError: isLoadingErrorCards } =
     api.ui.getCards.useQuery(
       { username, dashboardSlug },
@@ -49,6 +38,7 @@ export default function DashboardPage({
     );
 
   const cards = cardsData?.cards;
+  const dashboard = cardsData?.dashboard;
   const currencies = cardsData?.currencies;
 
   const firstCard = cards && cards.length > 0 ? cards[0] : undefined;
@@ -168,7 +158,7 @@ export default function DashboardPage({
     [username, dashboardSlug]
   );
 
-  if ((!dashboardIsPending && !dashboard) || cards === null) {
+  if (!dashboard || cards === null) {
     return (
       <MainProviders>
         <div className="w-full flex-1 flex flex-col items-center justify-center p-5 pb-[calc(5vh+1.5rem)] text-center break-words">
@@ -187,7 +177,7 @@ export default function DashboardPage({
     );
   }
 
-  if (isLoadingErrorCards || isLoadingErrorDashboard) {
+  if (isLoadingErrorCards) {
     return (
       <MainProviders>
         <DashboardGrid
