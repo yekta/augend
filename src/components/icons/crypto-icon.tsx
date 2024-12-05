@@ -3,13 +3,11 @@ import { cn } from "@/lib/utils";
 import { BanIcon } from "lucide-react";
 import { ComponentProps, useMemo, useState } from "react";
 
-const classInverter: Record<string, string> = {
-  "text-foreground": "bg-foreground",
-  "text-background": "bg-background",
-  "text-primary": "bg-primary",
-  "text-destructive": "bg-destructive",
-  "text-muted-foreground": "bg-muted-foreground",
-  "text-secondary": "bg-secondary",
+const classNameToFilter: Record<string, string> = {
+  "text-foreground":
+    "[filter:brightness(0)_saturate(100%)_invert(4%)_sepia(6%)_saturate(2739%)_hue-rotate(211deg)_brightness(97%)_contrast(100%)] dark:[filter:brightness(0)_saturate(100%)_invert(94%)_sepia(6%)_saturate(2076%)_hue-rotate(192deg)_brightness(101%)_contrast(92%)]",
+  "text-background":
+    "[filter:brightness(0)_saturate(100%)_invert(100%)] dark:[filter:brightness(0)_saturate(100%)_invert(4%)_sepia(6%)_saturate(2739%)_hue-rotate(211deg)_brightness(97%)_contrast(100%)]",
 };
 
 const nameAlts: Record<string, string> = {
@@ -37,15 +35,6 @@ export default function CryptoIcon({
   const _name = cryptoName ? nameAlts[cryptoName] || cryptoName : cryptoName;
   const defaultClassName = "shrink-0 size-6";
   const [hasError, setHasError] = useState(false);
-  const divClassName = useMemo(() => {
-    const classNames = (className?.split(" ") || []).map((c) => c.trim());
-    const index = classNames.findIndex((c) => classInverter[c]);
-    let divClassName = "";
-    if (index !== -1) {
-      divClassName = classInverter[classNames[index]];
-    }
-    return divClassName;
-  }, [className]);
 
   if (!_name) {
     return <BanIcon className={cn(defaultClassName, className)} />;
@@ -78,15 +67,19 @@ export default function CryptoIcon({
 
   if (variant === "mono") {
     return (
-      <div className={cn(defaultClassName, className)}>
-        <div
-          className={cn("bg-foreground size-full", divClassName)}
-          style={{
-            maskSize: "100%",
-            maskImage: `url(${env.NEXT_PUBLIC_BUCKET_URL}/icons/crypto/${category}/mono/${_name}.svg)`,
-          }}
-        />
-      </div>
+      <img
+        loading="lazy"
+        src={`${env.NEXT_PUBLIC_BUCKET_URL}/icons/crypto/${category}/mono/${_name}.svg`}
+        className={cn(
+          defaultClassName,
+          className,
+          classNameToFilter["text-foreground"],
+          className?.includes("text-background") &&
+            classNameToFilter["text-background"]
+        )}
+        alt={_name}
+        onError={() => setHasError(true)}
+      />
     );
   }
   return (
