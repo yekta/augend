@@ -29,6 +29,13 @@
       "when": 1732917952835,
       "tag": "0003_naive_sauron",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1733430153239,
+      "tag": "0004_create_main_dashboard_v2",
+      "breakpoints": true
     }
   ]
 }
