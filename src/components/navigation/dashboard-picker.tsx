@@ -58,7 +58,7 @@ export function DashboardPicker({}: Props) {
   );
 
   const [selectedDashboard, setSelectedDashboard] = useState(
-    data?.dashboards?.[0]
+    data?.dashboards && data.dashboards.length > 0
       ? {
           title: data.dashboards[0].dashboard.title,
           slug: data.dashboards[0].dashboard.slug,
