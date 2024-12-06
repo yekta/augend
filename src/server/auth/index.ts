@@ -55,20 +55,27 @@ authProviders.push(
     },
     async authorize(credentials) {
       try {
+        console.log("[AUTHORIZE]: before cookies");
         const cookiesObj = await cookies();
+        console.log("[AUTHORIZE]: after cookies");
 
         const csrf = cookiesObj.get("authjs.csrf-token");
         const csrfTokenRaw = csrf ? decodeURI(csrf.value) : null;
+        console.log("[AUTHORIZE]: before CSRF");
         if (!csrfTokenRaw) return null;
         const csrfArr = csrfTokenRaw?.split("|");
         if (!csrfArr || csrfArr.length < 1) return null;
         const csrfToken = csrfArr[0];
         if (!csrfToken) return null;
 
+        console.log("[AUTHORIZE]: after CSRF");
+
         const siwe = new SiweMessage(
           JSON.parse((credentials?.message as string) || "{}")
         );
         const nextAuthUrl = new URL(env.AUTH_URL);
+
+        console.log("[AUTHORIZE]: before SIWE");
 
         const result = await siwe.verify({
           signature: (credentials?.signature as string) || "",
@@ -80,7 +87,11 @@ authProviders.push(
           return null;
         }
 
+        console.log("[AUTHORIZE]: before ethereumAddressToUUID");
+
         const id = ethereumAddressToUUID(siwe.address);
+
+        console.log("[AUTHORIZE]: after ethereumAddressToUUID");
         let user = await getUser({ userId: id });
 
         if (!user) {
