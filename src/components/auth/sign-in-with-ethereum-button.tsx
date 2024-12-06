@@ -3,6 +3,7 @@
 import ProviderIcon from "@/components/icons/provider-icon";
 import { Button } from "@/components/ui/button";
 import { mainDashboardSlug, siteTitle } from "@/lib/constants";
+import { env } from "@/lib/env";
 import { cn } from "@/lib/utils";
 import { api } from "@/server/trpc/setup/react";
 import { LoaderIcon } from "lucide-react";
@@ -48,7 +49,9 @@ export default function SignInWithEthereumButton({
       if (!isConnected) {
         connect({
           chainId: mainnet.id,
-          connector: injected(),
+          connector: hasInjectedWallet
+            ? injected()
+            : walletConnect({ projectId: env.NEXT_PUBLIC_REOWN_PROJECT_ID }),
         });
         setIsPending(false);
         return;
@@ -85,29 +88,25 @@ export default function SignInWithEthereumButton({
   };
 
   return (
-    hasInjectedWallet && (
-      <form className={cn("w-full", className)} onSubmit={onSubmit}>
-        <Button
-          type="submit"
-          variant={isConnected ? "success" : "ethereum"}
-          className="w-full px-10"
-          data-connected={isConnected ? true : false}
-          state={isPending ? "loading" : undefined}
-        >
-          <div className="absolute left-2.25 top-1/2 -translate-y-1/2 size-6 flex items-center justify-center">
-            {isPending && (
-              <LoaderIcon className="size-full p-0.5 animate-spin" />
-            )}
-            {!isPending && (
-              <ProviderIcon
-                className="size-full"
-                provider="ethereum"
-              ></ProviderIcon>
-            )}
-          </div>
-          {isConnected ? "Sign In" : "Continue with Ethereum"}
-        </Button>
-      </form>
-    )
+    <form className={cn("w-full", className)} onSubmit={onSubmit}>
+      <Button
+        type="submit"
+        variant={isConnected ? "success" : "ethereum"}
+        className="w-full px-10"
+        data-connected={isConnected ? true : false}
+        state={isPending ? "loading" : undefined}
+      >
+        <div className="absolute left-2.25 top-1/2 -translate-y-1/2 size-6 flex items-center justify-center">
+          {isPending && <LoaderIcon className="size-full p-0.5 animate-spin" />}
+          {!isPending && (
+            <ProviderIcon
+              className="size-full"
+              provider="ethereum"
+            ></ProviderIcon>
+          )}
+        </div>
+        {isConnected ? "Sign In" : "Continue with Ethereum"}
+      </Button>
+    </form>
   );
 }
