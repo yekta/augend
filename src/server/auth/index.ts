@@ -60,8 +60,9 @@ authProviders.push(
         console.log("[AUTHORIZE]: after cookies");
 
         const csrf = cookiesObj.get("authjs.csrf-token");
+        console.log("[AUTHORIZE]: after csrf cookie", csrf);
         const csrfTokenRaw = csrf ? decodeURI(csrf.value) : null;
-        console.log("[AUTHORIZE]: before CSRF");
+        console.log("[AUTHORIZE]: before CSRF", csrfTokenRaw);
         if (!csrfTokenRaw) return null;
         const csrfArr = csrfTokenRaw?.split("|");
         if (!csrfArr || csrfArr.length < 1) return null;
