@@ -28,6 +28,7 @@ import { LoaderIcon, XIcon } from "lucide-react";
 import Link from "next/link";
 import { ComponentProps, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { ErrorLine } from "@/components/error-line";
 
 type TSharedProps = {
   cardId?: string;
@@ -86,12 +87,15 @@ export default function CardOuterWrapper({
   const [cardSize, setCardSize] = useState<TSize>(defaultCardSize);
   const { instanceId } = useDnd();
 
-  const { mutate: deleteCard, isPending: isPendingDelete } =
-    api.ui.deleteCards.useMutation({
-      onSuccess: async () => {
-        await invalidateCards();
-      },
-    });
+  const {
+    mutate: deleteCard,
+    isPending: isPendingDelete,
+    error: errorDelete,
+  } = api.ui.deleteCards.useMutation({
+    onSuccess: async () => {
+      await invalidateCards();
+    },
+  });
 
   const isPendingAny = isPendingDelete || isPendingCardInvalidation;
 
@@ -212,6 +216,7 @@ export default function CardOuterWrapper({
                   this card?
                 </DialogDescription>
               </DialogHeader>
+              {errorDelete && <ErrorLine message={errorDelete.message} />}
               <div className="flex justify-end flex-wrap gap-2">
                 <Button
                   onClick={() => setIsDialogOpen(false)}

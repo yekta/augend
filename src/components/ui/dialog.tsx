@@ -65,7 +65,7 @@ const DialogContent = React.forwardRef<
       >
         <div
           className={cn(
-            "w-full flex flex-col max-w-[calc(100vw-1rem)]",
+            "w-full flex flex-col max-w-[calc(100vw-1rem)] gap-4",
             classNameInnerWrapper
           )}
         >
