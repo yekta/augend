@@ -21,6 +21,7 @@ export const defaultQueryOptions = {
 };
 
 export const siteTitle = "Augend";
+export const siteTagline = "Track financial assets";
 export const siteDescription = "Track financial assets.";
 export const mainDashboardSlug = "main";
 

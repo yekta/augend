@@ -15,6 +15,7 @@ import {
   defaultCurrencyPreference,
   mainDashboardSlug,
   siteDescription,
+  siteTagline,
   siteTitle,
 } from "@/lib/constants";
 import { auth } from "@/server/auth";
@@ -25,7 +26,7 @@ import { redirect } from "next/navigation";
 import { ReactNode } from "react";
 
 export const metadata: Metadata = {
-  title: siteTitle,
+  title: `${siteTitle} | ${siteTagline}`,
   description: siteDescription,
 };
 
