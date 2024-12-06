@@ -9,9 +9,9 @@ import { LoaderIcon } from "lucide-react";
 import { getCsrfToken, signIn } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { SiweMessage } from "siwe";
-import { useAccount, useConnect, useDisconnect, useSignMessage } from "wagmi";
+import { useAccount, useConnect, useSignMessage } from "wagmi";
 import { mainnet } from "wagmi/chains";
-import { injected } from "wagmi/connectors";
+import { injected, walletConnect } from "wagmi/connectors";
 
 type Props = {
   callbackUrl?: string;
@@ -46,7 +46,10 @@ export default function SignInWithEthereumButton({
     setIsPending(true);
     try {
       if (!isConnected) {
-        connect({ chainId: mainnet.id, connector: injected() });
+        connect({
+          chainId: mainnet.id,
+          connector: injected(),
+        });
         setIsPending(false);
         return;
       }
