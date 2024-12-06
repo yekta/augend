@@ -1,17 +1,15 @@
 "use client";
 
-import { signInWithEthereumAction } from "@/components/auth/actions";
 import ProviderIcon from "@/components/icons/provider-icon";
 import { Button } from "@/components/ui/button";
 import { mainDashboardSlug, siteTitle } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { api } from "@/server/trpc/setup/react";
 import { LoaderIcon } from "lucide-react";
-import { getCsrfToken, signIn, useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { getCsrfToken, signIn } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { SiweMessage } from "siwe";
-import { useAccount, useConnect, useSignMessage } from "wagmi";
+import { useAccount, useConnect, useDisconnect, useSignMessage } from "wagmi";
 import { mainnet } from "wagmi/chains";
 import { injected } from "wagmi/connectors";
 
@@ -27,7 +25,6 @@ export default function SignInWithEthereumButton({
   const { signMessageAsync } = useSignMessage();
   const { address, isConnected, chainId } = useAccount();
   const { connect } = useConnect();
-  const { data: session, status } = useSession();
   const [isPending, setIsPending] = useState(false);
   const utils = api.useUtils();
 
@@ -49,8 +46,11 @@ export default function SignInWithEthereumButton({
     setIsPending(true);
     try {
       if (!isConnected) {
+        setIsPending(false);
         connect({ chainId: mainnet.id, connector: injected() });
+        return;
       }
+      const csrfToken = await getCsrfToken();
       const message = new SiweMessage({
         domain: window.location.host,
         address: address,
@@ -58,7 +58,7 @@ export default function SignInWithEthereumButton({
         uri: window.location.origin,
         version: "1",
         chainId: chainId,
-        nonce: "asdfgasdfasdfasdfasdfasdfasdfasdfasdfasdf",
+        nonce: csrfToken,
       });
       const signature = await signMessageAsync({
         message: message.prepareMessage(),
@@ -101,7 +101,7 @@ export default function SignInWithEthereumButton({
               ></ProviderIcon>
             )}
           </div>
-          Continue with Ethereum
+          {isConnected ? "Sign In" : "Continue with Ethereum"}
         </Button>
       </form>
     )

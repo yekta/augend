@@ -38,12 +38,15 @@ export async function getUser({
 export async function createUser({
   userId,
   name,
+  ethereumAddress,
 }: {
   userId: string;
   name: string;
+  ethereumAddress?: string;
 }) {
   await db.insert(usersTable).values({
     id: userId,
     name,
+    ethereumAddress,
   });
 }

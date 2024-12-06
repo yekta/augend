@@ -1,0 +1,1 @@
+ALTER TABLE "users" ADD CONSTRAINT "users_ethereum_address_unique" UNIQUE("ethereum_address");

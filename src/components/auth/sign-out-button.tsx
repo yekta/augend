@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { LoaderIcon } from "lucide-react";
 import { useActionState } from "react";
+import { useDisconnect } from "wagmi";
 
 type Props = {
   callbackUrl?: string;
@@ -17,9 +18,16 @@ export default function SignOutButton({ callbackUrl, className }: Props) {
     () => signOutAction({ callbackUrl }),
     null
   );
+  const { disconnect } = useDisconnect();
 
   return (
-    <form className={cn("w-full", className)} action={action}>
+    <form
+      className={cn("w-full", className)}
+      action={action}
+      onSubmit={() => {
+        disconnect();
+      }}
+    >
       <Button
         className="w-full px-10"
         state={isPending ? "loading" : undefined}

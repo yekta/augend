@@ -21,6 +21,7 @@ import { cache } from "react";
 import { SiweMessage } from "siwe";
 import { createUser, getUser } from "@/server/db/repo/user";
 import { encode as defaultEncode } from "next-auth/jwt";
+import { cookies, headers } from "next/headers";
 
 declare module "next-auth" {
   interface Session extends DefaultSession {
@@ -64,6 +65,16 @@ authProviders.push(
     },
     async authorize(credentials) {
       try {
+        const cookiesObj = await cookies();
+
+        const csrf = cookiesObj.get("authjs.csrf-token");
+        const csrfTokenRaw = csrf ? decodeURI(csrf.value) : null;
+        if (!csrfTokenRaw) return null;
+        const csrfArr = csrfTokenRaw?.split("|");
+        if (!csrfArr || csrfArr.length < 1) return null;
+        const csrfToken = csrfArr[0];
+        if (!csrfToken) return null;
+
         const siwe = new SiweMessage(
           JSON.parse((credentials?.message as string) || "{}")
         );
@@ -72,22 +83,30 @@ authProviders.push(
         const result = await siwe.verify({
           signature: (credentials?.signature as string) || "",
           domain: nextAuthUrl.host,
-          nonce: "asdfgasdfasdfasdfasdfasdfasdfasdfasdfasdf",
+          nonce: csrfToken,
         });
 
-        const id = ethereumAddressToUUID(siwe.address);
+        if (!result.success) {
+          return null;
+        }
 
+        const id = ethereumAddressToUUID(siwe.address);
         let user = await getUser({ userId: id });
 
         if (!user) {
-          await createUser({ userId: id, name: siwe.address });
+          await createUser({
+            userId: id,
+            name: siwe.address,
+            ethereumAddress: siwe.address,
+          });
           user = await getUser({ userId: id });
         }
 
-        if (result.success) {
-          return user;
+        if (!user) {
+          return null;
         }
-        return null;
+
+        return user;
       } catch (e) {
         return null;
       }

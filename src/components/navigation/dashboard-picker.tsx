@@ -107,7 +107,7 @@ export function DashboardPicker({}: Props) {
               className="font-semibold w-36 md:w-44 text-left justify-between items-center gap-1 group/trigger px-2.5 py-2.5"
               data-pending={isPending ? true : undefined}
               data-loading-error={isHardError ? true : undefined}
-              disabled={isPending || isHardError || data === null}
+              disabled={isPending || isHardError || selectedDashboard === null}
             >
               <p
                 className="truncate pointer-events-none select-none group-data-[pending]/trigger:text-transparent group-data-[pending]/trigger:bg-foreground 

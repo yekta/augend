@@ -1,0 +1,1 @@
+ALTER TABLE "users" ADD COLUMN "ethereum_address" varchar(42);

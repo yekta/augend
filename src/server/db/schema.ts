@@ -69,6 +69,7 @@ export const usersTable = pgTable(
       .$defaultFn(() => crypto.randomUUID().replaceAll("-", "").slice(0, 20)),
     email: text("email").unique(),
     emailVerified: timestamp("emailVerified", { mode: "date" }),
+    ethereumAddress: varchar("ethereum_address", { length: 42 }).unique(),
     image: text("image"),
     primaryCurrencyId: uuid("primary_currency_id")
       .notNull()
@@ -87,6 +88,9 @@ export const usersTable = pgTable(
   (table) => ({
     usernameIdx: index("users_username_idx").on(table.username),
     emailIdx: index("users_email_idx").on(table.email),
+    ethereumAddressIdx: index("users_ethereum_address_idx").on(
+      table.ethereumAddress
+    ),
   })
 );
 

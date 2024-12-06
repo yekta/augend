@@ -43,6 +43,27 @@
       "when": 1733437223147,
       "tag": "0005_broad_silver_samurai",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1733467025669,
+      "tag": "0006_mighty_valkyrie",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1733467049646,
+      "tag": "0007_aspiring_bloodstrike",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1733467068056,
+      "tag": "0008_simple_paladin",
+      "breakpoints": true
     }
   ]
 }
