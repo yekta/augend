@@ -16,7 +16,7 @@ export function AddCardIcon({ className }: ComponentProps<"svg"> & {}) {
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="2"
-        d="M22 14v4a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3h6m7 0v4m0 0v4m0-4h4m-4 0h-4"
+        d="M22 15v2a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3h6m7 0v4m0 0v4m0-4h4m-4 0h-4"
       />
     </svg>
   );

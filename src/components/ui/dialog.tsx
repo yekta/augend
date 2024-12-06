@@ -48,8 +48,10 @@ const dialogContentVariants = cva(
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> &
-    VariantProps<typeof dialogContentVariants>
->(({ className, variant, children, ...props }, ref) => (
+    VariantProps<typeof dialogContentVariants> & {
+      classNameInnerWrapper?: string;
+    }
+>(({ className, classNameInnerWrapper, variant, children, ...props }, ref) => (
   <DialogPortal>
     <DialogOverlay>
       <DialogPrimitive.Content
@@ -61,7 +63,12 @@ const DialogContent = React.forwardRef<
         )}
         {...props}
       >
-        <div className="w-full flex flex-col max-w-[calc(100vw-1rem)]">
+        <div
+          className={cn(
+            "w-full flex flex-col max-w-[calc(100vw-1rem)]",
+            classNameInnerWrapper
+          )}
+        >
           {children}
           {variant !== "styleless" && (
             <DialogPrimitive.Close
@@ -83,7 +90,7 @@ const DialogHeader = ({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn("flex flex-col gap-1", className)} {...props} />
+  <div className={cn("flex flex-col gap-0.5", className)} {...props} />
 );
 DialogHeader.displayName = "DialogHeader";
 

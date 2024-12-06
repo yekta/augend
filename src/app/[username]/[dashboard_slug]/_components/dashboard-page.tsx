@@ -2,8 +2,9 @@
 
 import CurrentDashboardProvider from "@/app/[username]/[dashboard_slug]/_components/current-dashboard-provider";
 import DashboardGrid from "@/app/[username]/[dashboard_slug]/_components/dashboard-grid";
-import { useDnd } from "@/app/[username]/[dashboard_slug]/_components/dnd-provider";
 import { DashboardTitleBar } from "@/app/[username]/[dashboard_slug]/_components/dashboard-title-bar";
+import { useDnd } from "@/app/[username]/[dashboard_slug]/_components/dnd-provider";
+import EditModeProvider from "@/app/[username]/[dashboard_slug]/_components/edit-mode-provider";
 import { AddCardButton } from "@/components/cards/_utils/add-card";
 import { CardParser } from "@/components/cards/_utils/card-parser";
 import { ProvidersForCardTypes } from "@/components/cards/_utils/providers-for-card-types";
@@ -16,7 +17,6 @@ import { cleanAndSortArray } from "@/server/redis/cache-utils";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
 import { api } from "@/server/trpc/setup/react";
 import { ReactNode, useMemo } from "react";
-import EditModeProvider from "@/app/[username]/[dashboard_slug]/_components/edit-mode-provider";
 
 const componentRequiresNewRow = ["order_book", "crypto_price_chart"];
 

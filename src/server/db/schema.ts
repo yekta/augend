@@ -201,7 +201,7 @@ export const dashboardsTable = pgTable(
       .notNull()
       .references(() => usersTable.id),
     title: varchar("title", { ...mediumText }).notNull(),
-    slug: text("slug").notNull(),
+    slug: varchar("slug", { ...mediumText }).notNull(),
     icon: text("icon").default("default").notNull(),
     isMain: boolean("is_main").notNull().default(false),
     isPublic: boolean("is_public").notNull().default(false),

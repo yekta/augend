@@ -36,6 +36,13 @@
       "when": 1733430153239,
       "tag": "0004_create_main_dashboard_v2",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1733437223147,
+      "tag": "0005_broad_silver_samurai",
+      "breakpoints": true
     }
   ]
 }

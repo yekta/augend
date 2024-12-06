@@ -105,7 +105,7 @@ export async function getCards({
     .where(and(...whereFilters))
     .orderBy(
       asc(cardsTable.xOrder),
-      desc(cardsTable.updatedAt),
+      desc(cardsTable.createdAt),
       desc(cardsTable.id)
     );
   const editedRes = isOwner
@@ -227,6 +227,29 @@ export async function reorderCards({
     .where(
       and(inArray(cardsTable.id, ids), cardsDashboardBelongsToUser(userId))
     );
+}
+
+export async function getMaximumCardXOrder({
+  dashboardId,
+}: {
+  dashboardId: string;
+}) {
+  const res = await db
+    .select({
+      xOrder: cardsTable.xOrder,
+    })
+    .from(cardsTable)
+    .innerJoin(dashboardsTable, eq(cardsTable.dashboardId, dashboardsTable.id))
+    .where(
+      and(
+        eq(cardsTable.dashboardId, dashboardId),
+        isNull(dashboardsTable.deletedAt)
+      )
+    )
+    .orderBy(desc(cardsTable.xOrder))
+    .limit(1);
+  if (res.length === 0) return -1;
+  return res[0].xOrder;
 }
 
 type TCurrencyAlias =

@@ -4,15 +4,18 @@ import {
   createCard,
   deleteCards,
   getCards,
+  getMaximumCardXOrder,
   reorderCards,
 } from "@/server/db/repo/card";
 import { getCardTypes } from "@/server/db/repo/card_types";
 import { createCardValues } from "@/server/db/repo/card_values";
 import { getCurrencies } from "@/server/db/repo/currencies";
 import {
+  createDashboard,
   getDashboard,
   getDashboards,
-  getMaximumXOrderForDashboard,
+  getMaximumDashboardXOrder,
+  isDashboardSlugAvailable,
 } from "@/server/db/repo/dashboard";
 import { getUser } from "@/server/db/repo/user";
 import { CardValueForAddCardsSchema } from "@/server/trpc/api/routers/ui/types";
@@ -73,7 +76,10 @@ export const uiRouter = createTRPCRouter({
         isOwner,
       });
 
-      return result;
+      return {
+        dashboards: result,
+        isOwner,
+      };
     }),
   getCards: publicProcedure
     .input(
@@ -200,23 +206,16 @@ export const uiRouter = createTRPCRouter({
         });
       }
 
-      // If dashboard does not belong to user
-      if (dashboard.data.user.username !== user.username) {
-        throw new TRPCError({
-          message: "Unauthorized",
-          code: "UNAUTHORIZED",
-        });
-      }
-
       let xOrderSelected = xOrder;
       if (xOrder === undefined && xOrderPreference === "first") {
         xOrderSelected = 0;
       } else if (xOrder === undefined) {
-        const maximumXOrder = await getMaximumXOrderForDashboard({
+        const maximumXOrder = await getMaximumCardXOrder({
           dashboardId: dashboard.data.dashboard.id,
         });
         xOrderSelected = maximumXOrder + 1;
       }
+
       if (xOrderSelected === undefined) {
         throw new TRPCError({
           message: "Invalid xOrder",
@@ -280,4 +279,68 @@ export const uiRouter = createTRPCRouter({
       await reorderCards({ userId, orderObjects });
       return true;
     }),
+  createDashboard: publicProcedure
+    .input(
+      z.object({
+        title: z.string(),
+        icon: z.string().optional(),
+        xOrder: z.number().optional(),
+      })
+    )
+    .mutation(async function ({ input: { title, icon, xOrder }, ctx }) {
+      const { session } = ctx;
+      if (!session || session.user.id === undefined) {
+        throw new TRPCError({
+          message: "Unauthorized",
+          code: "UNAUTHORIZED",
+        });
+      }
+
+      let slug = slugify(title);
+      const [isAvailable, maximumXOrder] = await Promise.all([
+        isDashboardSlugAvailable({
+          slug,
+          userId: session.user.id,
+        }),
+        getMaximumDashboardXOrder({ userId: session.user.id }),
+      ]);
+
+      if (!isAvailable) {
+        slug = addRandomStringToSlug(slug);
+      }
+
+      const dashboardId = await createDashboard({
+        userId: session.user.id,
+        slug,
+        title,
+        icon,
+        xOrder: xOrder !== undefined ? xOrder : maximumXOrder + 1,
+      });
+
+      return {
+        dashboardId,
+        slug,
+        title,
+      };
+    }),
 });
+
+function slugify(str: string) {
+  return (
+    str
+      .toLowerCase()
+      .trim()
+      // First remove anything that isn't alphanumeric or spaces
+      .replace(/[^a-z0-9 ]/g, "")
+      .replace(/\s+/g, " ")
+      // Replace multiple spaces with single space
+      .replace(/\s+/g, " ")
+      // Then replace spaces with hyphens
+      .replace(/ /g, "-")
+  );
+}
+
+function addRandomStringToSlug(slug: string) {
+  const uuid = crypto.randomUUID();
+  return `${slug}-${uuid.slice(0, 4)}`;
+}
