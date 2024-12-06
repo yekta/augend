@@ -60,13 +60,13 @@ input[type="number"]::-webkit-outer-spin-button {
     --index-neutral: 50 100% 60%;
     --index-greed: 120 50% 55%;
 
-    --google: 120 40% 85%;
-    --google-foreground: 250 25% 4%;
+    --google: 250 25% 4%;
+    --google-foreground: 0 0% 100%;
     --discord: 235 86% 65%;
     --discord-foreground: 0 0% 100%;
     --github: 0 0% 0%;
     --github-foreground: 0 0% 100%;
-    --ethereum: 265 86% 60%;
+    --ethereum: 265 55% 50%;
     --ethereum-foreground: 0 0% 100%;
 
     --barrier: 0 0% 0%;

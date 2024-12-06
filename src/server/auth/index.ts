@@ -15,7 +15,6 @@ import NextAuth, { DefaultSession } from "next-auth";
 import type { Provider as AuthProvider } from "next-auth/providers";
 import CredentialsProvider from "next-auth/providers/credentials";
 import Discord from "next-auth/providers/discord";
-import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 import { cache } from "react";
 import { SiweMessage } from "siwe";
@@ -37,15 +36,6 @@ if (env.AUTH_GOOGLE_ID && env.AUTH_GOOGLE_SECRET) {
 }
 if (env.AUTH_DISCORD_ID && env.AUTH_DISCORD_SECRET) {
   authProviders.push(Discord({}));
-}
-if (env.AUTH_GITHUB_ID && env.AUTH_GITHUB_SECRET) {
-  authProviders.push(GitHub({ allowDangerousEmailAccountLinking: true }));
-}
-if (authProviders.length === 0) {
-  throw new Error(
-    `No OAuth providers configured. Set one of the following pair of environment variables in your env.local file:
-    AUTH_GOOGLE_ID and AUTH_GOOGLE_SECRET, AUTH_GITHUB_ID and AUTH_GITHUB_SECRET, or AUTH_DISCORD_ID and AUTH_DISCORD_SECRET.`
-  );
 }
 
 authProviders.push(

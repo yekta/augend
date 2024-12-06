@@ -46,8 +46,8 @@ export default function SignInWithEthereumButton({
     setIsPending(true);
     try {
       if (!isConnected) {
-        setIsPending(false);
         connect({ chainId: mainnet.id, connector: injected() });
+        setIsPending(false);
         return;
       }
       const csrfToken = await getCsrfToken();
@@ -86,8 +86,9 @@ export default function SignInWithEthereumButton({
       <form className={cn("w-full", className)} onSubmit={onSubmit}>
         <Button
           type="submit"
-          variant="ethereum"
+          variant={isConnected ? "success" : "ethereum"}
           className="w-full px-10"
+          data-connected={isConnected ? true : false}
           state={isPending ? "loading" : undefined}
         >
           <div className="absolute left-2.25 top-1/2 -translate-y-1/2 size-6 flex items-center justify-center">

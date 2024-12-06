@@ -39,7 +39,7 @@ import { z } from "zod";
 
 type Props = {};
 
-export function DashboardPicker({}: Props) {
+export function DashboardSelector({}: Props) {
   const pathname = usePathname();
   const arr = pathname.split("/");
   const username = arr.length > 1 ? pathname.split("/")[1] : undefined;
@@ -80,11 +80,21 @@ export function DashboardPicker({}: Props) {
     utils.ui.getDashboards.invalidate({ username });
   };
 
+  const [firstCheckAfterDataCompleted, setFirstCheckAfterDataCompleted] =
+    useState(false);
+
+  useEffect(() => {
+    if (firstCheckAfterDataCompleted) {
+      setIsDropdownOpen(false);
+    }
+  }, [data]);
+
   useEffect(() => {
     if (!data) return;
     const dashboard = data.dashboards.find(
       (d) => d.dashboard.slug === dashboardSlug
     );
+    setFirstCheckAfterDataCompleted(true);
     if (!dashboard) return;
     setSelectedDashboard({
       title: dashboard.dashboard.title,
@@ -93,6 +103,8 @@ export function DashboardPicker({}: Props) {
   }, [data, pathname]);
 
   const isHardError = !isPending && isLoadingError && !data;
+  const noDashboard =
+    firstCheckAfterDataCompleted && selectedDashboard === null;
 
   return (
     isDashboardPath &&
@@ -107,15 +119,15 @@ export function DashboardPicker({}: Props) {
               className="font-semibold w-36 md:w-44 text-left justify-between items-center gap-1 group/trigger px-2.5 py-2.5"
               data-pending={isPending ? true : undefined}
               data-loading-error={isHardError ? true : undefined}
-              disabled={isPending || isHardError || selectedDashboard === null}
+              disabled={isPending || isHardError || noDashboard}
             >
               <p
                 className="truncate pointer-events-none select-none group-data-[pending]/trigger:text-transparent group-data-[pending]/trigger:bg-foreground 
-                  group-data-[pending]/trigger:rounded group-data-[pending]/trigger:animate-skeleton group-data-[loading-error]/trigger:text-destructive leading-none"
+                group-data-[pending]/trigger:rounded group-data-[pending]/trigger:animate-skeleton group-data-[loading-error]/trigger:text-destructive leading-none"
               >
                 {isHardError
                   ? "Error"
-                  : data === null || (data && selectedDashboard === null)
+                  : data === null || (data && noDashboard)
                   ? "Not found"
                   : selectedDashboard?.title || "Loading"}
               </p>

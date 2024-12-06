@@ -1,5 +1,5 @@
 import { LogoMarkIcon } from "@/components/icons/logo-mark-icon";
-import { DashboardPicker } from "@/components/navigation/dashboard-picker";
+import { DashboardSelector } from "@/components/navigation/dashboard-selector";
 import { NavbarWrapper } from "@/components/navigation/navbar-wrapper";
 import { LinkButton } from "@/components/ui/button";
 import {
@@ -34,7 +34,7 @@ export async function Navbar({ className }: Props) {
                 <LogoMarkIcon className="size-5" />
               </LinkButton>
             </NavigationMenuItem>
-            <DashboardPicker />
+            <DashboardSelector />
           </div>
           <div className="pr-1">
             {!session && (
