@@ -17,7 +17,7 @@ export default function DashboardGrid({
         className="w-full group/wrapper flex flex-col flex-1 items-center"
       >
         <div
-          className="w-full grid grid-cols-12 max-w-7xl px-1 pb-16 md:pb-20 md:px-5 pt-2 md:pt-3
+          className="w-full grid grid-cols-12 max-w-7xl px-1 pb-16 md:pb-20 md:px-5 pt-1 md:pt-2
           group-data-[placeholder]/wrapper:pb-2 group-data-[placeholder]/wrapper:md:pb-3"
         >
           {children}

@@ -21,7 +21,7 @@ export function DashboardTitleBar({
   const { dashboardName, isPendingDashboardName, isLoadingErrorDashboardName } =
     useCurrentDashboard();
   return (
-    <div className="col-span-12 items-center justify-between flex p-1 gap-2 px-3 md:pb-2">
+    <div className="col-span-12 items-center justify-between flex gap-2 px-3 pb-1 md:pb-2">
       <h1 className="font-bold text-xl md:text-2xl leading-none truncate shrink">
         {isPendingDashboardName
           ? "Loading"
@@ -29,7 +29,7 @@ export function DashboardTitleBar({
           ? "Error"
           : dashboardName}
       </h1>
-      {isOwner && hasCards && (
+      {isOwner && hasCards ? (
         <div className="flex items-center justify-start shrink-0 -mr-2 gap-1.5">
           {isPendingReorder && (
             <div className="size-9 flex items-center justify-center">
@@ -44,6 +44,8 @@ export function DashboardTitleBar({
           />
           <EditButton />
         </div>
+      ) : (
+        <div className="size-9 -mr-2 shrink-0" />
       )}
     </div>
   );
