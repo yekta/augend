@@ -35,6 +35,7 @@ export const env = createEnv({
    */
   client: {
     NEXT_PUBLIC_BUCKET_URL: z.string(),
+    NEXT_PUBLIC_SITE_URL: z.string(),
   },
 
   /**
@@ -47,6 +48,7 @@ export const env = createEnv({
     CMC_API_KEY: process.env.CMC_API_KEY,
     ALCHEMY_API_KEY: process.env.ALCHEMY_API_KEY,
     NEXT_PUBLIC_BUCKET_URL: process.env.NEXT_PUBLIC_BUCKET_URL,
+    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
     AUTH_SECRET: process.env.AUTH_SECRET,
     AUTH_DRIZZLE_URL: process.env.AUTH_DRIZZLE_URL,
     AUTH_GOOGLE_ID: process.env.AUTH_GOOGLE_ID,
