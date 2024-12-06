@@ -40,17 +40,23 @@ function getCurrencyFields(curr: TCurrencyAlias): TCurrencyFieldSelectors {
 }
 
 export async function getCards({
-  userId,
+  username,
   dashboardSlug,
   isOwner,
 }: {
-  userId: string;
+  username: string;
   dashboardSlug: string;
   isOwner?: boolean;
 }) {
   let whereFilters = [
     eq(dashboardsTable.slug, dashboardSlug),
-    eq(dashboardsTable.userId, userId),
+    inArray(
+      dashboardsTable.userId,
+      db
+        .select({ id: usersTable.id })
+        .from(usersTable)
+        .where(eq(usersTable.username, username))
+    ),
     isNull(dashboardsTable.deletedAt),
     isNull(cardsTable.deletedAt),
   ];

@@ -1,10 +1,10 @@
 import CurrentDashboardProvider from "@/app/[username]/[dashboard_slug]/_components/current-dashboard-provider";
 import DndProvider from "@/app/[username]/[dashboard_slug]/_components/dnd-provider";
-import CryptoCard from "@/components/cards/crypto/card";
 import CryptoPriceChartCard from "@/components/cards/crypto-price-chart/card";
-import GasTrackerCard from "@/components/cards/gas-tracker/card";
-import FearGreedIndexCard from "@/components/cards/fear-greed-index/card";
+import CryptoCard from "@/components/cards/crypto/card";
 import CurrencyCard from "@/components/cards/currency/card";
+import FearGreedIndexCard from "@/components/cards/fear-greed-index/card";
+import GasTrackerCard from "@/components/cards/gas-tracker/card";
 import MiniCryptoCard from "@/components/cards/mini-crypto/card";
 import CmcCryptoInfosProvider from "@/components/providers/cmc/cmc-crypto-infos-provider";
 import CmcGlobalMetricsProvider from "@/components/providers/cmc/cmc-global-metrics-provider";
@@ -19,7 +19,6 @@ import {
   siteTitle,
 } from "@/lib/constants";
 import { auth } from "@/server/auth";
-import { getUser } from "@/server/db/repo/user";
 import { cleanAndSortArray } from "@/server/redis/cache-utils";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
@@ -32,11 +31,8 @@ export const metadata: Metadata = {
 
 export default async function Home() {
   const session = await auth();
-  if (session?.user) {
-    const user = await getUser({ userId: session.user.id });
-    if (user) {
-      redirect(`/${user.username}/${mainDashboardSlug}`);
-    }
+  if (session) {
+    redirect(`/${session.user.username}/${mainDashboardSlug}`);
   }
 
   const cryptoIds = [1, 1027];

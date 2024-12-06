@@ -26,6 +26,12 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
+      username: string;
+      ethereumAddress?: string;
+      primaryCurrencyId: string;
+      secondaryCurrencyId: string;
+      tertiaryCurrencyId: string;
+      image?: string | null;
     } & DefaultSession["user"];
   }
 }
@@ -85,12 +91,11 @@ authProviders.push(
 
         if (!user) {
           const id = crypto.randomUUID();
-          await createUser({
+          user = await createUser({
             userId: id,
             name: siwe.address,
             ethereumAddress: siwe.address,
           });
-          user = await getUser({ userId: id });
         }
 
         if (!user) {

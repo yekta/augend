@@ -1,14 +1,23 @@
 import { db } from "@/server/db/db";
 import { cardsTable, dashboardsTable, usersTable } from "@/server/db/schema";
-import { and, asc, desc, eq, isNull } from "drizzle-orm";
+import { and, asc, desc, eq, inArray, isNull } from "drizzle-orm";
 
 type SharedProps = {
-  userId: string;
+  username: string;
   isOwner: boolean;
 };
 
+const dashboardBelongsToUsername = (username: string) =>
+  inArray(
+    dashboardsTable.userId,
+    db
+      .select({ id: usersTable.id })
+      .from(usersTable)
+      .where(eq(usersTable.username, username))
+  );
+
 export async function getDashboard({
-  userId,
+  username,
   dashboardSlug,
   dashboardId,
   isOwner,
@@ -25,7 +34,7 @@ export async function getDashboard({
     throw new Error("Either dashboardSlug or dashboardId must be provided");
   }
   let whereFilter = [
-    eq(dashboardsTable.userId, userId),
+    dashboardBelongsToUsername(username),
     isNull(dashboardsTable.deletedAt),
   ];
   if (dashboardSlug) {
@@ -59,14 +68,14 @@ export async function getDashboard({
 }
 
 export async function getDashboards({
-  userId,
+  username,
   isOwner,
 }: {
-  userId: string;
+  username: string;
   isOwner?: boolean;
 }) {
   const whereFilter = [
-    eq(dashboardsTable.userId, userId),
+    dashboardBelongsToUsername(username),
     isNull(dashboardsTable.deletedAt),
   ];
 

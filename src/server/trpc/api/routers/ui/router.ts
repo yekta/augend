@@ -26,12 +26,12 @@ import { cleanAndSortArray } from "@/server/redis/cache-utils";
 
 function getIsOwner({
   session,
-  user,
+  username,
 }: {
   session: Session | null;
-  user: NonNullable<Awaited<ReturnType<typeof getUser>>>;
+  username: string;
 }) {
-  return session?.user.id ? session.user.id === user.id : false;
+  return session ? session.user.username === username : false;
 }
 
 export const uiRouter = createTRPCRouter({
@@ -46,15 +46,12 @@ export const uiRouter = createTRPCRouter({
       input: { username, dashboardSlug },
       ctx: { session },
     }) {
-      const user = await getUser({ username });
-      if (!user) return null;
-
-      const isOwner = getIsOwner({ session, user });
+      const isOwner = getIsOwner({ session, username });
 
       const result = await getDashboard({
-        userId: user.id,
-        dashboardSlug,
         isOwner,
+        username,
+        dashboardSlug,
       });
 
       return result;
@@ -66,14 +63,11 @@ export const uiRouter = createTRPCRouter({
       })
     )
     .query(async function ({ input: { username }, ctx: { session } }) {
-      const user = await getUser({ username });
-      if (!user) return null;
-
-      const isOwner = getIsOwner({ session, user });
+      const isOwner = getIsOwner({ session, username });
 
       const result = await getDashboards({
-        userId: user.id,
         isOwner,
+        username,
       });
 
       return {
@@ -92,21 +86,18 @@ export const uiRouter = createTRPCRouter({
       input: { username, dashboardSlug },
       ctx: { session },
     }) {
-      const user = await getUser({ username });
-      if (!user) return null;
-
-      const isOwner = getIsOwner({ session, user });
+      const isOwner = getIsOwner({ session, username });
 
       const [result, dashboard] = await Promise.all([
         getCards({
-          userId: user.id,
-          dashboardSlug,
           isOwner,
+          username,
+          dashboardSlug,
         }),
         getDashboard({
           isOwner,
+          username,
           dashboardSlug,
-          userId: user.id,
         }),
       ]);
 
@@ -177,15 +168,7 @@ export const uiRouter = createTRPCRouter({
       input: { cardTypeId, dashboardSlug, xOrder, values, xOrderPreference },
       ctx: { session },
     }) {
-      // If there is no user
-      if (!session || session.user.id === undefined) {
-        throw new TRPCError({
-          message: "Unauthorized",
-          code: "UNAUTHORIZED",
-        });
-      }
-      const user = await getUser({ userId: session.user.id });
-      if (!user) {
+      if (!session?.user) {
         throw new TRPCError({
           message: "Unauthorized",
           code: "UNAUTHORIZED",
@@ -194,9 +177,9 @@ export const uiRouter = createTRPCRouter({
 
       // Get the dashboard
       const dashboard = await getDashboard({
-        userId: session.user.id,
-        dashboardSlug,
         isOwner: true,
+        username: session.user.username,
+        dashboardSlug,
       });
 
       if (!dashboard) {
@@ -252,14 +235,13 @@ export const uiRouter = createTRPCRouter({
       })
     )
     .mutation(async function ({ input: { ids }, ctx: { session } }) {
-      const userId = session?.user.id;
-      if (!userId) {
+      if (!session?.user) {
         throw new TRPCError({
           message: "Unauthorized",
           code: "UNAUTHORIZED",
         });
       }
-      await deleteCards({ userId, ids });
+      await deleteCards({ userId: session.user.id, ids });
       return true;
     }),
   reorderCards: publicProcedure
@@ -269,14 +251,13 @@ export const uiRouter = createTRPCRouter({
       })
     )
     .mutation(async function ({ input: { orderObjects }, ctx: { session } }) {
-      const userId = session?.user.id;
-      if (!userId) {
+      if (!session?.user) {
         throw new TRPCError({
           message: "Unauthorized",
           code: "UNAUTHORIZED",
         });
       }
-      await reorderCards({ userId, orderObjects });
+      await reorderCards({ userId: session.user.id, orderObjects });
       return true;
     }),
   createDashboard: publicProcedure
@@ -290,9 +271,11 @@ export const uiRouter = createTRPCRouter({
         xOrder: z.number().optional(),
       })
     )
-    .mutation(async function ({ input: { title, icon, xOrder }, ctx }) {
-      const { session } = ctx;
-      if (!session || session.user.id === undefined) {
+    .mutation(async function ({
+      input: { title, icon, xOrder },
+      ctx: { session },
+    }) {
+      if (!session?.user) {
         throw new TRPCError({
           message: "Unauthorized",
           code: "UNAUTHORIZED",

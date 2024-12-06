@@ -103,8 +103,10 @@ export function DashboardSelector({}: Props) {
   }, [data, pathname]);
 
   const isHardError = !isPending && isLoadingError && !data;
-  const noDashboard =
+  const noCurrentDashboard =
     firstCheckAfterDataCompleted && selectedDashboard === null;
+  const noDashboards =
+    data && (data.dashboards === null || data.dashboards.length === 0);
 
   return (
     isDashboardPath &&
@@ -119,7 +121,7 @@ export function DashboardSelector({}: Props) {
               className="font-semibold w-36 md:w-44 text-left justify-between items-center gap-1 group/trigger px-2.5 py-2.5"
               data-pending={isPending ? true : undefined}
               data-loading-error={isHardError ? true : undefined}
-              disabled={isPending || isHardError || noDashboard}
+              disabled={isPending || isHardError || noDashboards}
             >
               <p
                 className="truncate pointer-events-none select-none group-data-[pending]/trigger:text-transparent group-data-[pending]/trigger:bg-foreground 
@@ -127,11 +129,11 @@ export function DashboardSelector({}: Props) {
               >
                 {isHardError
                   ? "Error"
-                  : data === null || (data && noDashboard)
+                  : data === null || (data && noCurrentDashboard)
                   ? "Not found"
                   : selectedDashboard?.title || "Loading"}
               </p>
-              {data !== null && !isHardError && (
+              {data !== null && !noDashboards && !isHardError && (
                 <ChevronDownIcon className="size-4 pointer-events-none select-none -my-1 -mr-1 shrink-0 text-muted-more-foreground group-data-[state=open]/trigger:rotate-180 transition-transform" />
               )}
             </Button>

@@ -10,7 +10,7 @@ import { LoaderIcon } from "lucide-react";
 import { getCsrfToken, signIn } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { SiweMessage } from "siwe";
-import { useAccount, useConnect, useDisconnect, useSignMessage } from "wagmi";
+import { useAccount, useConnect, useSignMessage } from "wagmi";
 import { mainnet } from "wagmi/chains";
 import { injected, walletConnect } from "wagmi/connectors";
 
@@ -23,24 +23,23 @@ export default function SignInWithEthereumButton({
   callbackUrl,
   className,
 }: Props) {
+  const [hasInjectedWallet, setHasInjectedWallet] = useState(false);
+  const [signInState, setSignInState] = useState<
+    "idle" | "waiting-connection" | "waiting-signature" | "redirecting"
+  >("idle");
   const { signMessageAsync } = useSignMessage();
   const { address, isConnected, chainId } = useAccount();
-  const { disconnectAsync } = useDisconnect();
   const { connect } = useConnect({
     mutation: {
       onError: () => {
-        setIsPending(false);
+        setSignInState("idle");
       },
       onSuccess: () => {
         signInWithEthereum();
       },
     },
   });
-  const [isPending, setIsPending] = useState(false);
   const utils = api.useUtils();
-
-  const [hasInjectedWallet, setHasInjectedWallet] = useState(false);
-  const [waitingForSignature, setWaitingForSignature] = useState(false);
 
   useEffect(() => {
     if (
@@ -54,7 +53,7 @@ export default function SignInWithEthereumButton({
   }, []);
 
   const signMessage = async () => {
-    setWaitingForSignature(true);
+    setSignInState("waiting-signature");
     try {
       const csrfToken = await getCsrfToken();
       const message = new SiweMessage({
@@ -76,20 +75,17 @@ export default function SignInWithEthereumButton({
         callbackUrl,
       });
       const user = await utils.ui.getUser.fetch();
-      if (user) {
-        window.location.href = `/${user.username}/${mainDashboardSlug}`;
-      } else {
-        throw new Error("User not found");
-      }
+      if (!user) throw new Error("User not found");
+      setSignInState("redirecting");
+      window.location.href = `/${user.username}/${mainDashboardSlug}`;
     } catch (error) {
       console.log(error);
-      setIsPending(false);
+      setSignInState("idle");
     }
-    setWaitingForSignature(false);
   };
 
   const signInWithEthereum = async () => {
-    setIsPending(true);
+    setSignInState("waiting-connection");
     if (!isConnected) {
       connect({
         chainId: mainnet.id,
@@ -115,21 +111,25 @@ export default function SignInWithEthereumButton({
         type="submit"
         variant="ethereum"
         className="w-full px-10"
-        state={isPending ? "loading" : undefined}
+        state={signInState !== "idle" ? "loading" : undefined}
       >
         <div className="absolute left-2.25 top-1/2 -translate-y-1/2 size-6 flex items-center justify-center">
-          {isPending && <LoaderIcon className="size-full p-0.5 animate-spin" />}
-          {!isPending && (
+          {signInState !== "idle" && (
+            <LoaderIcon className="size-full p-0.5 animate-spin" />
+          )}
+          {signInState === "idle" && (
             <ProviderIcon
               className="size-full"
               provider="ethereum"
             ></ProviderIcon>
           )}
         </div>
-        {waitingForSignature
-          ? "Waiting signature"
-          : isConnected && !waitingForSignature && isPending
-          ? "Signing in"
+        {signInState === "redirecting"
+          ? "Redirecting"
+          : signInState === "waiting-signature"
+          ? "Waiting for signature"
+          : signInState === "waiting-connection"
+          ? "Waiting for connection"
           : "Continue with Ethereum"}
       </Button>
     </form>
