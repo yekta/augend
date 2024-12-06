@@ -81,10 +81,10 @@ authProviders.push(
           return null;
         }
 
-        const id = ethereumAddressToUUID(siwe.address);
-        let user = await getUser({ userId: id });
+        let user = await getUser({ ethereumAddress: siwe.address });
 
         if (!user) {
+          const id = crypto.randomUUID();
           await createUser({
             userId: id,
             name: siwe.address,
@@ -180,35 +180,5 @@ export const authProviderMap = authProviders
   .filter((provider) => provider.id !== "credentials");
 
 const auth = cache(uncachedAuth);
-
-function ethereumAddressToUUID(ethAddress: string): string {
-  // Normalize the Ethereum address to lowercase to handle case-insensitivity
-  const normalizedAddress = ethAddress.toLowerCase();
-
-  // Hash the normalized address using SHA-256
-  const hash = crypto.createHash("sha256").update(normalizedAddress).digest();
-
-  // Construct a UUID v4 from the hash
-  const uuid = [
-    // First 8 hex characters
-    hash.toString("hex").substring(0, 8),
-    // Next 4 hex characters
-    hash.toString("hex").substring(8, 12),
-    // Next 4 hex characters, ensuring the version is 4
-    (
-      (parseInt(hash.toString("hex").substring(12, 16), 16) & 0x0fff) |
-      0x4000
-    ).toString(16),
-    // Next 4 hex characters, ensuring the variant is 0b10xx
-    (
-      (parseInt(hash.toString("hex").substring(16, 18), 16) & 0x3f) |
-      0x80
-    ).toString(16) + hash.toString("hex").substring(18, 20),
-    // Final 12 hex characters
-    hash.toString("hex").substring(20, 32),
-  ].join("-");
-
-  return uuid;
-}
 
 export { auth, handlers, signIn, signOut };

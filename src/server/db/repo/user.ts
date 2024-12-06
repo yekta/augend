@@ -5,14 +5,27 @@ import { eq } from "drizzle-orm";
 export async function getUser({
   userId,
   username,
+  ethereumAddress,
 }:
-  | { userId: string; username?: never }
-  | { userId?: never; username: string }) {
+  | { userId: string; username?: never; ethereumAddress?: never }
+  | { userId?: never; username: string; ethereumAddress?: never }
+  | { userId?: never; username?: never; ethereumAddress: string }) {
   const selects = {
     id: usersTable.id,
     username: usersTable.username,
     email: usersTable.email,
   };
+
+  if (ethereumAddress !== undefined) {
+    const res = await db
+      .select(selects)
+      .from(usersTable)
+      .where(eq(usersTable.ethereumAddress, ethereumAddress));
+
+    if (res.length === 0) return null;
+    return res[0];
+  }
+
   if (userId !== undefined) {
     const res = await db
       .select(selects)
@@ -20,18 +33,19 @@ export async function getUser({
       .where(eq(usersTable.id, userId));
 
     if (res.length === 0) return null;
-
     return res[0];
-  } else if (username !== undefined) {
+  }
+
+  if (username !== undefined) {
     const res = await db
       .select(selects)
       .from(usersTable)
       .where(eq(usersTable.username, username));
 
     if (res.length === 0) return null;
-
     return res[0];
   }
+
   return null;
 }
 
