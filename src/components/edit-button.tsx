@@ -19,7 +19,7 @@ export const EditButton = ({ className }: Props) => {
     >
       <div
         data-editing={isEnabled ? true : undefined}
-        className="size-5 transition data-[editing]:rotate-90"
+        className="size-4.5 transition data-[editing]:rotate-90"
       >
         {isEnabled ? (
           <XIcon className="size-full" />

@@ -21,7 +21,7 @@ const DialogOverlay = React.forwardRef<
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
-      "fixed px-2 pt-12 pb-[calc((100vh-3rem)*0.1+3rem)] overflow-auto grid place-items-center inset-0 z-50 duration-200 data-[state=open]:duration-200 data-[state=closed]:duration-200 bg-barrier/[var(--opacity-barrier)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+      "fixed px-2 pt-12 pb-[calc((100vh-3rem)*0.08+2rem)] md:pb-[calc((100vh-3rem)*0.1+3rem)] overflow-auto grid place-items-center inset-0 z-50 duration-200 data-[state=open]:duration-200 data-[state=closed]:duration-200 bg-barrier/[var(--opacity-barrier)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
       className
     )}
     {...props}
@@ -72,7 +72,7 @@ const DialogContent = React.forwardRef<
           {children}
           {variant !== "styleless" && (
             <DialogPrimitive.Close
-              className="absolute right-0 top-0 rounded-xl p-2.5 opacity-50 transition-opacity not-touch:hover:opacity-100 active:opacity-100 ring-1 ring-transparent 
+              className="absolute right-0 top-0 rounded-xl p-2.5 opacity-50 not-touch:hover:opacity-100 active:opacity-100 ring-1 ring-transparent 
               focus-visible:outline-none focus-visible:ring-foreground disabled:pointer-events-none text-muted-foreground"
             >
               <Cross2Icon className="h-5 w-5" />

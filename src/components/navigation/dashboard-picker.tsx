@@ -1,5 +1,6 @@
 "use client";
 
+import { ErrorLine } from "@/components/error-line";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -186,11 +187,11 @@ export function DashboardPicker({}: Props) {
 const CreateCardFormSchema = z.object({
   title: z
     .string()
-    .min(3, {
-      message: "Should be at least 3 characters long.",
+    .min(2, {
+      message: "Should be at least 2 characters.",
     })
     .max(32, {
-      message: "Should be at most 32 characters long.",
+      message: "Should be at most 32 characters.",
     }),
 });
 
@@ -216,14 +217,18 @@ function AddCardButton({
     },
   });
   const asyncRouterPush = useAsyncRouterPush();
-  const { mutate: createDashboard, isPending } =
-    api.ui.createDashboard.useMutation({
-      onSuccess: async (d) => {
-        await asyncRouterPush(`/${username}/${d.slug}`);
-        onOpenChange(false);
-        onDashboardCreated?.(d);
-      },
-    });
+  const {
+    mutate: createDashboard,
+    isPending,
+    error,
+    isError,
+  } = api.ui.createDashboard.useMutation({
+    onSuccess: async (d) => {
+      await asyncRouterPush(`/${username}/${d.slug}`);
+      onOpenChange(false);
+      onDashboardCreated?.(d);
+    },
+  });
   function onSubmit(values: z.infer<typeof CreateCardFormSchema>) {
     createDashboard({
       title: values.title,
@@ -291,6 +296,7 @@ function AddCardButton({
             </Button>
           </form>
         </Form>
+        {error && <ErrorLine message={error.message} />}
       </DialogContent>
     </Dialog>
   );

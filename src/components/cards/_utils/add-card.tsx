@@ -4,6 +4,7 @@ import { useCurrentDashboard } from "@/app/[username]/[dashboard_slug]/_componen
 import CardInnerWrapper from "@/components/cards/_utils/card-inner-wrapper";
 import CardOuterWrapper from "@/components/cards/_utils/card-outer-wrapper";
 import CardValuesFormParser from "@/components/cards/_utils/values-form/card-values-form-parser";
+import { ErrorLine } from "@/components/error-line";
 import { AddCardIcon } from "@/components/icons/add-card-icon";
 import { Button } from "@/components/ui/button";
 import {
@@ -62,14 +63,17 @@ export function AddCardButton({
 
   const { invalidateCards, isPendingCardInvalidation } = useCurrentDashboard();
 
-  const { mutate: createCardMutation, isPending: isPendingCreateCard } =
-    api.ui.createCard.useMutation({
-      onSuccess: async (c) => {
-        await invalidateCards();
-        setOpen(false);
-        setSelectedCardType(null);
-      },
-    });
+  const {
+    mutate: createCardMutation,
+    isPending: isPendingCreateCard,
+    error: errorCreateCard,
+  } = api.ui.createCard.useMutation({
+    onSuccess: async (c) => {
+      await invalidateCards();
+      setOpen(false);
+      setSelectedCardType(null);
+    },
+  });
 
   const isPendingForm = isPendingCardInvalidation || isPendingCreateCard;
 
@@ -128,6 +132,7 @@ export function AddCardButton({
             selectedCardType={selectedCardType}
             setSelectedCardType={setSelectedCardType}
             isPendingForm={isPendingForm}
+            errorForm={errorCreateCard}
             onSubmit={onSubmit}
             getCardTypesQuery={getCardTypesQuery}
             className="h-96 max-h-[calc((100vh-3rem)*0.6)]"
@@ -144,6 +149,7 @@ type AddCardCommandPanelProps = {
   >;
   inputs?: AppRouterOutputs["ui"]["getCardTypes"][number]["inputs"];
   isPendingForm: boolean;
+  errorForm: { message: string } | null;
   selectedCardType: TSelectedCardType | null;
   setSelectedCardType: Dispatch<SetStateAction<TSelectedCardType | null>>;
   onSubmit: (values: TCardValueForAddCards[]) => void;
@@ -154,6 +160,7 @@ export function AddCardCommandPanel({
   getCardTypesQuery,
   inputs,
   isPendingForm,
+  errorForm,
   selectedCardType,
   setSelectedCardType,
   onSubmit,
@@ -197,13 +204,14 @@ export function AddCardCommandPanel({
           <div className="w-full bg-border h-px" />
           <div
             data-has-inputs={inputs ? true : undefined}
-            className="w-full flex flex-col px-4 pt-3.5 pb-4 data-[has-inputs]:pt-3"
+            className="w-full flex flex-col px-4 pt-3.5 pb-4 data-[has-inputs]:pt-3 gap-4"
           >
             <CardValuesFormParser
               onFormSubmit={onSubmit}
               isPendingForm={isPendingForm}
               cardTypeId={selectedCardType.cardType.id}
             />
+            {errorForm && <ErrorLine message={errorForm.message} />}
           </div>
         </div>
       )}

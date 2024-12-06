@@ -282,7 +282,10 @@ export const uiRouter = createTRPCRouter({
   createDashboard: publicProcedure
     .input(
       z.object({
-        title: z.string(),
+        title: z
+          .string()
+          .min(2, { message: "Title should be at least 4 characters." })
+          .max(32, { message: "Title should be at most 32 characters." }),
         icon: z.string().optional(),
         xOrder: z.number().optional(),
       })
