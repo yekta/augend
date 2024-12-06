@@ -27,6 +27,8 @@ const buttonVariants = cva(
           "bg-discord text-discord-foreground not-touch:hover:bg-discord/90 active:bg-discord/90",
         github:
           "bg-github text-github-foreground not-touch:hover:bg-github/90 active:bg-github/90",
+        ethereum:
+          "bg-ethereum text-ethereum-foreground not-touch:hover:bg-ethereum/90 active:bg-ethereum/90",
       },
       size: {
         default: "px-4 py-2.5",

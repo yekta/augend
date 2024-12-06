@@ -111,7 +111,7 @@ export function DashboardPicker({}: Props) {
             >
               <p
                 className="truncate pointer-events-none select-none group-data-[pending]/trigger:text-transparent group-data-[pending]/trigger:bg-foreground 
-                group-data-[pending]/trigger:rounded group-data-[pending]/trigger:animate-skeleton group-data-[loading-error]/trigger:text-destructive leading-none"
+                  group-data-[pending]/trigger:rounded group-data-[pending]/trigger:animate-skeleton group-data-[loading-error]/trigger:text-destructive leading-none"
               >
                 {isHardError
                   ? "Error"
@@ -126,23 +126,25 @@ export function DashboardPicker({}: Props) {
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align="start"
-            className="w-[var(--radix-popper-anchor-width)] max-h-[min(calc((100vh-4rem)*0.7),20rem)] overflow-auto shadow-xl shadow-shadow/[var(--opacity-shadow)]"
+            className="w-[var(--radix-popper-anchor-width)] p-0 flex flex-col max-h-[min(calc((100vh-4rem)*0.7),20rem)] shadow-xl shadow-shadow/[var(--opacity-shadow)]"
           >
             {data && (
               <>
                 {data.isOwner && (
                   <>
                     {/* Create Dashboard Button */}
-                    <AddCardButton
-                      onDashboardCreated={onDashboardCreated}
-                      username={username}
-                      open={isCreateDashboardOpen}
-                      onOpenChange={setIsCreateDashboardOpen}
-                    />
-                    <DropdownMenuSeparator />
+                    <DropdownMenuGroup className="p-1">
+                      <AddCardButton
+                        onDashboardCreated={onDashboardCreated}
+                        username={username}
+                        open={isCreateDashboardOpen}
+                        onOpenChange={setIsCreateDashboardOpen}
+                      />
+                    </DropdownMenuGroup>
+                    <DropdownMenuSeparator className="py-0 my-0" />
                   </>
                 )}
-                <DropdownMenuGroup>
+                <DropdownMenuGroup className="overflow-auto shrink min-w-0 p-1">
                   {data.dashboards.map((d) => (
                     <DropdownMenuItem
                       key={d.dashboard.slug}

@@ -4,6 +4,8 @@ import React from "react";
 import { IsTouchscreenProvider } from "@/components/providers/is-touchscreen-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { defaultTheme, themes } from "@/components/providers/themes";
+import { SessionProvider } from "next-auth/react";
+import WagmiProvider from "@/components/providers/wagmi-provider";
 
 export default async function Providers({
   children,
@@ -15,9 +17,13 @@ export default async function Providers({
       defaultTheme={defaultTheme}
       disableTransitionOnChange
     >
-      <TRPCReactProvider>
-        <IsTouchscreenProvider>{children}</IsTouchscreenProvider>
-      </TRPCReactProvider>
+      <WagmiProvider>
+        <TRPCReactProvider>
+          <SessionProvider>
+            <IsTouchscreenProvider>{children}</IsTouchscreenProvider>
+          </SessionProvider>
+        </TRPCReactProvider>
+      </WagmiProvider>
     </ThemeProvider>
   );
 }

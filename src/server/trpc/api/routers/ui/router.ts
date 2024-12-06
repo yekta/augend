@@ -326,6 +326,16 @@ export const uiRouter = createTRPCRouter({
         title,
       };
     }),
+  getUser: publicProcedure.query(async function ({ ctx: { session } }) {
+    if (!session || session.user.id === undefined) {
+      throw new TRPCError({
+        message: "Unauthorized",
+        code: "UNAUTHORIZED",
+      });
+    }
+    const user = await getUser({ userId: session.user.id });
+    return user;
+  }),
 });
 
 function slugify(str: string) {

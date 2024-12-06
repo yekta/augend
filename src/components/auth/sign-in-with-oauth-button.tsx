@@ -28,6 +28,7 @@ export default function SignInWithOAuthButton({
   return (
     <form className={cn("w-full", className)} action={action}>
       <Button
+        type="submit"
         variant={providerId.toLowerCase() as "github" | "google" | "discord"}
         className="w-full px-10"
         state={isPending ? "loading" : undefined}

@@ -143,7 +143,7 @@ export function CalculatorValueForm({
                 variant="outline"
                 size="icon"
                 type="button"
-                className="w-10 h-auto shrink-0 self-stretch text-muted-more-foreground"
+                className="w-8 -mr-1 border-none h-auto shrink-0 self-stretch text-muted-more-foreground"
                 onClick={() => {
                   let newCurrencyList = [...selectedCurrencies];
                   newCurrencyList.splice(index, 1);

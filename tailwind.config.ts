@@ -83,6 +83,10 @@ const config: Config = {
           DEFAULT: "hsl(var(--github))",
           foreground: "hsl(var(--github-foreground))",
         },
+        ethereum: {
+          DEFAULT: "hsl(var(--ethereum))",
+          foreground: "hsl(var(--ethereum-foreground))",
+        },
         barrier: "hsl(var(--barrier))",
       },
       opacity: {

@@ -1,3 +1,4 @@
+import SignInWithEthereumButton from "@/components/auth/sign-in-with-ethereum-button";
 import SignInWithOAuthButton from "@/components/auth/sign-in-with-oauth-button";
 import { Button } from "@/components/ui/button";
 import {
@@ -97,6 +98,7 @@ function SignInContent({
           callbackUrl={callbackUrl}
         />
       ))}
+      <SignInWithEthereumButton />
     </div>
   );
 }

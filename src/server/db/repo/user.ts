@@ -34,3 +34,16 @@ export async function getUser({
   }
   return null;
 }
+
+export async function createUser({
+  userId,
+  name,
+}: {
+  userId: string;
+  name: string;
+}) {
+  await db.insert(usersTable).values({
+    id: userId,
+    name,
+  });
+}
