@@ -5,8 +5,9 @@ import ProviderIcon from "@/components/icons/provider-icon";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { LoaderIcon } from "lucide-react";
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import { useDisconnect } from "wagmi";
+import { injected } from "wagmi/connectors";
 
 type Props = {
   callbackUrl?: string;
@@ -26,6 +27,10 @@ export default function SignOutButton({ callbackUrl, className }: Props) {
       action={action}
       onSubmit={() => {
         disconnect();
+        window.localStorage.removeItem("wagmi.recentConnectorId");
+        window.localStorage.removeItem("wagmi.store");
+        window.localStorage.removeItem("wagmi.walletConnect.requestedChains");
+        window.localStorage.removeItem("wagmi.injected.connected");
       }}
     >
       <Button
