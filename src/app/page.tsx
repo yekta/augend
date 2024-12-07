@@ -24,11 +24,6 @@ import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { ReactNode } from "react";
 
-export const metadata: Metadata = {
-  title: `${siteTitle} | ${siteTagline}`,
-  description: siteDescription,
-};
-
 export default async function Home() {
   const session = await auth();
   if (session) {

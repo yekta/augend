@@ -23,7 +23,8 @@ export const defaultQueryOptions = {
 
 export const siteTitle = "Augend";
 export const siteTagline = "Track financial assets";
-export const siteDescription = "Track financial assets.";
+export const siteDescription =
+  "Track crypto, NFTs, Uniswap positions, stocks, financial trends, and more with highly customizable dashboards.";
 export const mainDashboardSlug = "main";
 
 export const defaultCurrencyPreference: TCurrencyPreference = {
