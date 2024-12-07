@@ -8,7 +8,7 @@ import {
   NavigationMenuItem,
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
-import { auth } from "@/server/auth";
+import { auth } from "@/server/auth/auth";
 
 type Props = {
   className?: string;

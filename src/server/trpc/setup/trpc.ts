@@ -6,7 +6,7 @@
  * TL;DR - This is where all the tRPC server stuff is created and plugged in. The pieces you will
  * need to use are documented accordingly near the end.
  */
-import { auth } from "@/server/auth";
+import { auth } from "@/server/auth/auth";
 import { createCacheKeyForTRPCRoute } from "@/server/redis/cache-utils";
 import { getCache, setCache, TCacheTime } from "@/server/redis/redis";
 import { initTRPC } from "@trpc/server";

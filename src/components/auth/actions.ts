@@ -1,6 +1,6 @@
 "use server";
 
-import { signIn, signOut } from "@/server/auth";
+import { signIn, signOut } from "@/server/auth/auth";
 import { SiweMessage } from "siwe";
 
 export async function oAuthSignInAction({

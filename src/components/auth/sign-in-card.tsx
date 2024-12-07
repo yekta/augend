@@ -10,7 +10,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
-import { authProviderMap } from "@/server/auth";
+import { authProviderMap } from "@/server/auth/auth";
 import { ComponentProps } from "react";
 
 type SignInCardProps = ComponentProps<"div"> & {

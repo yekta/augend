@@ -18,7 +18,7 @@ import {
   siteTagline,
   siteTitle,
 } from "@/lib/constants";
-import { auth } from "@/server/auth";
+import { auth } from "@/server/auth/auth";
 import { cleanAndSortArray } from "@/server/redis/cache-utils";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
