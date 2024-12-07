@@ -1,6 +1,6 @@
 "use client";
 
-import { ErrorLine } from "@/components/error-line";
+import ErrorLine from "@/components/error-line";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -39,7 +39,7 @@ import { z } from "zod";
 
 type Props = {};
 
-export function DashboardSelector({}: Props) {
+export default function DashboardSelector({}: Props) {
   const pathname = usePathname();
   const arr = pathname.split("/");
   const username = arr.length > 1 ? pathname.split("/")[1] : undefined;

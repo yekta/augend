@@ -1,6 +1,7 @@
-import { LogoMarkIcon } from "@/components/icons/logo-mark-icon";
-import { DashboardSelector } from "@/components/navigation/dashboard-selector";
-import { NavbarWrapper } from "@/components/navigation/navbar-wrapper";
+import LogoMarkIcon from "@/components/icons/logo-mark-icon";
+import DashboardSelector from "@/components/navigation/dashboard-selector";
+import NavbarWrapper from "@/components/navigation/navbar-wrapper";
+import UserAvatar from "@/components/navigation/user-avatar";
 import { LinkButton } from "@/components/ui/button";
 import {
   NavigationMenu,
@@ -13,7 +14,7 @@ type Props = {
   className?: string;
 };
 
-export async function Navbar({ className }: Props) {
+export default async function Navbar({ className }: Props) {
   const session = await auth();
   return (
     <NavigationMenu
@@ -36,15 +37,17 @@ export async function Navbar({ className }: Props) {
             </NavigationMenuItem>
             <DashboardSelector />
           </div>
-          <div className="pr-1">
-            {!session && (
+          {!session ? (
+            <div className="pr-1">
               <NavigationMenuItem asChild>
                 <LinkButton href="/sign-in" size="sm">
                   Get Started
                 </LinkButton>
               </NavigationMenuItem>
-            )}
-          </div>
+            </div>
+          ) : (
+            <UserAvatar session={session} />
+          )}
         </div>
       </NavbarWrapper>
     </NavigationMenu>

@@ -4,7 +4,7 @@ type Props = {
   className?: string;
   message?: string;
 };
-export function ErrorLine({ className, message }: Props) {
+export default function ErrorLine({ className, message }: Props) {
   return (
     <p
       className={cn(

@@ -114,6 +114,12 @@ const config: Config = {
       fontSize: {
         xxs: ["0.625rem", "1rem"],
       },
+      borderWidth: {
+        "1.5": "1.5px",
+      },
+      rotate: {
+        360: "360deg",
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",

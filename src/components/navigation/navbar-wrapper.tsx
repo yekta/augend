@@ -8,7 +8,7 @@ type Props = {
   children?: React.ReactNode;
 };
 
-export function NavbarWrapper({ className, children }: Props) {
+export default function NavbarWrapper({ className, children }: Props) {
   const [{ y }] = useWindowScroll();
   return (
     <div

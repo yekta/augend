@@ -80,7 +80,7 @@ input[type="number"]::-webkit-outer-spin-button {
 
     --barrier: 0 0% 0%;
     --opacity-barrier: 0.6;
-    --opacity-shadow: 0.06;
+    --opacity-shadow: 0.08;
   }
   .dark {
     --background: 250 25% 4%;

@@ -1,13 +1,11 @@
 "use client";
 
-import { oAuthSignInAction, signOutAction } from "@/components/auth/actions";
-import ProviderIcon from "@/components/icons/provider-icon";
+import { signOutAction } from "@/components/auth/actions";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { LoaderIcon } from "lucide-react";
-import { useActionState, useEffect } from "react";
+import { useActionState } from "react";
 import { useDisconnect } from "wagmi";
-import { injected } from "wagmi/connectors";
 
 type Props = {
   callbackUrl?: string;

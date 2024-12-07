@@ -1,5 +1,5 @@
 import Footer from "@/components/navigation/footer";
-import { Navbar } from "@/components/navigation/navbar";
+import Navbar from "@/components/navigation/navbar";
 import Providers from "@/components/providers/providers";
 import { siteDescription, siteTagline, siteTitle } from "@/lib/constants";
 import { HydrateClient } from "@/server/trpc/setup/server";

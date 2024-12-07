@@ -28,7 +28,7 @@ import { LoaderIcon, XIcon } from "lucide-react";
 import Link from "next/link";
 import { ComponentProps, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { ErrorLine } from "@/components/error-line";
+import ErrorLine from "@/components/error-line";
 
 type TSharedProps = {
   cardId?: string;

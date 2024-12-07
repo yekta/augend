@@ -40,6 +40,7 @@
     "@uniswap/v3-periphery": "^1.4.4",
     "@web3icons/react": "^3.11.0",
     "alchemy-sdk": "^3.5.0",
+    "blockies-react-svg": "^0.0.13",
     "ccxt": "^4.4.25",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",

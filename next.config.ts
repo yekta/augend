@@ -6,7 +6,10 @@ import rehypeSlug from "rehype-slug";
 
 const nextConfig: NextConfig = {
   pageExtensions: ["tsx", "ts", "jsx", "js", "mdx", "md"],
-  /* config options here */
+  webpack: (config) => {
+    config.externals.push("pino-pretty", "lokijs", "encoding");
+    return config;
+  },
 };
 
 const withMDX = createMDX({
