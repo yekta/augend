@@ -33,7 +33,7 @@ export default function Page({}: Props) {
               target="_blank"
             >
               <SclIcon
-                className="size-6 absolute left-2.5 top-1/2 -translate-y-1/2"
+                className="size-6 absolute left-2.25 top-1/2 -translate-y-1/2"
                 slug={platform.slug}
               />
               {platform.name}

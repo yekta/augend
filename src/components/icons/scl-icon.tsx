@@ -60,7 +60,7 @@ export default function SclIcon({
     );
   }
   if (slug === "email") {
-    return <MailIcon className={cn(defaultClassName, className)} />;
+    return <MailIcon className={cn(defaultClassName, "p-0.25", className)} />;
   }
   return <BanIcon className={cn(defaultClassName, className)} />;
 }
