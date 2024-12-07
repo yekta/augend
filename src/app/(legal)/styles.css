@@ -1,0 +1,31 @@
+.heading-anchor-span {
+  opacity: 0;
+  padding: 0 0.5rem;
+}
+
+h1:hover .heading-anchor-span,
+h2:hover .heading-anchor-span,
+h3:hover .heading-anchor-span,
+h4:hover .heading-anchor-span,
+h5:hover .heading-anchor-span,
+h6:hover .heading-anchor-span {
+  opacity: 0.5;
+}
+
+h1:hover .heading-anchor-span:hover,
+h2:hover .heading-anchor-span:hover,
+h3:hover .heading-anchor-span:hover,
+h4:hover .heading-anchor-span:hover,
+h5:hover .heading-anchor-span:hover,
+h6:hover .heading-anchor-span:hover {
+  opacity: 1;
+}
+
+h1 a[tabindex="-1"],
+h2 a[tabindex="-1"],
+h3 a[tabindex="-1"],
+h4 a[tabindex="-1"],
+h5 a[tabindex="-1"],
+h6 a[tabindex="-1"] {
+  text-decoration: none;
+}

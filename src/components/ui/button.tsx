@@ -31,6 +31,9 @@ const buttonVariants = cva(
           "bg-github text-github-foreground not-touch:hover:bg-github/90 active:bg-github/90",
         ethereum:
           "bg-ethereum text-ethereum-foreground not-touch:hover:bg-ethereum/90 active:bg-ethereum/90",
+        x: "bg-x text-x-foreground not-touch:hover:bg-x/90 active:bg-x/90",
+        email:
+          "bg-email text-email-foreground not-touch:hover:bg-email/90 active:bg-email/90",
       },
       size: {
         default: "px-4 py-2.5",

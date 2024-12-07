@@ -7,6 +7,7 @@ const config: Config = {
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/**/*.{jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
@@ -86,6 +87,14 @@ const config: Config = {
         ethereum: {
           DEFAULT: "hsl(var(--ethereum))",
           foreground: "hsl(var(--ethereum-foreground))",
+        },
+        email: {
+          DEFAULT: "hsl(var(--email))",
+          foreground: "hsl(var(--email-foreground))",
+        },
+        x: {
+          DEFAULT: "hsl(var(--x))",
+          foreground: "hsl(var(--x-foreground))",
         },
         barrier: "hsl(var(--barrier))",
       },

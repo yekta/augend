@@ -54,3 +54,35 @@ export const defaultCurrencyPreference: TCurrencyPreference = {
     symbol: "£",
   },
 };
+
+export type TScOption = "discord" | "x" | "github" | "email";
+
+export const sc: Record<
+  TScOption,
+  {
+    name: string;
+    href: string;
+    slug: TScOption;
+  }
+> = {
+  discord: {
+    name: "Discord",
+    href: "https://discord.gg/vD45Ef2eWU",
+    slug: "discord",
+  },
+  x: {
+    name: "X",
+    href: "https://x.com/augendapp",
+    slug: "x",
+  },
+  email: {
+    name: "Email",
+    href: "mailto:augendapp@gmail.com",
+    slug: "email",
+  },
+  github: {
+    name: "GitHub",
+    href: "https://github.com/augendapp",
+    slug: "github",
+  },
+};

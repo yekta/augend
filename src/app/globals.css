@@ -6,6 +6,11 @@ body {
   font-family: var(--font-sans);
 }
 
+html,
+body {
+  scroll-padding-top: 5rem;
+}
+
 .font-mono {
   font-family: var(--font-mono);
 }
@@ -64,10 +69,14 @@ input[type="number"]::-webkit-outer-spin-button {
     --google-foreground: 0 0% 100%;
     --discord: 235 86% 65%;
     --discord-foreground: 0 0% 100%;
-    --github: 0 0% 0%;
+    --github: 250 25% 4%;
     --github-foreground: 0 0% 100%;
     --ethereum: 263 75% 51%;
     --ethereum-foreground: 0 0% 100%;
+    --email: 250 25% 4%;
+    --email-foreground: 0 0% 100%;
+    --x: 250 25% 4%;
+    --x-foreground: 0 0% 100%;
 
     --barrier: 0 0% 0%;
     --opacity-barrier: 0.6;
@@ -118,6 +127,10 @@ input[type="number"]::-webkit-outer-spin-button {
     --github-foreground: 250 25% 4%;
     --ethereum: 265 86% 83%;
     --ethereum-foreground: 250 25% 4%;
+    --email: 250 50% 92%;
+    --email-foreground: 250 25% 4%;
+    --x: 250 50% 92%;
+    --x-foreground: 250 25% 4%;
 
     --barrier: 250 25% 4%;
     --opacity-barrier: 0.75;
