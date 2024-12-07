@@ -7,10 +7,8 @@ type Props = {
 export default async function SignInPage({ searchParams }: Props) {
   const { callbackUrl, error } = await searchParams;
   return (
-    <div className="w-full flex-1 flex flex-col items-center justify-center">
-      <div className="w-full flex-1 flex items-center justify-center max-w-7xl pt-12 pb-[calc(8vh+3rem)] px-4">
-        <SignInCard error={error} callbackUrl={callbackUrl} />
-      </div>
+    <div className="w-full flex-1 flex flex-col items-center justify-center px-4 pt-6 pb-[calc(8vh+3rem)]">
+      <SignInCard error={error} callbackUrl={callbackUrl} />
     </div>
   );
 }

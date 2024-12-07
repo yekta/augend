@@ -36,7 +36,7 @@ export default function SignInCard({
       {...rest}
     >
       <div className="w-full flex flex-col items-center justify-center text-center gap-1">
-        <h2 className="text-xl font-bold leading-tight tracking-tight">
+        <h2 className="text-2xl font-bold leading-tight tracking-tight">
           {title}
         </h2>
         <p className="text-base text-muted-foreground leading-snug">
