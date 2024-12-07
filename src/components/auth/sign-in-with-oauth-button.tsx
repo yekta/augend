@@ -30,7 +30,7 @@ export default function SignInWithOAuthButton({
       <Button
         type="submit"
         variant={providerId.toLowerCase() as "github" | "google" | "discord"}
-        className="w-full px-10"
+        className="w-full px-12"
         state={isPending ? "loading" : undefined}
       >
         <div className="absolute left-2.25 top-1/2 -translate-y-1/2 size-6 flex items-center justify-center">

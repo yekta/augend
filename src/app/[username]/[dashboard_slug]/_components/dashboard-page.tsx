@@ -161,17 +161,19 @@ export default function DashboardPage({
   if (!dashboard || cards === null) {
     return (
       <MainProviders>
-        <div className="w-full flex-1 flex flex-col items-center justify-center p-5 pb-[calc(5vh+1.5rem)] text-center break-words">
-          <h1 className="font-bold text-8xl max-w-full">404</h1>
-          <h1 className="text-muted-foreground text-xl max-w-full">
-            This dashboard doesn't exist.
-          </h1>
-          <LinkButton
-            href={`/${username}/${mainDashboardSlug}`}
-            className="mt-8 max-w-full"
-          >
-            Return Home
-          </LinkButton>
+        <div className="w-full flex-1 flex flex-col items-center justify-center p-5 pb-[calc(8vh+2rem)] text-center break-words">
+          <div className="w-full max-w-xs flex flex-col items-center justify-center">
+            <h1 className="font-bold text-7xl max-w-full">404</h1>
+            <p className="text-muted-foreground text-lg max-w-full">
+              This dashboard doesn't exist.
+            </p>
+            <LinkButton
+              href={`/${username}/${mainDashboardSlug}`}
+              className="mt-5 max-w-full"
+            >
+              Return Home
+            </LinkButton>
+          </div>
         </div>
       </MainProviders>
     );

@@ -27,7 +27,7 @@ export default function Page({}: Props) {
             <LinkButton
               // @ts-ignore
               variant={platform.slug}
-              className="w-full px-10"
+              className="w-full px-12"
               key={platform.slug}
               href={platform.href}
               target="_blank"
