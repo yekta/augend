@@ -15,8 +15,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
-import { EthereumNetworkSchema } from "@/server/trpc/api/routers/ethereum/constants";
-import { TEthereumNetwork } from "@/server/trpc/api/routers/ethereum/types";
+import { EthereumNetworkSchema } from "@/server/trpc/api/ethereum/constants";
+import { TEthereumNetwork } from "@/server/trpc/api/ethereum/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Dispatch, SetStateAction, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";

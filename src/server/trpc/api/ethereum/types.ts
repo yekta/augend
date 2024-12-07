@@ -1,4 +1,4 @@
-import { EthereumNetworkSchema } from "@/server/trpc/api/routers/ethereum/constants";
+import { EthereumNetworkSchema } from "@/server/trpc/api/ethereum/constants";
 import { z } from "zod";
 
 export type TEthereumNetwork = z.infer<typeof EthereumNetworkSchema>;

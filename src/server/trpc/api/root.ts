@@ -1,11 +1,11 @@
-import { cmcRouter } from "@/server/trpc/api/routers/cmc/router";
-import { ethereumRouter } from "@/server/trpc/api/routers/ethereum/router";
-import { exchangeRouter } from "@/server/trpc/api/routers/exchange/router";
-import { fiatRouter } from "@/server/trpc/api/routers/fiat/router";
-import { nanoBananoRouter } from "@/server/trpc/api/routers/nano-banano/router";
-import { uiRouter } from "@/server/trpc/api/routers/ui/router";
-import { uniswapRouter } from "@/server/trpc/api/routers/uniswap/router";
-import { wbanRouter } from "@/server/trpc/api/routers/wban/router";
+import { cmcRouter } from "@/server/trpc/api/cmc/router";
+import { ethereumRouter } from "@/server/trpc/api/ethereum/router";
+import { exchangeRouter } from "@/server/trpc/api/exchange/router";
+import { fiatRouter } from "@/server/trpc/api/fiat/router";
+import { nanoBananoRouter } from "@/server/trpc/api/nano-banano/router";
+import { uiRouter } from "@/server/trpc/api/ui/router";
+import { uniswapRouter } from "@/server/trpc/api/uniswap/router";
+import { wbanRouter } from "@/server/trpc/api/wban/router";
 import {
   createCallerFactory,
   createTRPCRouter,

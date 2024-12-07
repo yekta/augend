@@ -1,4 +1,4 @@
-import { TCardValueForAddCards } from "@/server/trpc/api/routers/ui/types";
+import { TCardValueForAddCards } from "@/server/trpc/api/ui/types";
 
 export type TValueFormProps = {
   onFormSubmit: (values: TCardValueForAddCards[]) => void;

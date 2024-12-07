@@ -9,11 +9,8 @@ import { defaultQueryOptions } from "@/lib/constants";
 import { useConditionalValue } from "@/lib/hooks/use-conditional-value";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
-import { getExplorerUrl } from "@/server/trpc/api/routers/nano-banano/helpers";
-import {
-  TWbanIcon,
-  wbanNetworkObjects,
-} from "@/server/trpc/api/routers/wban/helpers";
+import { getExplorerUrl } from "@/server/trpc/api/nano-banano/helpers";
+import { TWbanIcon, wbanNetworkObjects } from "@/server/trpc/api/wban/helpers";
 import { api } from "@/server/trpc/setup/react";
 import { Flame, Hourglass, Snowflake } from "lucide-react";
 import Link from "next/link";

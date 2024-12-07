@@ -1,10 +1,10 @@
 import { cachedPromise } from "@/server/redis/redis";
-import { cmcApiUrl } from "@/server/trpc/api/routers/cmc/constants";
-import { cmcFetchOptions } from "@/server/trpc/api/routers/cmc/secrets";
-import { TCmcGetCryptosResult } from "@/server/trpc/api/routers/cmc/types";
-import { ethereumNetworks } from "@/server/trpc/api/routers/ethereum/constants";
-import { ethereumProviders } from "@/server/trpc/api/routers/ethereum/secrets";
-import { EthereumNetworkSchema } from "@/server/trpc/api/routers/ethereum/constants";
+import { cmcApiUrl } from "@/server/trpc/api/cmc/constants";
+import { cmcFetchOptions } from "@/server/trpc/api/cmc/secrets";
+import { TCmcGetCryptosResult } from "@/server/trpc/api/cmc/types";
+import { ethereumNetworks } from "@/server/trpc/api/ethereum/constants";
+import { ethereumProviders } from "@/server/trpc/api/ethereum/secrets";
+import { EthereumNetworkSchema } from "@/server/trpc/api/ethereum/constants";
 import {
   cachedPublicProcedure,
   createTRPCRouter,

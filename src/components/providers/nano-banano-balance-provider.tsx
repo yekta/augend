@@ -2,7 +2,7 @@
 
 import { defaultQueryOptions } from "@/lib/constants";
 import { AppRouterOutputs, AppRouterQueryResult } from "@/server/trpc/api/root";
-import { TNanoBananoAccount } from "@/server/trpc/api/routers/nano-banano/types";
+import { TNanoBananoAccount } from "@/server/trpc/api/nano-banano/types";
 import { api } from "@/server/trpc/setup/react";
 import React, { createContext, ReactNode, useContext } from "react";
 

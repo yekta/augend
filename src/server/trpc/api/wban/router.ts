@@ -2,7 +2,7 @@ import {
   getPendingWithdrawal,
   TWbanNetwork,
   wbanNetworkObjects,
-} from "@/server/trpc/api/routers/wban/helpers";
+} from "@/server/trpc/api/wban/helpers";
 import { createTRPCRouter, publicProcedure } from "@/server/trpc/setup/trpc";
 
 export const wbanRouter = createTRPCRouter({

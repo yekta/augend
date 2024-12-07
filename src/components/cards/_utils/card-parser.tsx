@@ -19,8 +19,8 @@ import { TCardOuterWrapperProps } from "@/components/cards/_utils/card-outer-wra
 import WBanSummaryCard from "@/components/cards/wban-summary/card";
 import { TCurrencyWithSelectedFields } from "@/server/db/repo/types";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
-import { TEthereumNetwork } from "@/server/trpc/api/routers/ethereum/types";
-import { TExchange } from "@/server/trpc/api/routers/exchange/types";
+import { TEthereumNetwork } from "@/server/trpc/api/ethereum/types";
+import { TExchange } from "@/server/trpc/api/exchange/types";
 
 export function CardParser({
   cardObject,

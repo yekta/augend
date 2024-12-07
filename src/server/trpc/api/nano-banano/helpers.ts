@@ -3,7 +3,7 @@ import {
   bananoExplorer,
   nanoAvatarUrl,
   nanoExplorer,
-} from "@/server/trpc/api/routers/nano-banano/constants";
+} from "@/server/trpc/api/nano-banano/constants";
 
 export function rawToBanOrNano(n: string, isNano: boolean) {
   return isNano ? rawToNano(n) : rawToBan(n);

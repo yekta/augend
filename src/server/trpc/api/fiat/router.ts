@@ -1,4 +1,4 @@
-import { tcmbApi } from "@/server/trpc/api/routers/fiat/helpers";
+import { tcmbApi } from "@/server/trpc/api/fiat/helpers";
 import {
   cachedPublicProcedure,
   createTRPCRouter,

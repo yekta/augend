@@ -18,7 +18,7 @@ import {
   isDashboardSlugAvailable,
 } from "@/server/db/repo/dashboard";
 import { getUser } from "@/server/db/repo/user";
-import { CardValueForAddCardsSchema } from "@/server/trpc/api/routers/ui/types";
+import { CardValueForAddCardsSchema } from "@/server/trpc/api/ui/types";
 import { createTRPCRouter, publicProcedure } from "@/server/trpc/setup/trpc";
 import { TRPCError } from "@trpc/server";
 import { Session } from "next-auth";

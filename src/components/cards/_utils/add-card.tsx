@@ -25,7 +25,7 @@ import {
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
 import { AppRouterOutputs, AppRouterQueryResult } from "@/server/trpc/api/root";
-import { TCardValueForAddCards } from "@/server/trpc/api/routers/ui/types";
+import { TCardValueForAddCards } from "@/server/trpc/api/ui/types";
 import { api } from "@/server/trpc/setup/react";
 import { ArrowDownCircle, ArrowLeftIcon, PlusIcon } from "lucide-react";
 import { Dispatch, SetStateAction, useState } from "react";

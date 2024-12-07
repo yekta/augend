@@ -1,11 +1,11 @@
 import { z } from "zod";
 
-import { getExchangeInstance } from "@/server/trpc/api/routers/exchange/helpers";
+import { getExchangeInstance } from "@/server/trpc/api/exchange/helpers";
 import {
   ExchangeSchema,
   TOHLCVResult,
   TOrderBook,
-} from "@/server/trpc/api/routers/exchange/types";
+} from "@/server/trpc/api/exchange/types";
 import {
   cachedPublicProcedure,
   createTRPCRouter,

@@ -11,8 +11,8 @@ import { defaultLocale, defaultQueryOptions } from "@/lib/constants";
 import { useConditionalValue } from "@/lib/hooks/use-conditional-value";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
-import { ethereumNetworks } from "@/server/trpc/api/routers/ethereum/constants";
-import { TEthereumNetwork } from "@/server/trpc/api/routers/ethereum/types";
+import { ethereumNetworks } from "@/server/trpc/api/ethereum/constants";
+import { TEthereumNetwork } from "@/server/trpc/api/ethereum/types";
 import { api } from "@/server/trpc/setup/react";
 import {
   ArrowRightLeftIcon,

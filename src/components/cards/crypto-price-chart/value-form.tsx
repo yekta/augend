@@ -4,10 +4,7 @@ import CardValuesFormWrapper from "@/components/cards/_utils/values-form/card-va
 import { TValueFormProps } from "@/components/cards/_utils/values-form/types";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import { cn } from "@/lib/utils";
-import {
-  ExchangeSchema,
-  TExchange,
-} from "@/server/trpc/api/routers/exchange/types";
+import { ExchangeSchema, TExchange } from "@/server/trpc/api/exchange/types";
 import { api } from "@/server/trpc/setup/react";
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 

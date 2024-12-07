@@ -10,10 +10,7 @@ import Indicator from "@/components/ui/indicator";
 import { defaultQueryOptions } from "@/lib/constants";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
-import {
-  TExchange,
-  TOrderBook,
-} from "@/server/trpc/api/routers/exchange/types";
+import { TExchange, TOrderBook } from "@/server/trpc/api/exchange/types";
 import { api } from "@/server/trpc/setup/react";
 import { ChartNoAxesCombinedIcon } from "lucide-react";
 

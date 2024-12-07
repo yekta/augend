@@ -7,7 +7,7 @@ import { useCurrencyPreference } from "@/components/providers/currency-preferenc
 import { useNanoBananoBalances } from "@/components/providers/nano-banano-balance-provider";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
-import { isNano } from "@/server/trpc/api/routers/nano-banano/helpers";
+import { isNano } from "@/server/trpc/api/nano-banano/helpers";
 
 export const bananoCmcId = 4704;
 

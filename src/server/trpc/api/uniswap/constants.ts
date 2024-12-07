@@ -1,6 +1,6 @@
-import { ethereumNetworks } from "@/server/trpc/api/routers/ethereum/constants";
-import { ethereumProviders } from "@/server/trpc/api/routers/ethereum/secrets";
-import { TEthereumNetwork } from "@/server/trpc/api/routers/ethereum/types";
+import { ethereumNetworks } from "@/server/trpc/api/ethereum/constants";
+import { ethereumProviders } from "@/server/trpc/api/ethereum/secrets";
+import { TEthereumNetwork } from "@/server/trpc/api/ethereum/types";
 import uniswapPositionManagerABIJson from "@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json";
 import { Contract } from "alchemy-sdk";
 

@@ -11,7 +11,7 @@ import { CryptoOrderBookValueForm } from "@/components/cards/order-book/value-fo
 import { UniswapPoolsTableValueForm } from "@/components/cards/uniswap-pools-table/value-form";
 import { UniswapPositionValueForm } from "@/components/cards/uniswap-position/value-form";
 import { WbanSummaryValueForm } from "@/components/cards/wban-summary/value-form";
-import { TCardValueForAddCards } from "@/server/trpc/api/routers/ui/types";
+import { TCardValueForAddCards } from "@/server/trpc/api/ui/types";
 import { CurrencyValueForm } from "@/components/cards/currency/value-form";
 
 type Props = {
