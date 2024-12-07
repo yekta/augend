@@ -39,8 +39,8 @@ function ScPage({ platform }: Props) {
 
 const generateSclPage = (platform: TScOption) => {
   return {
-    metadata: getScMetadata(platform),
-    page: () => <ScPage platform={platform} />,
+    meta: getScMetadata(platform),
+    Page: () => <ScPage platform={platform} />,
   };
 };
 
