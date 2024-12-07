@@ -1,4 +1,11 @@
 import SignInCard from "@/components/auth/sign-in-card";
+import { siteTitle } from "@/lib/constants";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: `Sign In | ${siteTitle}`,
+  description: "Start tracking your financial assets with Augend.",
+};
 
 type Props = {
   searchParams: Promise<{ callbackUrl?: string; error?: string }>;

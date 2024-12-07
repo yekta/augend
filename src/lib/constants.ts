@@ -1,4 +1,5 @@
 import { TCurrencyPreference } from "@/components/providers/currency-preference-provider";
+import { env } from "@/lib/env";
 
 export const defaultLocale: Intl.LocalesArgument = "en-US";
 
@@ -86,3 +87,11 @@ export const sc: Record<
     slug: "github",
   },
 };
+
+export const previewImages = {
+  path: "previews",
+  version: "v1",
+};
+
+export const getPreviewUrl = (slug: string) =>
+  `${env.NEXT_PUBLIC_SITE_URL}/${previewImages.path}/${previewImages.version}/${slug}.png`;
