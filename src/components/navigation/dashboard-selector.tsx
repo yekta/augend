@@ -1,6 +1,7 @@
 "use client";
 
 import ErrorLine from "@/components/error-line";
+import { CreateDashboardSchemaUI } from "@/components/navigation/types";
 import { useDashboards } from "@/components/providers/dashboards-provider";
 import { Button } from "@/components/ui/button";
 import {
@@ -197,17 +198,6 @@ export default function DashboardSelector({}: Props) {
   );
 }
 
-const CreateDashboardFormSchema = z.object({
-  title: z
-    .string()
-    .min(2, {
-      message: "Should be at least 2 characters.",
-    })
-    .max(32, {
-      message: "Should be at most 32 characters.",
-    }),
-});
-
 function CreateDashboardButton({
   username,
   open,
@@ -223,8 +213,8 @@ function CreateDashboardButton({
     dashboardId: string;
   }) => void;
 }) {
-  const form = useForm<z.infer<typeof CreateDashboardFormSchema>>({
-    resolver: zodResolver(CreateDashboardFormSchema),
+  const form = useForm<z.infer<typeof CreateDashboardSchemaUI>>({
+    resolver: zodResolver(CreateDashboardSchemaUI),
     defaultValues: {
       title: "",
     },
@@ -235,16 +225,16 @@ function CreateDashboardButton({
     mutate: createDashboard,
     isPending,
     error,
-    isError,
   } = api.ui.createDashboard.useMutation({
     onSuccess: async (d) => {
-      await asyncRouterPush(`/${username}/${d.slug}`);
+      const path = `/${d.username}/${d.slug}`;
+      await asyncRouterPush(path);
       onOpenChange(false);
       onDashboardCreated?.(d);
     },
   });
 
-  function onSubmit(values: z.infer<typeof CreateDashboardFormSchema>) {
+  function onSubmit(values: z.infer<typeof CreateDashboardSchemaUI>) {
     createDashboard({
       title: values.title,
     });

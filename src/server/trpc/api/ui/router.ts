@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { RenameDashboardSchemaUI } from "@/app/[username]/[dashboard_slug]/_components/types";
+import { CreateDashboardSchemaUI } from "@/components/navigation/types";
 import { mainDashboardSlug } from "@/lib/constants";
 import {
   createCard,
@@ -266,14 +267,7 @@ export const uiRouter = createTRPCRouter({
   createDashboard: publicProcedure
     .input(
       z.object({
-        title: z
-          .string()
-          .min(2, {
-            message: "Dashboard name should be at least 2 characters.",
-          })
-          .max(32, {
-            message: "Dashboard name should be at most 32 characters.",
-          }),
+        title: CreateDashboardSchemaUI.shape.title,
         icon: z.string().optional(),
         xOrder: z.number().optional(),
       })
@@ -314,6 +308,7 @@ export const uiRouter = createTRPCRouter({
         dashboardId,
         slug,
         title,
+        username: session.user.username,
       };
     }),
   renameDashboard: publicProcedure

@@ -46,7 +46,9 @@ export default async function Navbar({ className }: Props) {
               </NavigationMenuItem>
             </div>
           ) : (
-            <UserAvatar session={session} />
+            <div className="pr-0.25">
+              <UserAvatar session={session} />
+            </div>
           )}
         </div>
       </NavbarWrapper>
