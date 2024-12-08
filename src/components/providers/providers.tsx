@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/providers/theme-provider";
 import { defaultTheme, themes } from "@/components/providers/themes";
 import { SessionProvider } from "next-auth/react";
 import WagmiProvider from "@/components/providers/wagmi-provider";
+import DashboardsProvider from "@/components/providers/dashboards-provider";
 
 export default async function Providers({
   children,
@@ -20,7 +21,9 @@ export default async function Providers({
       <WagmiProvider>
         <TRPCReactProvider>
           <SessionProvider>
-            <IsTouchscreenProvider>{children}</IsTouchscreenProvider>
+            <IsTouchscreenProvider>
+              <DashboardsProvider>{children}</DashboardsProvider>
+            </IsTouchscreenProvider>
           </SessionProvider>
         </TRPCReactProvider>
       </WagmiProvider>

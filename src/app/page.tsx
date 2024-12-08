@@ -124,18 +124,20 @@ function Providers({
 }) {
   const finalCryptoIds = cleanAndSortArray(cryptoIds);
   return (
-    <CurrencyPreferenceProvider currencyPreference={defaultCurrencyPreference}>
-      <CmcGlobalMetricsProvider>
-        <CmcCryptoInfosProvider
-          cryptos={finalCryptoIds.map((i) => ({ id: i }))}
-        >
-          <FiatCurrencyRatesProvider>
-            <CurrentDashboardProvider username="main" dashboardSlug="main">
+    <CurrentDashboardProvider username="main" dashboardSlug="main">
+      <CurrencyPreferenceProvider
+        currencyPreference={defaultCurrencyPreference}
+      >
+        <CmcGlobalMetricsProvider>
+          <CmcCryptoInfosProvider
+            cryptos={finalCryptoIds.map((i) => ({ id: i }))}
+          >
+            <FiatCurrencyRatesProvider>
               <DndProvider initialIds={[]}>{children}</DndProvider>
-            </CurrentDashboardProvider>
-          </FiatCurrencyRatesProvider>
-        </CmcCryptoInfosProvider>
-      </CmcGlobalMetricsProvider>
-    </CurrencyPreferenceProvider>
+            </FiatCurrencyRatesProvider>
+          </CmcCryptoInfosProvider>
+        </CmcGlobalMetricsProvider>
+      </CurrencyPreferenceProvider>
+    </CurrentDashboardProvider>
   );
 }

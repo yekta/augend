@@ -1,6 +1,7 @@
 "use client";
 
 import ErrorLine from "@/components/error-line";
+import { useDashboards } from "@/components/providers/dashboards-provider";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -40,23 +41,19 @@ import { z } from "zod";
 type Props = {};
 
 export default function DashboardSelector({}: Props) {
+  const {
+    data,
+    isPending,
+    isLoadingError,
+    invalidate,
+    isDashboardPath,
+    username,
+    dashboardSlug,
+  } = useDashboards();
+
   const pathname = usePathname();
-  const arr = pathname.split("/");
-  const username = arr.length > 1 ? pathname.split("/")[1] : undefined;
-  const dashboardSlug = arr.length > 2 ? pathname.split("/")[2] : undefined;
-  const isDashboardPath = pathname.split("/").length >= 3;
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isCreateDashboardOpen, setIsCreateDashboardOpen] = useState(false);
-
-  const utils = api.useUtils();
-  const { data, isPending, isLoadingError } = api.ui.getDashboards.useQuery(
-    {
-      username: username!,
-    },
-    {
-      enabled: isDashboardPath,
-    }
-  );
 
   const [selectedDashboard, setSelectedDashboard] = useState(
     data?.dashboards && data.dashboards.length > 0
@@ -77,7 +74,7 @@ export default function DashboardSelector({}: Props) {
       title: dashboard.title,
       slug: dashboard.slug,
     });
-    utils.ui.getDashboards.invalidate({ username });
+    invalidate();
   };
 
   const [firstCheckAfterDataCompleted, setFirstCheckAfterDataCompleted] =

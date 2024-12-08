@@ -1,6 +1,6 @@
 "use client";
 
-import CurrentDashboardProvider from "@/app/[username]/[dashboard_slug]/_components/current-dashboard-provider";
+import { useCurrentDashboard } from "@/app/[username]/[dashboard_slug]/_components/current-dashboard-provider";
 import DashboardGrid from "@/app/[username]/[dashboard_slug]/_components/dashboard-grid";
 import { DashboardTitleBar } from "@/app/[username]/[dashboard_slug]/_components/dashboard-title-bar";
 import { useDnd } from "@/app/[username]/[dashboard_slug]/_components/dnd-provider";
@@ -15,40 +15,22 @@ import { LinkButton } from "@/components/ui/button";
 import { mainDashboardSlug } from "@/lib/constants";
 import { cleanAndSortArray } from "@/server/redis/cache-utils";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
-import { api } from "@/server/trpc/setup/react";
 import { ReactNode, useMemo } from "react";
 
 const componentRequiresNewRow = ["order_book", "crypto_price_chart"];
 
-export default function DashboardPage({
-  username,
-  dashboardSlug,
-  cardsInitialData,
-  dashboardInitialData,
-}: {
-  username: string;
-  dashboardSlug: string;
-  cardsInitialData?: AppRouterOutputs["ui"]["getCards"];
-  dashboardInitialData?: AppRouterOutputs["ui"]["getDashboard"];
-}) {
-  const { data: cardsData, isLoadingError: isLoadingErrorCards } =
-    api.ui.getCards.useQuery(
-      { username, dashboardSlug },
-      {
-        initialData: cardsInitialData,
-      }
-    );
+export default function DashboardPage({}: {}) {
+  const {
+    username,
+    dashboardSlug,
+    dataCards,
+    dataDashboard,
+    isLoadingErrorCards,
+  } = useCurrentDashboard();
 
-  const { data: dashboardData } = api.ui.getDashboard.useQuery(
-    { username, dashboardSlug },
-    {
-      initialData: dashboardInitialData,
-    }
-  );
-
-  const cards = cardsData?.cards;
-  const dashboard = dashboardData;
-  const currencies = cardsData?.currencies;
+  const cards = dataCards?.cards;
+  const dashboard = dataDashboard;
+  const currencies = dataCards?.currencies;
 
   const firstCard = cards && cards.length > 0 ? cards[0] : undefined;
   const currencyPreference: TCurrencyPreference | false | undefined =
@@ -155,14 +137,7 @@ export default function DashboardPage({
   const MainProviders = useMemo(
     () =>
       ({ children }: { children: ReactNode }) => {
-        return (
-          <CurrentDashboardProvider
-            username={username}
-            dashboardSlug={dashboardSlug}
-          >
-            <EditModeProvider>{children}</EditModeProvider>
-          </CurrentDashboardProvider>
-        );
+        return <EditModeProvider>{children}</EditModeProvider>;
       },
     [username, dashboardSlug]
   );
