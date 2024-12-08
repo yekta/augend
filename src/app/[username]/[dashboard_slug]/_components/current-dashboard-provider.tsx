@@ -20,6 +20,7 @@ type TCurrentDashboardContext = {
   invalidateDashboard: () => Promise<void>;
   cancelDashboardsQuery: () => Promise<void>;
   dashboardName?: string;
+  invalidateDashboards: () => Promise<void>;
   errorMessageDashboard?: string;
 };
 
@@ -90,6 +91,7 @@ export const CurrentDashboardProvider: FC<Props> = ({
         invalidateDashboard,
         cancelDashboardsQuery,
         errorMessageDashboard: errorDashboard?.message,
+        invalidateDashboards,
         hasCards:
           dataCards === null
             ? false

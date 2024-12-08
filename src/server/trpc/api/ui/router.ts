@@ -15,6 +15,7 @@ import { createCardValues } from "@/server/db/repo/card_values";
 import { getCurrencies } from "@/server/db/repo/currencies";
 import {
   createDashboard,
+  deleteDashboard,
   getDashboard,
   getDashboards,
   getMaximumDashboardXOrder,
@@ -359,6 +360,34 @@ export const uiRouter = createTRPCRouter({
         slug: result.slug,
         title: result.title,
         username: session.user.username,
+      };
+    }),
+  deleteDashboard: publicProcedure
+    .input(
+      z.object({
+        slug: z.string(),
+      })
+    )
+    .mutation(async function ({ input: { slug }, ctx: { session } }) {
+      if (!session || session.user.id === undefined) {
+        throw new TRPCError({
+          message: "Unauthorized",
+          code: "UNAUTHORIZED",
+        });
+      }
+      if (slug === mainDashboardSlug) {
+        throw new TRPCError({
+          message: "Cannot delete main dashboard.",
+          code: "BAD_REQUEST",
+        });
+      }
+      await deleteDashboard({
+        userId: session.user.id,
+        slug,
+      });
+      return {
+        username: session.user.username,
+        slug,
       };
     }),
   getUser: publicProcedure.query(async function ({ ctx: { session } }) {

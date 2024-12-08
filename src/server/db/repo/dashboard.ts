@@ -1,6 +1,7 @@
 import { mainDashboardSlug } from "@/lib/constants";
 import { db } from "@/server/db/db";
 import { cardsTable, dashboardsTable, usersTable } from "@/server/db/schema";
+import { TRPCError } from "@trpc/server";
 import { and, asc, desc, eq, inArray, isNull } from "drizzle-orm";
 
 type SharedProps = {
@@ -159,6 +160,27 @@ export async function renameDashboard({
     slug: _newSlug,
     title,
   };
+}
+
+export async function deleteDashboard({
+  userId,
+  slug,
+}: {
+  userId: string;
+  slug: string;
+}) {
+  if (slug === mainDashboardSlug) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "Cannot delete main dashboard",
+    });
+  }
+  await db
+    .update(dashboardsTable)
+    .set({ deletedAt: new Date() })
+    .where(
+      and(eq(dashboardsTable.userId, userId), eq(dashboardsTable.slug, slug))
+    );
 }
 
 export async function isDashboardSlugAvailable({
