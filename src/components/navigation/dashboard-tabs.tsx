@@ -8,7 +8,7 @@ import {
 import {
   BananaIcon,
   CalculatorIcon,
-  LucideLayoutDashboard,
+  LayoutDashboardIcon,
   TriangleAlertIcon,
 } from "lucide-react";
 
@@ -61,7 +61,7 @@ export default function DashboardTabs({
                 ? BananaIcon
                 : route.icon === "calculator"
                 ? CalculatorIcon
-                : LucideLayoutDashboard;
+                : LayoutDashboardIcon;
             return (
               <NavigationMenuItem asChild key={route.href}>
                 <Link

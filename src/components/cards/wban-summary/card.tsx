@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 import { getExplorerUrl } from "@/server/trpc/api/nano-banano/helpers";
 import { TWbanIcon, wbanNetworkObjects } from "@/server/trpc/api/wban/helpers";
 import { api } from "@/server/trpc/setup/react";
-import { Flame, Hourglass, Snowflake } from "lucide-react";
+import { FlameIcon, HourglassIcon, SnowflakeIcon } from "lucide-react";
 import Link from "next/link";
 
 export const wbanBalanceQueryInput = {
@@ -116,7 +116,7 @@ export default function WBanSummaryCard({
                 className="flex-1 flex items-center justify-start gap-1.5 md:gap-2 px-2 md:px-5 not-touch:hover:bg-background-hover active:bg-background-hover py-4 min-w-0"
               >
                 <IconWithPlaceholder
-                  Icon={Snowflake}
+                  Icon={SnowflakeIcon}
                   isPending={isPending}
                   className="shrink-0 size-4 md:size-5 text-nano rounded-sm md:rounded-md"
                 />
@@ -149,7 +149,7 @@ export default function WBanSummaryCard({
                 className="flex-1 flex items-center justify-start gap-1.5 md:gap-2 px-2 md:px-5 not-touch:hover:bg-background-hover active:bg-background-hover py-4 min-w-0"
               >
                 <IconWithPlaceholder
-                  Icon={Flame}
+                  Icon={FlameIcon}
                   isPending={isPending}
                   className="shrink-0 size-4 md:size-5 text-destructive rounded md:rounded-md"
                 />
@@ -187,7 +187,7 @@ export default function WBanSummaryCard({
                 className="flex-1 flex items-center justify-start gap-1.5 md:gap-2 px-2 md:px-5 rounded-lg py-4 group/pending min-w-0 overflow-hidden"
               >
                 <IconWithPlaceholder
-                  Icon={Hourglass}
+                  Icon={HourglassIcon}
                   isPending={isPending}
                   className="shrink-0 size-4 md:size-5 text-banano group-data-[warning]/pending:text-destructive rounded md:rounded-md"
                 />
