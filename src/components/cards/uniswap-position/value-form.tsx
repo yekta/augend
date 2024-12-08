@@ -124,11 +124,9 @@ export function UniswapPositionValueForm({
               </div>
               <FormControl>
                 <Input
+                  autoComplete="off"
                   type="number"
                   className="w-full"
-                  autoCapitalize="none"
-                  autoComplete="off"
-                  autoCorrect="off"
                   placeholder="10101"
                   {...field}
                 />

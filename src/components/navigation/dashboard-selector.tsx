@@ -275,10 +275,8 @@ function CreateDashboardButton({
                   </FormLabel>
                   <FormControl>
                     <Input
-                      className="w-full"
-                      autoCapitalize="none"
                       autoComplete="off"
-                      autoCorrect="off"
+                      className="w-full"
                       placeholder="New Dashboard"
                       {...field}
                     />

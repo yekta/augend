@@ -102,10 +102,8 @@ export function NanoBananoValueForm({
               </div>
               <FormControl>
                 <Input
-                  className="w-full"
-                  autoCapitalize="none"
                   autoComplete="off"
-                  autoCorrect="off"
+                  className="w-full"
                   placeholder={
                     network === "nano"
                       ? "nano_1natrium1o3z5519ifou7xii8crpxpk8y65qmkih8e8bpsjri651oza8imdd"

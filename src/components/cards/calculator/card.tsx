@@ -163,6 +163,7 @@ export default function CalculatorCard({
             className="w-full relative group/input"
           >
             <Input
+              autoComplete="off"
               disabled={isLoadingError}
               ref={(e) => {
                 inputRefs.current[index] = e;

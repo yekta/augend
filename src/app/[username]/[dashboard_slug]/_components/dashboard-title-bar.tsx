@@ -180,10 +180,8 @@ export function DashboardTitleBar({
                         </FormLabel>
                         <FormControl>
                           <Input
-                            className="w-full"
-                            autoCapitalize="none"
                             autoComplete="off"
-                            autoCorrect="off"
+                            className="w-full"
                             placeholder={dashboardName || "New Name"}
                             {...field}
                           />
@@ -252,6 +250,7 @@ export function DashboardTitleBar({
                   className="flex flex-col gap-4"
                 >
                   <Input
+                    autoComplete="off"
                     value={inputValueDeleteDashboard}
                     onChange={(e) =>
                       setInputValueDeleteDashboard(e.target.value)
