@@ -1,3 +1,4 @@
+import { mainDashboardSlug } from "@/lib/constants";
 import { db } from "@/server/db/db";
 import { cardsTable, dashboardsTable, usersTable } from "@/server/db/schema";
 import { and, asc, desc, eq, inArray, isNull } from "drizzle-orm";
@@ -134,20 +135,30 @@ export async function createDashboard({
 
 export async function renameDashboard({
   title,
-  slug,
+  currentSlug,
+  newSlug,
   userId,
 }: {
   title: string;
-  slug: string;
+  currentSlug: string;
+  newSlug: string;
   userId: string;
 }) {
+  const _newSlug =
+    currentSlug === mainDashboardSlug ? mainDashboardSlug : newSlug;
   await db
     .update(dashboardsTable)
-    .set({ title })
+    .set({ title, slug: _newSlug })
     .where(
-      and(eq(dashboardsTable.userId, userId), eq(dashboardsTable.slug, slug))
+      and(
+        eq(dashboardsTable.userId, userId),
+        eq(dashboardsTable.slug, currentSlug)
+      )
     );
-  return true;
+  return {
+    slug: _newSlug,
+    title,
+  };
 }
 
 export async function isDashboardSlugAvailable({

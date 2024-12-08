@@ -2,6 +2,7 @@ import { useCurrentDashboard } from "@/app/[username]/[dashboard_slug]/_componen
 import { useDnd } from "@/app/[username]/[dashboard_slug]/_components/dnd-provider";
 import { EditButton } from "@/app/[username]/[dashboard_slug]/_components/edit-button";
 import { useEditMode } from "@/app/[username]/[dashboard_slug]/_components/edit-mode-provider";
+import { RenameDashboardSchemaUI } from "@/app/[username]/[dashboard_slug]/_components/types";
 import { AddCardButton } from "@/components/cards/_utils/add-card";
 import ErrorLine from "@/components/error-line";
 import { Button } from "@/components/ui/button";
@@ -22,23 +23,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useAsyncRouterPush } from "@/lib/hooks/use-async-router-push";
 import { api } from "@/server/trpc/setup/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
-const RenameDashboardFormSchema = z.object({
-  title: z
-    .string()
-    .min(2, {
-      message: "Should be at least 2 characters.",
-    })
-    .max(32, {
-      message: "Should be at most 32 characters.",
-    }),
-});
 
 type Props = {
   isOwner: boolean;
@@ -54,6 +45,7 @@ export function DashboardTitleBar({
   hasCards,
 }: Props) {
   const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false);
+  const asyncPush = useAsyncRouterPush();
   const { isPendingReorderCards } = useDnd();
   const {
     dashboardName,
@@ -72,25 +64,27 @@ export function DashboardTitleBar({
     onMutate: () => {
       cancelDashboardsQuery();
     },
-    onSuccess: async () => {
+    onSuccess: async (data) => {
+      const path = `/${data.username}/${data.slug}`;
+      await asyncPush(path);
       await invalidateDashboard();
       setIsRenameDialogOpen(false);
     },
   });
 
-  const form = useForm<z.infer<typeof RenameDashboardFormSchema>>({
-    resolver: zodResolver(RenameDashboardFormSchema),
+  const form = useForm<z.infer<typeof RenameDashboardSchemaUI>>({
+    resolver: zodResolver(RenameDashboardSchemaUI),
     defaultValues: {
       title: "",
     },
   });
 
   async function onRenameDashboardFormSubmit(
-    values: z.infer<typeof RenameDashboardFormSchema>
+    values: z.infer<typeof RenameDashboardSchemaUI>
   ) {
     renameDashboard({
       title: values.title,
-      dashboardSlug: dashboardSlug,
+      slug: dashboardSlug,
     });
   }
 

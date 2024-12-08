@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { RenameDashboardSchemaUI } from "@/app/[username]/[dashboard_slug]/_components/types";
+import { mainDashboardSlug } from "@/lib/constants";
 import {
   createCard,
   deleteCards,
@@ -19,11 +21,11 @@ import {
   renameDashboard,
 } from "@/server/db/repo/dashboard";
 import { getUser } from "@/server/db/repo/user";
+import { cleanAndSortArray } from "@/server/redis/cache-utils";
 import { CardValueForAddCardsSchema } from "@/server/trpc/api/ui/types";
 import { createTRPCRouter, publicProcedure } from "@/server/trpc/setup/trpc";
 import { TRPCError } from "@trpc/server";
 import { Session } from "next-auth";
-import { cleanAndSortArray } from "@/server/redis/cache-utils";
 
 function getIsOwner({
   session,
@@ -317,34 +319,52 @@ export const uiRouter = createTRPCRouter({
   renameDashboard: publicProcedure
     .input(
       z.object({
-        title: z
-          .string()
-          .max(32)
-          .min(2, {
-            message: "Dashboard name should be at least 2 characters.",
-          })
-          .max(32, {
-            message: "Dashboard name should be at most 32 characters.",
-          }),
-        dashboardSlug: z.string(),
+        title: RenameDashboardSchemaUI.shape.title,
+        slug: z.string(),
       })
     )
-    .mutation(async function ({
-      input: { title, dashboardSlug },
-      ctx: { session },
-    }) {
+    .mutation(async function ({ input: { title, slug }, ctx: { session } }) {
       if (!session || session.user.id === undefined) {
         throw new TRPCError({
           message: "Unauthorized",
           code: "UNAUTHORIZED",
         });
       }
-      const result = await renameDashboard({
-        title: title,
-        slug: dashboardSlug,
+      if (slug === mainDashboardSlug) {
+        const result = await renameDashboard({
+          title: title,
+          currentSlug: mainDashboardSlug,
+          newSlug: mainDashboardSlug,
+          userId: session.user.id,
+        });
+        return {
+          slug: result.slug,
+          title: result.title,
+          username: session.user.username,
+        };
+      }
+
+      let newSlug = slugify(title);
+      const isAvailable = await isDashboardSlugAvailable({
+        slug: newSlug,
         userId: session.user.id,
       });
-      return result;
+      if (!isAvailable) {
+        newSlug = addRandomStringToSlug(newSlug);
+      }
+
+      const result = await renameDashboard({
+        title: title,
+        currentSlug: slug,
+        newSlug: newSlug,
+        userId: session.user.id,
+      });
+
+      return {
+        slug: result.slug,
+        title: result.title,
+        username: session.user.username,
+      };
     }),
   getUser: publicProcedure.query(async function ({ ctx: { session } }) {
     if (!session || session.user.id === undefined) {
