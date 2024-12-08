@@ -11,7 +11,7 @@ export default function Footer({ className }: { className?: string }) {
       )}
     >
       <div className="w-full max-w-7xl px-2 md:px-6">
-        <div className="w-full overflow-hidden flex items-center justify-between py-3 md:py-2 gap-2 px-4 ring-1 ring-border rounded-t-xl">
+        <div className="w-full overflow-hidden flex items-center justify-between py-3 md:py-2 gap-2 pl-4 pr-3 md:px-2 ring-1 ring-border rounded-t-xl">
           <div className="size-8.5 shrink-0 hidden md:flex" />
           <div className="shrink min-0 overflow-hidden font-medium flex flex-col md:flex-row text-sm text-muted-foreground">
             <p className="shrink min-w-0 text-sm text-left md:text-center">
