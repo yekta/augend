@@ -28,7 +28,7 @@ import { useAsyncRouterPush } from "@/lib/hooks/use-async-router-push";
 import { api } from "@/server/trpc/setup/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderIcon, PencilIcon, TrashIcon } from "lucide-react";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -53,8 +53,16 @@ export function DashboardTitleBar({
   const [inputValueDeleteDashboard, setInputValueDeleteDashboard] =
     useState("");
 
+  const form = useForm<z.infer<typeof RenameDashboardSchemaUI>>({
+    resolver: zodResolver(RenameDashboardSchemaUI),
+    defaultValues: {
+      title: "",
+    },
+  });
+
   const asyncPush = useAsyncRouterPush();
   const { isPendingReorderCards } = useDnd();
+
   const {
     dashboardName,
     isPendingDashboard,
@@ -78,6 +86,7 @@ export function DashboardTitleBar({
       await asyncPush(path);
       await invalidateDashboard();
       setIsDialogOpenRenameDashboard(false);
+      form.reset();
     },
   });
 
@@ -97,13 +106,6 @@ export function DashboardTitleBar({
     },
   });
 
-  const form = useForm<z.infer<typeof RenameDashboardSchemaUI>>({
-    resolver: zodResolver(RenameDashboardSchemaUI),
-    defaultValues: {
-      title: "",
-    },
-  });
-
   async function onRenameDashboardFormSubmit(
     values: z.infer<typeof RenameDashboardSchemaUI>
   ) {
@@ -111,6 +113,11 @@ export function DashboardTitleBar({
       title: values.title,
       slug: dashboardSlug,
     });
+  }
+
+  async function onDeleteDashboardFormSubmit(e: FormEvent) {
+    e.preventDefault();
+    deleteDashboard({ slug: dashboardSlug });
   }
 
   return (
@@ -241,10 +248,7 @@ export function DashboardTitleBar({
                   </DialogDescription>
                 </DialogHeader>
                 <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    deleteDashboard({ slug: dashboardSlug });
-                  }}
+                  onSubmit={onDeleteDashboardFormSubmit}
                   className="flex flex-col gap-4"
                 >
                   <Input
