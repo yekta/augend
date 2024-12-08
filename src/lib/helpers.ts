@@ -49,27 +49,27 @@ export function timeAgoIntl(date: Date, now: Date): string {
   const sign = now.getTime() > date.getTime() ? -1 : 1;
   const seconds = Math.abs(Math.floor((date.getTime() - now.getTime()) / 1000));
 
-  if (Math.abs(seconds) < 60) {
+  if (seconds < 60) {
     return rtf1.format(sign * seconds, "seconds");
   }
 
   const minutes = seconds / 60;
-  if (Math.abs(minutes) < 60) {
+  if (minutes < 60) {
     return rtf1.format(sign * Math.floor(minutes), "minutes");
   }
 
   const hours = minutes / 60;
-  if (Math.abs(hours) < 24) {
+  if (hours < 24) {
     return rtf1.format(sign * Math.floor(hours), "hours");
   }
 
   const days = hours / 24;
-  if (Math.abs(days) < 30) {
+  if (days < 30) {
     return rtf1.format(sign * Math.floor(days), "days");
   }
 
   const months = days / 30;
-  if (Math.abs(months) < 12) {
+  if (months < 12) {
     return rtf1.format(sign * Math.floor(months), "months");
   }
 
