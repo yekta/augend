@@ -26,7 +26,7 @@ import { Input } from "@/components/ui/input";
 import { useAsyncRouterPush } from "@/lib/hooks/use-async-router-push";
 import { api } from "@/server/trpc/setup/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LoaderIcon } from "lucide-react";
+import { LoaderIcon, PencilIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -102,18 +102,21 @@ export function DashboardTitleBar({
         <Dialog open={isRenameDialogOpen} onOpenChange={setIsRenameDialogOpen}>
           <DialogTrigger
             className="focus:outline-none focus-visible:outline-none focus-visible:ring-foreground/50 focus-visible:ring-offset-2 
-            focus-visible:ring-offset-background focus-visible:ring-1 rounded-lg"
+            focus-visible:ring-offset-background focus-visible:ring-1 rounded-lg shrink min-w-0 flex"
           >
-            <h1
-              className="border not-touch:hover:bg-border active:bg-border px-2 py-1.5 md:py-0.5 rounded-lg 
-              font-bold text-xl md:text-2xl leading-none truncate shrink"
+            <div
+              className="flex shrink min-w-0 rounded-lg items-center justify-start gap-2 
+              border not-touch:hover:bg-border active:bg-border px-2 py-1.5 md:py-0.5 overflow-hidden"
             >
-              {isPendingDashboard
-                ? "Loading"
-                : isLoadingErrorDashboard
-                ? "Error"
-                : dashboardName}
-            </h1>
+              <h1 className="font-bold text-xl md:text-2xl leading-none truncate shrink min-w-0">
+                {isPendingDashboard
+                  ? "Loading"
+                  : isLoadingErrorDashboard
+                  ? "Error"
+                  : dashboardName}
+              </h1>
+              <PencilIcon className="size-4 md:size-4.5 -my-1 shrink-0" />
+            </div>
           </DialogTrigger>
           <DialogContent
             classNameInnerWrapper="gap-4"

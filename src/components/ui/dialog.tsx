@@ -51,39 +51,94 @@ const DialogContent = React.forwardRef<
     VariantProps<typeof dialogContentVariants> & {
       classNameInnerWrapper?: string;
     }
->(({ className, classNameInnerWrapper, variant, children, ...props }, ref) => (
-  <DialogPortal>
-    <DialogOverlay>
-      <DialogPrimitive.Content
-        ref={ref}
-        className={cn(
-          "outline-none focus:outline-none",
-          dialogContentVariants({ variant }),
-          className
-        )}
-        {...props}
-      >
-        <div
-          className={cn(
-            "w-full flex flex-col max-w-[calc(100vw-1rem)] gap-4",
-            classNameInnerWrapper
-          )}
-        >
-          {children}
-          {variant !== "styleless" && (
-            <DialogPrimitive.Close
-              className="absolute right-0 top-0 rounded-xl p-2.5 opacity-50 not-touch:hover:opacity-100 active:opacity-100 ring-1 ring-transparent 
-              focus-visible:outline-none focus-visible:ring-foreground disabled:pointer-events-none text-muted-foreground"
+>(
+  (
+    {
+      className,
+      classNameInnerWrapper,
+      variant,
+      children,
+      onPointerDownOutside,
+      onPointerDown,
+      onCloseAutoFocus,
+      ...props
+    },
+    ref
+  ) => {
+    const isCloseFromMouse = React.useRef<boolean>(false);
+
+    const handlePointerDownOutside = React.useCallback(
+      (e: unknown) => {
+        isCloseFromMouse.current = true;
+        // @ts-expect-error - they don't export the PointerDownOutsideEvent
+        onPointerDownOutside?.(e);
+      },
+      [onPointerDownOutside]
+    );
+
+    const handlePointerDown = React.useCallback(
+      (e: unknown) => {
+        isCloseFromMouse.current = true;
+        // @ts-expect-error - they don't export the PointerDownEvent
+        onPointerDown?.(e);
+      },
+      [onPointerDown]
+    );
+
+    const handleCloseAutoFocus = React.useCallback(
+      (e: Event) => {
+        if (onCloseAutoFocus) {
+          return onCloseAutoFocus(e);
+        }
+
+        if (!isCloseFromMouse.current) {
+          return;
+        }
+
+        e.preventDefault();
+        isCloseFromMouse.current = false;
+      },
+      [onCloseAutoFocus]
+    );
+
+    return (
+      <DialogPortal>
+        <DialogOverlay>
+          <DialogPrimitive.Content
+            onPointerDownOutside={handlePointerDownOutside}
+            onPointerDown={handlePointerDown}
+            onCloseAutoFocus={handleCloseAutoFocus}
+            ref={ref}
+            className={cn(
+              "outline-none focus:outline-none",
+              dialogContentVariants({ variant }),
+              className
+            )}
+            {...props}
+          >
+            <div
+              className={cn(
+                "w-full flex flex-col max-w-[calc(100vw-1rem)] gap-4",
+                classNameInnerWrapper
+              )}
             >
-              <Cross2Icon className="h-5 w-5" />
-              <span className="sr-only">Close</span>
-            </DialogPrimitive.Close>
-          )}
-        </div>
-      </DialogPrimitive.Content>
-    </DialogOverlay>
-  </DialogPortal>
-));
+              {children}
+              {variant !== "styleless" && (
+                <DialogPrimitive.Close
+                  className="absolute right-0 top-0 rounded-xl p-2.5 opacity-50 not-touch:hover:opacity-100 active:opacity-100 ring-1 ring-transparent 
+                focus-visible:outline-none focus-visible:ring-foreground disabled:pointer-events-none text-muted-foreground"
+                >
+                  <Cross2Icon className="h-5 w-5" />
+                  <span className="sr-only">Close</span>
+                </DialogPrimitive.Close>
+              )}
+            </div>
+          </DialogPrimitive.Content>
+        </DialogOverlay>
+      </DialogPortal>
+    );
+  }
+);
 DialogContent.displayName = DialogPrimitive.Content.displayName;
 
 const DialogHeader = ({

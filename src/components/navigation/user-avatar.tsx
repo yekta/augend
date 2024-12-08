@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { signOutAction } from "@/components/auth/actions";
 import { useActionState, useState } from "react";
-import { LoaderIcon } from "lucide-react";
+import { LoaderIcon, LogOutIcon } from "lucide-react";
 import { useDisconnect } from "wagmi";
 
 type Props = {
@@ -90,10 +90,11 @@ export default function UserAvatar({ session }: Props) {
                 className="w-full"
               >
                 <button
-                  className="w-full px-2.5 text-left leading-tight py-1.5 text-base"
+                  className="w-full flex items-center px-2.5 gap-2 text-left leading-tight py-1.5 text-base"
                   type="submit"
                 >
-                  Sign Out
+                  <LogOutIcon className="size-5 shrink-0 -ml-0.5 -my-1" />
+                  <p className="shrink min-w-0">Sign Out</p>
                 </button>
               </form>
             </DropdownMenuItem>
