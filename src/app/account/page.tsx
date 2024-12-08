@@ -18,7 +18,6 @@ export default async function Page({}: Props) {
   if (!session) {
     return redirect("/sign-in?callbackUrl=/account");
   }
-  const user = session.user;
   const initialData = await apiServer.ui.getUserFull();
   return (
     <UserFullProvider initialData={initialData}>

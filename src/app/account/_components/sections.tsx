@@ -2,18 +2,14 @@
 
 import { useUserFull } from "@/app/[username]/[dashboard_slug]/_components/user-full-provider";
 import Blockies from "@/components/blockies/blockies";
+import { timeAgoIntl } from "@/lib/helpers";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
 
 type Props = {};
 
 export default function AccountSections({}: Props) {
   const { dataUser, isPendingUser, isLoadingErrorUser } = useUserFull();
-
   const user = dataUser?.user;
-
-  const rtf1 = new Intl.RelativeTimeFormat("en", {
-    style: "narrow",
-  });
 
   return (
     <div
@@ -100,16 +96,7 @@ export default function AccountSections({}: Props) {
                   className="text-muted-foreground font-normal"
                   suppressHydrationWarning
                 >
-                  (
-                  {rtf1.format(
-                    Math.round(
-                      ((new Date(user.createdAt).getTime() - Date.now()) /
-                        (1000 * 60 * 60 * 24)) *
-                        10
-                    ) / 10,
-                    "days"
-                  )}
-                  )
+                  ({timeAgoIntl(new Date(user.createdAt), new Date())})
                 </span>
               </span>
             ) : isPendingUser ? (
