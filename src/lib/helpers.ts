@@ -50,7 +50,7 @@ export function timeAgoIntl(date: Date, now: Date): string {
   const seconds = Math.abs(Math.floor((date.getTime() - now.getTime()) / 1000));
 
   if (seconds < 60) {
-    return rtf1.format(sign * seconds, "seconds");
+    return rtf1.format(sign * Math.floor(seconds), "seconds");
   }
 
   const minutes = seconds / 60;
