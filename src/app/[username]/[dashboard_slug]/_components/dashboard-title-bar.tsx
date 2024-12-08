@@ -123,7 +123,7 @@ export function DashboardTitleBar({
   return (
     <div className="col-span-12 items-center justify-between flex gap-1.5 px-1 pb-1 md:pb-2">
       {!isEnabledEdit || !isOwner ? (
-        <h1 className="border border-transparent px-2 py-1.5 md:py-0.5 rounded-lg font-bold text-xl md:text-2xl leading-none truncate shrink">
+        <h1 className="border border-transparent px-2 py-1.75 md:py-0.5 rounded-lg font-bold text-xl md:text-2xl leading-none truncate shrink">
           {isPendingDashboard
             ? "Loading"
             : isLoadingErrorDashboard
@@ -143,7 +143,7 @@ export function DashboardTitleBar({
             >
               <div
                 className="flex shrink min-w-0 rounded-lg items-center justify-start gap-2 
-                border not-touch:hover:bg-border active:bg-border px-2 py-1.5 md:py-0.5 overflow-hidden"
+                border not-touch:hover:bg-border active:bg-border px-2 py-1.75 md:py-0.5 overflow-hidden"
               >
                 <h1 className="font-bold text-xl md:text-2xl leading-none truncate shrink min-w-0">
                   {isPendingDashboard
