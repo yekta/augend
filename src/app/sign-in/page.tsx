@@ -1,6 +1,8 @@
 import SignInCard from "@/components/auth/sign-in-card";
-import { siteTitle } from "@/lib/constants";
+import { mainDashboardSlug, siteTitle } from "@/lib/constants";
+import { auth } from "@/server/auth/auth";
 import { Metadata } from "next";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: `Sign In | ${siteTitle}`,
@@ -13,9 +15,32 @@ type Props = {
 
 export default async function SignInPage({ searchParams }: Props) {
   const { callbackUrl, error } = await searchParams;
+  let cleanedCallbackUrl: string | undefined = undefined;
+
+  if (callbackUrl) {
+    if (callbackUrl.startsWith("/")) {
+      cleanedCallbackUrl = callbackUrl;
+    } else {
+      try {
+        const url = new URL(callbackUrl);
+        const { pathname, search } = url;
+        cleanedCallbackUrl = pathname + search;
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+
+  const session = await auth();
+  if (session?.user) {
+    return redirect(
+      cleanedCallbackUrl || `/${session.user.username}/${mainDashboardSlug}`
+    );
+  }
+
   return (
     <div className="w-full flex-1 flex flex-col items-center justify-center px-4 pt-6 pb-[calc(8vh+3rem)]">
-      <SignInCard error={error} callbackUrl={callbackUrl} />
+      <SignInCard error={error} callbackUrl={cleanedCallbackUrl} />
     </div>
   );
 }

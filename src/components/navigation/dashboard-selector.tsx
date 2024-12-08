@@ -56,14 +56,10 @@ export default function DashboardSelector({}: Props) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isCreateDashboardOpen, setIsCreateDashboardOpen] = useState(false);
 
-  const [selectedDashboard, setSelectedDashboard] = useState(
-    data?.dashboards && data.dashboards.length > 0
-      ? {
-          title: data.dashboards[0].dashboard.title,
-          slug: data.dashboards[0].dashboard.slug,
-        }
-      : null
-  );
+  const [selectedDashboard, setSelectedDashboard] = useState<{
+    title: string;
+    slug: string;
+  } | null>(null);
 
   const onDashboardCreated = (dashboard: {
     slug: string;
@@ -106,6 +102,8 @@ export default function DashboardSelector({}: Props) {
   const noDashboards =
     data && (data.dashboards === null || data.dashboards.length === 0);
 
+  const isDashboardNamePending = isPending || !firstCheckAfterDataCompleted;
+
   return (
     isDashboardPath &&
     username &&
@@ -117,9 +115,9 @@ export default function DashboardSelector({}: Props) {
               size="sm"
               variant="outline"
               className="font-semibold w-36 md:w-44 text-left justify-between items-center gap-1 group/trigger px-2.5 py-2.5"
-              data-pending={isPending ? true : undefined}
+              data-pending={isDashboardNamePending ? true : undefined}
               data-loading-error={isHardError ? true : undefined}
-              disabled={isPending || isHardError || noDashboards}
+              disabled={isDashboardNamePending || isHardError || noDashboards}
             >
               <p
                 className="truncate pointer-events-none select-none group-data-[pending]/trigger:text-transparent group-data-[pending]/trigger:bg-foreground 
@@ -129,6 +127,8 @@ export default function DashboardSelector({}: Props) {
                   ? "Error"
                   : data === null || (data && noCurrentDashboard)
                   ? "Not found"
+                  : isDashboardNamePending
+                  ? "Loading"
                   : selectedDashboard?.title || "Loading"}
               </p>
               {data !== null && !noDashboards && !isHardError && (

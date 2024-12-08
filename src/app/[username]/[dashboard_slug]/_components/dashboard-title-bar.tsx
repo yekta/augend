@@ -90,7 +90,7 @@ export function DashboardTitleBar({
       cancelDashboardsQuery();
     },
     onSuccess: async (data) => {
-      const path = `/${data.username}/main`;
+      const path = `/${data.username}/${mainDashboardSlug}`;
       await asyncPush(path);
       await invalidateDashboards();
       setIsDialogOpenDeleteDashboard(false);
@@ -115,7 +115,7 @@ export function DashboardTitleBar({
 
   return (
     <div className="col-span-12 items-center justify-between flex gap-1.5 px-1 pb-1 md:pb-2">
-      {!isEnabledEdit && isOwner ? (
+      {!isEnabledEdit || !isOwner ? (
         <h1 className="border border-transparent px-2 py-1.5 md:py-0.5 rounded-lg font-bold text-xl md:text-2xl leading-none truncate shrink">
           {isPendingDashboard
             ? "Loading"
