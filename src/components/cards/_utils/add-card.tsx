@@ -27,7 +27,7 @@ import { cn } from "@/lib/utils";
 import { AppRouterOutputs, AppRouterQueryResult } from "@/server/trpc/api/root";
 import { TCardValueForAddCards } from "@/server/trpc/api/ui/types";
 import { api } from "@/server/trpc/setup/react";
-import { ArrowDownCircle, ArrowLeftIcon, PlusIcon } from "lucide-react";
+import { ArrowDownCircleIcon, ArrowLeftIcon, PlusIcon } from "lucide-react";
 import { Dispatch, SetStateAction, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 
@@ -275,7 +275,7 @@ export function AddCardCommandPanel({
                         </p>
                       </div>
                       <div className="shrink-0 flex text-muted-foreground text-sm items-center justify-end text-right gap-1">
-                        <ArrowDownCircle
+                        <ArrowDownCircleIcon
                           className="size-3 -my-1 group-data-[pending]/command:text-transparent group-data-[pending]/command:rounded-full
                           group-data-[pending]/command:bg-muted-foreground group-data-[pending]/command:animate-skeleton"
                         />
