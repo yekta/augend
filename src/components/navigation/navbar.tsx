@@ -7,6 +7,7 @@ import {
   NavigationMenu,
   NavigationMenuItem,
 } from "@/components/ui/navigation-menu";
+import { mainDashboardSlug } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { auth } from "@/server/auth/auth";
 
@@ -28,7 +29,11 @@ export default async function Navbar({ className }: Props) {
           <div className="flex flex-1 min-w-0 items-center justify-start gap-1">
             <NavigationMenuItem asChild>
               <LinkButton
-                href="/"
+                href={
+                  session
+                    ? `/${session.user.username}/${mainDashboardSlug}`
+                    : "/"
+                }
                 variant="outline"
                 className="border-none p-2"
               >

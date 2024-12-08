@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: `Sign In | ${siteTitle}`,
-  description: "Start tracking your financial assets with Augend.",
+  description: `Start tracking your financial assets with ${siteTitle}.`,
 };
 
 type Props = {

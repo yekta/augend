@@ -1,5 +1,5 @@
 import Redirector from "@/app/(scl)/_components/redirector";
-import { sc, TScOption } from "@/lib/constants";
+import { sc, siteTitle, TScOption } from "@/lib/constants";
 
 import { LoaderIcon } from "lucide-react";
 import { Metadata } from "next";
@@ -7,7 +7,7 @@ import { Metadata } from "next";
 function getScMetadata(platform: TScOption): Metadata {
   const data = sc[platform];
   return {
-    title: `${data.name} | Augend`,
+    title: `${data.name} | ${siteTitle}`,
     description: `Join us on ${data.name}.`,
   };
 }

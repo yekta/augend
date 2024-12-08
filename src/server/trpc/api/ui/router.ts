@@ -22,7 +22,7 @@ import {
   isDashboardSlugAvailable,
   renameDashboard,
 } from "@/server/db/repo/dashboard";
-import { getUser } from "@/server/db/repo/user";
+import { getUser, getUserFull } from "@/server/db/repo/user";
 import { cleanAndSortArray } from "@/server/redis/cache-utils";
 import { CardValueForAddCardsSchema } from "@/server/trpc/api/ui/types";
 import { createTRPCRouter, publicProcedure } from "@/server/trpc/setup/trpc";
@@ -398,6 +398,16 @@ export const uiRouter = createTRPCRouter({
       });
     }
     const user = await getUser({ userId: session.user.id });
+    return user;
+  }),
+  getUserFull: publicProcedure.query(async function ({ ctx: { session } }) {
+    if (!session || session.user.id === undefined) {
+      throw new TRPCError({
+        message: "Unauthorized",
+        code: "UNAUTHORIZED",
+      });
+    }
+    const user = await getUserFull({ userId: session.user.id });
     return user;
   }),
 });

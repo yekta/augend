@@ -23,11 +23,19 @@ import {
 } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 
-const primaryCurrencyAlias = alias(currenciesTable, "primary_currency");
-const secondaryCurrencyAlias = alias(currenciesTable, "secondary_currency");
-const tertiaryCurrencyAlias = alias(currenciesTable, "tertiary_currency");
+export const primaryCurrencyAlias = alias(currenciesTable, "primary_currency");
+export const secondaryCurrencyAlias = alias(
+  currenciesTable,
+  "secondary_currency"
+);
+export const tertiaryCurrencyAlias = alias(
+  currenciesTable,
+  "tertiary_currency"
+);
 
-function getCurrencyFields(curr: TCurrencyAlias): TCurrencyFieldSelectors {
+export function getCurrencyFields(
+  curr: TCurrencyAlias
+): TCurrencyFieldSelectors {
   return {
     id: curr.id,
     ticker: curr.ticker,

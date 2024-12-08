@@ -14,6 +14,7 @@ import { signOutAction } from "@/components/auth/actions";
 import { useActionState, useState } from "react";
 import { LoaderIcon, LogOutIcon } from "lucide-react";
 import { useDisconnect } from "wagmi";
+import Link from "next/link";
 
 type Props = {
   session: Session;
@@ -70,8 +71,11 @@ export default function UserAvatar({ session }: Props) {
           className="font-semibold w-52 max-w-[calc(100vw-1.1rem)] shadow-xl shadow-shadow/[var(--opacity-shadow)]"
         >
           <DropdownMenuGroup>
-            <DropdownMenuItem className="p-0">
-              <div className="w-full px-2.5 py-1.5 gap-2 flex items-center justify-start">
+            <DropdownMenuItem asChild>
+              <Link
+                href="/account"
+                className="w-full px-2.5 py-1.5 gap-2 flex items-center justify-start cursor-pointer"
+              >
                 <Blockies
                   width={24}
                   height={24}
@@ -81,7 +85,7 @@ export default function UserAvatar({ session }: Props) {
                 <p className="font-bold text-sm shrink min-w-0 truncate">
                   {user.username}
                 </p>
-              </div>
+              </Link>
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />

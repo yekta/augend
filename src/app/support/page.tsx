@@ -1,10 +1,10 @@
 import SclIcon from "@/components/icons/scl-icon";
 import { LinkButton } from "@/components/ui/button";
-import { sc, TScOption } from "@/lib/constants";
+import { sc, siteTitle, TScOption } from "@/lib/constants";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Support | Augend",
+  title: `Support | ${siteTitle}`,
   description: "Reach out to us.",
 };
 
