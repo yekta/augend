@@ -24,8 +24,8 @@ export default async function Navbar({ className }: Props) {
       )}
     >
       <NavbarWrapper>
-        <div className="w-full flex items-center justify-between p-1.5 md:p-2">
-          <div className="flex items-center justify-start gap-1">
+        <div className="w-full flex items-center justify-between p-1.5 md:p-2 gap-2.5">
+          <div className="flex flex-1 min-w-0 items-center justify-start gap-1">
             <NavigationMenuItem asChild>
               <LinkButton
                 href="/"

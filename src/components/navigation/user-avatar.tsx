@@ -67,7 +67,7 @@ export default function UserAvatar({ session }: Props) {
         <DropdownMenuContent
           align="end"
           sideOffset={8}
-          className="font-semibold w-48 shadow-xl shadow-shadow/[var(--opacity-shadow)]"
+          className="font-semibold w-52 max-w-[calc(100vw-1.1rem)] shadow-xl shadow-shadow/[var(--opacity-shadow)]"
         >
           <DropdownMenuGroup>
             <DropdownMenuItem className="p-0">

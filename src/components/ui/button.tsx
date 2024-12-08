@@ -45,10 +45,16 @@ const buttonVariants = cva(
         default: "",
         loading: "opacity-75 disabled:opacity-75",
       },
+      fadeOnDisabled: {
+        default: "",
+        false: "disabled:opacity-100",
+      },
     },
     defaultVariants: {
       variant: "default",
       size: "default",
+      state: "default",
+      fadeOnDisabled: "default",
     },
   }
 );
@@ -67,13 +73,24 @@ export interface LinkButtonProps
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
-    { className, variant, size, disabled, state, asChild = false, ...props },
+    {
+      className,
+      variant,
+      size,
+      disabled,
+      fadeOnDisabled,
+      state,
+      asChild = false,
+      ...props
+    },
     ref
   ) => {
     const Comp = asChild ? Slot : "button";
     return (
       <Comp
-        className={cn(buttonVariants({ variant, size, className, state }))}
+        className={cn(
+          buttonVariants({ variant, size, className, state, fadeOnDisabled })
+        )}
         ref={ref}
         disabled={state === "loading" ? true : disabled}
         {...props}
@@ -84,10 +101,12 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 Button.displayName = "Button";
 
 const LinkButton = React.forwardRef<HTMLAnchorElement, LinkButtonProps>(
-  ({ className, variant, size, state, ...props }, ref) => {
+  ({ className, variant, size, state, fadeOnDisabled, ...props }, ref) => {
     return (
       <Link
-        className={cn(buttonVariants({ variant, size, className, state }))}
+        className={cn(
+          buttonVariants({ variant, size, className, state, fadeOnDisabled })
+        )}
         ref={ref}
         {...props}
       />

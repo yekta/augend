@@ -114,7 +114,8 @@ export default function DashboardSelector({}: Props) {
             <Button
               size="sm"
               variant="outline"
-              className="font-semibold w-36 md:w-44 text-left justify-between items-center gap-1 group/trigger px-2.5 py-2.5"
+              fadeOnDisabled={false}
+              className="font-semibold shrink max-w-[13rem] min-w-0 text-left justify-between items-center gap-1.25 group/trigger px-2.5 py-2.5"
               data-pending={isDashboardNamePending ? true : undefined}
               data-loading-error={isHardError ? true : undefined}
               disabled={isDashboardNamePending || isHardError || noDashboards}
@@ -138,7 +139,7 @@ export default function DashboardSelector({}: Props) {
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align="start"
-            className="w-[var(--radix-popper-anchor-width)] p-0 flex flex-col max-h-[min(calc((100vh-4rem)*0.7),20rem)] shadow-xl shadow-shadow/[var(--opacity-shadow)]"
+            className="w-52 max-w-[calc(100vw-4rem)] p-0 flex flex-col max-h-[min(calc((100vh-4rem)*0.7),20rem)] shadow-xl shadow-shadow/[var(--opacity-shadow)]"
           >
             {data && (
               <>
