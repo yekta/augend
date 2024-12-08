@@ -39,7 +39,10 @@ export default function UserAvatar({ session }: Props) {
   return (
     <div className="p-0.5 flex items-center justify-center">
       <DropdownMenu open={open} onOpenChange={setOpen}>
-        <DropdownMenuTrigger disabled={isPendingSignOut}>
+        <DropdownMenuTrigger
+          disabled={isPendingSignOut}
+          className="focus:outline-none focus-visible:outline-none rounded-full focus-visible:ring-1 focus-visible:ring-foreground/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        >
           <div
             data-open={open ? true : undefined}
             data-pending={isPendingSignOut ? true : undefined}
@@ -90,7 +93,7 @@ export default function UserAvatar({ session }: Props) {
                 className="w-full"
               >
                 <button
-                  className="w-full flex items-center px-2.5 gap-2 text-left leading-tight py-1.5 text-base"
+                  className="w-full flex items-center px-2.5 gap-2 text-left leading-tight py-2 text-base"
                   type="submit"
                 >
                   <LogOutIcon className="size-5 shrink-0 -ml-0.5 -my-1" />
