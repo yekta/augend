@@ -132,6 +132,24 @@ export async function createDashboard({
   return id;
 }
 
+export async function renameDashboard({
+  title,
+  slug,
+  userId,
+}: {
+  title: string;
+  slug: string;
+  userId: string;
+}) {
+  await db
+    .update(dashboardsTable)
+    .set({ title })
+    .where(
+      and(eq(dashboardsTable.userId, userId), eq(dashboardsTable.slug, slug))
+    );
+  return true;
+}
+
 export async function isDashboardSlugAvailable({
   slug,
   userId,

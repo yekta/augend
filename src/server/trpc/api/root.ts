@@ -12,6 +12,7 @@ import {
 } from "@/server/trpc/setup/trpc";
 import {
   inferReactQueryProcedureOptions,
+  inferRouterClient,
   TRPCClientErrorLike,
 } from "@trpc/react-query";
 import { UseTRPCQueryResult } from "@trpc/react-query/shared";
@@ -37,6 +38,7 @@ export const appRouter = createTRPCRouter({
 export type AppRouter = typeof appRouter;
 export type AppRouterReactQueryOptions =
   inferReactQueryProcedureOptions<AppRouter>;
+export type AppRouterQueryClient = inferRouterClient<AppRouter>;
 export type AppRouterInputs = inferRouterInputs<AppRouter>;
 export type AppRouterOutputs = inferRouterOutputs<AppRouter>;
 

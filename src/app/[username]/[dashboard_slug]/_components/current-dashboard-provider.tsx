@@ -1,17 +1,20 @@
 "use client";
 
 import { api } from "@/server/trpc/setup/react";
-import { createContext, FC, ReactNode, useContext, useEffect } from "react";
+import { createContext, FC, ReactNode, useContext } from "react";
 
 type TCurrentDashboardContext = {
   username?: string;
   dashboardSlug?: string;
   invalidateCards: () => Promise<void>;
   cancelCardsQuery: () => Promise<void>;
-  isPendingCardInvalidation: boolean;
+  invalidateDashboard: () => Promise<void>;
+  cancelDashboardsQuery: () => Promise<void>;
+  isPendingCards: boolean;
+  isPendingDashboard: boolean;
   dashboardName?: string;
-  isPendingDashboardName: boolean;
-  isLoadingErrorDashboardName: boolean;
+  isLoadingErrorDashboard: boolean;
+  errorMessageDashboard?: string;
   hasCards?: boolean;
 };
 
@@ -19,25 +22,51 @@ const CurrentDashboardContext = createContext<TCurrentDashboardContext | null>(
   null
 );
 
-export const CurrentDashboardProvider: FC<{
+type Props = {
   username: string;
   dashboardSlug: string;
   children: ReactNode;
-}> = ({ username, dashboardSlug, children }) => {
+  onSuccessDashboardRename?: () => void;
+};
+
+export const CurrentDashboardProvider: FC<Props> = ({
+  username,
+  dashboardSlug,
+  children,
+}) => {
   const utils = api.useUtils();
+
   const {
-    data: dataCard,
+    data: dataCards,
     isPending: isPendingCards,
     isLoadingError: isLoadingErrorCards,
   } = api.ui.getCards.useQuery({
     username,
     dashboardSlug,
   });
-  const dashboardName = dataCard?.dashboard?.data.dashboard.title;
+
+  const {
+    data: dataDashboard,
+    isPending: isPendingDashboard,
+    error: errorDashboard,
+    isLoadingError: isLoadingErrorDashboard,
+  } = api.ui.getDashboard.useQuery({
+    username,
+    dashboardSlug,
+  });
+
+  const dashboardName =
+    dataDashboard?.data.dashboard.title ||
+    dataCards?.dashboard?.data.dashboard.title;
+
   const invalidateCards = () =>
     utils.ui.getCards.invalidate({ username, dashboardSlug });
   const cancelCardsQuery = () =>
     utils.ui.getCards.cancel({ username, dashboardSlug });
+  const invalidateDashboard = () =>
+    utils.ui.getDashboard.invalidate({ username, dashboardSlug });
+  const cancelDashboardsQuery = () =>
+    utils.ui.getDashboard.cancel({ username, dashboardSlug });
 
   return (
     <CurrentDashboardContext.Provider
@@ -46,15 +75,18 @@ export const CurrentDashboardProvider: FC<{
         dashboardSlug,
         invalidateCards,
         cancelCardsQuery,
-        isPendingCardInvalidation: isPendingCards,
+        isPendingCards,
         dashboardName,
-        isPendingDashboardName: isPendingCards,
-        isLoadingErrorDashboardName: isLoadingErrorCards,
+        isPendingDashboard,
+        invalidateDashboard,
+        cancelDashboardsQuery,
+        isLoadingErrorDashboard,
+        errorMessageDashboard: errorDashboard?.message,
         hasCards:
-          dataCard === null
+          dataCards === null
             ? false
-            : dataCard !== undefined
-            ? dataCard.cards.length > 0
+            : dataCards !== undefined
+            ? dataCards.cards.length > 0
               ? true
               : false
             : undefined,

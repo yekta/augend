@@ -2,11 +2,12 @@
 
 import { useEditMode } from "@/app/[username]/[dashboard_slug]/_components/edit-mode-provider";
 
+import { useCurrentDashboard } from "@/app/[username]/[dashboard_slug]/_components/current-dashboard-provider";
 import {
   dndItemType,
   useDnd,
 } from "@/app/[username]/[dashboard_slug]/_components/dnd-provider";
-import { useCurrentDashboard } from "@/app/[username]/[dashboard_slug]/_components/current-dashboard-provider";
+import ErrorLine from "@/components/error-line";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -28,7 +29,6 @@ import { LoaderIcon, XIcon } from "lucide-react";
 import Link from "next/link";
 import { ComponentProps, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import ErrorLine from "@/components/error-line";
 
 type TSharedProps = {
   cardId?: string;
@@ -75,11 +75,9 @@ export default function CardOuterWrapper({
     className
   );
 
-  const { invalidateCards, isPendingCardInvalidation, hasCards } =
-    useCurrentDashboard();
+  const { invalidateCards } = useCurrentDashboard();
 
-  const { isEnabled: isEditModeEnabled, disable: disableEditMode } =
-    useEditMode();
+  const { isEnabled: isEditModeEnabled } = useEditMode();
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [dndState, setDndState] = useState<TDndState>("idle");
@@ -89,15 +87,13 @@ export default function CardOuterWrapper({
 
   const {
     mutate: deleteCard,
-    isPending: isPendingDelete,
-    error: errorDelete,
+    isPending: isPendingDeleteCard,
+    error: errorDeleteCard,
   } = api.ui.deleteCards.useMutation({
     onSuccess: async () => {
       await invalidateCards();
     },
   });
-
-  const isPendingAny = isPendingDelete || isPendingCardInvalidation;
 
   const onDeleteClick = async ({ cardId }: { cardId: string }) => {
     if (!cardId) return;
@@ -189,7 +185,7 @@ export default function CardOuterWrapper({
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
               <Button
-                state={isPendingAny ? "loading" : "default"}
+                state={isPendingDeleteCard ? "loading" : "default"}
                 onClick={() => setIsDialogOpen(true)}
                 size="icon"
                 variant="outline"
@@ -198,7 +194,7 @@ export default function CardOuterWrapper({
                   group-data-[dnd-over]/card:opacity-0 group-data-[dnd-dragging]/card:opacity-0"
               >
                 <div className="size-4">
-                  {isPendingAny ? (
+                  {isPendingDeleteCard ? (
                     <LoaderIcon className="size-full animate-spin" />
                   ) : (
                     <XIcon className="size-full" />
@@ -209,14 +205,16 @@ export default function CardOuterWrapper({
             <DialogContent className="max-w-sm">
               <DialogHeader>
                 <DialogTitle className="text-destructive">
-                  Are you sure?
+                  Delete card
                 </DialogTitle>
                 <DialogDescription>
                   This action cannot be undone. Are you sure you want to delete
                   this card?
                 </DialogDescription>
               </DialogHeader>
-              {errorDelete && <ErrorLine message={errorDelete.message} />}
+              {errorDeleteCard && (
+                <ErrorLine message={errorDeleteCard.message} />
+              )}
               <div className="flex justify-end flex-wrap gap-2">
                 <Button
                   onClick={() => setIsDialogOpen(false)}
@@ -227,12 +225,12 @@ export default function CardOuterWrapper({
                 </Button>
                 <Button
                   onClick={() => onDeleteClick({ cardId })}
-                  state={isPendingAny ? "loading" : "default"}
-                  data-pending={isPendingAny ? true : undefined}
+                  state={isPendingDeleteCard ? "loading" : "default"}
+                  data-pending={isPendingDeleteCard ? true : undefined}
                   variant="destructive"
                   className="group/button"
                 >
-                  {isPendingAny && (
+                  {isPendingDeleteCard && (
                     <div className="size-6 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
                       <LoaderIcon className="size-full animate-spin" />
                     </div>

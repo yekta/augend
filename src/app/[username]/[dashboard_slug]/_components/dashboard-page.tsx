@@ -24,10 +24,12 @@ export default function DashboardPage({
   username,
   dashboardSlug,
   cardsInitialData,
+  dashboardInitialData,
 }: {
   username: string;
   dashboardSlug: string;
   cardsInitialData?: AppRouterOutputs["ui"]["getCards"];
+  dashboardInitialData?: AppRouterOutputs["ui"]["getDashboard"];
 }) {
   const { data: cardsData, isLoadingError: isLoadingErrorCards } =
     api.ui.getCards.useQuery(
@@ -37,8 +39,15 @@ export default function DashboardPage({
       }
     );
 
+  const { data: dashboardData } = api.ui.getDashboard.useQuery(
+    { username, dashboardSlug },
+    {
+      initialData: dashboardInitialData,
+    }
+  );
+
   const cards = cardsData?.cards;
-  const dashboard = cardsData?.dashboard;
+  const dashboard = dashboardData;
   const currencies = cardsData?.currencies;
 
   const firstCard = cards && cards.length > 0 ? cards[0] : undefined;

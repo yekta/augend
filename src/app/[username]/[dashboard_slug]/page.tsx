@@ -31,8 +31,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function Page({ params }: Props) {
   const { dashboard_slug, username } = await params;
 
-  const [cardsInitialData] = await Promise.all([
+  const [cardsInitialData, dashboardInitialData] = await Promise.all([
     apiServer.ui.getCards({ username, dashboardSlug: dashboard_slug }),
+    apiServer.ui.getDashboard({ username, dashboardSlug: dashboard_slug }),
   ]);
 
   return (
@@ -40,6 +41,7 @@ export default async function Page({ params }: Props) {
       username={username}
       dashboardSlug={dashboard_slug}
       cardsInitialData={cardsInitialData}
+      dashboardInitialData={dashboardInitialData}
     />
   );
 }

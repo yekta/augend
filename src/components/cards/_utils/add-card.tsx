@@ -61,7 +61,7 @@ export function AddCardButton({
 
   const inputs = selectedCardType?.inputs;
 
-  const { invalidateCards, isPendingCardInvalidation } = useCurrentDashboard();
+  const { invalidateCards } = useCurrentDashboard();
 
   const {
     mutate: createCardMutation,
@@ -74,8 +74,6 @@ export function AddCardButton({
       setSelectedCardType(null);
     },
   });
-
-  const isPendingForm = isPendingCardInvalidation || isPendingCreateCard;
 
   const onSubmit = (values: TCardValueForAddCards[]) => {
     const _values = values.map((value) => ({
@@ -131,7 +129,7 @@ export function AddCardButton({
             inputs={inputs}
             selectedCardType={selectedCardType}
             setSelectedCardType={setSelectedCardType}
-            isPendingForm={isPendingForm}
+            isPendingForm={isPendingCreateCard}
             errorForm={errorCreateCard}
             onSubmit={onSubmit}
             getCardTypesQuery={getCardTypesQuery}

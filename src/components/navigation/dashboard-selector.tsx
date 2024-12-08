@@ -148,7 +148,7 @@ export default function DashboardSelector({}: Props) {
                   <>
                     {/* Create Dashboard Button */}
                     <DropdownMenuGroup className="p-1">
-                      <AddCardButton
+                      <CreateDashboardButton
                         onDashboardCreated={onDashboardCreated}
                         username={username}
                         open={isCreateDashboardOpen}
@@ -200,7 +200,7 @@ export default function DashboardSelector({}: Props) {
   );
 }
 
-const CreateCardFormSchema = z.object({
+const CreateDashboardFormSchema = z.object({
   title: z
     .string()
     .min(2, {
@@ -211,7 +211,7 @@ const CreateCardFormSchema = z.object({
     }),
 });
 
-function AddCardButton({
+function CreateDashboardButton({
   username,
   open,
   onOpenChange,
@@ -226,13 +226,14 @@ function AddCardButton({
     dashboardId: string;
   }) => void;
 }) {
-  const form = useForm<z.infer<typeof CreateCardFormSchema>>({
-    resolver: zodResolver(CreateCardFormSchema),
+  const form = useForm<z.infer<typeof CreateDashboardFormSchema>>({
+    resolver: zodResolver(CreateDashboardFormSchema),
     defaultValues: {
       title: "",
     },
   });
   const asyncRouterPush = useAsyncRouterPush();
+
   const {
     mutate: createDashboard,
     isPending,
@@ -245,11 +246,13 @@ function AddCardButton({
       onDashboardCreated?.(d);
     },
   });
-  function onSubmit(values: z.infer<typeof CreateCardFormSchema>) {
+
+  function onSubmit(values: z.infer<typeof CreateDashboardFormSchema>) {
     createDashboard({
       title: values.title,
     });
   }
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>

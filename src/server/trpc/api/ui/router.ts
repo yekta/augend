@@ -16,6 +16,7 @@ import {
   getDashboards,
   getMaximumDashboardXOrder,
   isDashboardSlugAvailable,
+  renameDashboard,
 } from "@/server/db/repo/dashboard";
 import { getUser } from "@/server/db/repo/user";
 import { CardValueForAddCardsSchema } from "@/server/trpc/api/ui/types";
@@ -265,8 +266,12 @@ export const uiRouter = createTRPCRouter({
       z.object({
         title: z
           .string()
-          .min(2, { message: "Title should be at least 4 characters." })
-          .max(32, { message: "Title should be at most 32 characters." }),
+          .min(2, {
+            message: "Dashboard name should be at least 2 characters.",
+          })
+          .max(32, {
+            message: "Dashboard name should be at most 32 characters.",
+          }),
         icon: z.string().optional(),
         xOrder: z.number().optional(),
       })
@@ -308,6 +313,38 @@ export const uiRouter = createTRPCRouter({
         slug,
         title,
       };
+    }),
+  renameDashboard: publicProcedure
+    .input(
+      z.object({
+        title: z
+          .string()
+          .max(32)
+          .min(2, {
+            message: "Dashboard name should be at least 2 characters.",
+          })
+          .max(32, {
+            message: "Dashboard name should be at most 32 characters.",
+          }),
+        dashboardSlug: z.string(),
+      })
+    )
+    .mutation(async function ({
+      input: { title, dashboardSlug },
+      ctx: { session },
+    }) {
+      if (!session || session.user.id === undefined) {
+        throw new TRPCError({
+          message: "Unauthorized",
+          code: "UNAUTHORIZED",
+        });
+      }
+      const result = await renameDashboard({
+        title: title,
+        slug: dashboardSlug,
+        userId: session.user.id,
+      });
+      return result;
     }),
   getUser: publicProcedure.query(async function ({ ctx: { session } }) {
     if (!session || session.user.id === undefined) {
