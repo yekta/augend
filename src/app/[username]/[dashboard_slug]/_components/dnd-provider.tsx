@@ -33,7 +33,7 @@ export default function DndProvider({ initialIds, children }: Props) {
   const { mutate: reorderCards, isPending: isPendingReorderCards } =
     api.ui.reorderCards.useMutation({
       onMutate: async () => {
-        await cancelCardsQuery();
+        cancelCardsQuery();
       },
       onSuccess: async () => {
         await invalidateCards();

@@ -297,11 +297,11 @@ export function DashboardTitleBar({
       )}
       {isOwner ? (
         <div className="flex items-center justify-start shrink-0 gap-1.5">
-          {isPendingReorderCards && (
-            <div className="size-9 flex items-center justify-center">
+          <div className="size-7 flex items-center justify-center">
+            {isPendingReorderCards && (
               <LoaderIcon className="size-5 text-muted-more-foreground animate-spin" />
-            </div>
-          )}
+            )}
+          </div>
           <AddCardButton
             variant="icon"
             username={username}
