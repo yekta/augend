@@ -11,16 +11,9 @@ import CmcGlobalMetricsProvider from "@/components/providers/cmc/cmc-global-metr
 import CurrencyPreferenceProvider from "@/components/providers/currency-preference-provider";
 import FiatCurrencyRatesProvider from "@/components/providers/fiat-currency-rates-provider";
 import { LinkButton } from "@/components/ui/button";
-import {
-  defaultCurrencyPreference,
-  mainDashboardSlug,
-  siteDescription,
-  siteTagline,
-  siteTitle,
-} from "@/lib/constants";
+import { defaultCurrencyPreference, mainDashboardSlug } from "@/lib/constants";
 import { auth } from "@/server/auth/auth";
 import { cleanAndSortArray } from "@/server/redis/cache-utils";
-import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { ReactNode } from "react";
 
