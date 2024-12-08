@@ -207,7 +207,6 @@ export const dashboardsTable = pgTable(
     title: varchar("title", { ...mediumText }).notNull(),
     slug: varchar("slug", { ...mediumText }).notNull(),
     icon: text("icon").default("default").notNull(),
-    isMain: boolean("is_main").notNull().default(false),
     isPublic: boolean("is_public").notNull().default(false),
     ...timestamps,
   },

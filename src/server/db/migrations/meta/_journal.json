@@ -64,6 +64,13 @@
       "when": 1733467068056,
       "tag": "0008_simple_paladin",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1733630100295,
+      "tag": "0009_public_jackpot",
+      "breakpoints": true
     }
   ]
 }
