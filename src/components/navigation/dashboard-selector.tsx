@@ -110,12 +110,12 @@ export default function DashboardSelector({}: Props) {
     dashboardSlug && (
       <>
         <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
-          <DropdownMenuTrigger asChild>
+          <DropdownMenuTrigger asChild className="py-2.25">
             <Button
               size="sm"
               variant="outline"
               fadeOnDisabled={false}
-              className="font-semibold shrink max-w-[13rem] min-w-0 text-left justify-between items-center gap-1.25 group/trigger px-2.5 py-2.5"
+              className="font-semibold shrink max-w-[13rem] min-w-0 text-left justify-between items-center gap-1.25 group/trigger px-2.5"
               data-pending={isDashboardNamePending ? true : undefined}
               data-loading-error={isHardError ? true : undefined}
               disabled={isDashboardNamePending || isHardError || noDashboards}
@@ -177,13 +177,13 @@ export default function DashboardSelector({}: Props) {
                           })
                         }
                         href={`/${username}/${d.dashboard.slug}`}
-                        className="flex items-center justify-between"
+                        className="w-full flex items-center justify-between"
                       >
                         <p className="min-w-0 shrink leading-tight">
                           {d.dashboard.title}
                         </p>
                         <CheckIcon
-                          className="size-3.5 pointer-events-none select-none -my-1 -mr-0.5 shrink-0 text-foreground opacity-0 scale-0
+                          className="size-4 -my-1 pointer-events-none select-none -mr-0.5 shrink-0 text-foreground opacity-0 scale-0
                           group-data-[item-selected]/item:opacity-100 group-data-[item-selected]/item:scale-100 transition"
                         />
                       </Link>
@@ -243,14 +243,14 @@ function CreateDashboardButton({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogTrigger asChild>
+      <DialogTrigger asChild className="gap-1.5 py-2.25 text-base">
         <Button
           size="sm"
           variant="ghost"
-          className="w-full justify-start text-left items-center gap-1 px-1.5"
+          className="w-full justify-start text-left items-center"
         >
-          <PlusIcon className="size-4" />
-          <p className="shrink min-w-0 truncate">Create</p>
+          <PlusIcon className="size-4 -my-1 -ml-1" />
+          <p className="shrink min-w-0 truncate leading-tight">Create</p>
         </Button>
       </DialogTrigger>
       <DialogContent
