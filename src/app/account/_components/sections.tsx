@@ -233,7 +233,7 @@ function UsernameButton({
       >
         <DialogHeader>
           <DialogTitle>Change Username</DialogTitle>
-          <DialogDescription>Change your username.</DialogDescription>
+          <DialogDescription>Set a new username.</DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form
