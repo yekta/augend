@@ -249,7 +249,7 @@ function CreateDashboardButton({
           variant="ghost"
           className="w-full justify-start text-left items-center"
         >
-          <PlusIcon className="size-5 -my-1 -ml-1" />
+          <PlusIcon className="size-5 -my-1 -ml-1.25" />
           <p className="shrink min-w-0 truncate leading-tight">Create</p>
         </Button>
       </DialogTrigger>
