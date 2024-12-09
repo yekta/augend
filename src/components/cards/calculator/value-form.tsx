@@ -112,8 +112,11 @@ export function CalculatorValueForm({
                   }
                   return (
                     <p
+                      data-long-symbol={
+                        currency.symbol === currency.ticker ? true : undefined
+                      }
                       className={cn(
-                        "text-foreground text-center leading-tight",
+                        "text-foreground flex items-center justify-center text-center leading-tight data-[long-symbol]:text-[0.5rem]",
                         className
                       )}
                     >
@@ -186,8 +189,11 @@ export function CalculatorValueForm({
               }
               return (
                 <p
+                  data-long-symbol={
+                    currency.symbol === currency.ticker ? true : undefined
+                  }
                   className={cn(
-                    "text-foreground text-center leading-tight",
+                    "text-foreground flex items-center justify-center text-center leading-tight data-[long-symbol]:text-[0.5rem]",
                     className
                   )}
                 >
