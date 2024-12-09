@@ -155,11 +155,13 @@ export const uiRouter = createTRPCRouter({
     .input(
       z.object({
         ids: z.array(z.string()).optional(),
+        fiatOnly: z.boolean().optional().default(false),
       })
     )
-    .query(async function ({ input: { ids } }) {
+    .query(async function ({ input: { ids, fiatOnly } }) {
       const res = await getCurrencies({
         ids: ids ? cleanAndSortArray(ids) : undefined,
+        fiatOnly,
       });
       return res;
     }),
@@ -460,7 +462,25 @@ export const uiRouter = createTRPCRouter({
         secondaryCurrencyId === tertiaryCurrencyId
       ) {
         throw new TRPCError({
-          message: "Currency preferences must be different.",
+          message:
+            "Primary, secondary, and tertiary currencies must be different.",
+          code: "BAD_REQUEST",
+        });
+      }
+      const currencies = await getCurrencies({
+        ids: [primaryCurrencyId, secondaryCurrencyId, tertiaryCurrencyId],
+      });
+
+      if (currencies.length !== 3) {
+        throw new TRPCError({
+          message: "One of the currency IDs is wrong.",
+          code: "BAD_REQUEST",
+        });
+      }
+
+      if (currencies.some((c) => c.isCrypto)) {
+        throw new TRPCError({
+          message: "All currencies must be fiat currencies.",
           code: "BAD_REQUEST",
         });
       }

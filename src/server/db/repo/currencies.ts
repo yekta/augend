@@ -1,8 +1,14 @@
 import { db } from "@/server/db/db";
 import { currenciesTable } from "@/server/db/schema";
-import { inArray } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 
-export async function getCurrencies({ ids }: { ids?: string[] }) {
+export async function getCurrencies({
+  ids,
+  fiatOnly,
+}: {
+  ids?: string[];
+  fiatOnly?: boolean;
+}) {
   const res = await db
     .select({
       id: currenciesTable.id,
@@ -14,7 +20,16 @@ export async function getCurrencies({ ids }: { ids?: string[] }) {
       maxDecimalsPreferred: currenciesTable.maxDecimalsPreferred,
     })
     .from(currenciesTable)
-    .where(ids ? inArray(currenciesTable.id, ids) : undefined);
+    .where(
+      ids
+        ? and(
+            inArray(currenciesTable.id, ids),
+            fiatOnly === true ? eq(currenciesTable.isCrypto, false) : undefined
+          )
+        : fiatOnly === true
+        ? eq(currenciesTable.isCrypto, false)
+        : undefined
+    );
   return res;
 }
 

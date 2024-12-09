@@ -110,12 +110,13 @@ export function CardValueCombobox<T>({
             data-loading-error={isHardError ? true : undefined}
             data-showing-placeholder={!label ? true : undefined}
             data-has-icon={Icon ? true : undefined}
+            fadeOnDisabled={false}
             className={
               "w-full min-w-0 overflow-hidden font-semibold justify-between group/button"
             }
           >
             <div className="flex-shrink min-w-0 overflow-hidden flex items-center gap-1.5 group-data-[has-icon]/button:-ml-1">
-              {!isPending && !isLoadingError && Icon && value && (
+              {!isPending && !isLoadingError && Icon && value && label && (
                 <Icon
                   value={iconValue ?? value}
                   className="shrink-0 size-5 -my-1"

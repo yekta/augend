@@ -20,7 +20,7 @@ export default async function Page({}: Props) {
   }
   const [userInitialData, currenciesInitialData] = await Promise.all([
     apiServer.ui.getUserFull(),
-    apiServer.ui.getCurrencies({}),
+    apiServer.ui.getCurrencies({ fiatOnly: true }),
   ]);
   return (
     <UserFullProvider
