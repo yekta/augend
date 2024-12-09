@@ -484,6 +484,7 @@ export const uiRouter = createTRPCRouter({
           code: "BAD_REQUEST",
         });
       }
+
       const result = await changeCurrencyPreference({
         userId: session.user.id,
         primaryCurrencyId,
