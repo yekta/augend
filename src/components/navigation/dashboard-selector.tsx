@@ -183,7 +183,7 @@ export default function DashboardSelector({}: Props) {
                           {d.dashboard.title}
                         </p>
                         <CheckIcon
-                          className="size-4 -my-1 pointer-events-none select-none -mr-0.5 shrink-0 text-foreground opacity-0 scale-0
+                          className="size-5 -my-1 pointer-events-none select-none -mr-0.5 shrink-0 text-foreground opacity-0 scale-0
                           group-data-[item-selected]/item:opacity-100 group-data-[item-selected]/item:scale-100 transition"
                         />
                       </Link>
@@ -243,13 +243,13 @@ function CreateDashboardButton({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogTrigger asChild className="gap-1.5 py-2.25 text-base">
+      <DialogTrigger asChild className="gap-1.25 py-2.25 text-base">
         <Button
           size="sm"
           variant="ghost"
           className="w-full justify-start text-left items-center"
         >
-          <PlusIcon className="size-4 -my-1 -ml-1" />
+          <PlusIcon className="size-5 -my-1 -ml-1" />
           <p className="shrink min-w-0 truncate leading-tight">Create</p>
         </Button>
       </DialogTrigger>
