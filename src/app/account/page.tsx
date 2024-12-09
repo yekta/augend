@@ -18,9 +18,15 @@ export default async function Page({}: Props) {
   if (!session) {
     return redirect("/sign-in?callbackUrl=/account");
   }
-  const initialData = await apiServer.ui.getUserFull();
+  const [userInitialData, currenciesInitialData] = await Promise.all([
+    apiServer.ui.getUserFull(),
+    apiServer.ui.getCurrencies({}),
+  ]);
   return (
-    <UserFullProvider initialData={initialData}>
+    <UserFullProvider
+      userInitialData={userInitialData}
+      currenciesInitialData={currenciesInitialData}
+    >
       <div className="w-full flex flex-col items-center flex-1">
         <div className="w-full flex flex-col max-w-7xl px-1 pb-16 md:pb-20 md:px-5 pt-1 md:pt-2">
           <div className="w-full flex flex-col px-1 pb-1 md:pb-2 gap-4">

@@ -21,6 +21,7 @@ import {
   renameDashboard,
 } from "@/server/db/repo/dashboard";
 import {
+  changeCurrencyPreference,
   changeUsername,
   getUser,
   getUserFull,
@@ -32,6 +33,7 @@ import { createTRPCRouter, publicProcedure } from "@/server/trpc/setup/trpc";
 import { TRPCError } from "@trpc/server";
 import { Session } from "next-auth";
 import {
+  ChangeCurrencyPreferenceSchemaUI,
   ChangeUsernameSchemaUI,
   CreateDashboardSchemaUI,
   RenameDashboardSchemaUI,
@@ -437,6 +439,36 @@ export const uiRouter = createTRPCRouter({
       const result = await changeUsername({
         userId: session.user.id,
         newUsername,
+      });
+      return result;
+    }),
+  changeCurrencyPreference: publicProcedure
+    .input(z.object({ ...ChangeCurrencyPreferenceSchemaUI.shape }))
+    .mutation(async function ({
+      input: { primaryCurrencyId, secondaryCurrencyId, tertiaryCurrencyId },
+      ctx: { session },
+    }) {
+      if (!session || session.user.id === undefined) {
+        throw new TRPCError({
+          message: "Unauthorized",
+          code: "UNAUTHORIZED",
+        });
+      }
+      if (
+        primaryCurrencyId === secondaryCurrencyId ||
+        primaryCurrencyId === tertiaryCurrencyId ||
+        secondaryCurrencyId === tertiaryCurrencyId
+      ) {
+        throw new TRPCError({
+          message: "Currency preferences must be different.",
+          code: "BAD_REQUEST",
+        });
+      }
+      const result = await changeCurrencyPreference({
+        userId: session.user.id,
+        primaryCurrencyId,
+        secondaryCurrencyId,
+        tertiaryCurrencyId,
       });
       return result;
     }),

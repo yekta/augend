@@ -36,3 +36,9 @@ export const ChangeUsernameSchemaUI = z.object({
         "Username can only contain lowercase letters, numbers, and underscores.",
     }),
 });
+
+export const ChangeCurrencyPreferenceSchemaUI = z.object({
+  primaryCurrencyId: z.string().uuid(),
+  secondaryCurrencyId: z.string().uuid(),
+  tertiaryCurrencyId: z.string().uuid(),
+});

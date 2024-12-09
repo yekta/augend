@@ -245,3 +245,31 @@ export async function createUser({
   if (arr.length === 0) return null;
   return arr[0];
 }
+
+export async function changeCurrencyPreference({
+  userId,
+  primaryCurrencyId,
+  secondaryCurrencyId,
+  tertiaryCurrencyId,
+}: {
+  userId: string;
+  primaryCurrencyId: string;
+  secondaryCurrencyId: string;
+  tertiaryCurrencyId: string;
+}) {
+  const arr = await db
+    .update(usersTable)
+    .set({
+      primaryCurrencyId,
+      secondaryCurrencyId,
+      tertiaryCurrencyId,
+    })
+    .where(eq(usersTable.id, userId))
+    .returning();
+  if (arr.length === 0) return null;
+  return {
+    primaryCurrencyId: arr[0].primaryCurrencyId,
+    secondaryCurrencyId: arr[0].secondaryCurrencyId,
+    tertiaryCurrencyId: arr[0].tertiaryCurrencyId,
+  };
+}

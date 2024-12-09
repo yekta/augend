@@ -9,33 +9,58 @@ type TUserFullContext = {
   isPendingUser: boolean;
   isLoadingErrorUser: boolean;
   invalidateUser: () => Promise<void>;
+  dataCurrencies?: AppRouterOutputs["ui"]["getCurrencies"];
+  isPendingCurrencies: boolean;
+  isLoadingErrorCurrencies: boolean;
+  invalidateCurrencies: () => Promise<void>;
 };
 
 const UserFullContext = createContext<TUserFullContext | null>(null);
 
 type Props = {
   children: ReactNode;
-  initialData?: AppRouterOutputs["ui"]["getUserFull"];
+  userInitialData?: AppRouterOutputs["ui"]["getUserFull"];
+  currenciesInitialData?: AppRouterOutputs["ui"]["getCurrencies"];
 };
 
-export const UserFullProvider: FC<Props> = ({ initialData, children }) => {
+export const UserFullProvider: FC<Props> = ({
+  userInitialData,
+  currenciesInitialData,
+  children,
+}) => {
   const utils = api.useUtils();
   const {
     data: dataUser,
     isPending: isPendingUser,
     isLoadingError: isLoadingErrorUser,
   } = api.ui.getUserFull.useQuery(undefined, {
-    initialData,
+    initialData: userInitialData,
   });
   const invalidateUser = () => utils.ui.getUserFull.invalidate();
+
+  const {
+    data: dataCurrencies,
+    isPending: isPendingCurrencies,
+    isLoadingError: isLoadingErrorCurrencies,
+  } = api.ui.getCurrencies.useQuery(
+    {},
+    {
+      initialData: currenciesInitialData,
+    }
+  );
+  const invalidateCurrencies = () => utils.ui.getCurrencies.invalidate();
 
   return (
     <UserFullContext.Provider
       value={{
-        dataUser: dataUser,
+        dataUser,
         isPendingUser,
         isLoadingErrorUser,
         invalidateUser,
+        dataCurrencies,
+        isPendingCurrencies,
+        isLoadingErrorCurrencies,
+        invalidateCurrencies,
       }}
     >
       {children}
