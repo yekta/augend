@@ -2,7 +2,6 @@ import { useCurrentDashboard } from "@/app/[username]/[dashboard_slug]/_componen
 import { useDnd } from "@/app/[username]/[dashboard_slug]/_components/dnd-provider";
 import { EditButton } from "@/app/[username]/[dashboard_slug]/_components/edit-button";
 import { useEditMode } from "@/app/[username]/[dashboard_slug]/_components/edit-mode-provider";
-import { RenameDashboardSchemaUI } from "@/app/[username]/[dashboard_slug]/_components/types";
 import { AddCardButton } from "@/components/cards/_utils/add-card";
 import ErrorLine from "@/components/error-line";
 import { Button } from "@/components/ui/button";
@@ -25,6 +24,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { mainDashboardSlug } from "@/lib/constants";
 import { useAsyncRouterPush } from "@/lib/hooks/use-async-router-push";
+import { RenameDashboardSchemaUI } from "@/server/trpc/api/ui/types-client";
 import { api } from "@/server/trpc/setup/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderIcon, PencilIcon, TrashIcon } from "lucide-react";
@@ -34,17 +34,11 @@ import { z } from "zod";
 
 type Props = {
   isOwner: boolean;
-  hasCards: boolean;
   username: string;
   dashboardSlug: string;
 };
 
-export function DashboardTitleBar({
-  username,
-  dashboardSlug,
-  isOwner,
-  hasCards,
-}: Props) {
+export function DashboardTitleBar({ username, dashboardSlug, isOwner }: Props) {
   const [isDialogOpenRenameDashboard, setIsDialogOpenRenameDashboard] =
     useState(false);
   const [isDialogOpenDeleteDashboard, setIsDialogOpenDeleteDashboard] =

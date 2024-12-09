@@ -1,7 +1,6 @@
 "use client";
 
 import ErrorLine from "@/components/error-line";
-import { CreateDashboardSchemaUI } from "@/components/navigation/types";
 import { useDashboards } from "@/components/providers/dashboards-provider";
 import { Button } from "@/components/ui/button";
 import {
@@ -30,6 +29,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useAsyncRouterPush } from "@/lib/hooks/use-async-router-push";
+import { CreateDashboardSchemaUI } from "@/server/trpc/api/ui/types-client";
 import { api } from "@/server/trpc/setup/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckIcon, ChevronDownIcon, LoaderIcon, PlusIcon } from "lucide-react";

@@ -211,7 +211,6 @@ export default function DashboardPage({}: {}) {
         <DashboardGrid initialIds={cards.map((c) => c.card.id)}>
           <DashboardTitleBar
             isOwner={dashboard.isOwner}
-            hasCards={false}
             username={username}
             dashboardSlug={dashboardSlug}
           />
@@ -230,7 +229,6 @@ export default function DashboardPage({}: {}) {
         >
           <DashboardTitleBar
             isOwner={dashboard.isOwner}
-            hasCards={cards.length > 0}
             username={username}
             dashboardSlug={dashboardSlug}
           />
@@ -252,7 +250,6 @@ export default function DashboardPage({}: {}) {
         <DashboardGrid initialIds={cards.map((c) => c.card.id)}>
           <DashboardTitleBar
             isOwner={dashboard.isOwner}
-            hasCards={cards.length > 0}
             username={username}
             dashboardSlug={dashboardSlug}
           />

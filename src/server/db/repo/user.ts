@@ -5,8 +5,12 @@ import {
   secondaryCurrencyAlias,
   tertiaryCurrencyAlias,
 } from "@/server/db/repo/card";
-import { currenciesTable, usersTable } from "@/server/db/schema";
-import { eq } from "drizzle-orm";
+import {
+  currenciesTable,
+  usernameBlocklistTable,
+  usersTable,
+} from "@/server/db/schema";
+import { and, eq, notExists } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 
 type SharedProps = {};
@@ -176,6 +180,34 @@ export async function getUserFull({
   }
 
   return null;
+}
+
+export async function changeUsername({
+  userId,
+  newUsername,
+}: {
+  userId: string;
+  newUsername: string;
+}) {
+  const arr = await db
+    .update(usersTable)
+    .set({ username: newUsername })
+    .where(
+      and(
+        eq(usersTable.id, userId),
+        notExists(
+          db
+            .select({ username: usernameBlocklistTable.username })
+            .from(usernameBlocklistTable)
+            .where(eq(usernameBlocklistTable.username, newUsername))
+        )
+      )
+    )
+    .returning();
+  if (arr.length === 0) return null;
+  return {
+    username: arr[0].username,
+  };
 }
 
 export async function createUser({

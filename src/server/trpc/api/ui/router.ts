@@ -1,7 +1,5 @@
 import { z } from "zod";
 
-import { RenameDashboardSchemaUI } from "@/app/[username]/[dashboard_slug]/_components/types";
-import { CreateDashboardSchemaUI } from "@/components/navigation/types";
 import { mainDashboardSlug } from "@/lib/constants";
 import {
   createCard,
@@ -28,6 +26,10 @@ import { CardValueForAddCardsSchema } from "@/server/trpc/api/ui/types";
 import { createTRPCRouter, publicProcedure } from "@/server/trpc/setup/trpc";
 import { TRPCError } from "@trpc/server";
 import { Session } from "next-auth";
+import {
+  CreateDashboardSchemaUI,
+  RenameDashboardSchemaUI,
+} from "@/server/trpc/api/ui/types-client";
 
 function getIsOwner({
   session,
@@ -268,7 +270,7 @@ export const uiRouter = createTRPCRouter({
   createDashboard: publicProcedure
     .input(
       z.object({
-        title: CreateDashboardSchemaUI.shape.title,
+        ...CreateDashboardSchemaUI.shape,
         icon: z.string().optional(),
         xOrder: z.number().optional(),
       })
@@ -315,7 +317,7 @@ export const uiRouter = createTRPCRouter({
   renameDashboard: publicProcedure
     .input(
       z.object({
-        title: RenameDashboardSchemaUI.shape.title,
+        ...RenameDashboardSchemaUI.shape,
         slug: z.string(),
       })
     )
