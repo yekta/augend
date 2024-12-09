@@ -28,6 +28,11 @@ const timestamps = {
   deletedAt: timestamp("deleted_at"),
 };
 
+export const usernameBlocklistTable = pgTable("username_blocklist", {
+  username: varchar("username").primaryKey(),
+  ...timestamps,
+});
+
 export const currenciesTable = pgTable(
   "currencies",
   {
