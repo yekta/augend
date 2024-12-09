@@ -250,6 +250,8 @@ function UsernameButton({
                     <Input
                       autoCapitalize="none"
                       autoComplete="off"
+                      autoCorrect="off"
+                      spellCheck="false"
                       className="w-full"
                       placeholder="New Username"
                       {...field}
