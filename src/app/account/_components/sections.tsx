@@ -437,6 +437,34 @@ function CurrenciesButton({
     changeCurrencyPreference(result);
   }
 
+  const Icon = ({
+    value,
+    className,
+    iconValue,
+  }: {
+    value: string | null;
+    className?: string;
+    iconValue?: string;
+  }) => {
+    if (!dataCurrencies) return null;
+    const idx = dataCurrencies.findIndex((c) => c.ticker === value);
+    if (idx === -1) return null;
+    const currency = dataCurrencies[idx];
+    return (
+      <p
+        data-long-symbol={
+          currency.symbol === currency.ticker ? true : undefined
+        }
+        className={cn(
+          "text-foreground flex items-center justify-center text-center leading-tight data-[long-symbol]:text-[0.5rem]",
+          className
+        )}
+      >
+        {currency.symbol}
+      </p>
+    );
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger disabled={isPendingUser} asChild>
@@ -491,22 +519,7 @@ function CurrenciesButton({
             dataCurrencies?.find((c) => getValue(c) === primaryCurrencyValue)
               ?.ticker
           }
-          Icon={({ value, className }) => {
-            if (!dataCurrencies) return null;
-            const idx = dataCurrencies.findIndex((c) => c.ticker === value);
-            if (idx === -1) return null;
-            const currency = dataCurrencies[idx];
-            return (
-              <p
-                className={cn(
-                  "text-foreground text-center leading-tight",
-                  className
-                )}
-              >
-                {currency.symbol}
-              </p>
-            );
-          }}
+          Icon={Icon}
           onValueChange={clearErrors}
           value={primaryCurrencyValue}
           setValue={setPrimaryCurrencyValue}
@@ -528,22 +541,7 @@ function CurrenciesButton({
                 )?.ticker
               : undefined
           }
-          Icon={({ value, className }) => {
-            if (!dataCurrencies) return null;
-            const idx = dataCurrencies.findIndex((c) => c.ticker === value);
-            if (idx === -1) return null;
-            const currency = dataCurrencies[idx];
-            return (
-              <p
-                className={cn(
-                  "text-foreground text-center leading-tight",
-                  className
-                )}
-              >
-                {currency.symbol}
-              </p>
-            );
-          }}
+          Icon={Icon}
           onValueChange={clearErrors}
           value={secondaryCurrencyValue}
           setValue={setSecondaryCurrencyValue}
@@ -562,22 +560,7 @@ function CurrenciesButton({
             dataCurrencies?.find((c) => getValue(c) === tertiaryCurrencyValue)
               ?.ticker
           }
-          Icon={({ value, className }) => {
-            if (!dataCurrencies) return null;
-            const idx = dataCurrencies.findIndex((c) => c.ticker === value);
-            if (idx === -1) return null;
-            const currency = dataCurrencies[idx];
-            return (
-              <p
-                className={cn(
-                  "text-foreground text-center leading-tight",
-                  className
-                )}
-              >
-                {currency.symbol}
-              </p>
-            );
-          }}
+          Icon={Icon}
           onValueChange={clearErrors}
           value={tertiaryCurrencyValue}
           setValue={setTertiaryCurrencyValue}
