@@ -47,7 +47,7 @@ export function DashboardTitleBar({ username, dashboardSlug, isOwner }: Props) {
   const [inputValueDeleteDashboard, setInputValueDeleteDashboard] =
     useState("");
 
-  const form = useForm<z.infer<typeof RenameDashboardSchemaUI>>({
+  const renameDashboardForm = useForm<z.infer<typeof RenameDashboardSchemaUI>>({
     resolver: zodResolver(RenameDashboardSchemaUI),
     defaultValues: {
       title: "",
@@ -71,6 +71,7 @@ export function DashboardTitleBar({ username, dashboardSlug, isOwner }: Props) {
     mutate: renameDashboard,
     isPending: isPendingRenameDashboard,
     error: errorRenameDashboard,
+    reset: resetRenameDashboard,
   } = api.ui.renameDashboard.useMutation({
     onMutate: () => {
       cancelDashboardsQuery();
@@ -80,7 +81,7 @@ export function DashboardTitleBar({ username, dashboardSlug, isOwner }: Props) {
       await asyncPush(path);
       await invalidateDashboard();
       setIsDialogOpenRenameDashboard(false);
-      form.reset();
+      renameDashboardForm.reset();
     },
   });
 
@@ -103,6 +104,12 @@ export function DashboardTitleBar({ username, dashboardSlug, isOwner }: Props) {
   async function onRenameDashboardFormSubmit(
     values: z.infer<typeof RenameDashboardSchemaUI>
   ) {
+    if (dashboardName === values.title) {
+      setIsDialogOpenRenameDashboard(false);
+      resetRenameDashboard();
+      renameDashboardForm.reset();
+      return;
+    }
     renameDashboard({
       title: values.title,
       slug: dashboardSlug,
@@ -159,13 +166,15 @@ export function DashboardTitleBar({ username, dashboardSlug, isOwner }: Props) {
                   Give a new name to your dashboard.
                 </DialogDescription>
               </DialogHeader>
-              <Form {...form}>
+              <Form {...renameDashboardForm}>
                 <form
-                  onSubmit={form.handleSubmit(onRenameDashboardFormSubmit)}
+                  onSubmit={renameDashboardForm.handleSubmit(
+                    onRenameDashboardFormSubmit
+                  )}
                   className="w-full flex flex-col gap-3"
                 >
                   <FormField
-                    control={form.control}
+                    control={renameDashboardForm.control}
                     name="title"
                     render={({ field }) => (
                       <FormItem className="w-full flex flex-col gap-2">

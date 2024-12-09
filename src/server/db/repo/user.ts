@@ -210,6 +210,21 @@ export async function changeUsername({
   };
 }
 
+export async function isUsernameAvailable(username: string) {
+  const res = await db
+    .select({ username: usersTable.username })
+    .from(usersTable)
+    .where(eq(usersTable.username, username))
+    .union(
+      db
+        .select({ username: usernameBlocklistTable.username })
+        .from(usernameBlocklistTable)
+        .where(eq(usernameBlocklistTable.username, username))
+    )
+    .limit(1);
+  return res.length === 0;
+}
+
 export async function createUser({
   userId,
   name,

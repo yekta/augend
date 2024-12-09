@@ -20,13 +20,19 @@ import {
   isDashboardSlugAvailable,
   renameDashboard,
 } from "@/server/db/repo/dashboard";
-import { getUser, getUserFull } from "@/server/db/repo/user";
+import {
+  changeUsername,
+  getUser,
+  getUserFull,
+  isUsernameAvailable,
+} from "@/server/db/repo/user";
 import { cleanAndSortArray } from "@/server/redis/cache-utils";
 import { CardValueForAddCardsSchema } from "@/server/trpc/api/ui/types";
 import { createTRPCRouter, publicProcedure } from "@/server/trpc/setup/trpc";
 import { TRPCError } from "@trpc/server";
 import { Session } from "next-auth";
 import {
+  ChangeUsernameSchemaUI,
   CreateDashboardSchemaUI,
   RenameDashboardSchemaUI,
 } from "@/server/trpc/api/ui/types-client";
@@ -412,6 +418,28 @@ export const uiRouter = createTRPCRouter({
     const user = await getUserFull({ userId: session.user.id });
     return user;
   }),
+  changeUsername: publicProcedure
+    .input(z.object({ ...ChangeUsernameSchemaUI.shape }))
+    .mutation(async function ({ input: { newUsername }, ctx: { session } }) {
+      if (!session || session.user.id === undefined) {
+        throw new TRPCError({
+          message: "Unauthorized",
+          code: "UNAUTHORIZED",
+        });
+      }
+      const isAvailable = await isUsernameAvailable(newUsername);
+      if (!isAvailable) {
+        throw new TRPCError({
+          message: "This username is not available.",
+          code: "BAD_REQUEST",
+        });
+      }
+      const result = await changeUsername({
+        userId: session.user.id,
+        newUsername,
+      });
+      return result;
+    }),
 });
 
 function slugify(str: string) {

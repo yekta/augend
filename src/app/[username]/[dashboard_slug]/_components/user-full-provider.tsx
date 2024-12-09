@@ -1,6 +1,5 @@
 "use client";
 
-import { useDashboards } from "@/components/providers/dashboards-provider";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
 import { api } from "@/server/trpc/setup/react";
 import { createContext, FC, ReactNode, useContext } from "react";
@@ -9,6 +8,7 @@ type TUserFullContext = {
   dataUser?: AppRouterOutputs["ui"]["getUserFull"];
   isPendingUser: boolean;
   isLoadingErrorUser: boolean;
+  invalidateUser: () => Promise<void>;
 };
 
 const UserFullContext = createContext<TUserFullContext | null>(null);
@@ -19,6 +19,7 @@ type Props = {
 };
 
 export const UserFullProvider: FC<Props> = ({ initialData, children }) => {
+  const utils = api.useUtils();
   const {
     data: dataUser,
     isPending: isPendingUser,
@@ -26,6 +27,7 @@ export const UserFullProvider: FC<Props> = ({ initialData, children }) => {
   } = api.ui.getUserFull.useQuery(undefined, {
     initialData,
   });
+  const invalidateUser = () => utils.ui.getUserFull.invalidate();
 
   return (
     <UserFullContext.Provider
@@ -33,6 +35,7 @@ export const UserFullProvider: FC<Props> = ({ initialData, children }) => {
         dataUser: dataUser,
         isPendingUser,
         isLoadingErrorUser,
+        invalidateUser,
       }}
     >
       {children}
