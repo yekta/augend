@@ -12,7 +12,6 @@ import { useCurrencyPreference } from "@/components/providers/currency-preferenc
 import Indicator from "@/components/ui/indicator";
 import { getCmcUrl } from "@/lib/get-cmc-url";
 import { formatNumberTBMK } from "@/lib/number-formatters";
-import { cn } from "@/lib/utils";
 import { ArrowDownIcon, ArrowRightIcon, ArrowUpIcon } from "lucide-react";
 
 export default function MiniCryptoCard({
@@ -64,7 +63,7 @@ export default function MiniCryptoCard({
     : restAsDiv;
   return (
     <CardOuterWrapper
-      className={cn("col-span-6 md:col-span-4 lg:col-span-3", className)}
+      className={className}
       data-loading-error={(isLoadingError && true) || undefined}
       data-pending={(isPending && true) || undefined}
       {...restTyped}

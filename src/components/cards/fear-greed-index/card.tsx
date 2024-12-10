@@ -1,18 +1,18 @@
 "use client";
 
+import CardInnerWrapper from "@/components/cards/_utils/card-inner-wrapper";
 import CardOuterWrapper, {
   TCardOuterWrapperDivProps,
   TCardOuterWrapperLinkProps,
   TCardOuterWrapperProps,
 } from "@/components/cards/_utils/card-outer-wrapper";
-import Indicator from "@/components/ui/indicator";
 import { useCmcGlobalMetrics } from "@/components/providers/cmc/cmc-global-metrics-provider";
+import { useCurrencyPreference } from "@/components/providers/currency-preference-provider";
+import Indicator from "@/components/ui/indicator";
 import { linearInterpolation } from "@/lib/helpers";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
 import { ArrowDownIcon, ArrowRightIcon, ArrowUpIcon } from "lucide-react";
-import { useCurrencyPreference } from "@/components/providers/currency-preference-provider";
-import CardInnerWrapper from "@/components/cards/_utils/card-inner-wrapper";
 
 export default function FearGreedIndexCard({
   className,
@@ -51,7 +51,7 @@ export default function FearGreedIndexCard({
     <CardOuterWrapper
       data-loading-error={(isLoadingError && true) || undefined}
       data-pending={(isPending && true) || undefined}
-      className={cn("col-span-6 md:col-span-4 lg:col-span-3 h-32", className)}
+      className={cn("h-32", className)}
       {...restTyped}
     >
       <CardInnerWrapper

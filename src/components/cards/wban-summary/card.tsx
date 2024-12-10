@@ -77,7 +77,7 @@ export default function WBanSummaryCard({
     <CardOuterWrapper
       data-loading-error={isLoadingError ? true : undefined}
       data-pending={(isPending && true) || undefined}
-      className={cn(className)}
+      className={className}
       {...rest}
     >
       <CardInnerWrapper className="flex flex-col items-center transition">

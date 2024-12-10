@@ -3,6 +3,7 @@
 import { useCurrentDashboard } from "@/app/[username]/[dashboard_slug]/_components/current-dashboard-provider";
 import CardInnerWrapper from "@/components/cards/_utils/card-inner-wrapper";
 import CardOuterWrapper from "@/components/cards/_utils/card-outer-wrapper";
+import { cardTypes } from "@/components/cards/_utils/card-parser";
 import CardValuesFormParser from "@/components/cards/_utils/values-form/card-values-form-parser";
 import ErrorLine from "@/components/error-line";
 import { AddCardIcon } from "@/components/icons/add-card-icon";
@@ -100,10 +101,7 @@ export function AddCardButton({
             </Button>
           ) : (
             <CardOuterWrapper
-              className={cn(
-                "col-span-12 md:col-span-6 lg:col-span-4 xl:col-span-3 h-32",
-                className
-              )}
+              className={cn(cardTypes.md.className, "h-32", className)}
             >
               <CardInnerWrapper
                 className="flex-1 px-8 font-medium py-3 flex flex-row gap-1 items-center text-muted-foreground justify-center 

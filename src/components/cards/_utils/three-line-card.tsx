@@ -48,7 +48,7 @@ export default function ThreeLineCard({
     <CardOuterWrapper
       data-loading-error={(isLoadingError && true) || undefined}
       data-pending={(isPending && true) || undefined}
-      className={cn("col-span-6 md:col-span-4 lg:col-span-3 h-32", className)}
+      className={cn("col-span-12 h-32", className)}
       {...rest}
     >
       <CardInnerWrapper

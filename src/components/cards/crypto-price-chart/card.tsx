@@ -1,10 +1,11 @@
 "use client";
 
+import CardInnerWrapper from "@/components/cards/_utils/card-inner-wrapper";
 import CardOuterWrapper, {
   TCardOuterWrapperProps,
 } from "@/components/cards/_utils/card-outer-wrapper";
-import Indicator from "@/components/ui/indicator";
 import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
+import Indicator from "@/components/ui/indicator";
 import {
   Select,
   SelectContent,
@@ -16,9 +17,8 @@ import { defaultQueryOptions } from "@/lib/constants";
 import { months } from "@/lib/months";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
+import { ExchangeSchema, TOHLCVResult } from "@/server/trpc/api/exchange/types";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
-import { ExchangeSchema } from "@/server/trpc/api/exchange/types";
-import { TOHLCVResult } from "@/server/trpc/api/exchange/types";
 import { api } from "@/server/trpc/setup/react";
 import { keepPreviousData } from "@tanstack/react-query";
 import { ArrowDownIcon, ArrowRightIcon, ArrowUpIcon } from "lucide-react";
@@ -29,7 +29,6 @@ import {
   ValueType,
 } from "recharts/types/component/DefaultTooltipContent";
 import { z } from "zod";
-import CardInnerWrapper from "@/components/cards/_utils/card-inner-wrapper";
 
 const baseChartContainerConfig = {
   label: "Price",
@@ -181,7 +180,7 @@ export default function CryptoPriceChartCard({
 
   return (
     <CardOuterWrapper
-      className={cn("col-span-12 lg:col-span-6", className)}
+      className={className}
       data-pending={(isPending && true) || undefined}
       data-loading-error={
         isLoadingError && !isPending && !isRefetching ? true : undefined

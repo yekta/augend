@@ -10,7 +10,6 @@ import { useCmcCryptoInfos } from "@/components/providers/cmc/cmc-crypto-infos-p
 import { useForexRates } from "@/components/providers/forex-rates-provider";
 import Indicator from "@/components/ui/indicator";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
 import { TCurrencyWithSelectedFields } from "@/server/db/repo/types";
 import { LoaderIcon } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
@@ -149,10 +148,7 @@ export default function CalculatorCard({
     });
   }
   return (
-    <CardOuterWrapper
-      className={cn("col-span-12 md:col-span-6 lg:col-span-3", className)}
-      {...rest}
-    >
+    <CardOuterWrapper className={className} {...rest}>
       <CardInnerWrapper
         id="calculator"
         className="p-3.75 flex flex-col gap-2 relative"

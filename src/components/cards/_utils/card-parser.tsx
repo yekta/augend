@@ -22,118 +22,44 @@ import { AppRouterOutputs } from "@/server/trpc/api/root";
 import { TEthereumNetwork } from "@/server/trpc/api/ethereum/types";
 import { TExchange } from "@/server/trpc/api/exchange/types";
 import CardErrorBoundary from "@/components/cards/_utils/card-error-boundary";
+import { cn } from "@/lib/utils";
 
-const className = {
-  default: "col-span-6 md:col-span-4 lg:col-span-3",
-  full: "col-span-12",
+export const cardTypes: TCardTypes = {
+  sm: {
+    className: "col-span-6 md:col-span-4 lg:col-span-3",
+  },
+  md: {
+    className: "col-span-12 md:col-span-6 lg:col-span-4 xl:col-span-3",
+  },
+  lg: {
+    className: "col-span-12 lg:col-span-6",
+  },
+  xl: {
+    className: "col-span-12",
+  },
 };
 
 export function CardParser({
   cardObject,
   currencies,
+  className,
   ...rest
 }: {
   cardObject: NonNullable<AppRouterOutputs["ui"]["getCards"]>["cards"][number];
   currencies: TCurrencyWithSelectedFields[] | null;
 } & TCardOuterWrapperProps) {
-  if (cardObject.cardType.id === "fear_greed_index") {
-    return (
-      <CardErrorBoundary className={className.default}>
-        <FearGreedIndexCard {...rest} />
-      </CardErrorBoundary>
-    );
-  }
-
-  if (cardObject.cardType.id === "wban_summary") {
-    return (
-      <CardErrorBoundary className={className.full}>
-        <WBanSummaryCard {...rest} />
-      </CardErrorBoundary>
-    );
-  }
-
-  if (
-    cardObject.cardType.id === "calculator" &&
-    currencies &&
-    currencies.length > 1
-  ) {
+  if (cardObject.cardType.id === "crypto") {
     const values = cardObject.values;
     if (!values) return null;
-    const ids = values
-      .filter((v) => v.cardTypeInputId === "calculator_currency_id")
-      .map((v) => v.value);
-    const selectedCurrencies = currencies
-      .filter((c) => ids.includes(c.id))
-      .sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id));
+    const coinId = values.find(
+      (v) => v.cardTypeInputId === "crypto_coin_id"
+    )?.value;
+    if (!coinId) return null;
     return (
-      <CardErrorBoundary className="col-span-12 md:col-span-6 lg:col-span-3">
-        <CalculatorCard currencies={selectedCurrencies} {...rest} />
-      </CardErrorBoundary>
-    );
-  }
-
-  if (cardObject.cardType.id === "order_book") {
-    const values = cardObject.values;
-    if (!values) return null;
-    const exchange = values.find(
-      (v) => v.cardTypeInputId === "order_book_exchange"
-    )?.value;
-    const pair = values.find(
-      (v) => v.cardTypeInputId === "order_book_pair"
-    )?.value;
-    if (!exchange || !pair) return null;
-    const config: TOrderBookConfig = {
-      exchange: exchange as TExchange,
-      limit: 10,
-      pair: pair,
-    };
-    return (
-      <CardErrorBoundary className="col-span-12 md:col-span-6 lg:col-span-4 xl:col-span-3">
-        <OrderBookCard config={config} {...rest} />
-      </CardErrorBoundary>
-    );
-  }
-
-  if (cardObject.cardType.id === "crypto_price_chart") {
-    const values = cardObject.values;
-    if (!values) return null;
-    const exchange = values.find(
-      (v) => v.cardTypeInputId === "crypto_price_chart_exchange"
-    )?.value;
-    const pair = values.find(
-      (v) => v.cardTypeInputId === "crypto_price_chart_pair"
-    )?.value;
-    if (!exchange || !pair) return null;
-    const config: TOhlcvChartConfig = {
-      exchange: exchange as TExchange,
-      pair: pair,
-    };
-    return (
-      <CardErrorBoundary className="col-span-12 lg:col-span-6">
-        <CryptoPriceChartCard config={config} {...rest} />
-      </CardErrorBoundary>
-    );
-  }
-
-  if (cardObject.cardType.id === "uniswap_position") {
-    const values = cardObject.values;
-    if (!values) return null;
-    const network = values.find(
-      (v) => v.cardTypeInputId === "uniswap_position_network"
-    )?.value;
-    const positionId = values.find(
-      (v) => v.cardTypeInputId === "uniswap_position_position_id"
-    )?.value;
-    const isOwner = values.find(
-      (v) => v.cardTypeInputId === "uniswap_position_is_owner"
-    )?.value;
-    if (!network || !positionId || !isOwner) return null;
-    return (
-      <CardErrorBoundary className={className.full}>
-        <UniswapPositionCard
-          positionId={Number(positionId)}
-          network={network as TEthereumNetwork}
-          isOwner={isOwner === "true"}
+      <CardErrorBoundary className={cn(cardTypes.sm.className, className)}>
+        <CryptoCard
+          className={cn(cardTypes.sm.className, className)}
+          config={{ id: Number(coinId) }}
           {...rest}
         />
       </CardErrorBoundary>
@@ -148,22 +74,34 @@ export function CardParser({
     )?.value;
     if (!coinId) return null;
     return (
-      <CardErrorBoundary className={className.default}>
-        <MiniCryptoCard coinId={Number(coinId)} {...rest} />
+      <CardErrorBoundary className={cn(cardTypes.sm.className, className)}>
+        <MiniCryptoCard
+          className={cn(cardTypes.sm.className, className)}
+          coinId={Number(coinId)}
+          {...rest}
+        />
       </CardErrorBoundary>
     );
   }
 
-  if (cardObject.cardType.id === "crypto") {
-    const values = cardObject.values;
-    if (!values) return null;
-    const coinId = values.find(
-      (v) => v.cardTypeInputId === "crypto_coin_id"
-    )?.value;
-    if (!coinId) return null;
+  if (cardObject.cardType.id === "banano_total") {
     return (
-      <CardErrorBoundary className={className.default}>
-        <CryptoCard config={{ id: Number(coinId) }} {...rest} />
+      <CardErrorBoundary className={cn(cardTypes.sm.className, className)}>
+        <BananoTotalCard
+          className={cn(cardTypes.sm.className, className)}
+          {...rest}
+        />
+      </CardErrorBoundary>
+    );
+  }
+
+  if (cardObject.cardType.id === "fear_greed_index") {
+    return (
+      <CardErrorBoundary className={cn(cardTypes.sm.className, className)}>
+        <FearGreedIndexCard
+          className={cn(cardTypes.sm.className, className)}
+          {...rest}
+        />
       </CardErrorBoundary>
     );
   }
@@ -182,28 +120,13 @@ export function CardParser({
     const quoteCurrency = currencies?.find((c) => c.id === quoteId);
     if (!baseCurrency || !quoteCurrency) return null;
     return (
-      <CardErrorBoundary className={className.default}>
+      <CardErrorBoundary className={cn(cardTypes.sm.className, className)}>
         <CurrencyCard
+          className={cn(cardTypes.sm.className, className)}
           baseCurrency={baseCurrency}
           quoteCurrency={quoteCurrency}
           {...rest}
         />
-      </CardErrorBoundary>
-    );
-  }
-
-  if (cardObject.cardType.id === "uniswap_pools_table") {
-    return (
-      <CardErrorBoundary className={className.full}>
-        <UniswapPoolsTableCard {...rest} />
-      </CardErrorBoundary>
-    );
-  }
-
-  if (cardObject.cardType.id === "crypto_table") {
-    return (
-      <CardErrorBoundary className={className.full}>
-        <CryptoTableCard {...rest} />
       </CardErrorBoundary>
     );
   }
@@ -226,8 +149,146 @@ export function CardParser({
     )?.value;
     if (address === undefined || isOwner === undefined) return null;
     return (
-      <CardErrorBoundary className={className.default}>
-        <NanoBananoCard account={{ address: address }} {...rest} />
+      <CardErrorBoundary className={cn(cardTypes.sm.className, className)}>
+        <NanoBananoCard
+          className={cn(cardTypes.sm.className, className)}
+          account={{ address: address }}
+          {...rest}
+        />
+      </CardErrorBoundary>
+    );
+  }
+
+  if (
+    cardObject.cardType.id === "calculator" &&
+    currencies &&
+    currencies.length > 1
+  ) {
+    const values = cardObject.values;
+    if (!values) return null;
+    const ids = values
+      .filter((v) => v.cardTypeInputId === "calculator_currency_id")
+      .map((v) => v.value);
+    const selectedCurrencies = currencies
+      .filter((c) => ids.includes(c.id))
+      .sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id));
+    return (
+      <CardErrorBoundary className={cn(cardTypes.md.className, className)}>
+        <CalculatorCard
+          className={cn(cardTypes.md.className, className)}
+          currencies={selectedCurrencies}
+          {...rest}
+        />
+      </CardErrorBoundary>
+    );
+  }
+
+  if (cardObject.cardType.id === "order_book") {
+    const values = cardObject.values;
+    if (!values) return null;
+    const exchange = values.find(
+      (v) => v.cardTypeInputId === "order_book_exchange"
+    )?.value;
+    const pair = values.find(
+      (v) => v.cardTypeInputId === "order_book_pair"
+    )?.value;
+    if (!exchange || !pair) return null;
+    const config: TOrderBookConfig = {
+      exchange: exchange as TExchange,
+      limit: 10,
+      pair: pair,
+    };
+    return (
+      <CardErrorBoundary className={cn(cardTypes.md.className, className)}>
+        <OrderBookCard
+          className={cn(cardTypes.md.className, className)}
+          config={config}
+          {...rest}
+        />
+      </CardErrorBoundary>
+    );
+  }
+
+  if (cardObject.cardType.id === "crypto_price_chart") {
+    const values = cardObject.values;
+    if (!values) return null;
+    const exchange = values.find(
+      (v) => v.cardTypeInputId === "crypto_price_chart_exchange"
+    )?.value;
+    const pair = values.find(
+      (v) => v.cardTypeInputId === "crypto_price_chart_pair"
+    )?.value;
+    if (!exchange || !pair) return null;
+    const config: TOhlcvChartConfig = {
+      exchange: exchange as TExchange,
+      pair: pair,
+    };
+    return (
+      <CardErrorBoundary className={cn(cardTypes.lg.className, className)}>
+        <CryptoPriceChartCard
+          className={cn(cardTypes.lg.className, className)}
+          config={config}
+          {...rest}
+        />
+      </CardErrorBoundary>
+    );
+  }
+
+  if (cardObject.cardType.id === "wban_summary") {
+    return (
+      <CardErrorBoundary className={cn(cardTypes.xl.className, className)}>
+        <WBanSummaryCard
+          className={cn(cardTypes.xl.className, className)}
+          {...rest}
+        />
+      </CardErrorBoundary>
+    );
+  }
+
+  if (cardObject.cardType.id === "uniswap_position") {
+    const values = cardObject.values;
+    if (!values) return null;
+    const network = values.find(
+      (v) => v.cardTypeInputId === "uniswap_position_network"
+    )?.value;
+    const positionId = values.find(
+      (v) => v.cardTypeInputId === "uniswap_position_position_id"
+    )?.value;
+    const isOwner = values.find(
+      (v) => v.cardTypeInputId === "uniswap_position_is_owner"
+    )?.value;
+    if (!network || !positionId || !isOwner) return null;
+    return (
+      <CardErrorBoundary className={cn(cardTypes.xl.className, className)}>
+        <UniswapPositionCard
+          className={cn(cardTypes.xl.className, className)}
+          positionId={Number(positionId)}
+          network={network as TEthereumNetwork}
+          isOwner={isOwner === "true"}
+          {...rest}
+        />
+      </CardErrorBoundary>
+    );
+  }
+
+  if (cardObject.cardType.id === "uniswap_pools_table") {
+    return (
+      <CardErrorBoundary className={cn(cardTypes.xl.className, className)}>
+        <UniswapPoolsTableCard
+          className={cn(cardTypes.xl.className, className)}
+          {...rest}
+        />
+      </CardErrorBoundary>
+    );
+  }
+
+  if (cardObject.cardType.id === "crypto_table") {
+    return (
+      <CardErrorBoundary className={cn(cardTypes.xl.className, className)}>
+        <CryptoTableCard
+          className={cn(cardTypes.xl.className, className)}
+          {...rest}
+        />
       </CardErrorBoundary>
     );
   }
@@ -240,19 +301,26 @@ export function CardParser({
     )?.value;
     if (!network) return null;
     return (
-      <CardErrorBoundary className={className.full}>
-        <GasTrackerCard network={network as TEthereumNetwork} {...rest} />
-      </CardErrorBoundary>
-    );
-  }
-
-  if (cardObject.cardType.id === "banano_total") {
-    return (
-      <CardErrorBoundary className={className.default}>
-        <BananoTotalCard {...rest} />
+      <CardErrorBoundary className={cn(cardTypes.xl.className, className)}>
+        <GasTrackerCard
+          className={cn(cardTypes.xl.className, className)}
+          network={network as TEthereumNetwork}
+          {...rest}
+        />
       </CardErrorBoundary>
     );
   }
 
   return null;
 }
+
+type TCardTypeDefinition = {
+  className: string;
+};
+
+type TCardTypes = {
+  sm: TCardTypeDefinition;
+  md: TCardTypeDefinition;
+  lg: TCardTypeDefinition;
+  xl: TCardTypeDefinition;
+};

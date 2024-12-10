@@ -1,17 +1,16 @@
 "use client";
 
-import ThreeLineCard from "@/components/cards/_utils/three-line-card";
 import {
   TCardOuterWrapperDivProps,
   TCardOuterWrapperLinkProps,
   TCardOuterWrapperProps,
 } from "@/components/cards/_utils/card-outer-wrapper";
+import ThreeLineCard from "@/components/cards/_utils/three-line-card";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import { useCmcCryptoInfos } from "@/components/providers/cmc/cmc-crypto-infos-provider";
 import { useCurrencyPreference } from "@/components/providers/currency-preference-provider";
 import { getCmcUrl } from "@/lib/get-cmc-url";
 import { formatNumberTBMK } from "@/lib/number-formatters";
-import { cn } from "@/lib/utils";
 import { ArrowDownIcon, ArrowRightIcon, ArrowUpIcon } from "lucide-react";
 
 export type TCrypto = {
@@ -61,7 +60,7 @@ export default function CryptoCard({
 
   return (
     <ThreeLineCard
-      className={cn(className)}
+      className={className}
       isPendingParagraphClassName={config.isPendingParagraphClassName}
       top={
         data ? (

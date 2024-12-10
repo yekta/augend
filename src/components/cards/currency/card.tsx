@@ -1,13 +1,12 @@
 "use client";
 
-import ThreeLineCard from "@/components/cards/_utils/three-line-card";
 import { TCardOuterWrapperProps } from "@/components/cards/_utils/card-outer-wrapper";
+import ThreeLineCard from "@/components/cards/_utils/three-line-card";
+import CryptoIcon from "@/components/icons/crypto-icon";
+import { useCmcCryptoInfos } from "@/components/providers/cmc/cmc-crypto-infos-provider";
 import { useForexRates } from "@/components/providers/forex-rates-provider";
 import { formatNumberTBMK } from "@/lib/number-formatters";
-import { cn } from "@/lib/utils";
 import { TCurrencyWithSelectedFields } from "@/server/db/repo/types";
-import { useCmcCryptoInfos } from "@/components/providers/cmc/cmc-crypto-infos-provider";
-import CryptoIcon from "@/components/icons/crypto-icon";
 
 export default function CurrencyCard({
   baseCurrency,
@@ -52,7 +51,7 @@ export default function CurrencyCard({
 
   return (
     <ThreeLineCard
-      className={cn(className)}
+      className={className}
       top={(() => {
         if (baseCurrency.isCrypto && baseCurrency.coinId) {
           return (

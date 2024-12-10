@@ -9,7 +9,6 @@ import CardOuterWrapper, {
 import Indicator from "@/components/ui/indicator";
 import { defaultQueryOptions } from "@/lib/constants";
 import { formatNumberTBMK } from "@/lib/number-formatters";
-import { cn } from "@/lib/utils";
 import { TExchange, TOrderBook } from "@/server/trpc/api/exchange/types";
 import { api } from "@/server/trpc/setup/react";
 import { ChartNoAxesCombinedIcon } from "lucide-react";
@@ -77,10 +76,7 @@ export default function OrderBookCard({
     : restAsDiv;
   return (
     <CardOuterWrapper
-      className={cn(
-        "col-span-12 md:col-span-6 lg:col-span-4 xl:col-span-3",
-        className
-      )}
+      className={className}
       data-loading-error={(isLoadingError && true) || undefined}
       data-pending={(isPending && true) || undefined}
       {...restTyped}

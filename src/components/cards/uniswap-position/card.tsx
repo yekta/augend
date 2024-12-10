@@ -313,7 +313,7 @@ export default function UniswapPositionCard({
 
   return (
     <CardOuterWrapper
-      className={cn(className)}
+      className={className}
       data-loading-error={(isLoadingError && true) || undefined}
       data-pending={(isPending && true) || undefined}
       data-out-of-range={isOutOfRange || undefined}
