@@ -46,7 +46,7 @@ export default function FiatIcon({
           stroke="currentColor"
           strokeLinecap="round"
           strokeWidth="1.5"
-          d="M10.25 14V8.5a1.5 1.5 0 1 0-3 0V14m3 0v3m0-3h-3m0 3v-3m8.5-1.5h.5a.5.5 0 0 1 .5.5v2.25a1.75 1.75 0 1 1-3.5 0v-6.5a1.75 1.75 0 1 1 3.5 0V9M6 21h12a3 3 0 0 0 3-3V6a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3Z"
+          d="M10.25 13V8.5a1.5 1.5 0 1 0-3 0V13m3 0v4m0-4h-3m0 4v-4m8.5 0h.5a.5.5 0 0 1 .5.5v1.75a1.75 1.75 0 1 1-3.5 0v-6.5a1.75 1.75 0 1 1 3.5 0V10M6 21h12a3 3 0 0 0 3-3V6a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3Z"
         />
       </svg>
     );
