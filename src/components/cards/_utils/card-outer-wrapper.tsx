@@ -34,7 +34,6 @@ type TSharedProps = {
   cardId?: string;
   isRemovable?: boolean;
   noHref?: boolean;
-  defaultClassName?: string;
 };
 export type TCardOuterWrapperDivProps = ComponentProps<"div"> &
   TSharedProps & {
