@@ -203,7 +203,7 @@ export function CardParser({
   if (cardObject.cardType.id === "crypto_table") {
     return (
       <CardErrorBoundary className={className.full}>
-        <CryptoTableCard {...rest} />;
+        <CryptoTableCard {...rest} />
       </CardErrorBoundary>
     );
   }
