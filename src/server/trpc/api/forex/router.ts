@@ -27,6 +27,7 @@ export const forexRouter = createTRPCRouter({
         `${tiingoApi}/fx/top?tickers=xauusd,xagusd&token=${env.TIINGO_API_KEY}`
       ),
     ]);
+
     const [forexData, preciousMetalsJson]: [any, TForexQuote[]] =
       await Promise.all([forexResult.text(), preciousMetalsResult.json()]);
     const parsed: TParsedPage = parser.parse(forexData);
@@ -76,12 +77,14 @@ export const forexRouter = createTRPCRouter({
     const xauUsd = preciousMetalsJson.find((pm) => pm.ticker === "xauusd");
     const xagUsd = preciousMetalsJson.find((pm) => pm.ticker === "xagusd");
     if (xauUsd === undefined) {
+      console.log(preciousMetalsJson);
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
         message: "XAU/USD is missing.",
       });
     }
     if (xagUsd === undefined) {
+      console.log(preciousMetalsJson);
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
         message: "XAG/USD is missing.",
