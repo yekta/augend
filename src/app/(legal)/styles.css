@@ -1,24 +1,29 @@
-.heading-anchor-span {
+.icon-link {
   opacity: 0;
   padding: 0 0.5rem;
 }
 
-h1:hover .heading-anchor-span,
-h2:hover .heading-anchor-span,
-h3:hover .heading-anchor-span,
-h4:hover .heading-anchor-span,
-h5:hover .heading-anchor-span,
-h6:hover .heading-anchor-span {
+.icon-link::before {
+  content: "#";
+  font-weight: normal;
+}
+
+h1:hover .icon-link,
+h2:hover .icon-link,
+h3:hover .icon-link,
+h4:hover .icon-link,
+h5:hover .icon-link,
+h6:hover .icon-link {
   opacity: 0.5;
 }
 
-h1:hover .heading-anchor-span:hover,
-h2:hover .heading-anchor-span:hover,
-h3:hover .heading-anchor-span:hover,
-h4:hover .heading-anchor-span:hover,
-h5:hover .heading-anchor-span:hover,
-h6:hover .heading-anchor-span:hover {
-  opacity: 1;
+h1:hover .icon-link:hover,
+h2:hover .icon-link:hover,
+h3:hover .icon-link:hover,
+h4:hover .icon-link:hover,
+h5:hover .icon-link:hover,
+h6:hover .icon-link:hover {
+  opacity: 0.75;
 }
 
 h1 a[tabindex="-1"],
