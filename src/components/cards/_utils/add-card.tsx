@@ -4,7 +4,6 @@ import CardOuterWrapper from "@/components/cards/_utils/card-outer-wrapper";
 import { cardTypes } from "@/components/cards/_utils/helpers";
 import CardValuesFormParser from "@/components/cards/_utils/values-form/card-values-form-parser";
 import ErrorLine from "@/components/error-line";
-import { AddCardIcon } from "@/components/icons/add-card-icon";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -94,7 +93,7 @@ export function AddCardButton({
           {variant === "icon" ? (
             <Button size="icon" variant="outline" className="size-9">
               <div className="size-5 transition data-[editing]:rotate-90">
-                <AddCardIcon className="size-full" />
+                <PlusIcon className="size-full" />
               </div>
             </Button>
           ) : (
