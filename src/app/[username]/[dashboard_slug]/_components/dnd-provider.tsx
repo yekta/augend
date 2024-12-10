@@ -23,6 +23,7 @@ const DndContext = createContext<{
   instanceId: symbol;
   orderedIds: string[];
   isPendingReorderCards: boolean;
+  isErrorPendingCards: boolean;
 } | null>(null);
 
 type Props = { initialIds: string[]; children: ReactNode };
@@ -30,15 +31,18 @@ type Props = { initialIds: string[]; children: ReactNode };
 export default function DndProvider({ initialIds, children }: Props) {
   const [orderedIds, setOrderedIds] = useState(initialIds);
   const { invalidateCards, cancelCardsQuery } = useCurrentDashboard();
-  const { mutate: reorderCards, isPending: isPendingReorderCards } =
-    api.ui.reorderCards.useMutation({
-      onMutate: async () => {
-        cancelCardsQuery();
-      },
-      onSuccess: async () => {
-        await invalidateCards();
-      },
-    });
+  const {
+    mutate: reorderCards,
+    isPending: isPendingReorderCards,
+    isError: isErrorPendingCards,
+  } = api.ui.reorderCards.useMutation({
+    onMutate: async () => {
+      cancelCardsQuery();
+    },
+    onSuccess: async () => {
+      await invalidateCards();
+    },
+  });
 
   const [instanceId] = useState(getInstanceId);
 
@@ -109,6 +113,7 @@ export default function DndProvider({ initialIds, children }: Props) {
         instanceId,
         orderedIds,
         isPendingReorderCards,
+        isErrorPendingCards,
       }}
     >
       {children}

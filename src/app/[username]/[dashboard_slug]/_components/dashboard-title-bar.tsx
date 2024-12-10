@@ -27,7 +27,12 @@ import { useAsyncRouterPush } from "@/lib/hooks/use-async-router-push";
 import { RenameDashboardSchemaUI } from "@/server/trpc/api/ui/types-client";
 import { api } from "@/server/trpc/setup/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LoaderIcon, PencilIcon, TrashIcon } from "lucide-react";
+import {
+  LoaderIcon,
+  PencilIcon,
+  TrashIcon,
+  TriangleAlertIcon,
+} from "lucide-react";
 import { FormEvent, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -55,7 +60,7 @@ export function DashboardTitleBar({ username, dashboardSlug, isOwner }: Props) {
   });
 
   const asyncPush = useAsyncRouterPush();
-  const { isPendingReorderCards } = useDnd();
+  const { isPendingReorderCards, isErrorPendingCards } = useDnd();
 
   const {
     dashboardName,
@@ -302,6 +307,9 @@ export function DashboardTitleBar({ username, dashboardSlug, isOwner }: Props) {
           <div className="size-7 flex items-center justify-center">
             {isPendingReorderCards && (
               <LoaderIcon className="size-5 text-muted-more-foreground animate-spin" />
+            )}
+            {!isPendingReorderCards && isErrorPendingCards && (
+              <TriangleAlertIcon className="size-5 text-destructive" />
             )}
           </div>
           <AddCardButton
