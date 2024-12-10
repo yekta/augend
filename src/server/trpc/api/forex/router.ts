@@ -1,21 +1,29 @@
-import { tcmbApi } from "@/server/trpc/api/fiat/helpers";
+import { tcmbApi, tiingoApi } from "@/server/trpc/api/forex/helpers";
+import { TForexQuote } from "@/server/trpc/api/forex/types";
 import {
   cachedPublicProcedure,
   createTRPCRouter,
 } from "@/server/trpc/setup/trpc";
 import { TRPCError } from "@trpc/server";
 import { XMLParser } from "fast-xml-parser";
+import { env } from "process";
 
 const parser = new XMLParser({
   ignoreAttributes: false,
   attributeNamePrefix: "",
 });
 
-export const fiatRouter = createTRPCRouter({
-  getRates: cachedPublicProcedure("seconds-medium").query(async () => {
-    const result = await fetch(tcmbApi);
-    const data = await result.text();
-    const parsed: TParsedPage = parser.parse(data);
+export const forexRouter = createTRPCRouter({
+  getRates: cachedPublicProcedure("minutes-medium").query(async () => {
+    const [forexResult, preciousMetalsResult] = await Promise.all([
+      fetch(tcmbApi),
+      fetch(
+        `${tiingoApi}/fx/top?tickers=xauusd,xagusd&token=${env.TIINGO_API_KEY}`
+      ),
+    ]);
+    const [forexData, preciousMetalsJson]: [any, TForexQuote[]] =
+      await Promise.all([forexResult.text(), preciousMetalsResult.json()]);
+    const parsed: TParsedPage = parser.parse(forexData);
     let results: Record<string, Record<string, { buy: number }>> = {
       USD: {},
     };
@@ -49,10 +57,31 @@ export const fiatRouter = createTRPCRouter({
             ? res.CrossRateOther
             : parseFloat(res.CrossRateOther)
           : undefined;
-      if (usdRate !== undefined) {
-        results.USD[currencyCode] = { buy: usdRate };
+      if (usdRate === undefined) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: `USD rate is missing for ${currencyCode}`,
+        });
       }
+      results.USD[currencyCode] = { buy: usdRate };
     }
+
+    const xauUsd = preciousMetalsJson.find((pm) => pm.ticker === "xauusd");
+    const xagUsd = preciousMetalsJson.find((pm) => pm.ticker === "xagusd");
+    if (xauUsd === undefined) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "XAU/USD is missing.",
+      });
+    }
+    if (xagUsd === undefined) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "XAG/USD is missing.",
+      });
+    }
+    results.USD["XAU"] = { buy: xauUsd.askPrice };
+    results.USD["XAG"] = { buy: xagUsd.askPrice };
 
     return results;
   }),

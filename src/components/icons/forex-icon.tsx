@@ -3,7 +3,7 @@ import { ComponentProps } from "react";
 
 const defaultClassName = "shrink-0 size-6";
 
-export default function FiatIcon({
+export default function ForexIcon({
   ticker,
   symbol,
   className,

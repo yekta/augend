@@ -5,9 +5,9 @@ import CardOuterWrapper, {
   TCardOuterWrapperProps,
 } from "@/components/cards/_utils/card-outer-wrapper";
 import CryptoIcon from "@/components/icons/crypto-icon";
-import FiatIcon from "@/components/icons/fiat-icon";
+import ForexIcon from "@/components/icons/forex-icon";
 import { useCmcCryptoInfos } from "@/components/providers/cmc/cmc-crypto-infos-provider";
-import { useFiatCurrencyRates } from "@/components/providers/fiat-currency-rates-provider";
+import { useForexRates } from "@/components/providers/forex-rates-provider";
 import Indicator from "@/components/ui/indicator";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -23,12 +23,12 @@ export default function CalculatorCard({
   currencies: TCurrencyWithSelectedFields[];
 }) {
   const {
-    data: fiatData,
-    isLoadingError: isLoadingErrorFiat,
-    isError: isErrorFiat,
-    isPending: isPendingFiat,
-    isRefetching: isRefetchingFiat,
-  } = useFiatCurrencyRates();
+    data: forexData,
+    isLoadingError: isLoadingErrorForex,
+    isError: isErrorForex,
+    isPending: isPendingForex,
+    isRefetching: isRefetchingForex,
+  } = useForexRates();
 
   const {
     data: cryptoData,
@@ -38,10 +38,10 @@ export default function CalculatorCard({
     isRefetching: isRefetchingCrypto,
   } = useCmcCryptoInfos();
 
-  const isPending = isPendingFiat || isPendingCrypto;
-  const isLoadingError = isLoadingErrorFiat || isLoadingErrorCrypto;
-  const isRefetching = isRefetchingFiat || isRefetchingCrypto;
-  const isError = isErrorFiat || isErrorCrypto;
+  const isPending = isPendingForex || isPendingCrypto;
+  const isLoadingError = isLoadingErrorForex || isLoadingErrorCrypto;
+  const isRefetching = isRefetchingForex || isRefetchingCrypto;
+  const isError = isErrorForex || isErrorCrypto;
 
   const inputRefs = useRef<(HTMLInputElement | null)[]>(
     currencies.map(() => null)
@@ -51,7 +51,7 @@ export default function CalculatorCard({
     useState<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    if (!fiatData || !cryptoData) return;
+    if (!forexData || !cryptoData) return;
 
     for (let i of inputRefs.current) {
       if (i && document.activeElement === i) {
@@ -66,7 +66,7 @@ export default function CalculatorCard({
         return;
       }
     }
-  }, [fiatData, cryptoData]);
+  }, [forexData, cryptoData]);
 
   function endsWithDotZeros(value: string) {
     return /\.0*$/.test(value);
@@ -79,7 +79,7 @@ export default function CalculatorCard({
 
   function editOtherInputs(input: HTMLInputElement) {
     if (isPending) return;
-    if (!cryptoData || !fiatData) return;
+    if (!cryptoData || !forexData) return;
 
     let value = input.value;
     const valueCleaned = value.replaceAll(",", "");
@@ -104,7 +104,7 @@ export default function CalculatorCard({
       ? cryptoData[selfCoinId!].quote["USD"].price
       : selfIsUsd
       ? 1
-      : fiatData["USD"][selfTicker].buy;
+      : forexData["USD"][selfTicker].buy;
 
     otherInputs.forEach((i) => {
       if (!i) return;
@@ -135,7 +135,7 @@ export default function CalculatorCard({
         return;
       }
 
-      const targetUsdPrice = fiatData["USD"][targetTicker].buy;
+      const targetUsdPrice = forexData["USD"][targetTicker].buy;
       const inputValue = valueNumber * (selfUsdPrice / targetUsdPrice);
       if (isNaN(inputValue)) {
         i.value = "";
@@ -180,7 +180,7 @@ export default function CalculatorCard({
               {c.isCrypto ? (
                 <CryptoIcon cryptoName={c.ticker} className="size-6 -ml-1.25" />
               ) : (
-                <FiatIcon
+                <ForexIcon
                   symbol={c.symbol}
                   ticker={c.ticker}
                   className="size-6 -ml-1.25"
@@ -203,7 +203,7 @@ export default function CalculatorCard({
           isRefetching={isRefetching}
           isError={isError}
           isPending={isPending}
-          hasData={fiatData !== undefined && cryptoData !== undefined}
+          hasData={forexData !== undefined && cryptoData !== undefined}
         />
       </CardInnerWrapper>
     </CardOuterWrapper>

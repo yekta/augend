@@ -3,7 +3,7 @@ import CardValuesFormSubmitButton from "@/components/cards/_utils/values-form/ca
 import CardValuesFormWrapper from "@/components/cards/_utils/values-form/card-values-form-wrapper";
 import { TValueFormProps } from "@/components/cards/_utils/values-form/types";
 import CryptoIcon from "@/components/icons/crypto-icon";
-import FiatIcon from "@/components/icons/fiat-icon";
+import ForexIcon from "@/components/icons/forex-icon";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { cleanArray } from "@/server/redis/cache-utils";
@@ -112,7 +112,7 @@ export function CalculatorValueForm({
                     );
                   }
                   return (
-                    <FiatIcon
+                    <ForexIcon
                       ticker={currency.ticker}
                       symbol={currency.symbol}
                       className={cn("text-foreground", className)}
@@ -183,7 +183,7 @@ export function CalculatorValueForm({
                 );
               }
               return (
-                <FiatIcon
+                <ForexIcon
                   ticker={currency.ticker}
                   symbol={currency.symbol}
                   className={cn("text-foreground", className)}

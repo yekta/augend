@@ -4,7 +4,7 @@ import { useUserFull } from "@/app/[username]/[dashboard_slug]/_components/user-
 import Blockies from "@/components/blockies/blockies";
 import { CardValueCombobox } from "@/components/cards/_utils/values-form/card-value-combobox";
 import ErrorLine from "@/components/error-line";
-import FiatIcon from "@/components/icons/fiat-icon";
+import ForexIcon from "@/components/icons/forex-icon";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -452,7 +452,7 @@ function CurrenciesButton({
     if (idx === -1) return null;
     const currency = dataCurrencies[idx];
     return (
-      <FiatIcon
+      <ForexIcon
         ticker={currency.ticker}
         symbol={currency.symbol}
         className={className}

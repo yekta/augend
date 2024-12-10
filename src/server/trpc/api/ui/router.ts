@@ -155,13 +155,13 @@ export const uiRouter = createTRPCRouter({
     .input(
       z.object({
         ids: z.array(z.string()).optional(),
-        fiatOnly: z.boolean().optional().default(false),
+        forexOnly: z.boolean().optional().default(false),
       })
     )
-    .query(async function ({ input: { ids, fiatOnly } }) {
+    .query(async function ({ input: { ids, forexOnly } }) {
       const res = await getCurrencies({
         ids: ids ? cleanAndSortArray(ids) : undefined,
-        fiatOnly,
+        forexOnly,
       });
       return res;
     }),

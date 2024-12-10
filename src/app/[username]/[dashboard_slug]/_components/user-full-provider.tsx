@@ -43,7 +43,7 @@ export const UserFullProvider: FC<Props> = ({
     isPending: isPendingCurrencies,
     isLoadingError: isLoadingErrorCurrencies,
   } = api.ui.getCurrencies.useQuery(
-    { fiatOnly: true },
+    { forexOnly: true },
     {
       initialData: currenciesInitialData,
     }

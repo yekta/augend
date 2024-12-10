@@ -9,7 +9,7 @@ import MiniCryptoCard from "@/components/cards/mini-crypto/card";
 import CmcCryptoInfosProvider from "@/components/providers/cmc/cmc-crypto-infos-provider";
 import CmcGlobalMetricsProvider from "@/components/providers/cmc/cmc-global-metrics-provider";
 import CurrencyPreferenceProvider from "@/components/providers/currency-preference-provider";
-import FiatCurrencyRatesProvider from "@/components/providers/fiat-currency-rates-provider";
+import ForexRatesProvider from "@/components/providers/forex-rates-provider";
 import { LinkButton } from "@/components/ui/button";
 import { defaultCurrencyPreference, mainDashboardSlug } from "@/lib/constants";
 import { auth } from "@/server/auth/auth";
@@ -125,9 +125,9 @@ function Providers({
           <CmcCryptoInfosProvider
             cryptos={finalCryptoIds.map((i) => ({ id: i }))}
           >
-            <FiatCurrencyRatesProvider>
+            <ForexRatesProvider>
               <DndProvider initialIds={[]}>{children}</DndProvider>
-            </FiatCurrencyRatesProvider>
+            </ForexRatesProvider>
           </CmcCryptoInfosProvider>
         </CmcGlobalMetricsProvider>
       </CurrencyPreferenceProvider>

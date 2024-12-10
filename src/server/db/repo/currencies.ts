@@ -4,10 +4,10 @@ import { and, eq, inArray } from "drizzle-orm";
 
 export async function getCurrencies({
   ids,
-  fiatOnly,
+  forexOnly,
 }: {
   ids?: string[];
-  fiatOnly?: boolean;
+  forexOnly?: boolean;
 }) {
   const res = await db
     .select({
@@ -24,9 +24,9 @@ export async function getCurrencies({
       ids
         ? and(
             inArray(currenciesTable.id, ids),
-            fiatOnly === true ? eq(currenciesTable.isCrypto, false) : undefined
+            forexOnly === true ? eq(currenciesTable.isCrypto, false) : undefined
           )
-        : fiatOnly === true
+        : forexOnly === true
         ? eq(currenciesTable.isCrypto, false)
         : undefined
     );

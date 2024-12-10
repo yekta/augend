@@ -1,7 +1,7 @@
 import { cmcRouter } from "@/server/trpc/api/cmc/router";
 import { ethereumRouter } from "@/server/trpc/api/ethereum/router";
 import { exchangeRouter } from "@/server/trpc/api/exchange/router";
-import { fiatRouter } from "@/server/trpc/api/fiat/router";
+import { forexRouter } from "@/server/trpc/api/forex/router";
 import { nanoBananoRouter } from "@/server/trpc/api/nano-banano/router";
 import { uiRouter } from "@/server/trpc/api/ui/router";
 import { uniswapRouter } from "@/server/trpc/api/uniswap/router";
@@ -28,7 +28,7 @@ export const appRouter = createTRPCRouter({
   exchange: exchangeRouter,
   nanoBanano: nanoBananoRouter,
   cmc: cmcRouter,
-  fiat: fiatRouter,
+  forex: forexRouter,
   wban: wbanRouter,
   uniswap: uniswapRouter,
   ethereum: ethereumRouter,

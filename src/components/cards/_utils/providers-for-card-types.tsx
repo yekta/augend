@@ -4,7 +4,7 @@ import CmcGlobalMetricsProvider from "@/components/providers/cmc/cmc-global-metr
 import CurrencyPreferenceProvider, {
   TCurrencyPreference,
 } from "@/components/providers/currency-preference-provider";
-import FiatCurrencyRatesProvider from "@/components/providers/fiat-currency-rates-provider";
+import ForexRatesProvider from "@/components/providers/forex-rates-provider";
 import NanoBananoBalancesProvider, {
   TNanoBananoAccountFull,
 } from "@/components/providers/nano-banano-balance-provider";
@@ -37,7 +37,7 @@ export function ProvidersForCardTypes({
 
   if (includesAny(["currency", "banano_total_balance", "calculator"])) {
     wrappedChildren = (
-      <FiatCurrencyRatesProvider>{wrappedChildren}</FiatCurrencyRatesProvider>
+      <ForexRatesProvider>{wrappedChildren}</ForexRatesProvider>
     );
   }
   if (includesAny(["fear_greed_index"])) {
