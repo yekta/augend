@@ -40,24 +40,23 @@ class CardErrorBoundary extends Component<Props, State> {
     if (this.state.hasError) {
       return (
         <CardOuterWrapper className={cn("h-32", this.props.className)}>
-          <CardInnerWrapper className="max-h-full overflow-auto">
+          <CardInnerWrapper className="max-h-full overflow-auto border-destructive/25">
             {this.props.fallback || (
-              <div className="w-full flex flex-col items-center px-2 pb-2 pt-2.5 gap-2.5">
-                <div className="text-destructive px-2 flex items-center justify-center gap-1.5">
+              <div className="w-full flex flex-col items-center pt-2.5 gap-2.5">
+                <div className="text-destructive px-4 flex items-center justify-center gap-1.5">
                   <TriangleAlertIcon className="size-4 shrink-0" />
                   <p className="font-semibold text-sm  text-left shrink min-w-0">
-                    Card had an error.
+                    Card had an unexpected error.
                   </p>
                 </div>
-                <div className="w-full flex items-center flex-col gap-2">
+                <div className="w-full flex items-center flex-col gap-3">
                   <CopyErrorButton
                     textToCopy={
                       (this.state.error?.message || "Unknown error") +
-                        "\n" +
                         this.state.error?.stack || "Unknown stack"
                     }
                   />
-                  <pre className="w-full overflow-auto text-xs font-mono font-medium text-muted-foreground bg-foreground/5 rounded-md px-2 py-1.5">
+                  <pre className="w-full overflow-auto text-xs font-mono font-medium text-destructive bg-destructive/10 px-3 py-2">
                     {this.state.error?.message || "Unknown error"}
                     {this.state.error?.stack || "Unknown stack"}
                   </pre>

@@ -118,6 +118,7 @@ const config: Config = {
         "1.5": "1.5px",
       },
       rotate: {
+        30: "30deg",
         360: "360deg",
       },
       borderRadius: {
