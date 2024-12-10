@@ -69,7 +69,7 @@ export function CalculatorValueForm({
       return;
     }
     if (currencyIds.length > maxCurrencies) {
-      setLastCurrencyError(`Maxiumum ${maxCurrencies} currencies is allowed.`);
+      setLastCurrencyError(`Maxiumum ${maxCurrencies} currencies are allowed.`);
       return;
     }
     onFormSubmit(
