@@ -21,6 +21,12 @@ import { TCurrencyWithSelectedFields } from "@/server/db/repo/types";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
 import { TEthereumNetwork } from "@/server/trpc/api/ethereum/types";
 import { TExchange } from "@/server/trpc/api/exchange/types";
+import CardErrorBoundary from "@/components/cards/_utils/card-error-boundary";
+
+const className = {
+  default: "col-span-6 md:col-span-4 lg:col-span-3",
+  full: "col-span-12",
+};
 
 export function CardParser({
   cardObject,
@@ -31,11 +37,19 @@ export function CardParser({
   currencies: TCurrencyWithSelectedFields[] | null;
 } & TCardOuterWrapperProps) {
   if (cardObject.cardType.id === "fear_greed_index") {
-    return <FearGreedIndexCard {...rest} />;
+    return (
+      <CardErrorBoundary className={className.default}>
+        <FearGreedIndexCard {...rest} />
+      </CardErrorBoundary>
+    );
   }
 
   if (cardObject.cardType.id === "wban_summary") {
-    return <WBanSummaryCard {...rest} />;
+    return (
+      <CardErrorBoundary className={className.full}>
+        <WBanSummaryCard {...rest} />
+      </CardErrorBoundary>
+    );
   }
 
   if (
@@ -51,7 +65,11 @@ export function CardParser({
     const selectedCurrencies = currencies
       .filter((c) => ids.includes(c.id))
       .sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id));
-    return <CalculatorCard currencies={selectedCurrencies} {...rest} />;
+    return (
+      <CardErrorBoundary className="col-span-12 md:col-span-6 lg:col-span-3">
+        <CalculatorCard currencies={selectedCurrencies} {...rest} />
+      </CardErrorBoundary>
+    );
   }
 
   if (cardObject.cardType.id === "order_book") {
@@ -69,7 +87,11 @@ export function CardParser({
       limit: 10,
       pair: pair,
     };
-    return <OrderBookCard config={config} {...rest} />;
+    return (
+      <CardErrorBoundary className="col-span-12 md:col-span-6 lg:col-span-4 xl:col-span-3">
+        <OrderBookCard config={config} {...rest} />
+      </CardErrorBoundary>
+    );
   }
 
   if (cardObject.cardType.id === "crypto_price_chart") {
@@ -86,7 +108,11 @@ export function CardParser({
       exchange: exchange as TExchange,
       pair: pair,
     };
-    return <CryptoPriceChartCard config={config} {...rest} />;
+    return (
+      <CardErrorBoundary className="col-span-12 lg:col-span-6">
+        <CryptoPriceChartCard config={config} {...rest} />
+      </CardErrorBoundary>
+    );
   }
 
   if (cardObject.cardType.id === "uniswap_position") {
@@ -103,12 +129,14 @@ export function CardParser({
     )?.value;
     if (!network || !positionId || !isOwner) return null;
     return (
-      <UniswapPositionCard
-        positionId={Number(positionId)}
-        network={network as TEthereumNetwork}
-        isOwner={isOwner === "true"}
-        {...rest}
-      />
+      <CardErrorBoundary className={className.full}>
+        <UniswapPositionCard
+          positionId={Number(positionId)}
+          network={network as TEthereumNetwork}
+          isOwner={isOwner === "true"}
+          {...rest}
+        />
+      </CardErrorBoundary>
     );
   }
 
@@ -119,7 +147,11 @@ export function CardParser({
       (v) => v.cardTypeInputId === "mini_crypto_coin_id"
     )?.value;
     if (!coinId) return null;
-    return <MiniCryptoCard coinId={Number(coinId)} {...rest} />;
+    return (
+      <CardErrorBoundary className={className.default}>
+        <MiniCryptoCard coinId={Number(coinId)} {...rest} />
+      </CardErrorBoundary>
+    );
   }
 
   if (cardObject.cardType.id === "crypto") {
@@ -129,7 +161,11 @@ export function CardParser({
       (v) => v.cardTypeInputId === "crypto_coin_id"
     )?.value;
     if (!coinId) return null;
-    return <CryptoCard config={{ id: Number(coinId) }} {...rest} />;
+    return (
+      <CardErrorBoundary className={className.default}>
+        <CryptoCard config={{ id: Number(coinId) }} {...rest} />
+      </CardErrorBoundary>
+    );
   }
 
   if (cardObject.cardType.id === "currency") {
@@ -146,20 +182,30 @@ export function CardParser({
     const quoteCurrency = currencies?.find((c) => c.id === quoteId);
     if (!baseCurrency || !quoteCurrency) return null;
     return (
-      <CurrencyCard
-        baseCurrency={baseCurrency}
-        quoteCurrency={quoteCurrency}
-        {...rest}
-      />
+      <CardErrorBoundary className={className.default}>
+        <CurrencyCard
+          baseCurrency={baseCurrency}
+          quoteCurrency={quoteCurrency}
+          {...rest}
+        />
+      </CardErrorBoundary>
     );
   }
 
   if (cardObject.cardType.id === "uniswap_pools_table") {
-    return <UniswapPoolsTableCard {...rest} />;
+    return (
+      <CardErrorBoundary className={className.full}>
+        <UniswapPoolsTableCard {...rest} />
+      </CardErrorBoundary>
+    );
   }
 
   if (cardObject.cardType.id === "crypto_table") {
-    return <CryptoTableCard {...rest} />;
+    return (
+      <CardErrorBoundary className={className.full}>
+        <CryptoTableCard {...rest} />;
+      </CardErrorBoundary>
+    );
   }
 
   if (
@@ -179,7 +225,11 @@ export function CardParser({
         v.cardTypeInputId === "banano_balance_is_owner"
     )?.value;
     if (address === undefined || isOwner === undefined) return null;
-    return <NanoBananoCard account={{ address: address }} {...rest} />;
+    return (
+      <CardErrorBoundary className={className.default}>
+        <NanoBananoCard account={{ address: address }} {...rest} />
+      </CardErrorBoundary>
+    );
   }
 
   if (cardObject.cardType.id === "gas_tracker") {
@@ -189,11 +239,19 @@ export function CardParser({
       (v) => v.cardTypeInputId === "gas_tracker_network"
     )?.value;
     if (!network) return null;
-    return <GasTrackerCard network={network as TEthereumNetwork} {...rest} />;
+    return (
+      <CardErrorBoundary className={className.full}>
+        <GasTrackerCard network={network as TEthereumNetwork} {...rest} />
+      </CardErrorBoundary>
+    );
   }
 
   if (cardObject.cardType.id === "banano_total") {
-    return <BananoTotalCard {...rest} />;
+    return (
+      <CardErrorBoundary className={className.default}>
+        <BananoTotalCard {...rest} />
+      </CardErrorBoundary>
+    );
   }
 
   return null;
