@@ -23,7 +23,7 @@ const DndContext = createContext<{
   instanceId: symbol;
   orderedIds: string[];
   isPendingReorderCards: boolean;
-  isErrorPendingCards: boolean;
+  isErrorReorderCards: boolean;
 } | null>(null);
 
 type Props = { initialIds: string[]; children: ReactNode };
@@ -34,7 +34,7 @@ export default function DndProvider({ initialIds, children }: Props) {
   const {
     mutate: reorderCards,
     isPending: isPendingReorderCards,
-    isError: isErrorPendingCards,
+    isError: isErrorReorderCards,
   } = api.ui.reorderCards.useMutation({
     onMutate: async () => {
       cancelCardsQuery();
@@ -113,7 +113,7 @@ export default function DndProvider({ initialIds, children }: Props) {
         instanceId,
         orderedIds,
         isPendingReorderCards,
-        isErrorPendingCards,
+        isErrorReorderCards,
       }}
     >
       {children}

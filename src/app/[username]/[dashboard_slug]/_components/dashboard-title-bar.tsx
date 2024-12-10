@@ -60,7 +60,7 @@ export function DashboardTitleBar({ username, dashboardSlug, isOwner }: Props) {
   });
 
   const asyncPush = useAsyncRouterPush();
-  const { isPendingReorderCards, isErrorPendingCards } = useDnd();
+  const { isPendingReorderCards, isErrorReorderCards } = useDnd();
 
   const {
     dashboardName,
@@ -308,7 +308,7 @@ export function DashboardTitleBar({ username, dashboardSlug, isOwner }: Props) {
             {isPendingReorderCards && (
               <LoaderIcon className="size-5 text-muted-more-foreground animate-spin" />
             )}
-            {!isPendingReorderCards && isErrorPendingCards && (
+            {!isPendingReorderCards && isErrorReorderCards && (
               <TriangleAlertIcon className="size-5 text-destructive" />
             )}
           </div>
