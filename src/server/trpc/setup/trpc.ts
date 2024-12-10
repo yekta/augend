@@ -116,18 +116,19 @@ const cacheMiddleware = (cacheTime: TCacheTime) =>
 
     let wasAccessed = false;
 
-    const cachedResult = cachedValue
-      ? new Proxy(cachedValue, {
-          get(target, prop, receiver) {
-            wasAccessed = true;
-            return Reflect.get(target, prop, receiver);
-          },
-        })
-      : undefined;
+    const cachedResult =
+      cachedValue !== undefined && cachedValue !== null
+        ? new Proxy(cachedValue, {
+            get(target, prop, receiver) {
+              wasAccessed = true;
+              return Reflect.get(target, prop, receiver);
+            },
+          })
+        : undefined;
 
     const result = await next({ ctx: { ...ctx, cachedResult } });
 
-    if (cachedValue && !wasAccessed) {
+    if (cachedValue !== undefined && cachedValue !== null && !wasAccessed) {
       console.warn(
         `[CACHE][WARNING]: ${path} | There was a cached result, but it wasn't accessed.`
       );
