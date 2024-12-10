@@ -465,7 +465,7 @@ function CurrenciesButton({
       <DialogTrigger disabled={isPendingUser} asChild>
         <Button
           variant="ghost"
-          className="flex text-left items-center rounded px-1 py-1 justify-start max-w-full gap-2"
+          className="flex text-left items-center rounded pl-1 pr-2 py-1 justify-start max-w-full gap-2"
         >
           <p
             className="font-bold leading-tight text-lg group-data-[loading-error]/account:text-destructive 
@@ -477,7 +477,7 @@ function CurrenciesButton({
               isPending={isPendingUser}
             />
             {dataUser && (
-              <span className="text-muted-more-foreground font-normal px-[0.25ch]">
+              <span className="text-muted-more-foreground font-normal">
                 {" • "}
               </span>
             )}
@@ -486,7 +486,7 @@ function CurrenciesButton({
               isPending={isPendingUser}
             />
             {dataUser && (
-              <span className="text-muted-more-foreground font-normal px-[0.25ch]">
+              <span className="text-muted-more-foreground font-normal">
                 {" • "}
               </span>
             )}
