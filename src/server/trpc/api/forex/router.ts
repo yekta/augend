@@ -14,7 +14,13 @@ const parser = new XMLParser({
 });
 
 export const forexRouter = createTRPCRouter({
-  getRates: cachedPublicProcedure("minutes-medium").query(async () => {
+  getRates: cachedPublicProcedure("minutes-short").query(async ({ ctx }) => {
+    type TReturn = Record<string, Record<string, { buy: number }>>;
+
+    if (ctx.cachedResult) {
+      return ctx.cachedResult as TReturn;
+    }
+
     const [forexResult, preciousMetalsResult] = await Promise.all([
       fetch(tcmbApi),
       fetch(
@@ -24,7 +30,8 @@ export const forexRouter = createTRPCRouter({
     const [forexData, preciousMetalsJson]: [any, TForexQuote[]] =
       await Promise.all([forexResult.text(), preciousMetalsResult.json()]);
     const parsed: TParsedPage = parser.parse(forexData);
-    let results: Record<string, Record<string, { buy: number }>> = {
+
+    let result: TReturn = {
       USD: {},
     };
 
@@ -37,13 +44,13 @@ export const forexRouter = createTRPCRouter({
         message: "USD is missing",
       });
     }
-    results.USD["TRY"] = {
+    result.USD["TRY"] = {
       buy: 1 / parseFloat(usdTry.ForexBuying),
     };
 
     for (const res of parsed.Tarih_Date.Currency) {
       if (res.CurrencyCode === "USD") {
-        results.USD["USD"] = { buy: 1 };
+        result.USD["USD"] = { buy: 1 };
         continue;
       }
       const currencyCode = res.CurrencyCode;
@@ -63,7 +70,7 @@ export const forexRouter = createTRPCRouter({
           message: `USD rate is missing for ${currencyCode}`,
         });
       }
-      results.USD[currencyCode] = { buy: usdRate };
+      result.USD[currencyCode] = { buy: usdRate };
     }
 
     const xauUsd = preciousMetalsJson.find((pm) => pm.ticker === "xauusd");
@@ -80,10 +87,10 @@ export const forexRouter = createTRPCRouter({
         message: "XAG/USD is missing.",
       });
     }
-    results.USD["XAU"] = { buy: xauUsd.askPrice };
-    results.USD["XAG"] = { buy: xagUsd.askPrice };
+    result.USD["XAU"] = { buy: xauUsd.askPrice };
+    result.USD["XAG"] = { buy: xagUsd.askPrice };
 
-    return results;
+    return result;
   }),
 });
 

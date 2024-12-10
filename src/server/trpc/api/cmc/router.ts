@@ -69,7 +69,7 @@ export const cmcRouter = createTRPCRouter({
       }
       return editedResult;
     }),
-  getGlobalMetrics: cachedPublicProcedure()
+  getGlobalMetrics: cachedPublicProcedure("minutes-short")
     .input(
       z.object({
         convert: z.string().optional().default("USD"),
