@@ -136,6 +136,7 @@ export function CardValueCombobox<T>({
         </PopoverTrigger>
         <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
           <Command
+            shouldFilter={isPending || isLoadingError ? false : true}
             data-pending={isPending ? true : undefined}
             className="max-h-[15.5rem] group/command"
           >

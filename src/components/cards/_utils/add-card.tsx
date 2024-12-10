@@ -1,5 +1,3 @@
-"use client";
-
 import { useCurrentDashboard } from "@/app/[username]/[dashboard_slug]/_components/current-dashboard-provider";
 import CardInnerWrapper from "@/components/cards/_utils/card-inner-wrapper";
 import CardOuterWrapper from "@/components/cards/_utils/card-outer-wrapper";
@@ -213,6 +211,7 @@ export function AddCardCommandPanel({
       )}
       {selectedCardType === null && (
         <Command
+          shouldFilter={isPending || isLoadingError ? false : true}
           className={cn(
             "w-full rounded-xl border shadow-xl shadow-shadow/[var(--opacity-shadow)]",
             className
