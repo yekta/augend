@@ -1,5 +1,6 @@
 import CurrentDashboardProvider from "@/app/[username]/[dashboard_slug]/_components/current-dashboard-provider";
 import DndProvider from "@/app/[username]/[dashboard_slug]/_components/dnd-provider";
+import { cardTypes } from "@/components/cards/_utils/helpers";
 import CryptoPriceChartCard from "@/components/cards/crypto-price-chart/card";
 import CryptoCard from "@/components/cards/crypto/card";
 import CurrencyCard from "@/components/cards/currency/card";
@@ -12,6 +13,7 @@ import CurrencyPreferenceProvider from "@/components/providers/currency-preferen
 import ForexRatesProvider from "@/components/providers/forex-rates-provider";
 import { LinkButton } from "@/components/ui/button";
 import { defaultCurrencyPreference, mainDashboardSlug } from "@/lib/constants";
+import { cn } from "@/lib/utils";
 import { auth } from "@/server/auth/auth";
 import { cleanAndSortArray } from "@/server/redis/cache-utils";
 import { redirect } from "next/navigation";
@@ -28,7 +30,7 @@ export default async function Home() {
 
   return (
     <div className="w-full flex-1 flex flex-col items-center">
-      <div className="w-full max-w-7xl flex-1 flex flex-col justify-center items-center pt-8 pb-[calc(6vh+2rem)]">
+      <div className="w-full max-w-7xl flex-1 flex flex-col justify-center items-center pt-8 pb-[calc(8vh+2rem)]">
         <div className="flex flex-col items-center max-w-full px-5 md:px-8">
           <h1 className="text-4xl md:text-5xl font-bold text-center leading-none">
             Track financial assets
@@ -48,12 +50,15 @@ export default async function Home() {
                 noHref
                 key={id}
                 config={{ id }}
-                className={index === 1 ? "hidden lg:flex" : ""}
+                className={cn(
+                  cardTypes.sm.className,
+                  index === 1 ? "hidden lg:flex" : ""
+                )}
               />
             ))}
-            <FearGreedIndexCard noHref />
+            <FearGreedIndexCard noHref className={cardTypes.sm.className} />
             <CurrencyCard
-              className="hidden md:flex"
+              className={cn(cardTypes.sm.className, "hidden md:flex")}
               baseCurrency={{
                 id: "d11e7514-5c8e-423d-bc94-efa24bf0f423",
                 ticker: "EUR",
@@ -78,24 +83,30 @@ export default async function Home() {
                 noHref
                 key={id}
                 coinId={id}
-                className={
+                className={cn(
+                  cardTypes.sm.className,
                   index >= 3
                     ? "hidden lg:flex"
                     : index >= 2
                     ? "hidden md:flex"
                     : ""
-                }
+                )}
               />
             ))}
-            <GasTrackerCard noHref network="Ethereum" />
+            <GasTrackerCard
+              noHref
+              network="Ethereum"
+              className={cardTypes.xl.className}
+            />
             <CryptoPriceChartCard
               config={{
                 exchange: "Kucoin",
                 pair: "DOGE/USDT",
               }}
+              className={cardTypes.lg.className}
             />
             <CryptoPriceChartCard
-              className="hidden lg:flex"
+              className={cn(cardTypes.lg.className, "hidden lg:flex")}
               config={{
                 exchange: "Kucoin",
                 pair: "LINK/BTC",

@@ -29,7 +29,7 @@ export const useAsyncRouterPush = () => {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
-  const asynPush = async (path: string) => {
+  const asyncPush = async (path: string) => {
     return new Promise<void>((resolve) => {
       startTransition(() => {
         router.push(path);
@@ -47,5 +47,5 @@ export const useAsyncRouterPush = () => {
     }
   }, [isPending]);
 
-  return asynPush;
+  return asyncPush;
 };

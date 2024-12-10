@@ -1,3 +1,29 @@
+type TCardTypeDefinition = {
+  className: string;
+};
+
+type TCardTypes = {
+  sm: TCardTypeDefinition;
+  md: TCardTypeDefinition;
+  lg: TCardTypeDefinition;
+  xl: TCardTypeDefinition;
+};
+
+export const cardTypes: TCardTypes = {
+  sm: {
+    className: "col-span-6 md:col-span-4 lg:col-span-3",
+  },
+  md: {
+    className: "col-span-12 md:col-span-6 lg:col-span-4 xl:col-span-3",
+  },
+  lg: {
+    className: "col-span-12 lg:col-span-6",
+  },
+  xl: {
+    className: "col-span-12",
+  },
+};
+
 export function getNumberColorClass(
   n: number | "positive" | "negative",
   hasBg = false,

@@ -23,8 +23,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { revalidateLayout } from "@/lib/actions/revalidate";
 import { timeAgoIntl } from "@/lib/helpers";
-import { cn } from "@/lib/utils";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
 import {
   ChangeCurrencyPreferenceSchemaUI,
@@ -44,11 +44,10 @@ export default function AccountSections({}: Props) {
     dataUser,
     isPendingUser,
     isLoadingErrorUser,
-    invalidateUser,
     dataCurrencies,
     isPendingCurrencies,
     isLoadingErrorCurrencies,
-    invalidateCurrencies,
+    invalidateUser,
   } = useUserFull();
   const user = dataUser?.user;
   const [isUsernameDialogOpen, setIsUsernameDialogOpen] = useState(false);
@@ -169,6 +168,12 @@ function UsernameButton({
     },
   });
 
+  const resetProcess = () => {
+    onOpenChange(false);
+    resetChangeUsername();
+    form.reset();
+  };
+
   const {
     mutate: changeUsername,
     isPending: isPendingChangeUsername,
@@ -177,17 +182,14 @@ function UsernameButton({
   } = api.ui.changeUsername.useMutation({
     onSuccess: async (d) => {
       await onSuccess?.();
-      onOpenChange(false);
-      form.reset();
-      resetChangeUsername();
+      await revalidateLayout();
+      resetProcess();
     },
   });
 
   function onSubmit(values: z.infer<typeof ChangeUsernameSchemaUI>) {
     if (values.newUsername === user?.username) {
-      onOpenChange(false);
-      form.reset();
-      resetChangeUsername();
+      resetProcess();
       return;
     }
     changeUsername({
@@ -368,6 +370,7 @@ function CurrenciesButton({
   } = api.ui.changeCurrencyPreference.useMutation({
     onSuccess: async (d) => {
       await onSuccess?.();
+      await revalidateLayout();
       resetProcess();
     },
   });

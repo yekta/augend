@@ -1,43 +1,29 @@
+import CardErrorBoundary from "@/components/cards/_utils/card-error-boundary";
+import { TCardOuterWrapperProps } from "@/components/cards/_utils/card-outer-wrapper";
+import { cardTypes } from "@/components/cards/_utils/helpers";
 import BananoTotalCard from "@/components/cards/banano-total/card";
 import CalculatorCard from "@/components/cards/calculator/card";
-import CryptoCard from "@/components/cards/crypto/card";
-import CryptoTableCard from "@/components/cards/crypto-table/card";
-import GasTrackerCard from "@/components/cards/gas-tracker/card";
-import FearGreedIndexCard from "@/components/cards/fear-greed-index/card";
-import CurrencyCard from "@/components/cards/currency/card";
-import MiniCryptoCard from "@/components/cards/mini-crypto/card";
-import NanoBananoCard from "@/components/cards/nano-banano/card";
 import CryptoPriceChartCard, {
   TOhlcvChartConfig,
 } from "@/components/cards/crypto-price-chart/card";
+import CryptoTableCard from "@/components/cards/crypto-table/card";
+import CryptoCard from "@/components/cards/crypto/card";
+import CurrencyCard from "@/components/cards/currency/card";
+import FearGreedIndexCard from "@/components/cards/fear-greed-index/card";
+import GasTrackerCard from "@/components/cards/gas-tracker/card";
+import MiniCryptoCard from "@/components/cards/mini-crypto/card";
+import NanoBananoCard from "@/components/cards/nano-banano/card";
 import OrderBookCard, {
   TOrderBookConfig,
 } from "@/components/cards/order-book/card";
 import UniswapPoolsTableCard from "@/components/cards/uniswap-pools-table/card";
 import UniswapPositionCard from "@/components/cards/uniswap-position/card";
-import { TCardOuterWrapperProps } from "@/components/cards/_utils/card-outer-wrapper";
 import WBanSummaryCard from "@/components/cards/wban-summary/card";
+import { cn } from "@/lib/utils";
 import { TCurrencyWithSelectedFields } from "@/server/db/repo/types";
-import { AppRouterOutputs } from "@/server/trpc/api/root";
 import { TEthereumNetwork } from "@/server/trpc/api/ethereum/types";
 import { TExchange } from "@/server/trpc/api/exchange/types";
-import CardErrorBoundary from "@/components/cards/_utils/card-error-boundary";
-import { cn } from "@/lib/utils";
-
-export const cardTypes: TCardTypes = {
-  sm: {
-    className: "col-span-6 md:col-span-4 lg:col-span-3",
-  },
-  md: {
-    className: "col-span-12 md:col-span-6 lg:col-span-4 xl:col-span-3",
-  },
-  lg: {
-    className: "col-span-12 lg:col-span-6",
-  },
-  xl: {
-    className: "col-span-12",
-  },
-};
+import { AppRouterOutputs } from "@/server/trpc/api/root";
 
 export function CardParser({
   cardObject,
@@ -313,14 +299,3 @@ export function CardParser({
 
   return null;
 }
-
-type TCardTypeDefinition = {
-  className: string;
-};
-
-type TCardTypes = {
-  sm: TCardTypeDefinition;
-  md: TCardTypeDefinition;
-  lg: TCardTypeDefinition;
-  xl: TCardTypeDefinition;
-};

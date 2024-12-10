@@ -3,7 +3,7 @@
 import { useCurrentDashboard } from "@/app/[username]/[dashboard_slug]/_components/current-dashboard-provider";
 import CardInnerWrapper from "@/components/cards/_utils/card-inner-wrapper";
 import CardOuterWrapper from "@/components/cards/_utils/card-outer-wrapper";
-import { cardTypes } from "@/components/cards/_utils/card-parser";
+import { cardTypes } from "@/components/cards/_utils/helpers";
 import CardValuesFormParser from "@/components/cards/_utils/values-form/card-values-form-parser";
 import ErrorLine from "@/components/error-line";
 import { AddCardIcon } from "@/components/icons/add-card-icon";
