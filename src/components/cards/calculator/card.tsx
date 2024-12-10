@@ -5,6 +5,7 @@ import CardOuterWrapper, {
   TCardOuterWrapperProps,
 } from "@/components/cards/_utils/card-outer-wrapper";
 import CryptoIcon from "@/components/icons/crypto-icon";
+import FiatIcon from "@/components/icons/fiat-icon";
 import { useCmcCryptoInfos } from "@/components/providers/cmc/cmc-crypto-infos-provider";
 import { useFiatCurrencyRates } from "@/components/providers/fiat-currency-rates-provider";
 import Indicator from "@/components/ui/indicator";
@@ -12,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { TCurrencyWithSelectedFields } from "@/server/db/repo/types";
 import { LoaderIcon } from "lucide-react";
-import React, { ReactNode, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 export default function CalculatorCard({
   currencies,
@@ -179,7 +180,11 @@ export default function CalculatorCard({
               {c.isCrypto ? (
                 <CryptoIcon cryptoName={c.ticker} className="size-6 -ml-1.25" />
               ) : (
-                c.symbol
+                <FiatIcon
+                  symbol={c.symbol}
+                  ticker={c.ticker}
+                  className="size-6 -ml-1.25"
+                />
               )}
             </div>
             {isPending && (
