@@ -4,6 +4,7 @@ import { useUserFull } from "@/app/[username]/[dashboard_slug]/_components/user-
 import Blockies from "@/components/blockies/blockies";
 import { CardValueCombobox } from "@/components/cards/_utils/values-form/card-value-combobox";
 import ErrorLine from "@/components/error-line";
+import FiatIcon from "@/components/icons/fiat-icon";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -451,17 +452,11 @@ function CurrenciesButton({
     if (idx === -1) return null;
     const currency = dataCurrencies[idx];
     return (
-      <p
-        data-long-symbol={
-          currency.symbol === currency.ticker ? true : undefined
-        }
-        className={cn(
-          "text-foreground flex items-center justify-center text-center leading-tight data-[long-symbol]:text-[0.5rem]",
-          className
-        )}
-      >
-        {currency.symbol}
-      </p>
+      <FiatIcon
+        ticker={currency.ticker}
+        symbol={currency.symbol}
+        className={className}
+      />
     );
   };
 

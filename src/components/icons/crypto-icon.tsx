@@ -22,6 +22,8 @@ const nameAlts: Record<string, string> = {
   Optimism: "OP",
 };
 
+const defaultClassName = "shrink-0 size-6";
+
 export default function CryptoIcon({
   cryptoName,
   className,
@@ -33,7 +35,6 @@ export default function CryptoIcon({
   category?: "tokens" | "exchanges" | "networks";
 }) {
   const _name = cryptoName ? nameAlts[cryptoName] || cryptoName : cryptoName;
-  const defaultClassName = "shrink-0 size-6";
   const [hasError, setHasError] = useState(false);
 
   if (!_name) {

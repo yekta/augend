@@ -12,7 +12,7 @@ const parser = new XMLParser({
 });
 
 export const fiatRouter = createTRPCRouter({
-  getRates: cachedPublicProcedure("seconds-short").query(async () => {
+  getRates: cachedPublicProcedure("seconds-medium").query(async () => {
     const result = await fetch(tcmbApi);
     const data = await result.text();
     const parsed: TParsedPage = parser.parse(data);

@@ -3,6 +3,7 @@ import CardValuesFormSubmitButton from "@/components/cards/_utils/values-form/ca
 import CardValuesFormWrapper from "@/components/cards/_utils/values-form/card-values-form-wrapper";
 import { TValueFormProps } from "@/components/cards/_utils/values-form/types";
 import CryptoIcon from "@/components/icons/crypto-icon";
+import FiatIcon from "@/components/icons/fiat-icon";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { cleanArray } from "@/server/redis/cache-utils";
@@ -111,17 +112,11 @@ export function CalculatorValueForm({
                     );
                   }
                   return (
-                    <p
-                      data-long-symbol={
-                        currency.symbol === currency.ticker ? true : undefined
-                      }
-                      className={cn(
-                        "text-foreground flex items-center justify-center text-center leading-tight data-[long-symbol]:text-[0.5rem]",
-                        className
-                      )}
-                    >
-                      {currency.symbol}
-                    </p>
+                    <FiatIcon
+                      ticker={currency.ticker}
+                      symbol={currency.symbol}
+                      className={cn("text-foreground", className)}
+                    />
                   );
                 }}
                 value={currency}
@@ -188,17 +183,11 @@ export function CalculatorValueForm({
                 );
               }
               return (
-                <p
-                  data-long-symbol={
-                    currency.symbol === currency.ticker ? true : undefined
-                  }
-                  className={cn(
-                    "text-foreground flex items-center justify-center text-center leading-tight data-[long-symbol]:text-[0.5rem]",
-                    className
-                  )}
-                >
-                  {currency.symbol}
-                </p>
+                <FiatIcon
+                  ticker={currency.ticker}
+                  symbol={currency.symbol}
+                  className={cn("text-foreground", className)}
+                />
               );
             }}
             inputErrorMessage={lastCurrencyError}
