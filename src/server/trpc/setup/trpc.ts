@@ -114,23 +114,22 @@ const cacheMiddleware = (cacheTime: TCacheTime) =>
     const cacheKey = createCacheKeyForTRPCRoute(path, rawInput);
     const cachedValue = await getCache(cacheKey);
 
-    let wasAccessed = false;
+    let wasNotAccessed = true;
 
-    const cachedResult =
-      cachedValue !== undefined && cachedValue !== null
-        ? new Proxy(cachedValue, {
-            get(target, prop, receiver) {
-              wasAccessed = true;
-              return Reflect.get(target, prop, receiver);
-            },
-          })
-        : undefined;
+    const cachedResult = cachedValue
+      ? new Proxy(cachedValue, {
+          get(target, prop, receiver) {
+            wasNotAccessed = false;
+            return Reflect.get(target, prop, receiver);
+          },
+        })
+      : undefined;
 
     const result = await next({ ctx: { ...ctx, cachedResult } });
 
-    if (cachedValue !== undefined && cachedValue !== null && !wasAccessed) {
+    if (cachedValue && wasNotAccessed) {
       console.warn(
-        `[CACHE][WARNING]: ${path} | There was a cached result, but it wasn't accessed.`
+        `[CACHE][WARNING]: ${path} | There was a cached result, but it was not accessed.`
       );
     }
 
