@@ -5,11 +5,11 @@ import ccxt, { Exchange } from "ccxt";
 import { env } from "@/lib/env";
 
 const exchanges: Record<TExchange, Exchange> = {
-  CoinEx: withOptionalProxy(new ccxt.coinex()),
-  Kucoin: withOptionalProxy(new ccxt.kucoin()),
-  Coinbase: withOptionalProxy(new ccxt.coinbaseadvanced()),
-  OKX: withOptionalProxy(new ccxt.okx()),
-  Kraken: withOptionalProxy(new ccxt.kraken()),
+  CoinEx: new ccxt.coinex(),
+  Kucoin: new ccxt.kucoin(),
+  Coinbase: new ccxt.coinbaseadvanced(),
+  OKX: new ccxt.okx(),
+  Kraken: new ccxt.kraken(),
   Binance: withOptionalProxy(
     new ccxt.binance(
       env.BINANCE_API_KEY && env.BINANCE_API_SECRET
@@ -31,11 +31,7 @@ export function getExchangeInstance(exchange: TExchange): Exchange {
 
 function withOptionalProxy(exchange: Exchange) {
   if (env.CCXT_PROXY_URL) {
-    let url = env.CCXT_PROXY_URL;
-    if (!url.endsWith("/")) {
-      url = url + "/";
-    }
-    exchange.proxyUrl = url;
+    exchange.proxyUrl = env.CCXT_PROXY_URL;
   }
   return exchange;
 }
