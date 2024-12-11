@@ -125,6 +125,7 @@ export const exchangeRouter = createTRPCRouter({
       );
       return result;
     }),
+
   getPairs: cachedPublicProcedure("hours-short")
     .input(
       z.object({

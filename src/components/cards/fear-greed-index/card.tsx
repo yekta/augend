@@ -106,7 +106,7 @@ export default function FearGreedIndexCard({
                         3,
                         false,
                         true
-                      )
+                      ) + "%"
                     : "Error"}
                 </p>
               </div>

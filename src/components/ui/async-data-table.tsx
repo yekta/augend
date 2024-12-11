@@ -477,7 +477,7 @@ function ChangeColumn({
       data-positive={isPositive ? true : undefined}
       className={cn(
         "w-full",
-        `${paddingLeft} ${paddingRight} ${paddingY} ${defaultColumnClasses} text-xs md:text-sm md:leading-none break-words leading-none font-medium flex text-right truncate items-center justify-end text-muted-foreground data-[loading-error]:text-destructive data-[negative]:text-destructive data-[positive]:text-success`,
+        `${paddingLeft} ${paddingRight} ${paddingY} ${defaultColumnClasses} text-xs md:text-sm md:leading-none break-words leading-none font-medium flex text-right min-w-0 shrink items-center justify-end text-muted-foreground data-[loading-error]:text-destructive data-[negative]:text-destructive data-[positive]:text-success`,
         className
       )}
     >
@@ -485,12 +485,12 @@ function ChangeColumn({
         <Icon className="size-3.5 md:size-4 shrink-0 -my-0.5" />
       )}
       <p
-        className={`${pendingClasses} shrink min-w-0 truncate group-data-[loading-error]/table:text-destructive`}
+        className={`${pendingClasses} shrink min-w-0 group-data-[loading-error]/table:text-destructive`}
       >
         {isPending
           ? "Loading"
           : !isLoadingError
-          ? formatNumberTBMK(change, 3, false, true)
+          ? formatNumberTBMK(change, 3, false, true) + "%"
           : "Error"}
       </p>
     </div>
@@ -520,7 +520,7 @@ function RegularColumn({
     >
       <p
         className={cn(
-          `${pendingClasses} max-w-full break-words leading-none text-right truncate group-data-[loading-error]/table:text-destructive`,
+          `${pendingClasses} max-w-full break-words leading-none text-right group-data-[loading-error]/table:text-destructive`,
           classNameParagraph
         )}
       >

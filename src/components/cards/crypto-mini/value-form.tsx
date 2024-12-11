@@ -61,7 +61,7 @@ export function MiniCryptoValueForm({
     }
     onFormSubmit([
       {
-        cardTypeInputId: "mini_crypto_coin_id",
+        cardTypeInputId: "crypto_mini_coin_id",
         value: coinId,
       },
     ]);

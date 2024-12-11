@@ -14,7 +14,7 @@ import { getCmcUrl } from "@/lib/get-cmc-url";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { ArrowDownIcon, ArrowRightIcon, ArrowUpIcon } from "lucide-react";
 
-export default function MiniCryptoCard({
+export default function CryptoMiniCard({
   coinId,
   className,
   ...rest
@@ -108,7 +108,7 @@ export default function MiniCryptoCard({
                         3,
                         false,
                         true
-                      )
+                      ) + "%"
                     : "Error"}
                 </p>
               </div>

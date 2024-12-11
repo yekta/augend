@@ -11,7 +11,7 @@ import CryptoCard from "@/components/cards/crypto/card";
 import CurrencyCard from "@/components/cards/currency/card";
 import FearGreedIndexCard from "@/components/cards/fear-greed-index/card";
 import GasTrackerCard from "@/components/cards/gas-tracker/card";
-import MiniCryptoCard from "@/components/cards/mini-crypto/card";
+import CryptoMiniCard from "@/components/cards/crypto-mini/card";
 import NanoBananoCard from "@/components/cards/nano-banano/card";
 import OrderBookCard, {
   TOrderBookConfig,
@@ -52,16 +52,16 @@ export function CardParser({
     );
   }
 
-  if (cardObject.cardType.id === "mini_crypto") {
+  if (cardObject.cardType.id === "crypto_mini") {
     const values = cardObject.values;
     if (!values) return null;
     const coinId = values.find(
-      (v) => v.cardTypeInputId === "mini_crypto_coin_id"
+      (v) => v.cardTypeInputId === "crypto_mini_coin_id"
     )?.value;
     if (!coinId) return null;
     return (
       <CardErrorBoundary className={cn(cardTypes.sm.className, className)}>
-        <MiniCryptoCard
+        <CryptoMiniCard
           className={cn(cardTypes.sm.className, className)}
           coinId={Number(coinId)}
           {...rest}

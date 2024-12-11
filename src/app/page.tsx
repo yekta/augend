@@ -6,7 +6,7 @@ import CryptoCard from "@/components/cards/crypto/card";
 import CurrencyCard from "@/components/cards/currency/card";
 import FearGreedIndexCard from "@/components/cards/fear-greed-index/card";
 import GasTrackerCard from "@/components/cards/gas-tracker/card";
-import MiniCryptoCard from "@/components/cards/mini-crypto/card";
+import CryptoMiniCard from "@/components/cards/crypto-mini/card";
 import CmcCryptoInfosProvider from "@/components/providers/cmc/cmc-crypto-infos-provider";
 import CmcGlobalMetricsProvider from "@/components/providers/cmc/cmc-global-metrics-provider";
 import CurrencyPreferenceProvider from "@/components/providers/currency-preference-provider";
@@ -79,7 +79,7 @@ export default async function Home() {
               }}
             />
             {miniCryptoIds.map((id, index) => (
-              <MiniCryptoCard
+              <CryptoMiniCard
                 noHref
                 key={id}
                 coinId={id}

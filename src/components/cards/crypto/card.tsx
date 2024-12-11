@@ -84,7 +84,7 @@ export default function CryptoCard({
                       3,
                       false,
                       true
-                    )
+                    ) + "%"
                   : "Error"}
               </p>
             </div>
