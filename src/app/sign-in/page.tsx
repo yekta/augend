@@ -33,7 +33,7 @@ export default async function SignInPage({ searchParams }: Props) {
 
   const session = await auth();
   if (session?.user) {
-    return redirect(
+    redirect(
       cleanedCallbackUrl || `/${session.user.username}/${mainDashboardSlug}`
     );
   }
