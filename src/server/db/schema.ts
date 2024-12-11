@@ -14,7 +14,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccountType } from "next-auth/adapters";
-import { z } from "zod";
+import { symbol, z } from "zod";
 
 const shortText = { length: 20 };
 const mediumText = { length: 32 };
@@ -44,6 +44,7 @@ export const currenciesTable = pgTable(
     symbol: text("symbol").notNull(),
     isCrypto: boolean("is_crypto").notNull().default(false),
     coinId: text("coin_id"),
+    xOrder: integer("x_order").notNull().default(0),
     maxDecimalsPreferred: integer("max_decimals_preferred")
       .notNull()
       .default(2),
@@ -55,6 +56,9 @@ export const currenciesTable = pgTable(
       "currencies_crypto_must_have_coin_id",
       sql`(NOT "is_crypto" OR "coin_id" IS NOT NULL)`
     ),
+    tickerIdx: index("currencies_ticker_idx").on(table.ticker),
+    nameIdx: index("currencies_name_idx").on(table.name),
+    symbolIdx: index("currencies_symbol_idx").on(table.symbol),
     createdAtIdx: index("currencies_created_at_idx").on(table.createdAt),
     updatedAtIdx: index("currencies_updated_at_idx").on(table.updatedAt),
     deletedAtIdx: index("currencies_deleted_at_idx").on(table.deletedAt),

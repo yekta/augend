@@ -1,6 +1,6 @@
 import { db } from "@/server/db/db";
 import { currenciesTable } from "@/server/db/schema";
-import { and, eq, inArray } from "drizzle-orm";
+import { and, asc, eq, inArray } from "drizzle-orm";
 
 export async function getCurrencies({
   ids,
@@ -29,7 +29,8 @@ export async function getCurrencies({
         : forexOnly === true
         ? eq(currenciesTable.isCrypto, false)
         : undefined
-    );
+    )
+    .orderBy(asc(currenciesTable.xOrder), asc(currenciesTable.name));
   return res;
 }
 
