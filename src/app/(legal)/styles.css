@@ -23,7 +23,7 @@ h3:hover .icon-link:hover,
 h4:hover .icon-link:hover,
 h5:hover .icon-link:hover,
 h6:hover .icon-link:hover {
-  opacity: 0.75;
+  opacity: 1;
 }
 
 h1 a[tabindex="-1"],

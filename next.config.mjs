@@ -13,7 +13,10 @@ const withMDX = createMDX({
   options: {
     rehypePlugins: [
       ["rehype-slug"],
-      ["rehype-autolink-headings", { behavior: "append" }],
+      [
+        "rehype-autolink-headings",
+        { behavior: "append", test: ["h2", "h3", "h4", "h5", "h6"] },
+      ],
     ],
   },
 });

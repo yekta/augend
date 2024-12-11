@@ -17,6 +17,7 @@ type Props = {
 
 export default async function Navbar({ className }: Props) {
   const session = await auth();
+
   return (
     <NavigationMenu
       className={cn(
