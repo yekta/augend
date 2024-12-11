@@ -32,6 +32,9 @@ export function getExchangeInstance(exchange: TExchange): Exchange {
 function withOptionalProxy(exchange: Exchange) {
   if (env.CCXT_PROXY_URL) {
     exchange.proxyUrl = env.CCXT_PROXY_URL;
+    exchange.headers = {
+      Origin: env.NEXT_PUBLIC_SITE_URL,
+    };
   }
   return exchange;
 }
