@@ -33,7 +33,7 @@ function withOptionalProxy(exchange: Exchange) {
   if (env.CCXT_PROXY_URL) {
     exchange.proxyUrl = env.CCXT_PROXY_URL;
     exchange.headers = {
-      Origin: env.NEXT_PUBLIC_SITE_URL,
+      Origin: new URL(env.CCXT_PROXY_URL).origin,
     };
   }
   return exchange;
