@@ -7,7 +7,6 @@ import {
   siteTagline,
   siteTitle,
 } from "@/lib/constants";
-import { HydrateClient } from "@/server/trpc/setup/server";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import NextTopLoader from "nextjs-toploader";
@@ -62,21 +61,19 @@ export default async function RootLayout({
         className={`${sans.variable} ${mono.variable} antialiased break-words`}
       >
         <Providers>
-          <HydrateClient>
-            <NextTopLoader
-              zIndex={9999}
-              showSpinner={false}
-              color="hsl(var(--primary))"
-              shadow={false}
-              height={2}
-            />
-            <div className="w-full flex flex-col min-h-[100svh]">
-              <Navbar className="fixed left-0 top-0 z-50" />
-              <div className="pointer-events-none h-14 w-full" />
-              {children}
-              <Footer />
-            </div>
-          </HydrateClient>
+          <NextTopLoader
+            zIndex={9999}
+            showSpinner={false}
+            color="hsl(var(--primary))"
+            shadow={false}
+            height={2}
+          />
+          <div className="w-full flex flex-col min-h-[100svh]">
+            <Navbar className="fixed left-0 top-0 z-50" />
+            <div className="pointer-events-none h-14 w-full" />
+            {children}
+            <Footer />
+          </div>
         </Providers>
       </body>
     </html>

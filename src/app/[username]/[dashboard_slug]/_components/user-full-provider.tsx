@@ -19,35 +19,22 @@ const UserFullContext = createContext<TUserFullContext | null>(null);
 
 type Props = {
   children: ReactNode;
-  userInitialData?: AppRouterOutputs["ui"]["getUserFull"];
-  currenciesInitialData?: AppRouterOutputs["ui"]["getCurrencies"];
 };
 
-export const UserFullProvider: FC<Props> = ({
-  userInitialData,
-  currenciesInitialData,
-  children,
-}) => {
+export const UserFullProvider: FC<Props> = ({ children }) => {
   const utils = api.useUtils();
   const {
     data: dataUser,
     isPending: isPendingUser,
     isLoadingError: isLoadingErrorUser,
-  } = api.ui.getUserFull.useQuery(undefined, {
-    initialData: userInitialData,
-  });
+  } = api.ui.getUserFull.useQuery();
   const invalidateUser = () => utils.ui.getUserFull.invalidate();
 
   const {
     data: dataCurrencies,
     isPending: isPendingCurrencies,
     isLoadingError: isLoadingErrorCurrencies,
-  } = api.ui.getCurrencies.useQuery(
-    { forexOnly: true },
-    {
-      initialData: currenciesInitialData,
-    }
-  );
+  } = api.ui.getCurrencies.useQuery({ forexOnly: true });
   const invalidateCurrencies = () => utils.ui.getCurrencies.invalidate();
 
   return (

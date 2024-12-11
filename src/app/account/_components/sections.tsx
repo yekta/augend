@@ -23,8 +23,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { revalidateLayout } from "@/lib/actions/revalidate";
 import { timeAgoIntl } from "@/lib/helpers";
+import { useAsyncRouterRefresh } from "@/lib/hooks/use-async-router-refresh";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
 import {
   ChangeCurrencyPreferenceSchemaUI,
@@ -70,7 +70,6 @@ export default function AccountSections({}: Props) {
             isPendingUser={isPendingUser}
             open={isUsernameDialogOpen}
             onOpenChange={setIsUsernameDialogOpen}
-            onSuccess={invalidateUser}
           />
         </div>
       </div>
@@ -87,7 +86,6 @@ export default function AccountSections({}: Props) {
             isLoadingErrorCurrencies={isLoadingErrorCurrencies}
             open={isCurrencyPreferenceDialogOpen}
             onOpenChange={setIsCurrencyPreferenceDialogOpen}
-            onSuccess={invalidateUser}
           />
         </div>
       </div>
@@ -123,42 +121,19 @@ export default function AccountSections({}: Props) {
   );
 }
 
-function CurrencySpan({
-  currency,
-  isPending,
-}: {
-  currency:
-    | NonNullable<AppRouterOutputs["ui"]["getUserFull"]>["primaryCurrency"]
-    | undefined;
-  isPending: boolean;
-}) {
-  return currency ? (
-    <span className="font-bold">
-      {currency.ticker}{" "}
-      <span className="text-muted-foreground font-normal">
-        ({currency.symbol})
-      </span>
-    </span>
-  ) : isPending ? (
-    <span>Loading</span>
-  ) : (
-    <span>Error</span>
-  );
-}
-
 function UsernameButton({
   dataUser,
   isPendingUser,
   open,
   onOpenChange,
-  onSuccess,
 }: {
   dataUser: AppRouterOutputs["ui"]["getUserFull"] | undefined;
   isPendingUser: boolean;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSuccess?: () => Promise<void>;
 }) {
+  const asyncRouterRefresh = useAsyncRouterRefresh();
+
   const user = dataUser?.user;
 
   const form = useForm<z.infer<typeof ChangeUsernameSchemaUI>>({
@@ -181,8 +156,7 @@ function UsernameButton({
     reset: resetChangeUsername,
   } = api.ui.changeUsername.useMutation({
     onSuccess: async (d) => {
-      await onSuccess?.();
-      await revalidateLayout();
+      await asyncRouterRefresh();
       resetProcess();
     },
   });
@@ -297,7 +271,6 @@ function CurrenciesButton({
   isLoadingErrorCurrencies,
   open,
   onOpenChange,
-  onSuccess,
 }: {
   dataUser: AppRouterOutputs["ui"]["getUserFull"] | undefined;
   isPendingUser: boolean;
@@ -306,8 +279,10 @@ function CurrenciesButton({
   isLoadingErrorCurrencies: boolean;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSuccess?: () => Promise<void>;
 }) {
+  const asyncRouterRefresh = useAsyncRouterRefresh();
+  const utils = api.useUtils();
+
   const getValue = (c: { name: string; ticker: string }) =>
     `${c.name} (${c.ticker})`;
 
@@ -369,8 +344,7 @@ function CurrenciesButton({
     reset: resetChangeCurrencyPreference,
   } = api.ui.changeCurrencyPreference.useMutation({
     onSuccess: async (d) => {
-      await onSuccess?.();
-      await revalidateLayout();
+      await asyncRouterRefresh();
       resetProcess();
     },
   });
@@ -595,5 +569,28 @@ function CurrenciesButton({
         )}
       </DialogContent>
     </Dialog>
+  );
+}
+
+function CurrencySpan({
+  currency,
+  isPending,
+}: {
+  currency:
+    | NonNullable<AppRouterOutputs["ui"]["getUserFull"]>["primaryCurrency"]
+    | undefined;
+  isPending: boolean;
+}) {
+  return currency ? (
+    <span className="font-bold">
+      {currency.ticker}{" "}
+      <span className="text-muted-foreground font-normal">
+        ({currency.symbol})
+      </span>
+    </span>
+  ) : isPending ? (
+    <span>Loading</span>
+  ) : (
+    <span>Error</span>
   );
 }

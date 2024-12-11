@@ -3,7 +3,7 @@
 import { useDashboards } from "@/components/providers/dashboards-provider";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
 import { api } from "@/server/trpc/setup/react";
-import { createContext, FC, ReactNode, useContext } from "react";
+import { createContext, FC, ReactNode, useContext, useEffect } from "react";
 
 type TCurrentDashboardContext = {
   username: string;
@@ -32,14 +32,12 @@ type Props = {
   username: string;
   dashboardSlug: string;
   children: ReactNode;
-  cardsInitialData?: AppRouterOutputs["ui"]["getCards"];
 };
 
 export const CurrentDashboardProvider: FC<Props> = ({
   username,
   dashboardSlug,
   children,
-  cardsInitialData,
 }) => {
   const utils = api.useUtils();
 
@@ -48,15 +46,11 @@ export const CurrentDashboardProvider: FC<Props> = ({
     isPending: isPendingCards,
     isLoadingError: isLoadingErrorCards,
     error: errorCards,
-  } = api.ui.getCards.useQuery(
-    {
-      username,
-      dashboardSlug,
-    },
-    {
-      initialData: cardsInitialData,
-    }
-  );
+  } = api.ui.getCards.useQuery({
+    username,
+    dashboardSlug,
+  });
+
   const { invalidate: invalidateDashboards } = useDashboards();
 
   const dashboardName = dataCards?.dashboard?.data.dashboard.title;

@@ -1,7 +1,7 @@
 import CurrentDashboardProvider from "@/app/[username]/[dashboard_slug]/_components/current-dashboard-provider";
 import DashboardPage from "@/app/[username]/[dashboard_slug]/_components/dashboard-page";
 import { siteTitle } from "@/lib/constants";
-import { apiServer } from "@/server/trpc/setup/server";
+import { apiServer, HydrateClient } from "@/server/trpc/setup/server";
 import { Metadata } from "next";
 
 type Props = {
@@ -32,17 +32,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function Page({ params }: Props) {
   const { dashboard_slug, username } = await params;
 
-  const [cardsInitialData] = await Promise.all([
-    apiServer.ui.getCards({ username, dashboardSlug: dashboard_slug }),
-  ]);
+  await apiServer.ui.getCards.prefetch({
+    username,
+    dashboardSlug: dashboard_slug,
+  });
 
   return (
-    <CurrentDashboardProvider
-      username={username}
-      dashboardSlug={dashboard_slug}
-      cardsInitialData={cardsInitialData}
-    >
-      <DashboardPage />
-    </CurrentDashboardProvider>
+    <HydrateClient>
+      <CurrentDashboardProvider
+        username={username}
+        dashboardSlug={dashboard_slug}
+      >
+        <DashboardPage />
+      </CurrentDashboardProvider>
+    </HydrateClient>
   );
 }
