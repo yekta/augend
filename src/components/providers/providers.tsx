@@ -19,17 +19,15 @@ export default async function Providers({
       defaultTheme={defaultTheme}
       disableTransitionOnChange
     >
-      <WagmiProvider>
-        <TRPCReactProvider>
-          <SessionProvider>
+      <TRPCReactProvider>
+        <SessionProvider>
+          <WagmiProvider>
             <IsTouchscreenProvider>
-              <DashboardsProvider>
-                <HydrateClient>{children}</HydrateClient>
-              </DashboardsProvider>
+              <DashboardsProvider>{children}</DashboardsProvider>
             </IsTouchscreenProvider>
-          </SessionProvider>
-        </TRPCReactProvider>
-      </WagmiProvider>
+          </WagmiProvider>
+        </SessionProvider>
+      </TRPCReactProvider>
     </ThemeProvider>
   );
 }
