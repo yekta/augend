@@ -3,12 +3,14 @@ import CardOuterWrapper from "@/components/cards/_utils/card-outer-wrapper";
 import CopyErrorButton from "@/components/cards/_utils/copy-error-button";
 import { cn } from "@/lib/utils";
 import { TriangleAlertIcon } from "lucide-react";
-import { Component, ErrorInfo, ReactNode } from "react";
+import { Component, ErrorInfo, isValidElement, ReactNode } from "react";
 
 interface Props {
   children: ReactNode;
   fallback?: ReactNode;
   className?: string;
+  cardId?: string;
+  isRemovable?: boolean;
 }
 
 interface State {
@@ -36,13 +38,34 @@ class CardErrorBoundary extends Component<Props, State> {
     console.error("Error caught by Error Boundary:", error, errorInfo);
   }
 
+  extractPropsFromChildren(children: ReactNode): {
+    cardId?: string;
+    isRemovable?: boolean;
+  } {
+    if (!isValidElement(children)) {
+      return {};
+    }
+    const childProps = children.props;
+    return {
+      cardId: childProps.cardId as string | undefined,
+      isRemovable: childProps.isRemovable as boolean | undefined,
+    };
+  }
+
   render(): ReactNode {
     if (this.state.hasError) {
+      const { cardId, isRemovable } = this.extractPropsFromChildren(
+        this.props.children
+      );
       return (
-        <CardOuterWrapper className={cn("h-32", this.props.className)}>
-          <CardInnerWrapper className="max-h-full overflow-auto border-destructive/25">
+        <CardOuterWrapper
+          cardId={cardId}
+          isRemovable={isRemovable}
+          className={cn("h-32 flex flex-col", this.props.className)}
+        >
+          <CardInnerWrapper className="w-full h-full overflow-hidden border-destructive/25">
             {this.props.fallback || (
-              <div className="w-full flex flex-col items-center pt-2.5 gap-2.5">
+              <div className="w-full h-full overflow-auto flex flex-col items-center pt-2.5 gap-2.5">
                 <div className="text-destructive px-4 flex items-center justify-center gap-1.5">
                   <TriangleAlertIcon className="size-4 shrink-0" />
                   <p className="font-semibold text-sm  text-left shrink min-w-0">
