@@ -9,7 +9,7 @@ import CardOuterWrapper, {
 import Indicator from "@/components/ui/indicator";
 import { defaultQueryOptions } from "@/lib/constants";
 import { formatNumberTBMK } from "@/lib/number-formatters";
-import { TExchange, TOrderBook } from "@/server/trpc/api/exchange/types";
+import { TExchange, TOrderBook } from "@/server/trpc/api/crypto/exchange/types";
 import { api } from "@/server/trpc/setup/react";
 import { ChartNoAxesCombinedIcon } from "lucide-react";
 
@@ -41,7 +41,7 @@ export default function OrderBookCard({
   config: TOrderBookConfig;
 }) {
   const { data, isPending, isError, isLoadingError, isRefetching } =
-    api.exchange.getOrderBook.useQuery(
+    api.crypto.exchange.getOrderBook.useQuery(
       {
         exchange: config.exchange,
         pair: config.pair,

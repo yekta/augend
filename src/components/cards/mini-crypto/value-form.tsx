@@ -18,7 +18,7 @@ export function MiniCryptoValueForm({
     data: idMaps,
     isPending: isPendingIdMaps,
     isLoadingError: isLoadingErrorIdMaps,
-  } = api.cmc.getCoinIdMaps.useQuery({});
+  } = api.crypto.cmc.getCoinIdMaps.useQuery({});
   const [idMapError, setIdMapError] = useState<string | null>(null);
 
   const shapedIdMaps = useMemo(() => {

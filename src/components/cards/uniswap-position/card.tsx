@@ -16,9 +16,9 @@ import { timeAgo } from "@/lib/helpers";
 import { useConditionalValue } from "@/lib/hooks/use-conditional-value";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
-import { ethereumNetworks } from "@/server/trpc/api/ethereum/constants";
-import { TEthereumNetwork } from "@/server/trpc/api/ethereum/types";
-import { TUniswapPoolSwapsResult } from "@/server/trpc/api/uniswap/types";
+import { ethereumNetworks } from "@/server/trpc/api/crypto/ethereum/constants";
+import { TEthereumNetwork } from "@/server/trpc/api/crypto/ethereum/types";
+import { TUniswapPoolSwapsResult } from "@/server/trpc/api/crypto/uniswap/types";
 import { api } from "@/server/trpc/setup/react";
 import { SortingState } from "@tanstack/react-table";
 import {
@@ -66,7 +66,7 @@ export default function UniswapPositionCard({
   isOwner: boolean;
 }) {
   const { data, isPending, isError, isLoadingError, isRefetching } =
-    api.uniswap.getPosition.useQuery(
+    api.crypto.uniswap.getPosition.useQuery(
       {
         id: positionId,
         network,
@@ -83,7 +83,7 @@ export default function UniswapPositionCard({
     isError: swapsIsError,
     isLoadingError: swapsIsLoadingError,
     isRefetching: swapsIsRefetching,
-  } = api.uniswap.getSwaps.useQuery(
+  } = api.crypto.uniswap.getSwaps.useQuery(
     {
       network,
       poolAddress: data?.position.poolAddress || "",
@@ -100,7 +100,7 @@ export default function UniswapPositionCard({
     isError: statsIsError,
     isLoadingError: statsIsLoadingError,
     isRefetching: statsIsRefetching,
-  } = api.uniswap.getPools.useQuery(
+  } = api.crypto.uniswap.getPools.useQuery(
     {
       network,
       searchAddress: data?.position.poolAddress || "",

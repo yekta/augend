@@ -13,8 +13,8 @@ import {
   getAvatarUrl,
   getExplorerUrl,
   isNano,
-} from "@/server/trpc/api/nano-banano/helpers";
-import { TNanoBananoAccount } from "@/server/trpc/api/nano-banano/types";
+} from "@/server/trpc/api/crypto/nano-banano/helpers";
+import { TNanoBananoAccount } from "@/server/trpc/api/crypto/nano-banano/types";
 
 export default function NanoBananoCard({
   account,

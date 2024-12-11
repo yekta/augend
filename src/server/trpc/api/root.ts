@@ -1,11 +1,6 @@
-import { cmcRouter } from "@/server/trpc/api/cmc/router";
-import { ethereumRouter } from "@/server/trpc/api/ethereum/router";
-import { exchangeRouter } from "@/server/trpc/api/exchange/router";
 import { forexRouter } from "@/server/trpc/api/forex/router";
-import { nanoBananoRouter } from "@/server/trpc/api/nano-banano/router";
+import { cryptoRouter } from "@/server/trpc/api/crypto/router";
 import { uiRouter } from "@/server/trpc/api/ui/router";
-import { uniswapRouter } from "@/server/trpc/api/uniswap/router";
-import { wbanRouter } from "@/server/trpc/api/wban/router";
 import {
   createCallerFactory,
   createTRPCRouter,
@@ -25,13 +20,8 @@ import { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
  */
 export const appRouter = createTRPCRouter({
   ui: uiRouter,
-  exchange: exchangeRouter,
-  nanoBanano: nanoBananoRouter,
-  cmc: cmcRouter,
   forex: forexRouter,
-  wban: wbanRouter,
-  uniswap: uniswapRouter,
-  ethereum: ethereumRouter,
+  crypto: cryptoRouter,
 });
 
 // export type definition of API

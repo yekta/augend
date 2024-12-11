@@ -4,7 +4,10 @@ import CardValuesFormWrapper from "@/components/cards/_utils/values-form/card-va
 import { TValueFormProps } from "@/components/cards/_utils/values-form/types";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import { cn } from "@/lib/utils";
-import { ExchangeSchema, TExchange } from "@/server/trpc/api/exchange/types";
+import {
+  ExchangeSchema,
+  TExchange,
+} from "@/server/trpc/api/crypto/exchange/types";
 import { api } from "@/server/trpc/setup/react";
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 
@@ -20,7 +23,7 @@ export function CryptoOrderBookValueForm({
     data: pairs,
     isPending: isPendingPairs,
     isLoadingError: isLoadingErrorPairs,
-  } = api.exchange.getPairs.useQuery({
+  } = api.crypto.exchange.getPairs.useQuery({
     exchange,
   });
   const [exchangeError, setExchangeError] = useState<string | null>(null);

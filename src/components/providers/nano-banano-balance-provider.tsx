@@ -2,7 +2,7 @@
 
 import { defaultQueryOptions } from "@/lib/constants";
 import { AppRouterOutputs, AppRouterQueryResult } from "@/server/trpc/api/root";
-import { TNanoBananoAccount } from "@/server/trpc/api/nano-banano/types";
+import { TNanoBananoAccount } from "@/server/trpc/api/crypto/nano-banano/types";
 import { api } from "@/server/trpc/setup/react";
 import React, { createContext, ReactNode, useContext } from "react";
 
@@ -13,7 +13,7 @@ export const NanoBananoBalancesProvider: React.FC<{
   children: ReactNode;
   accounts: TNanoBananoAccountFull[];
 }> = ({ children, accounts }) => {
-  const query = api.nanoBanano.getBalances.useQuery(
+  const query = api.crypto.nanoBanano.getBalances.useQuery(
     {
       accounts: accounts.map((i) => ({ address: i.address })),
     },
@@ -44,7 +44,7 @@ export const useNanoBananoBalances = () => {
 export default NanoBananoBalancesProvider;
 
 type TNanoBananoBalancesContext = AppRouterQueryResult<
-  AppRouterOutputs["nanoBanano"]["getBalances"]
+  AppRouterOutputs["crypto"]["nanoBanano"]["getBalances"]
 > & { accounts: TNanoBananoAccountFull[] };
 
 export type TNanoBananoAccountFull = TNanoBananoAccount & { isOwner: boolean };

@@ -17,7 +17,10 @@ import { defaultQueryOptions } from "@/lib/constants";
 import { months } from "@/lib/months";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
-import { ExchangeSchema, TOHLCVResult } from "@/server/trpc/api/exchange/types";
+import {
+  ExchangeSchema,
+  TOHLCVResult,
+} from "@/server/trpc/api/crypto/exchange/types";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
 import { api } from "@/server/trpc/setup/react";
 import { keepPreviousData } from "@tanstack/react-query";
@@ -110,7 +113,7 @@ export default function CryptoPriceChartCard({
     isLoadingError,
     isRefetching,
     isPlaceholderData,
-  } = api.exchange.getOHLCV.useQuery(
+  } = api.crypto.exchange.getOHLCV.useQuery(
     {
       exchange: config.exchange,
       pair: config.pair,
@@ -519,7 +522,7 @@ const OhclvChartConfigSchema = z.object({
 
 export type TOhlcvChartConfig = z.infer<typeof OhclvChartConfigSchema>;
 
-type TChartData = AppRouterOutputs["exchange"]["getOHLCVs"][number];
+type TChartData = AppRouterOutputs["crypto"]["exchange"]["getOHLCVs"][number];
 
 type TChartDataKey = keyof TChartData["data"][0];
 

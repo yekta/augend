@@ -1,6 +1,6 @@
 import "server-only";
 
-import { TExchange } from "@/server/trpc/api/exchange/types";
+import { TExchange } from "@/server/trpc/api/crypto/exchange/types";
 import ccxt, { Exchange } from "ccxt";
 import { env } from "@/lib/env";
 

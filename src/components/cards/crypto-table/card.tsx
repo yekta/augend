@@ -63,7 +63,7 @@ export default function CryptoTableCard({
   ]);
 
   const { data, isLoadingError, isPending, isError, isRefetching } =
-    api.cmc.getCoinList.useQuery(
+    api.crypto.cmc.getCoinList.useQuery(
       { convert: convertCurrency.ticker, page: page.current },
       defaultQueryOptions.slow
     );

@@ -1,4 +1,4 @@
-import { TEthereumNetwork } from "@/server/trpc/api/ethereum/types";
+import { TEthereumNetwork } from "@/server/trpc/api/crypto/ethereum/types";
 import { z } from "zod";
 
 type TNetworkInfoBase = {

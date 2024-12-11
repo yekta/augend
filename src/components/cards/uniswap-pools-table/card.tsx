@@ -12,8 +12,8 @@ import AsyncDataTable, {
 import { defaultQueryOptions } from "@/lib/constants";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
-import { TEthereumNetwork } from "@/server/trpc/api/ethereum/types";
-import { TUniswapPoolsResult } from "@/server/trpc/api/uniswap/types";
+import { TEthereumNetwork } from "@/server/trpc/api/crypto/ethereum/types";
+import { TUniswapPoolsResult } from "@/server/trpc/api/crypto/uniswap/types";
 import { api } from "@/server/trpc/setup/react";
 import { SortingState } from "@tanstack/react-table";
 import { ExternalLinkIcon } from "lucide-react";
@@ -70,7 +70,7 @@ export default function UniswapPoolsTableCard({
   ]);
 
   const { data, isLoadingError, isPending, isError, isRefetching } =
-    api.uniswap.getPools.useQuery({ network }, defaultQueryOptions.slow);
+    api.crypto.uniswap.getPools.useQuery({ network }, defaultQueryOptions.slow);
 
   const dataOrFallback = useMemo(() => {
     if (!data) return dataFallback;

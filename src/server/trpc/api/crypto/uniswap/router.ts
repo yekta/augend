@@ -1,11 +1,11 @@
 import { z } from "zod";
 
 import { cachedPromise } from "@/server/redis/redis";
-import { EthereumAddressSchema } from "@/server/trpc/api/ethereum/types";
+import { EthereumAddressSchema } from "@/server/trpc/api/crypto/ethereum/types";
 import {
   getUniswapPositionManager,
   uniswapOkuApiUrl,
-} from "@/server/trpc/api/uniswap/constants";
+} from "@/server/trpc/api/crypto/uniswap/constants";
 import {
   TUniswapPoolsResult,
   TUniswapPoolsResultRaw,
@@ -13,7 +13,7 @@ import {
   TUniswapPoolSwapsResultRaw,
   TUniswapPositionResult,
   TUniswapPositionResultRaw,
-} from "@/server/trpc/api/uniswap/types";
+} from "@/server/trpc/api/crypto/uniswap/types";
 import {
   cachedPublicProcedure,
   createTRPCRouter,
@@ -23,7 +23,7 @@ import { TRPCError } from "@trpc/server";
 import {
   ethereumNetworks,
   EthereumNetworkSchema,
-} from "@/server/trpc/api/ethereum/constants";
+} from "@/server/trpc/api/crypto/ethereum/constants";
 
 export const uniswapRouter = createTRPCRouter({
   getPools: cachedPublicProcedure("seconds-medium")

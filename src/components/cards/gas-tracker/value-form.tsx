@@ -7,8 +7,8 @@ import { cn } from "@/lib/utils";
 import {
   ethereumNetworks,
   EthereumNetworkSchema,
-} from "@/server/trpc/api/ethereum/constants";
-import { TEthereumNetwork } from "@/server/trpc/api/ethereum/types";
+} from "@/server/trpc/api/crypto/ethereum/constants";
+import { TEthereumNetwork } from "@/server/trpc/api/crypto/ethereum/types";
 import { Dispatch, SetStateAction, useMemo, useState } from "react";
 
 export function GasTrackerValueForm({

@@ -23,9 +23,10 @@ export const CmcCryptoInfosProvider: React.FC<{
   let convert = Object.values(currencyPreference).map((i) => i.ticker);
   if (!dontAddUsd && !convert.includes("USD")) convert.push("USD");
 
-  const emptyInitialData: AppRouterOutputs["cmc"]["getCryptoInfos"] = {};
+  const emptyInitialData: AppRouterOutputs["crypto"]["cmc"]["getCryptoInfos"] =
+    {};
   const enabled = cryptos.length > 0;
-  const query = api.cmc.getCryptoInfos.useQuery(
+  const query = api.crypto.cmc.getCryptoInfos.useQuery(
     {
       convert,
       ids: cryptos.map((i) => i.id),
@@ -60,5 +61,5 @@ export const useCmcCryptoInfos = () => {
 export default CmcCryptoInfosProvider;
 
 type TCmcCryptoInfosContext = AppRouterQueryResult<
-  AppRouterOutputs["cmc"]["getCryptoInfos"]
+  AppRouterOutputs["crypto"]["cmc"]["getCryptoInfos"]
 >;

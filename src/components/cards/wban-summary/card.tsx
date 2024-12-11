@@ -9,8 +9,11 @@ import { defaultQueryOptions } from "@/lib/constants";
 import { useConditionalValue } from "@/lib/hooks/use-conditional-value";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
-import { getExplorerUrl } from "@/server/trpc/api/nano-banano/helpers";
-import { TWbanIcon, wbanNetworkObjects } from "@/server/trpc/api/wban/helpers";
+import { getExplorerUrl } from "@/server/trpc/api/crypto/nano-banano/helpers";
+import {
+  TWbanIcon,
+  wbanNetworkObjects,
+} from "@/server/trpc/api/crypto/wban/helpers";
 import { api } from "@/server/trpc/setup/react";
 import { FlameIcon, HourglassIcon, SnowflakeIcon } from "lucide-react";
 import Link from "next/link";
@@ -38,7 +41,7 @@ export default function WBanSummaryCard({
     isLoadingError: isLoadingErrorBanBalance,
     isPending: isPendingBanBalance,
     isRefetching: isRefetchingBanBalance,
-  } = api.nanoBanano.getBalances.useQuery(
+  } = api.crypto.nanoBanano.getBalances.useQuery(
     wbanBalanceQueryInput,
     defaultQueryOptions.fast
   );
@@ -49,7 +52,7 @@ export default function WBanSummaryCard({
     isLoadingError: isLoadingErrorWbanPendingWithdrawals,
     isPending: isPendingWbanPendingWithdrawals,
     isRefetching: isRefetchingWbanPendingWithdrawals,
-  } = api.wban.getPendingWithdrawals.useQuery(
+  } = api.crypto.wban.getPendingWithdrawals.useQuery(
     undefined,
     defaultQueryOptions.fast
   );

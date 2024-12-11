@@ -14,7 +14,7 @@ export const CmcGlobalMetricsProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const currencyPreference = useCurrencyPreference();
-  const query = api.cmc.getGlobalMetrics.useQuery(
+  const query = api.crypto.cmc.getGlobalMetrics.useQuery(
     {
       convert: currencyPreference.primary.ticker,
     },
@@ -44,5 +44,5 @@ export const useCmcGlobalMetrics = () => {
 export default CmcGlobalMetricsProvider;
 
 type TCmcGlobalMetricsContext = AppRouterQueryResult<
-  AppRouterOutputs["cmc"]["getGlobalMetrics"]
+  AppRouterOutputs["crypto"]["cmc"]["getGlobalMetrics"]
 > & {};

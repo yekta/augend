@@ -3,18 +3,18 @@ import { z } from "zod";
 import {
   bananoApiUrl,
   nanoApiUrl,
-} from "@/server/trpc/api/nano-banano/constants";
+} from "@/server/trpc/api/crypto/nano-banano/constants";
 import {
   isBan,
   isNano,
   rawToBanOrNano,
-} from "@/server/trpc/api/nano-banano/helpers";
+} from "@/server/trpc/api/crypto/nano-banano/helpers";
 import {
   AccountSchema,
   TNanoBananoAccount,
   TNanoBananoBalanceResponse,
   TNanoBananoResult,
-} from "@/server/trpc/api/nano-banano/types";
+} from "@/server/trpc/api/crypto/nano-banano/types";
 import { createTRPCRouter, publicProcedure } from "@/server/trpc/setup/trpc";
 import { TRPCError } from "@trpc/server";
 

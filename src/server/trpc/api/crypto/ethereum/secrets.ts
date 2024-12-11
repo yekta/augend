@@ -1,6 +1,6 @@
 import "server-only";
 
-import { TEthereumNetwork } from "@/server/trpc/api/ethereum/types";
+import { TEthereumNetwork } from "@/server/trpc/api/crypto/ethereum/types";
 import { env } from "@/lib/env";
 import { Alchemy, Network } from "alchemy-sdk";
 

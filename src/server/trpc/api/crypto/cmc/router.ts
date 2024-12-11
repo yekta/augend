@@ -1,11 +1,11 @@
 import { z } from "zod";
 
-import { cmcApiUrl } from "@/server/trpc/api/cmc/constants";
-import { cmcFetchOptions } from "@/server/trpc/api/cmc/secrets";
+import { cmcApiUrl } from "@/server/trpc/api/crypto/cmc/constants";
+import { cmcFetchOptions } from "@/server/trpc/api/crypto/cmc/secrets";
 import {
   TCmcGetCryptosResult,
   TCmcGetCryptosResultEdited,
-} from "@/server/trpc/api/cmc/types";
+} from "@/server/trpc/api/crypto/cmc/types";
 import {
   cachedPublicProcedure,
   createTRPCRouter,
