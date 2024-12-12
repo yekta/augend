@@ -20,11 +20,16 @@ import { auth } from "@/server/auth/auth";
 import { cleanAndSortArray } from "@/server/redis/cache-utils";
 import { redirect } from "next/navigation";
 import { ReactNode } from "react";
-import { apiServer, HydrateClient } from "@/server/trpc/setup/server";
+import {
+  apiServer,
+  apiServerStatic,
+  HydrateClient,
+} from "@/server/trpc/setup/server";
 import { TEthereumNetwork } from "@/server/trpc/api/crypto/ethereum/types";
 import { cryptoPriceChartIntervalDefault } from "@/components/cards/crypto-price-chart/constants";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
 import { cachedPromise } from "@/server/redis/redis";
+import { unstable_cache as unstableCache } from "next/cache";
 
 export default async function Home() {
   const session = await auth();
@@ -50,34 +55,26 @@ export default async function Home() {
   const finalCryptos = finalCryptoIds.map((i) => ({ id: i }));
   const convert = Object.values(defaultCurrencyPreference).map((i) => i.ticker);
 
-  const [globalMetrics, cryptoInfos, forexRates, gasInfo, ...priceCharts] =
-    await cachedPromise<
-      [
-        AppRouterOutputs["crypto"]["cmc"]["getGlobalMetrics"],
-        AppRouterOutputs["crypto"]["cmc"]["getCryptoInfos"],
-        AppRouterOutputs["forex"]["getRates"],
-        AppRouterOutputs["crypto"]["ethereum"]["getGasInfo"],
-        ...AppRouterOutputs["crypto"]["exchange"]["getOHLCV"][]
-      ]
-    >({
-      path: "home",
-      params: { version: "1.0.0" },
-      cacheTime: "minutes-medium",
-      promise: Promise.all([
-        apiServer.crypto.cmc.getGlobalMetrics({
+  const cachedFetch = unstableCache(
+    () =>
+      Promise.all([
+        new Promise<number>((resolve) =>
+          setTimeout(() => resolve(Date.now()), 1000)
+        ),
+        apiServerStatic.crypto.cmc.getGlobalMetrics({
           convert: defaultCurrencyPreference.primary.ticker,
         }),
-        apiServer.crypto.cmc.getCryptoInfos({
+        apiServerStatic.crypto.cmc.getCryptoInfos({
           convert: convert,
           ids: finalCryptoIds,
         }),
-        apiServer.forex.getRates(),
-        apiServer.crypto.ethereum.getGasInfo({
+        apiServerStatic.forex.getRates(),
+        apiServerStatic.crypto.ethereum.getGasInfo({
           network: gasTrackerNetwork,
           convert: defaultCurrencyPreference.primary.ticker,
         }),
         ...priceChartConfigs.map((config) =>
-          apiServer.crypto.exchange.getOHLCV({
+          apiServerStatic.crypto.exchange.getOHLCV({
             exchange: config.exchange,
             pair: config.pair,
             limit: cryptoPriceChartIntervalDefault.limit,
@@ -85,12 +82,26 @@ export default async function Home() {
           })
         ),
       ]),
-    });
+    ["home", "v1.0.0"],
+    {
+      revalidate: 60 * 5,
+    }
+  );
+
+  const [
+    timestamp,
+    globalMetrics,
+    cryptoInfos,
+    forexRates,
+    gasInfo,
+    ...priceCharts
+  ] = await cachedFetch();
 
   return (
     <div className="w-full flex-1 flex flex-col items-center">
       <div className="w-full max-w-7xl flex-1 flex flex-col justify-center items-center pt-4 pb-[calc(4vh+2rem)]">
         <div className="flex flex-col items-center max-w-full px-5 md:px-8">
+          {timestamp.toLocaleString("en-US")}
           <h1 className="text-4xl md:text-5xl font-bold text-center leading-none">
             Track financial assets
           </h1>
