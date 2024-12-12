@@ -24,7 +24,7 @@ export default function DashboardGrid({
         </div>
         {placeholder && (
           <div className="flex col-span-12 flex-1 flex-col items-center justify-center w-full text-center gap-3">
-            <div className="w-full text-muted-foreground max-w-full px-5 pt-5 pb-[calc(8vh+2rem)]">
+            <div className="w-full text-muted-foreground max-w-full px-5 pt-5 pb-[calc(6vh+2rem)]">
               {placeholder}
             </div>
           </div>

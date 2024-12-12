@@ -22,7 +22,7 @@ function ScPage({ platform }: Props) {
   return (
     <Redirector platform={platform}>
       <div className="w-full flex-1 flex flex-col items-center justify-center">
-        <div className="w-full flex flex-col max-w-7xl px-5 md:px-10 gap-2 pt-6 pb-[calc(8vh+3rem)] items-center justify-center text-muted-foreground">
+        <div className="w-full flex flex-col max-w-7xl px-5 md:px-10 gap-2 pt-6 pb-[calc(6vh+2rem)] items-center justify-center text-muted-foreground">
           <LoaderIcon className="size-10 animate-spin" />
           <h1 className="w-full text-base font-medium text-center leading-relaxed">
             Redirecting to

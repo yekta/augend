@@ -13,7 +13,7 @@ type Props = {};
 export default function Page({}: Props) {
   const platforms = (Object.keys(sc) as TScOption[]).map((s) => sc[s]);
   return (
-    <div className="w-full px-4 flex-1 flex flex-col items-center justify-center pt-6 pb-[calc(8vh+3rem)]">
+    <div className="w-full px-4 flex-1 flex flex-col items-center justify-center pt-6 pb-[calc(6vh+2rem)]">
       <div className="flex flex-col rounded-xl max-w-[24rem] border p-5 pt-4.5 gap-6">
         <div className="w-full flex flex-col gap-1 text-center">
           <h1 className="text-2xl font-bold leading-tight">Support</h1>

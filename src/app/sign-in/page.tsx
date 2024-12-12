@@ -39,7 +39,7 @@ export default async function SignInPage({ searchParams }: Props) {
   }
 
   return (
-    <div className="w-full flex-1 flex flex-col items-center justify-center px-4 pt-6 pb-[calc(8vh+3rem)]">
+    <div className="w-full flex-1 flex flex-col items-center justify-center px-4 pt-6 pb-[calc(6vh+2rem)]">
       <SignInCard error={error} callbackUrl={cleanedCallbackUrl} />
     </div>
   );
