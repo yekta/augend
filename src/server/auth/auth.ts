@@ -184,6 +184,14 @@ export const authProviderMap = authProviders
   })
   .filter((provider) => provider.id !== "credentials");
 
-const auth = cache(uncachedAuth);
+const loggedAuth = async () => {
+  const start = performance.now();
+  const result = await uncachedAuth();
+  const duration = Math.round(performance.now() - start);
+  console.log(`[AUTH]: ${duration}ms`);
+  return result;
+};
+
+const auth = cache(loggedAuth);
 
 export { auth, handlers, signIn, signOut };
