@@ -23,10 +23,13 @@ export async function setCache(
   value: unknown,
   cacheTime: TCacheTime
 ) {
-  const start = Date.now();
+  const start = performance.now();
   try {
     await redis.set(key, JSON.stringify(value), "EX", cacheTimes[cacheTime]);
-    console.log(`[CACHE][SET]: "${key}" | ${Date.now() - start}ms`);
+    const duration = Math.round(performance.now() - start);
+
+    console.log(`[CACHE][SET]: "${key}" | ${duration}ms`);
+
     return true;
   } catch (error) {
     console.log(`[CACHE][ERROR]: Setting cache for "${key}"`, error);
@@ -35,14 +38,18 @@ export async function setCache(
 }
 
 export async function getCache<T>(key: string) {
-  const start = Date.now();
+  const start = performance.now();
   try {
     const value = await redis.get(key);
+    const duration = Math.round(performance.now() - start);
+
     if (!value) {
-      console.log(`[CACHE][MISS]: "${key}" | ${Date.now() - start}ms`);
+      console.log(`[CACHE][MISS]: "${key}" | ${duration}ms`);
       return null;
     }
-    console.log(`[CACHE][HIT]: "${key}" | ${Date.now() - start}ms`);
+
+    console.log(`[CACHE][HIT]: "${key}" | ${duration}ms`);
+
     return JSON.parse(value) as T;
   } catch (error) {
     console.log(`[CACHE][ERROR]: Getting cache for "${key}"`, error);
