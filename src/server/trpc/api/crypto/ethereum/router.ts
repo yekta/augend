@@ -46,7 +46,7 @@ export const ethereumRouter = createTRPCRouter({
         ethereumProviders[network].core.getBlockNumber(),
         cachedPromise({
           path: "ethereum.getGasInfo:getEthPrice",
-          value: { cmcId, convert },
+          params: { cmcId, convert },
           promise: getEthPrice({ cmcId, convert }),
           cacheTime: "seconds-long",
         }),

@@ -9,11 +9,12 @@ const ForexRatesContext = createContext<TForexRatesContext | null>(null);
 
 export const ForexRatesProvider: React.FC<{
   children: ReactNode;
-}> = ({ children }) => {
-  const query = api.forex.getRates.useQuery(
-    undefined,
-    defaultQueryOptions.slow
-  );
+  initialData?: AppRouterOutputs["forex"]["getRates"];
+}> = ({ children, initialData }) => {
+  const query = api.forex.getRates.useQuery(undefined, {
+    ...defaultQueryOptions.slow,
+    initialData,
+  });
   return (
     <ForexRatesContext.Provider
       value={{

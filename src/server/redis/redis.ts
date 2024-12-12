@@ -52,16 +52,16 @@ export async function getCache<T>(key: string) {
 
 export async function cachedPromise<T>({
   path,
-  value,
+  params,
   promise,
   cacheTime = "seconds-medium",
 }: {
   path: string;
-  value: any;
+  params: any;
   promise: Promise<T>;
   cacheTime: TCacheTime;
 }) {
-  const key = createCacheKeyForTRPCRoute(path, value);
+  const key = createCacheKeyForTRPCRoute(path, params, cacheTime);
   const cache = await getCache<T>(key);
   if (cache) {
     return cache;

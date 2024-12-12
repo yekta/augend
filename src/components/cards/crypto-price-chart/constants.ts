@@ -2,10 +2,12 @@ export type TSelectOption = {
   value: string;
 } & Record<string, unknown>;
 
-export const cryptoPriceChartIntervalOptions: (TSelectOption & {
+export type TIntervalOption = TSelectOption & {
   limit: number;
   timeframe: string;
-})[] = [
+};
+
+export const cryptoPriceChartIntervalOptions: TIntervalOption[] = [
   {
     value: "1D",
     limit: 24,

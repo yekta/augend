@@ -45,7 +45,7 @@ export function CardParser({
       <CardErrorBoundary className={cn(cardTypes.sm.className, className)}>
         <CryptoCard
           className={cn(cardTypes.sm.className, className)}
-          config={{ id: Number(coinId) }}
+          coinId={Number(coinId)}
           {...rest}
         />
       </CardErrorBoundary>

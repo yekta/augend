@@ -23,13 +23,16 @@ import {
 import { ElementType } from "react";
 import CardInnerWrapper from "@/components/cards/_utils/card-inner-wrapper";
 import { useCurrencyPreference } from "@/components/providers/currency-preference-provider";
+import { AppRouterOutputs } from "@/server/trpc/api/root";
 
 export default function GasTrackerCard({
   network,
   className,
+  initialData,
   ...rest
 }: TCardOuterWrapperProps & {
   network: TEthereumNetwork;
+  initialData?: AppRouterOutputs["crypto"]["ethereum"]["getGasInfo"];
 }) {
   const currencyPreference = useCurrencyPreference();
   const convertCurrency = currencyPreference.primary;
@@ -39,7 +42,7 @@ export default function GasTrackerCard({
         network,
         convert: convertCurrency.ticker,
       },
-      defaultQueryOptions.fast
+      { ...defaultQueryOptions.fast, initialData }
     );
 
   const conditionalValue = useConditionalValue({

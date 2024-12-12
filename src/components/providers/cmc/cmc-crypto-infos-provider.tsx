@@ -18,7 +18,8 @@ export const CmcCryptoInfosProvider: React.FC<{
   children: ReactNode;
   cryptos: TCryptoDef[];
   dontAddUsd?: boolean;
-}> = ({ children, cryptos, dontAddUsd = false }) => {
+  initialData?: AppRouterOutputs["crypto"]["cmc"]["getCryptoInfos"];
+}> = ({ children, cryptos, dontAddUsd = false, initialData }) => {
   const currencyPreference = useCurrencyPreference();
   let convert = Object.values(currencyPreference).map((i) => i.ticker);
   if (!dontAddUsd && !convert.includes("USD")) convert.push("USD");
@@ -34,7 +35,11 @@ export const CmcCryptoInfosProvider: React.FC<{
     {
       ...defaultQueryOptions.slow,
       enabled,
-      initialData: !enabled ? emptyInitialData : undefined,
+      initialData: initialData
+        ? initialData
+        : !enabled
+        ? emptyInitialData
+        : undefined,
     }
   );
   return (

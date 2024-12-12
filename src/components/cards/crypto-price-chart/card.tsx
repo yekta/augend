@@ -7,6 +7,7 @@ import CardOuterWrapper, {
 import {
   cryptoPriceChartIntervalDefault,
   cryptoPriceChartIntervalOptions,
+  TIntervalOption,
   TSelectOption,
 } from "@/components/cards/crypto-price-chart/constants";
 import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
@@ -75,9 +76,13 @@ const fallbackData: TOHLCVResult = {
 export default function CryptoPriceChartCard({
   config,
   className,
+  initialData,
+  initialIntervalOption,
   ...rest
 }: TCardOuterWrapperProps & {
   config: TOhlcvChartConfig;
+  initialData?: AppRouterOutputs["crypto"]["exchange"]["getOHLCV"];
+  initialIntervalOption?: TIntervalOption;
 }) {
   const [interval, setInterval] = useState(cryptoPriceChartIntervalDefault);
 
@@ -98,6 +103,12 @@ export default function CryptoPriceChartCard({
     {
       ...defaultQueryOptions.normal,
       placeholderData: keepPreviousData,
+      initialData:
+        initialIntervalOption?.limit === interval.limit &&
+        initialIntervalOption.timeframe === interval.timeframe &&
+        initialIntervalOption.value === interval.value
+          ? initialData
+          : undefined,
     }
   );
 

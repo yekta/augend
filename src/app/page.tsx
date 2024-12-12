@@ -23,6 +23,8 @@ import { ReactNode } from "react";
 import { apiServer, HydrateClient } from "@/server/trpc/setup/server";
 import { TEthereumNetwork } from "@/server/trpc/api/crypto/ethereum/types";
 import { cryptoPriceChartIntervalDefault } from "@/components/cards/crypto-price-chart/constants";
+import { AppRouterOutputs } from "@/server/trpc/api/root";
+import { cachedPromise } from "@/server/redis/redis";
 
 export default async function Home() {
   const session = await auth();
@@ -44,6 +46,47 @@ export default async function Home() {
     },
   ];
 
+  const finalCryptoIds = cleanAndSortArray([...cryptoIds, ...miniCryptoIds]);
+  const finalCryptos = finalCryptoIds.map((i) => ({ id: i }));
+  const convert = Object.values(defaultCurrencyPreference).map((i) => i.ticker);
+
+  const [globalMetrics, cryptoInfos, forexRates, gasInfo, ...priceCharts] =
+    await cachedPromise<
+      [
+        AppRouterOutputs["crypto"]["cmc"]["getGlobalMetrics"],
+        AppRouterOutputs["crypto"]["cmc"]["getCryptoInfos"],
+        AppRouterOutputs["forex"]["getRates"],
+        AppRouterOutputs["crypto"]["ethereum"]["getGasInfo"],
+        ...AppRouterOutputs["crypto"]["exchange"]["getOHLCV"][]
+      ]
+    >({
+      path: "home",
+      params: { version: "1.0.0" },
+      promise: Promise.all([
+        apiServer.crypto.cmc.getGlobalMetrics({
+          convert: defaultCurrencyPreference.primary.ticker,
+        }),
+        apiServer.crypto.cmc.getCryptoInfos({
+          convert: convert,
+          ids: finalCryptoIds,
+        }),
+        apiServer.forex.getRates(),
+        apiServer.crypto.ethereum.getGasInfo({
+          network: gasTrackerNetwork,
+          convert: defaultCurrencyPreference.primary.ticker,
+        }),
+        ...priceChartConfigs.map((config) =>
+          apiServer.crypto.exchange.getOHLCV({
+            exchange: config.exchange,
+            pair: config.pair,
+            limit: cryptoPriceChartIntervalDefault.limit,
+            timeframe: cryptoPriceChartIntervalDefault.timeframe,
+          })
+        ),
+      ]),
+      cacheTime: "minutes-medium",
+    });
+
   return (
     <div className="w-full flex-1 flex flex-col items-center">
       <div className="w-full max-w-7xl flex-1 flex flex-col justify-center items-center pt-8 pb-[calc(8vh+2rem)]">
@@ -61,15 +104,16 @@ export default async function Home() {
         </div>
         <div className="w-full grid grid-cols-12 mt-6 px-1 md:px-5">
           <Providers
-            cryptoIds={[...cryptoIds, ...miniCryptoIds]}
-            gasTrackerNetwork={gasTrackerNetwork}
-            priceChartConfigs={priceChartConfigs}
+            cryptos={finalCryptos}
+            globalMetricsInitialData={globalMetrics}
+            cryptoInfosInitialData={cryptoInfos}
+            forexRatesInitialData={forexRates}
           >
             {cryptoIds.map((id, index) => (
               <CryptoCard
                 noHref
-                key={id}
-                config={{ id }}
+                key={`${id}-${index}`}
+                coinId={id}
                 className={cn(
                   cardTypes.sm.className,
                   index === 1 ? "hidden lg:flex" : ""
@@ -117,6 +161,7 @@ export default async function Home() {
               noHref
               network={gasTrackerNetwork}
               className={cardTypes.xl.className}
+              initialData={gasInfo}
             />
             {priceChartConfigs.map((config, index) => (
               <CryptoPriceChartCard
@@ -126,6 +171,8 @@ export default async function Home() {
                   cardTypes.lg.className,
                   index === 1 && "hidden lg:flex"
                 )}
+                initialIntervalOption={cryptoPriceChartIntervalDefault}
+                initialData={priceCharts[index]}
               />
             ))}
           </Providers>
@@ -136,43 +183,19 @@ export default async function Home() {
 }
 
 async function Providers({
-  cryptoIds,
-  gasTrackerNetwork,
-  priceChartConfigs,
+  cryptos,
   children,
+  globalMetricsInitialData,
+  cryptoInfosInitialData,
+  forexRatesInitialData,
 }: {
-  cryptoIds: number[];
-  gasTrackerNetwork: TEthereumNetwork;
-  priceChartConfigs: TOhlcvChartConfig[];
+  cryptos: { id: number }[];
+  globalMetricsInitialData: AppRouterOutputs["crypto"]["cmc"]["getGlobalMetrics"];
+  cryptoInfosInitialData: AppRouterOutputs["crypto"]["cmc"]["getCryptoInfos"];
+  forexRatesInitialData: AppRouterOutputs["forex"]["getRates"];
+
   children: ReactNode;
 }) {
-  const finalCryptoIds = cleanAndSortArray(cryptoIds);
-  const finalCryptos = finalCryptoIds.map((i) => ({ id: i }));
-  const convert = Object.values(defaultCurrencyPreference).map((i) => i.ticker);
-
-  await Promise.all([
-    apiServer.crypto.cmc.getGlobalMetrics.prefetch({
-      convert: defaultCurrencyPreference.primary.ticker,
-    }),
-    apiServer.crypto.cmc.getCryptoInfos.prefetch({
-      convert: convert,
-      ids: finalCryptoIds,
-    }),
-    apiServer.forex.getRates.prefetch(),
-    apiServer.crypto.ethereum.getGasInfo.prefetch({
-      network: gasTrackerNetwork,
-      convert: defaultCurrencyPreference.primary.ticker,
-    }),
-    ...priceChartConfigs.map((config) =>
-      apiServer.crypto.exchange.getOHLCV.prefetch({
-        exchange: config.exchange,
-        pair: config.pair,
-        limit: cryptoPriceChartIntervalDefault.limit,
-        timeframe: cryptoPriceChartIntervalDefault.timeframe,
-      })
-    ),
-  ]);
-
   return (
     <HydrateClient>
       <CurrentDashboardProvider
@@ -183,9 +206,12 @@ async function Providers({
         <CurrencyPreferenceProvider
           currencyPreference={defaultCurrencyPreference}
         >
-          <CmcGlobalMetricsProvider>
-            <CmcCryptoInfosProvider cryptos={finalCryptos}>
-              <ForexRatesProvider>
+          <CmcGlobalMetricsProvider initialData={globalMetricsInitialData}>
+            <CmcCryptoInfosProvider
+              cryptos={cryptos}
+              initialData={cryptoInfosInitialData}
+            >
+              <ForexRatesProvider initialData={forexRatesInitialData}>
                 <DndProvider initialIds={[]}>{children}</DndProvider>
               </ForexRatesProvider>
             </CmcCryptoInfosProvider>

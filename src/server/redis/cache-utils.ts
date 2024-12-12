@@ -1,3 +1,5 @@
+import { TCacheTime } from "@/server/redis/redis";
+
 function compare<T>(a: T, b: T): number {
   if (typeof a === "number" && typeof b === "number") {
     return (a - b) as number;
@@ -26,7 +28,11 @@ export function cleanAndSortArray<T>(arr: T[]) {
   return cleanedArr.sort();
 }
 
-export function createCacheKeyForTRPCRoute(path: string, rawInput: unknown) {
+export function createCacheKeyForTRPCRoute(
+  path: string,
+  rawInput: unknown,
+  cacheTime: TCacheTime
+) {
   function normalizeValue(value: unknown): unknown {
     if (Array.isArray(value)) {
       return cleanAndSortArray(value);
@@ -40,5 +46,5 @@ export function createCacheKeyForTRPCRoute(path: string, rawInput: unknown) {
   }
 
   const normalizedInput = normalizeValue(rawInput);
-  return `${path}:${JSON.stringify(normalizedInput)}`;
+  return `${path}:${JSON.stringify(normalizedInput)}:${cacheTime}`;
 }

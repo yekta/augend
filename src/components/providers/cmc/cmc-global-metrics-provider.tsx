@@ -10,15 +10,16 @@ const CmcGlobalMetricsContext = createContext<TCmcGlobalMetricsContext | null>(
   null
 );
 
-export const CmcGlobalMetricsProvider: React.FC<{ children: ReactNode }> = ({
-  children,
-}) => {
+export const CmcGlobalMetricsProvider: React.FC<{
+  children: ReactNode;
+  initialData?: AppRouterOutputs["crypto"]["cmc"]["getGlobalMetrics"];
+}> = ({ children, initialData }) => {
   const currencyPreference = useCurrencyPreference();
   const query = api.crypto.cmc.getGlobalMetrics.useQuery(
     {
       convert: currencyPreference.primary.ticker,
     },
-    defaultQueryOptions.slow
+    { ...defaultQueryOptions.slow, initialData }
   );
   return (
     <CmcGlobalMetricsContext.Provider

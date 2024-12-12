@@ -111,7 +111,7 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
 const cacheMiddleware = (cacheTime: TCacheTime) =>
   t.middleware(async ({ path, next, getRawInput, ctx }) => {
     const rawInput = await getRawInput();
-    const cacheKey = createCacheKeyForTRPCRoute(path, rawInput);
+    const cacheKey = createCacheKeyForTRPCRoute(path, rawInput, cacheTime);
     const cachedValue = await getCache(cacheKey);
 
     let wasNotAccessed = true;
