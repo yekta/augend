@@ -62,6 +62,7 @@ export default async function Home() {
     >({
       path: "home",
       params: { version: "1.0.0" },
+      cacheTime: "minutes-medium",
       promise: Promise.all([
         apiServer.crypto.cmc.getGlobalMetrics({
           convert: defaultCurrencyPreference.primary.ticker,
@@ -84,7 +85,6 @@ export default async function Home() {
           })
         ),
       ]),
-      cacheTime: "minutes-medium",
     });
 
   return (
