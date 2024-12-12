@@ -53,9 +53,6 @@ export default async function Home() {
   const cachedFetch = unstableCache(
     () =>
       Promise.all([
-        new Promise<number>((resolve) =>
-          setTimeout(() => resolve(Date.now()), 1000)
-        ),
         apiServerStatic.crypto.cmc.getGlobalMetrics({
           convert: defaultCurrencyPreference.primary.ticker,
         }),
@@ -83,14 +80,8 @@ export default async function Home() {
     }
   );
 
-  const [
-    timestamp,
-    globalMetrics,
-    cryptoInfos,
-    forexRates,
-    gasInfo,
-    ...priceCharts
-  ] = await cachedFetch();
+  const [globalMetrics, cryptoInfos, forexRates, gasInfo, ...priceCharts] =
+    await cachedFetch();
 
   return (
     <div className="w-full flex-1 flex flex-col items-center">
@@ -182,9 +173,6 @@ export default async function Home() {
             ))}
           </Providers>
         </div>
-        <p className="text-xs max-w-full text-center text-muted-foreground pt-4">
-          {new Date(timestamp).toLocaleString("en-US")}
-        </p>
       </div>
     </div>
   );

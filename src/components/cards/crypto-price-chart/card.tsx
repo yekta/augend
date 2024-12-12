@@ -270,7 +270,7 @@ export default function CryptoPriceChartCard({
           isRefetching={isRefetching && !isPlaceholderData}
           hasData={data !== undefined}
         />
-        {!isPending && (
+        {!isPending && !isLoadingError && (
           <SelectCustom
             onValueChange={(v) =>
               setInterval(
@@ -302,21 +302,24 @@ function SelectCustom({
   contentClassName?: string;
 }) {
   const [open, setOpen] = useState(false);
-
   return (
     <Select
       onValueChange={(value) => {
         onValueChange(value);
       }}
+      defaultValue={value}
       value={value}
       open={open}
       onOpenChange={setOpen}
     >
       <SelectTrigger
         aria-label="Select Interval"
-        className={cn("font-semibold font-mono pl-2.5", className)}
+        className={cn(
+          "font-semibold font-mono pl-2.5 shrink min-w-0 overflow-hidden",
+          className
+        )}
       >
-        <SelectValue placeholder={value} />
+        <p className="truncate shrink min-w-0 pointer-events-none">{value}</p>
       </SelectTrigger>
       <SelectContent
         className={cn(
