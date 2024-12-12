@@ -74,7 +74,7 @@ export default function UserAvatar({ session }: Props) {
             <DropdownMenuItem asChild className="px-2.5 py-2.25">
               <Link
                 href="/account"
-                className="w-full gap-2 flex items-center justify-start cursor-pointer"
+                className="w-full gap-2.5 flex items-center justify-start cursor-pointer"
               >
                 <Blockies
                   width={24}
@@ -93,7 +93,7 @@ export default function UserAvatar({ session }: Props) {
             <DropdownMenuItem asChild>
               <Link
                 href="/account"
-                className="w-full flex items-center gap-2 text-left leading-tight cursor-pointer"
+                className="w-full flex items-center gap-2.5 text-left leading-tight cursor-pointer"
                 type="submit"
               >
                 <UserIcon className="size-5 shrink-0 -ml-0.5 -my-1" />
@@ -109,7 +109,7 @@ export default function UserAvatar({ session }: Props) {
                 className="w-full  flex items-center justify-start"
               >
                 <button
-                  className="w-full flex items-center px-2.5 gap-2 text-left leading-tight py-2.25"
+                  className="w-full flex items-center px-2.5 gap-2.5 text-left leading-tight py-2.25"
                   type="submit"
                 >
                   <LogOutIcon className="size-5 shrink-0 -ml-0.5 -my-1" />

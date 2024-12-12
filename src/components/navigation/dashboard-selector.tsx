@@ -149,7 +149,6 @@ export default function DashboardSelector({}: Props) {
                     <DropdownMenuGroup className="p-1">
                       <CreateDashboardButton
                         onDashboardCreated={onDashboardCreated}
-                        username={username}
                         open={isCreateDashboardOpen}
                         onOpenChange={setIsCreateDashboardOpen}
                       />
@@ -200,12 +199,10 @@ export default function DashboardSelector({}: Props) {
 }
 
 function CreateDashboardButton({
-  username,
   open,
   onOpenChange,
   onDashboardCreated,
 }: {
-  username: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onDashboardCreated?: (dashboard: {
@@ -243,15 +240,17 @@ function CreateDashboardButton({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogTrigger asChild className="gap-1.25 py-2.25 text-base">
-        <Button
-          size="sm"
-          variant="ghost"
-          className="w-full justify-start text-left items-center"
-        >
-          <PlusIcon className="size-5 -my-1 -ml-1.25" />
-          <p className="shrink min-w-0 truncate leading-tight">Create</p>
-        </Button>
+      <DialogTrigger asChild>
+        <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="p-0">
+          <Button
+            size="sm"
+            variant="ghost"
+            className="w-full justify-start text-left items-center gap-1.25 py-2.25 text-base"
+          >
+            <PlusIcon className="size-5 -my-1 -ml-1.25" />
+            <p className="shrink min-w-0 truncate leading-tight">Create</p>
+          </Button>
+        </DropdownMenuItem>
       </DialogTrigger>
       <DialogContent
         classNameInnerWrapper="gap-4"
