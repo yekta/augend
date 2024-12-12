@@ -28,6 +28,7 @@ const createContextStatic = cache(async () => {
   const heads = new Headers();
   return createTRPCContext({
     headers: heads,
+    skipAuth: true,
   });
 });
 const callerStatic = createCaller(createContextStatic);

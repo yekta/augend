@@ -1,14 +1,15 @@
 import CurrentDashboardProvider from "@/app/[username]/[dashboard_slug]/_components/current-dashboard-provider";
 import DndProvider from "@/app/[username]/[dashboard_slug]/_components/dnd-provider";
 import { cardTypes } from "@/components/cards/_utils/helpers";
+import CryptoMiniCard from "@/components/cards/crypto-mini/card";
 import CryptoPriceChartCard, {
   TOhlcvChartConfig,
 } from "@/components/cards/crypto-price-chart/card";
+import { cryptoPriceChartIntervalDefault } from "@/components/cards/crypto-price-chart/constants";
 import CryptoCard from "@/components/cards/crypto/card";
 import CurrencyCard from "@/components/cards/currency/card";
 import FearGreedIndexCard from "@/components/cards/fear-greed-index/card";
 import GasTrackerCard from "@/components/cards/gas-tracker/card";
-import CryptoMiniCard from "@/components/cards/crypto-mini/card";
 import CmcCryptoInfosProvider from "@/components/providers/cmc/cmc-crypto-infos-provider";
 import CmcGlobalMetricsProvider from "@/components/providers/cmc/cmc-global-metrics-provider";
 import CurrencyPreferenceProvider from "@/components/providers/currency-preference-provider";
@@ -18,18 +19,12 @@ import { defaultCurrencyPreference, mainDashboardSlug } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { auth } from "@/server/auth/auth";
 import { cleanAndSortArray } from "@/server/redis/cache-utils";
+import { TEthereumNetwork } from "@/server/trpc/api/crypto/ethereum/types";
+import { AppRouterOutputs } from "@/server/trpc/api/root";
+import { apiServerStatic, HydrateClient } from "@/server/trpc/setup/server";
+import { unstable_cache as unstableCache } from "next/cache";
 import { redirect } from "next/navigation";
 import { ReactNode } from "react";
-import {
-  apiServer,
-  apiServerStatic,
-  HydrateClient,
-} from "@/server/trpc/setup/server";
-import { TEthereumNetwork } from "@/server/trpc/api/crypto/ethereum/types";
-import { cryptoPriceChartIntervalDefault } from "@/components/cards/crypto-price-chart/constants";
-import { AppRouterOutputs } from "@/server/trpc/api/root";
-import { cachedPromise } from "@/server/redis/redis";
-import { unstable_cache as unstableCache } from "next/cache";
 
 export default async function Home() {
   const session = await auth();
