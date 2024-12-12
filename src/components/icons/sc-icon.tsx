@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import { BanIcon, MailIcon } from "lucide-react";
 import { ComponentProps } from "react";
 
-export default function SclIcon({
+export default function ScIcon({
   slug,
   className,
 }: ComponentProps<"svg"> & { slug?: TScOption }) {
@@ -11,6 +11,7 @@ export default function SclIcon({
   if (slug === "discord") {
     return (
       <svg
+        aria-label="Discord Icon"
         className={cn(defaultClassName, className)}
         width="24"
         height="24"
@@ -28,6 +29,7 @@ export default function SclIcon({
   if (slug === "github") {
     return (
       <svg
+        aria-label="GitHub Icon"
         className={cn(defaultClassName, className)}
         width="24"
         height="24"
@@ -45,6 +47,7 @@ export default function SclIcon({
   if (slug === "x") {
     return (
       <svg
+        aria-label="X (Twitter) Icon"
         className={cn(defaultClassName, className)}
         width="24"
         height="24"
@@ -60,7 +63,12 @@ export default function SclIcon({
     );
   }
   if (slug === "email") {
-    return <MailIcon className={cn(defaultClassName, "p-0.25", className)} />;
+    return (
+      <MailIcon
+        aria-label="Email Icon"
+        className={cn(defaultClassName, "p-0.25", className)}
+      />
+    );
   }
   return <BanIcon className={cn(defaultClassName, className)} />;
 }

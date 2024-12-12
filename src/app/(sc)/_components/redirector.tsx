@@ -13,6 +13,7 @@ export default function Redirector({ children, platform }: Props) {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     window.location.href = sc[platform].href;
   };
+
   useEffect(() => {
     redirect();
   }, []);

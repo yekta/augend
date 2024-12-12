@@ -1,4 +1,4 @@
-import SclIcon from "@/components/icons/scl-icon";
+import ScIcon from "@/components/icons/sc-icon";
 import { LinkButton } from "@/components/ui/button";
 import { sc, siteTitle, TScOption } from "@/lib/constants";
 import { Metadata } from "next";
@@ -32,7 +32,7 @@ export default function Page({}: Props) {
               href={platform.href}
               target="_blank"
             >
-              <SclIcon
+              <ScIcon
                 className="size-6 absolute left-2.25 top-1/2 -translate-y-1/2"
                 slug={platform.slug}
               />

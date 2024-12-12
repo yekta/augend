@@ -73,7 +73,7 @@ export const sc: Record<
     slug: "discord",
   },
   x: {
-    name: "X",
+    name: "X (Twitter)",
     href: "https://x.com/augendapp",
     slug: "x",
   },
