@@ -182,7 +182,7 @@ export default async function Home() {
             ))}
           </Providers>
         </div>
-        <p className="text-xs max-w-full text-center text-muted-foreground">
+        <p className="text-xs max-w-full text-center text-muted-foreground pt-4">
           {new Date(timestamp).toLocaleString("en-US")}
         </p>
       </div>
