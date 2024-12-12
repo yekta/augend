@@ -15,16 +15,29 @@ import { useActionState, useState } from "react";
 import { LoaderIcon, LogOutIcon, UserIcon } from "lucide-react";
 import { useDisconnect } from "wagmi";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 type Props = {
   session: Session;
 };
 
+const protectedPaths = ["/account"];
+
 export default function UserAvatar({ session }: Props) {
+  const pathname = usePathname();
+  const pathnameParts = pathname.split("/");
+
+  const isOwnDashboard =
+    pathnameParts.length === 3 && pathnameParts[1] === session.user.username;
+
+  const shouldRedirectHome =
+    isOwnDashboard || protectedPaths.includes(pathname);
+
   const { user } = session;
   const [open, setOpen] = useState(false);
+
   const [stateSignOut, actionSignOut, isPendingSignOut] = useActionState(
-    () => signOutAction({ callbackUrl: "/" }),
+    () => signOutAction({ callbackUrl: shouldRedirectHome ? "/" : pathname }),
     null
   );
 

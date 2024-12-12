@@ -73,7 +73,7 @@ input[type="number"]::-webkit-outer-spin-button {
     --github-foreground: 0 0% 100%;
     --ethereum: 263 75% 51%;
     --ethereum-foreground: 0 0% 100%;
-    --email: 250 25% 4%;
+    --email: 100 55% 30%;
     --email-foreground: 0 0% 100%;
     --x: 250 25% 4%;
     --x-foreground: 0 0% 100%;
@@ -127,7 +127,7 @@ input[type="number"]::-webkit-outer-spin-button {
     --github-foreground: 250 25% 4%;
     --ethereum: 265 86% 83%;
     --ethereum-foreground: 250 25% 4%;
-    --email: 250 50% 92%;
+    --email: 100 60% 65%;
     --email-foreground: 250 25% 4%;
     --x: 250 50% 92%;
     --x-foreground: 250 25% 4%;
