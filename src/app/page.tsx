@@ -96,7 +96,6 @@ export default async function Home() {
     <div className="w-full flex-1 flex flex-col items-center">
       <div className="w-full max-w-7xl flex-1 flex flex-col justify-center items-center pt-4 pb-[calc(4vh+2rem)]">
         <div className="flex flex-col items-center max-w-full px-5 md:px-8">
-          {timestamp.toLocaleString("en-US")}
           <h1 className="text-4xl md:text-5xl font-bold text-center leading-none">
             Track financial assets
           </h1>
@@ -183,6 +182,9 @@ export default async function Home() {
             ))}
           </Providers>
         </div>
+        <p className="text-xs max-w-full text-center text-muted-foreground">
+          {new Date(timestamp).toLocaleString("en-US")}
+        </p>
       </div>
     </div>
   );
