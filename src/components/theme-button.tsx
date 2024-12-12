@@ -28,6 +28,7 @@ export default function ThemeButton() {
 
   return (
     <Button
+      aria-label="Toggle Theme"
       className="p-1.5 rounded-full"
       variant="outline"
       onClick={toggleTheme}

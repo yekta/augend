@@ -30,6 +30,7 @@ export default async function Navbar({ className }: Props) {
           <div className="flex flex-1 min-w-0 items-center justify-start gap-1">
             <NavigationMenuItem asChild>
               <LinkButton
+                aria-label="Home"
                 href={
                   session
                     ? `/${session.user.username}/${mainDashboardSlug}`

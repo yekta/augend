@@ -313,6 +313,7 @@ function SelectCustom({
       onOpenChange={setOpen}
     >
       <SelectTrigger
+        aria-label="Select Interval"
         className={cn("font-semibold font-mono pl-2.5", className)}
       >
         <SelectValue placeholder={value} />
