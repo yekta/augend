@@ -32,12 +32,14 @@ type Props = {
   username: string;
   dashboardSlug: string;
   children: ReactNode;
+  enabled?: boolean;
 };
 
 export const CurrentDashboardProvider: FC<Props> = ({
   username,
   dashboardSlug,
   children,
+  enabled = true,
 }) => {
   const utils = api.useUtils();
 
@@ -46,10 +48,15 @@ export const CurrentDashboardProvider: FC<Props> = ({
     isPending: isPendingCards,
     isLoadingError: isLoadingErrorCards,
     error: errorCards,
-  } = api.ui.getCards.useQuery({
-    username,
-    dashboardSlug,
-  });
+  } = api.ui.getCards.useQuery(
+    {
+      username,
+      dashboardSlug,
+    },
+    {
+      enabled,
+    }
+  );
 
   const { invalidate: invalidateDashboards } = useDashboards();
 

@@ -4,6 +4,11 @@ import CardInnerWrapper from "@/components/cards/_utils/card-inner-wrapper";
 import CardOuterWrapper, {
   TCardOuterWrapperProps,
 } from "@/components/cards/_utils/card-outer-wrapper";
+import {
+  cryptoPriceChartIntervalDefault,
+  cryptoPriceChartIntervalOptions,
+  TSelectOption,
+} from "@/components/cards/crypto-price-chart/constants";
 import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
 import Indicator from "@/components/ui/indicator";
 import {
@@ -67,36 +72,6 @@ const fallbackData: TOHLCVResult = {
   isFallback: true,
 };
 
-const now = Date.now();
-const dayInMs = 1000 * 60 * 60 * 24;
-
-const intervalOptions: (TSelectOption & {
-  since: number;
-  timeframe: string;
-})[] = [
-  {
-    value: "1D",
-    since: now - dayInMs,
-    timeframe: "1h",
-  },
-  {
-    value: "1W",
-    since: now - dayInMs * 7,
-    timeframe: "6h",
-  },
-  {
-    value: "1M",
-    since: now - dayInMs * 30,
-    timeframe: "1d",
-  },
-  {
-    value: "3M",
-    since: now - dayInMs * 90,
-    timeframe: "1d",
-  },
-];
-const intervalDefault = intervalOptions[3];
-
 export default function CryptoPriceChartCard({
   config,
   className,
@@ -104,7 +79,7 @@ export default function CryptoPriceChartCard({
 }: TCardOuterWrapperProps & {
   config: TOhlcvChartConfig;
 }) {
-  const [interval, setInterval] = useState(intervalDefault);
+  const [interval, setInterval] = useState(cryptoPriceChartIntervalDefault);
 
   const {
     data,
@@ -117,8 +92,8 @@ export default function CryptoPriceChartCard({
     {
       exchange: config.exchange,
       pair: config.pair,
-      since: interval.since,
       timeframe: interval.timeframe,
+      limit: interval.limit,
     },
     {
       ...defaultQueryOptions.normal,
@@ -288,22 +263,19 @@ export default function CryptoPriceChartCard({
           <SelectCustom
             onValueChange={(v) =>
               setInterval(
-                intervalOptions.find((i) => i.value === v) || intervalDefault
+                cryptoPriceChartIntervalOptions.find((i) => i.value === v) ||
+                  cryptoPriceChartIntervalDefault
               )
             }
             value={interval.value}
             className="absolute right-2 top-2"
-            options={intervalOptions}
+            options={cryptoPriceChartIntervalOptions}
           />
         )}
       </CardInnerWrapper>
     </CardOuterWrapper>
   );
 }
-
-export type TSelectOption = {
-  value: string;
-} & Record<string, unknown>;
 
 function SelectCustom({
   options,

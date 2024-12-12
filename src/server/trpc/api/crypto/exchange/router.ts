@@ -23,7 +23,7 @@ const OHLCVInputSchema = z.object({
   exchange: ExchangeSchema,
   pair: z.string(),
   timeframe: z.string().default("1d"),
-  since: z.number().default(Date.now() - 1000 * 60 * 60 * 24 * 30),
+  limit: z.number().max(90).default(90),
 });
 
 export const exchangeRouter = createTRPCRouter({
@@ -196,10 +196,15 @@ function parseOrderbookResult(
 }
 
 function getOHLCVPromiseObject(input: z.infer<typeof OHLCVInputSchema>) {
-  const { exchange, pair, timeframe, since } = input;
+  const { exchange, pair, timeframe, limit } = input;
   const exchangeInstance = getExchangeInstance(exchange);
   return {
-    ohlcvPromise: exchangeInstance.fetchOHLCV(pair, timeframe, since),
+    ohlcvPromise: exchangeInstance.fetchOHLCV(
+      pair,
+      timeframe,
+      undefined,
+      limit
+    ),
     tickerInfoPromise: exchangeInstance.fetchTicker(pair),
   };
 }

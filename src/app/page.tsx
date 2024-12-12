@@ -1,7 +1,9 @@
 import CurrentDashboardProvider from "@/app/[username]/[dashboard_slug]/_components/current-dashboard-provider";
 import DndProvider from "@/app/[username]/[dashboard_slug]/_components/dnd-provider";
 import { cardTypes } from "@/components/cards/_utils/helpers";
-import CryptoPriceChartCard from "@/components/cards/crypto-price-chart/card";
+import CryptoPriceChartCard, {
+  TOhlcvChartConfig,
+} from "@/components/cards/crypto-price-chart/card";
 import CryptoCard from "@/components/cards/crypto/card";
 import CurrencyCard from "@/components/cards/currency/card";
 import FearGreedIndexCard from "@/components/cards/fear-greed-index/card";
@@ -18,6 +20,9 @@ import { auth } from "@/server/auth/auth";
 import { cleanAndSortArray } from "@/server/redis/cache-utils";
 import { redirect } from "next/navigation";
 import { ReactNode } from "react";
+import { apiServer, HydrateClient } from "@/server/trpc/setup/server";
+import { TEthereumNetwork } from "@/server/trpc/api/crypto/ethereum/types";
+import { cryptoPriceChartIntervalDefault } from "@/components/cards/crypto-price-chart/constants";
 
 export default async function Home() {
   const session = await auth();
@@ -27,6 +32,17 @@ export default async function Home() {
 
   const cryptoIds = [1, 1027];
   const miniCryptoIds = [5426, 1839, 7278, 11841];
+  const gasTrackerNetwork: TEthereumNetwork = "Ethereum";
+  const priceChartConfigs: TOhlcvChartConfig[] = [
+    {
+      exchange: "Kucoin",
+      pair: "DOGE/USDT",
+    },
+    {
+      exchange: "Kucoin",
+      pair: "LINK/BTC",
+    },
+  ];
 
   return (
     <div className="w-full flex-1 flex flex-col items-center">
@@ -44,7 +60,11 @@ export default async function Home() {
           </LinkButton>
         </div>
         <div className="w-full grid grid-cols-12 mt-6 px-1 md:px-5">
-          <Providers cryptoIds={[...cryptoIds, ...miniCryptoIds]}>
+          <Providers
+            cryptoIds={[...cryptoIds, ...miniCryptoIds]}
+            gasTrackerNetwork={gasTrackerNetwork}
+            priceChartConfigs={priceChartConfigs}
+          >
             {cryptoIds.map((id, index) => (
               <CryptoCard
                 noHref
@@ -95,23 +115,19 @@ export default async function Home() {
             ))}
             <GasTrackerCard
               noHref
-              network="Ethereum"
+              network={gasTrackerNetwork}
               className={cardTypes.xl.className}
             />
-            <CryptoPriceChartCard
-              config={{
-                exchange: "Kucoin",
-                pair: "DOGE/USDT",
-              }}
-              className={cardTypes.lg.className}
-            />
-            <CryptoPriceChartCard
-              className={cn(cardTypes.lg.className, "hidden lg:flex")}
-              config={{
-                exchange: "Kucoin",
-                pair: "LINK/BTC",
-              }}
-            />
+            {priceChartConfigs.map((config, index) => (
+              <CryptoPriceChartCard
+                key={config.exchange + config.pair}
+                config={config}
+                className={cn(
+                  cardTypes.lg.className,
+                  index === 1 && "hidden lg:flex"
+                )}
+              />
+            ))}
           </Providers>
         </div>
       </div>
@@ -119,29 +135,63 @@ export default async function Home() {
   );
 }
 
-function Providers({
+async function Providers({
   cryptoIds,
+  gasTrackerNetwork,
+  priceChartConfigs,
   children,
 }: {
   cryptoIds: number[];
+  gasTrackerNetwork: TEthereumNetwork;
+  priceChartConfigs: TOhlcvChartConfig[];
   children: ReactNode;
 }) {
   const finalCryptoIds = cleanAndSortArray(cryptoIds);
+  const finalCryptos = finalCryptoIds.map((i) => ({ id: i }));
+  const convert = Object.values(defaultCurrencyPreference).map((i) => i.ticker);
+
+  await Promise.all([
+    apiServer.crypto.cmc.getGlobalMetrics.prefetch({
+      convert: defaultCurrencyPreference.primary.ticker,
+    }),
+    apiServer.crypto.cmc.getCryptoInfos.prefetch({
+      convert: convert,
+      ids: finalCryptoIds,
+    }),
+    apiServer.forex.getRates.prefetch(),
+    apiServer.crypto.ethereum.getGasInfo.prefetch({
+      network: gasTrackerNetwork,
+      convert: defaultCurrencyPreference.primary.ticker,
+    }),
+    ...priceChartConfigs.map((config) =>
+      apiServer.crypto.exchange.getOHLCV.prefetch({
+        exchange: config.exchange,
+        pair: config.pair,
+        limit: cryptoPriceChartIntervalDefault.limit,
+        timeframe: cryptoPriceChartIntervalDefault.timeframe,
+      })
+    ),
+  ]);
+
   return (
-    <CurrentDashboardProvider username="main" dashboardSlug="main">
-      <CurrencyPreferenceProvider
-        currencyPreference={defaultCurrencyPreference}
+    <HydrateClient>
+      <CurrentDashboardProvider
+        enabled={false}
+        username="main"
+        dashboardSlug="main"
       >
-        <CmcGlobalMetricsProvider>
-          <CmcCryptoInfosProvider
-            cryptos={finalCryptoIds.map((i) => ({ id: i }))}
-          >
-            <ForexRatesProvider>
-              <DndProvider initialIds={[]}>{children}</DndProvider>
-            </ForexRatesProvider>
-          </CmcCryptoInfosProvider>
-        </CmcGlobalMetricsProvider>
-      </CurrencyPreferenceProvider>
-    </CurrentDashboardProvider>
+        <CurrencyPreferenceProvider
+          currencyPreference={defaultCurrencyPreference}
+        >
+          <CmcGlobalMetricsProvider>
+            <CmcCryptoInfosProvider cryptos={finalCryptos}>
+              <ForexRatesProvider>
+                <DndProvider initialIds={[]}>{children}</DndProvider>
+              </ForexRatesProvider>
+            </CmcCryptoInfosProvider>
+          </CmcGlobalMetricsProvider>
+        </CurrencyPreferenceProvider>
+      </CurrentDashboardProvider>
+    </HydrateClient>
   );
 }
