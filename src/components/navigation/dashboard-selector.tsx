@@ -1,6 +1,6 @@
 "use client";
 
-import CreateDashboardTrigger from "@/components/create-dashboard-trigger";
+import CreateDashboardTrigger from "@/components/dashboard/create-dashboard-trigger";
 import { useDashboardsAuto } from "@/components/providers/dashboards-auto-provider";
 import { Button } from "@/components/ui/button";
 

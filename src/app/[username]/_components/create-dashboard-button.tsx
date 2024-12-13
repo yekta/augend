@@ -1,7 +1,7 @@
 "use client";
 
 import { useDashboards } from "@/app/[username]/_components/dashboards-provider";
-import CreateDashboardTrigger from "@/components/create-dashboard-trigger";
+import CreateDashboardTrigger from "@/components/dashboard/create-dashboard-trigger";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { PlusIcon } from "lucide-react";

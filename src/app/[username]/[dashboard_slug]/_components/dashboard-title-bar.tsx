@@ -3,6 +3,7 @@ import { useDndCards } from "@/app/[username]/[dashboard_slug]/_components/dnd-c
 import EditButtonCards from "@/app/[username]/[dashboard_slug]/_components/edit-button-cards";
 import { useEditModeCards } from "@/app/[username]/[dashboard_slug]/_components/edit-mode-cards-provider";
 import { AddCardButton } from "@/components/cards/_utils/add-card";
+import DeleteDashboardTrigger from "@/components/dashboard/delete-dashboard-trigger";
 import ErrorLine from "@/components/error-line";
 import { Button } from "@/components/ui/button";
 import {
@@ -33,7 +34,7 @@ import {
   TrashIcon,
   TriangleAlertIcon,
 } from "lucide-react";
-import { FormEvent, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -48,9 +49,6 @@ export function DashboardTitleBar({ username, dashboardSlug, isOwner }: Props) {
     useState(false);
   const [isDialogOpenDeleteDashboard, setIsDialogOpenDeleteDashboard] =
     useState(false);
-
-  const [inputValueDeleteDashboard, setInputValueDeleteDashboard] =
-    useState("");
 
   const renameDashboardForm = useForm<z.infer<typeof RenameDashboardSchemaUI>>({
     resolver: zodResolver(RenameDashboardSchemaUI),
@@ -90,22 +88,6 @@ export function DashboardTitleBar({ username, dashboardSlug, isOwner }: Props) {
     },
   });
 
-  const {
-    mutate: deleteDashboard,
-    isPending: isPendingDeleteDashboard,
-    error: errorDeleteDashboard,
-  } = api.ui.deleteDashboard.useMutation({
-    onMutate: () => {
-      cancelDashboardsQuery();
-    },
-    onSuccess: async (data) => {
-      const path = `/${data.username}/${mainDashboardSlug}`;
-      await asyncPush(path);
-      await invalidateDashboards();
-      setIsDialogOpenDeleteDashboard(false);
-    },
-  });
-
   async function onRenameDashboardFormSubmit(
     values: z.infer<typeof RenameDashboardSchemaUI>
   ) {
@@ -119,11 +101,6 @@ export function DashboardTitleBar({ username, dashboardSlug, isOwner }: Props) {
       title: values.title,
       slug: dashboardSlug,
     });
-  }
-
-  async function onDeleteDashboardFormSubmit(e: FormEvent) {
-    e.preventDefault();
-    deleteDashboard({ slug: dashboardSlug });
   }
 
   return (
@@ -222,83 +199,25 @@ export function DashboardTitleBar({ username, dashboardSlug, isOwner }: Props) {
             </DialogContent>
           </Dialog>
           {/* Delete Dashboard */}
-          {dashboardSlug !== mainDashboardSlug && (
-            <Dialog
+          {dashboardSlug !== mainDashboardSlug && dashboardName && (
+            <DeleteDashboardTrigger
+              dashboardName={dashboardName}
+              dashboardSlug={dashboardSlug}
               open={isDialogOpenDeleteDashboard}
               onOpenChange={setIsDialogOpenDeleteDashboard}
+              onMutate={() => cancelDashboardsQuery()}
+              afterSuccess={async (data) => {
+                const path = `/${data.username}/${mainDashboardSlug}`;
+                await asyncPush(path);
+                await invalidateDashboards();
+              }}
             >
-              <DialogTrigger asChild>
-                <Button
-                  size="icon"
-                  variant="outline"
-                  className="size-9 shrink-0"
-                >
-                  <div className="size-4.5 transition">
-                    <TrashIcon className="size-full text-destructive" />
-                  </div>
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-sm">
-                <DialogHeader>
-                  <DialogTitle className="text-destructive">
-                    Delete dashboard
-                  </DialogTitle>
-                  <DialogDescription>
-                    This action cannot be undone.
-                    <br />
-                    Type{" "}
-                    <span className="bg-foreground/10 px-1 rounded font-bold text-foreground">
-                      {dashboardName}
-                    </span>{" "}
-                    in the input below to confirm.
-                  </DialogDescription>
-                </DialogHeader>
-                <form
-                  onSubmit={onDeleteDashboardFormSubmit}
-                  className="flex flex-col gap-4"
-                >
-                  <Input
-                    autoComplete="off"
-                    value={inputValueDeleteDashboard}
-                    onChange={(e) =>
-                      setInputValueDeleteDashboard(e.target.value)
-                    }
-                    className="w-full font-medium"
-                    placeholder={dashboardName}
-                  />
-                  {errorDeleteDashboard && (
-                    <ErrorLine message={errorDeleteDashboard.message} />
-                  )}
-                  <div className="flex justify-end flex-wrap gap-2">
-                    <Button
-                      type="button"
-                      onClick={() => setIsDialogOpenDeleteDashboard(false)}
-                      variant="outline"
-                      className="border-none text-muted-foreground"
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      type="submit"
-                      state={isPendingDeleteDashboard ? "loading" : "default"}
-                      data-pending={isPendingDeleteDashboard ? true : undefined}
-                      variant="destructive"
-                      className="group/button"
-                      disabled={inputValueDeleteDashboard !== dashboardName}
-                    >
-                      {isPendingDeleteDashboard && (
-                        <div className="size-6 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-                          <LoaderIcon className="size-full animate-spin" />
-                        </div>
-                      )}
-                      <span className="group-data-[pending]/button:text-transparent">
-                        Delete
-                      </span>
-                    </Button>
-                  </div>
-                </form>
-              </DialogContent>
-            </Dialog>
+              <Button size="icon" variant="outline" className="size-9 shrink-0">
+                <div className="size-4.5 transition">
+                  <TrashIcon className="size-full text-destructive" />
+                </div>
+              </Button>
+            </DeleteDashboardTrigger>
           )}
         </div>
       )}

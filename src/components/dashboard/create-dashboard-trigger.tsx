@@ -17,11 +17,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useAsyncRouterPush } from "@/lib/hooks/use-async-router-push";
 import { CreateDashboardSchemaUI } from "@/server/trpc/api/ui/types-client";
 import { api } from "@/server/trpc/setup/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LoaderIcon, PlusIcon } from "lucide-react";
+import { LoaderIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
