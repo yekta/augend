@@ -61,7 +61,7 @@ export function DashboardTitleBar({ username, dashboardSlug, isOwner }: Props) {
   const { isPendingReorderCards, isErrorReorderCards } = useDndCards();
 
   const {
-    dashboardName,
+    dashboardTitle,
     isPendingDashboard,
     isLoadingErrorDashboard,
     invalidateDashboard,
@@ -91,7 +91,7 @@ export function DashboardTitleBar({ username, dashboardSlug, isOwner }: Props) {
   async function onRenameDashboardFormSubmit(
     values: z.infer<typeof RenameDashboardSchemaUI>
   ) {
-    if (dashboardName === values.title) {
+    if (dashboardTitle === values.title) {
       setIsDialogOpenRenameDashboard(false);
       resetRenameDashboard();
       renameDashboardForm.reset();
@@ -111,7 +111,7 @@ export function DashboardTitleBar({ username, dashboardSlug, isOwner }: Props) {
             ? "Loading"
             : isLoadingErrorDashboard
             ? "Error"
-            : dashboardName}
+            : dashboardTitle}
         </h1>
       ) : (
         <div className="flex justify-start items-center shrink min-w-0 gap-1.5">
@@ -133,7 +133,7 @@ export function DashboardTitleBar({ username, dashboardSlug, isOwner }: Props) {
                     ? "Loading"
                     : isLoadingErrorDashboard
                     ? "Error"
-                    : dashboardName}
+                    : dashboardTitle}
                 </h1>
                 <PencilIcon className="size-4 md:size-4.5 -my-1 shrink-0" />
               </div>
@@ -167,7 +167,7 @@ export function DashboardTitleBar({ username, dashboardSlug, isOwner }: Props) {
                           <Input
                             autoComplete="off"
                             className="w-full"
-                            placeholder={dashboardName || "New Name"}
+                            placeholder={dashboardTitle || "New Name"}
                             {...field}
                           />
                         </FormControl>
@@ -199,9 +199,9 @@ export function DashboardTitleBar({ username, dashboardSlug, isOwner }: Props) {
             </DialogContent>
           </Dialog>
           {/* Delete Dashboard */}
-          {dashboardSlug !== mainDashboardSlug && dashboardName && (
+          {dashboardSlug !== mainDashboardSlug && dashboardTitle && (
             <DeleteDashboardTrigger
-              dashboardName={dashboardName}
+              dashboardTitle={dashboardTitle}
               dashboardSlug={dashboardSlug}
               open={isDialogOpenDeleteDashboard}
               onOpenChange={setIsDialogOpenDeleteDashboard}

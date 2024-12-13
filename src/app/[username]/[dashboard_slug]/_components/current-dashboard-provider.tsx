@@ -19,7 +19,7 @@ type TCurrentDashboardContext = {
   isLoadingErrorDashboard: boolean;
   invalidateDashboard: () => Promise<void>;
   cancelDashboardsQuery: () => Promise<void>;
-  dashboardName?: string;
+  dashboardTitle?: string;
   invalidateDashboards: () => Promise<void>;
   errorMessageDashboard?: string;
 };
@@ -60,7 +60,7 @@ export const CurrentDashboardProvider: FC<Props> = ({
 
   const { invalidate: invalidateDashboards } = useDashboardsAuto();
 
-  const dashboardName = dataCards?.dashboard?.data.dashboard.title;
+  const dashboardTitle = dataCards?.dashboard?.data.dashboard.title;
   const dataDashboard = dataCards?.dashboard;
   const isPendingDashboard = isPendingCards;
   const errorDashboard = errorCards;
@@ -88,7 +88,7 @@ export const CurrentDashboardProvider: FC<Props> = ({
         dataDashboard,
         isPendingDashboard,
         isLoadingErrorDashboard,
-        dashboardName,
+        dashboardTitle,
         invalidateDashboard,
         cancelDashboardsQuery,
         errorMessageDashboard: errorDashboard?.message,

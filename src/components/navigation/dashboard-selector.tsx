@@ -2,7 +2,7 @@
 
 import CreateDashboardTrigger from "@/components/dashboard/create-dashboard-trigger";
 import { useDashboardsAuto } from "@/components/providers/dashboards-auto-provider";
-import { Button } from "@/components/ui/button";
+import { Button, LinkButton } from "@/components/ui/button";
 
 import {
   DropdownMenu,
@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAsyncRouterPush } from "@/lib/hooks/use-async-router-push";
-import { CheckIcon, ChevronDownIcon, PlusIcon } from "lucide-react";
+import { CheckIcon, ChevronDownIcon, FolderIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -120,7 +120,7 @@ export default function DashboardSelector({}: Props) {
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align="start"
-            className="w-52 max-w-[calc(100vw-4rem)] p-0 flex flex-col max-h-[min(calc((100vh-4rem)*0.7),20rem)] shadow-xl shadow-shadow/[var(--opacity-shadow)]"
+            className="w-56 max-w-[calc(100vw-4rem)] p-0 flex flex-col max-h-[min(calc((100vh-4rem)*0.7),20rem)] shadow-xl shadow-shadow/[var(--opacity-shadow)]"
           >
             {data && (
               <>
@@ -144,9 +144,11 @@ export default function DashboardSelector({}: Props) {
                           <Button
                             size="sm"
                             variant="ghost"
-                            className="w-full justify-start text-left items-center gap-1.25 py-2.25 text-base"
+                            className="w-full px-3 justify-start text-left items-center gap-2 py-2.25 text-base"
                           >
-                            <PlusIcon className="size-5 -my-1 -ml-1.25" />
+                            <div className="size-4 -my-1 -ml-0.5 flex items-center justify-center">
+                              <PlusIcon className="size-5" />
+                            </div>
                             <p className="shrink min-w-0 truncate leading-tight">
                               Create
                             </p>
@@ -154,42 +156,63 @@ export default function DashboardSelector({}: Props) {
                         </DropdownMenuItem>
                       </CreateDashboardTrigger>
                     </DropdownMenuGroup>
-                    <DropdownMenuSeparator className="py-0 my-0" />
+                    <DropdownMenuSeparator className="py-0 my-0 shrink-0" />
                   </>
                 )}
-                <DropdownMenuGroup className="overflow-auto shrink min-w-0 p-1">
-                  {data.dashboards.map((d) => (
+                <div className="w-full flex flex-col overflow-auto shrink min-w-0">
+                  <DropdownMenuGroup className="p-1">
                     <DropdownMenuItem
-                      key={d.dashboard.slug}
                       asChild
-                      className="cursor-pointer font-semibold group/item"
-                      data-item-selected={
-                        d.dashboard.slug === selectedDashboard?.slug
-                          ? true
-                          : undefined
-                      }
+                      className="cursor-pointer font-semibold group/item px-3"
                     >
                       <Link
-                        onClick={() =>
-                          setSelectedDashboard({
-                            title: d.dashboard.title,
-                            slug: d.dashboard.slug,
-                          })
-                        }
-                        href={`/${username}/${d.dashboard.slug}`}
-                        className="w-full flex items-center justify-between"
+                        href={`/${username}`}
+                        className="w-full flex items-center justify-start gap-2"
                       >
+                        <div className="size-4 -my-1 -ml-0.5 flex items-center justify-center">
+                          <FolderIcon className="size-full" />
+                        </div>
                         <p className="min-w-0 shrink leading-tight">
-                          {d.dashboard.title}
+                          All Dashboards
                         </p>
-                        <CheckIcon
-                          className="size-5 -my-1 pointer-events-none select-none -mr-0.5 shrink-0 text-foreground opacity-0 scale-0
-                          group-data-[item-selected]/item:opacity-100 group-data-[item-selected]/item:scale-100 transition"
-                        />
                       </Link>
                     </DropdownMenuItem>
-                  ))}
-                </DropdownMenuGroup>
+                  </DropdownMenuGroup>
+                  <DropdownMenuSeparator className="py-0 my-0 shrink-0" />
+                  <DropdownMenuGroup className="p-1">
+                    {data.dashboards.map((d) => (
+                      <DropdownMenuItem
+                        key={d.dashboard.slug}
+                        asChild
+                        className="cursor-pointer font-semibold group/item"
+                        data-item-selected={
+                          d.dashboard.slug === selectedDashboard?.slug
+                            ? true
+                            : undefined
+                        }
+                      >
+                        <Link
+                          onClick={() =>
+                            setSelectedDashboard({
+                              title: d.dashboard.title,
+                              slug: d.dashboard.slug,
+                            })
+                          }
+                          href={`/${username}/${d.dashboard.slug}`}
+                          className="w-full flex items-center justify-between"
+                        >
+                          <p className="min-w-0 shrink leading-tight">
+                            {d.dashboard.title}
+                          </p>
+                          <CheckIcon
+                            className="size-5 -my-1 pointer-events-none select-none -mr-0.5 shrink-0 text-foreground opacity-0 scale-0
+                            group-data-[item-selected]/item:opacity-100 group-data-[item-selected]/item:scale-100 transition"
+                          />
+                        </Link>
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuGroup>
+                </div>
               </>
             )}
           </DropdownMenuContent>

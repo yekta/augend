@@ -395,7 +395,7 @@ export const uiRouter = createTRPCRouter({
       }
       if (slug === mainDashboardSlug) {
         throw new TRPCError({
-          message: "Cannot delete main dashboard.",
+          message: "Cannot delete the main dashboard.",
           code: "BAD_REQUEST",
         });
       }

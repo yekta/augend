@@ -1,9 +1,16 @@
+import { useDashboards } from "@/app/[username]/_components/dashboards-provider";
+import { useEditModeDashboards } from "@/app/[username]/_components/edit-mode-dashboards-provider";
+import DeleteDashboardTrigger from "@/components/dashboard/delete-dashboard-trigger";
 import { CardsIcon } from "@/components/icons/cards-icon";
-import { EyeIcon, LockIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { mainDashboardSlug } from "@/lib/constants";
+import { EyeIcon, LoaderIcon, LockIcon, XIcon } from "lucide-react";
+import { useState } from "react";
 
 type Props = {
   href?: string;
   title: string;
+  dashboardSlug: string;
   cardCount: number | null;
   isPublic: boolean;
   isOwner: boolean;
@@ -12,21 +19,54 @@ type Props = {
 
 export default function DashboardCard({
   title,
+  dashboardSlug,
   cardCount,
   isPublic,
   isOwner,
   href,
   isPending,
 }: Props) {
-  const Comp = !isPending && href ? "a" : "div";
+  const { invalidate } = useDashboards();
+  const { isEnabled: isEditEnabled } = useEditModeDashboards();
+  const isPendingDeleteDashboard = false;
+  const [open, setOpen] = useState(false);
+  const isMainDashboard = dashboardSlug === mainDashboardSlug;
+
+  const Comp = !isPending && !isEditEnabled && href ? "a" : "div";
   return (
     <Comp
       target="_self"
       href={href}
       data-has-href={!isPending && href !== undefined ? true : undefined}
       data-pending={isPending ? true : undefined}
-      className="col-span-12 md:col-span-6 lg:col-span-4 p-1 group/card"
+      className="col-span-12 md:col-span-6 lg:col-span-4 p-1 group/card relative"
     >
+      {isEditEnabled && isOwner && !isMainDashboard && (
+        <DeleteDashboardTrigger
+          dashboardSlug={dashboardSlug}
+          open={open}
+          onOpenChange={setOpen}
+          dashboardTitle={title}
+          afterSuccess={() => invalidate()}
+        >
+          <Button
+            state={isPendingDeleteDashboard ? "loading" : "default"}
+            size="icon"
+            variant="outline"
+            className="absolute left-0 top-0 size-7 rounded-full z-10 transition text-foreground shadow-md 
+            shadow-shadow/[var(--opacity-shadow)] group-data-[dnd-over]/card:scale-0 group-data-[dnd-dragging]/card:scale-0
+            group-data-[dnd-over]/card:opacity-0 group-data-[dnd-dragging]/card:opacity-0"
+          >
+            <div className="size-4">
+              {isPendingDeleteDashboard ? (
+                <LoaderIcon className="size-full animate-spin" />
+              ) : (
+                <XIcon className="size-full" />
+              )}
+            </div>
+          </Button>
+        </DeleteDashboardTrigger>
+      )}
       <div className="border rounded-xl flex gap-16 flex-col items-start justify-start px-5 pt-4 pb-4.5 overflow-hidden not-touch:group-data-[has-href]/card:group-hover/card:bg-background-hover group-data-[has-href]/card:group-active/card:bg-background-hover">
         <div className="w-full flex items-center justify-between gap-4">
           <h2

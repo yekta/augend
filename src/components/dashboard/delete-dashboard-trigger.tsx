@@ -19,7 +19,7 @@ type Props = {
   children: React.ReactNode;
   afterSuccess?: (props: { username: string; slug: string }) => Promise<void>;
   onMutate?: () => void;
-  dashboardName: string;
+  dashboardTitle: string;
   dashboardSlug: string;
 };
 
@@ -29,7 +29,7 @@ export default function DeleteDashboardTrigger({
   afterSuccess,
   onMutate,
   children,
-  dashboardName,
+  dashboardTitle,
   dashboardSlug,
 }: Props) {
   const [inputValue, setInputValue] = useState("");
@@ -66,7 +66,7 @@ export default function DeleteDashboardTrigger({
             <br />
             Type{" "}
             <span className="bg-foreground/10 px-1 rounded font-bold text-foreground">
-              {dashboardName}
+              {dashboardTitle}
             </span>{" "}
             in the input below to confirm.
           </DialogDescription>
@@ -77,7 +77,7 @@ export default function DeleteDashboardTrigger({
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             className="w-full font-medium"
-            placeholder={dashboardName}
+            placeholder={dashboardTitle}
           />
           {errorDeleteDashboard && (
             <ErrorLine message={errorDeleteDashboard.message} />
@@ -97,7 +97,7 @@ export default function DeleteDashboardTrigger({
               data-pending={isPendingDeleteDashboard ? true : undefined}
               variant="destructive"
               className="group/button"
-              disabled={inputValue !== dashboardName}
+              disabled={inputValue !== dashboardTitle}
             >
               {isPendingDeleteDashboard && (
                 <div className="size-6 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">

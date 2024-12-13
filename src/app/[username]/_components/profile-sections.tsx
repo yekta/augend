@@ -63,6 +63,7 @@ export default function ProfileSections({}: Props) {
               href={`/${username}/${dashboardObject.dashboard.slug}`}
               isPending={isPending}
               key={index}
+              dashboardSlug={dashboardObject.dashboard.slug}
             />
           ))}
       </div>

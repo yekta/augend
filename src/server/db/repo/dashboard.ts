@@ -212,7 +212,7 @@ export async function deleteDashboard({
   if (slug === mainDashboardSlug) {
     throw new TRPCError({
       code: "BAD_REQUEST",
-      message: "Cannot delete main dashboard",
+      message: "Cannot delete the main dashboard",
     });
   }
   await db
