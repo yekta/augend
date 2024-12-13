@@ -58,7 +58,7 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${sans.variable} ${mono.variable} antialiased break-words`}
+        className={`${sans.variable} ${mono.variable} bg-background text-foreground antialiased break-words`}
       >
         <Providers>
           <NextTopLoader
