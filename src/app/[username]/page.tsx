@@ -1,4 +1,6 @@
+import DashboardsGrid from "@/app/[username]/_components/dashboards-grid";
 import DashboardsProvider from "@/app/[username]/_components/dashboards-provider";
+import DndDashboardsProvider from "@/app/[username]/_components/dnd-dashboards-provider";
 import EditModeDashboardsProvider from "@/app/[username]/_components/edit-mode-dashboards-provider";
 import ProfileSections from "@/app/[username]/_components/profile-sections";
 import { ProfileTitleBar } from "@/app/[username]/_components/profile-title-bar";
@@ -21,10 +23,14 @@ type Props = {
 
 export default async function Page({ params }: Props) {
   const { username } = await params;
+  const includeCardCounts = true;
 
   const [user, _] = await Promise.all([
     apiServer.ui.getOtherUser({ username }),
-    apiServer.ui.getDashboards.prefetch({ username, includeCardCounts: true }),
+    apiServer.ui.getDashboards.prefetch({
+      username,
+      includeCardCounts,
+    }),
   ]);
 
   return (
@@ -34,12 +40,10 @@ export default async function Page({ params }: Props) {
         ethereumAddress={user?.ethereumAddress}
       >
         <EditModeDashboardsProvider>
-          <div className="w-full flex flex-col items-center flex-1">
-            <div className="w-full flex flex-col max-w-7xl px-1 pb-16 md:pb-20 md:px-5 pt-1 md:pt-2">
-              <ProfileTitleBar />
-              <ProfileSections />
-            </div>
-          </div>
+          <DashboardsGrid>
+            <ProfileTitleBar />
+            <ProfileSections />
+          </DashboardsGrid>
         </EditModeDashboardsProvider>
       </DashboardsProvider>
     </HydrateClient>

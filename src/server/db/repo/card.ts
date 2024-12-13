@@ -235,12 +235,14 @@ export async function reorderCards({
 
   const finalSql = sql.join(sqlChunks, sql.raw(" "));
 
-  await db
+  const res = await db
     .update(cardsTable)
     .set({ xOrder: finalSql })
     .where(
       and(inArray(cardsTable.id, ids), cardsDashboardBelongsToUser(userId))
-    );
+    )
+    .returning({ id: cardsTable.id, xOrder: cardsTable.xOrder });
+  return res;
 }
 
 export async function getMaximumCardXOrder({

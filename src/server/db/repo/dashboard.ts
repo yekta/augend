@@ -2,7 +2,17 @@ import { mainDashboardSlug } from "@/lib/constants";
 import { db } from "@/server/db/db";
 import { cardsTable, dashboardsTable, usersTable } from "@/server/db/schema";
 import { TRPCError } from "@trpc/server";
-import { and, asc, count, desc, eq, inArray, isNull } from "drizzle-orm";
+import {
+  and,
+  asc,
+  count,
+  desc,
+  eq,
+  inArray,
+  isNull,
+  sql,
+  SQL,
+} from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 
 type SharedProps = {
@@ -92,6 +102,7 @@ export async function getDashboards({
     const res = await db
       .select({
         dashboard: {
+          id: dashboardsTable.id,
           slug: dashboardsTable.slug,
           icon: dashboardsTable.icon,
           title: dashboardsTable.title,
@@ -126,6 +137,7 @@ export async function getDashboards({
   const res = await db
     .select({
       dashboard: {
+        id: dashboardsTable.id,
         slug: dashboardsTable.slug,
         icon: dashboardsTable.icon,
         title: dashboardsTable.title,
@@ -259,6 +271,42 @@ export async function getMaximumDashboardXOrder({
     .limit(1);
   if (res.length === 0) return -1;
   return res[0].xOrder;
+}
+
+export async function reorderDashboards({
+  userId,
+  orderObjects,
+}: {
+  userId: string;
+  orderObjects: { id: string; xOrder: number }[];
+}) {
+  if (orderObjects.length < 1) {
+    throw new Error("orderObjects array must be provided be longer than 0");
+  }
+
+  let sqlChunks: SQL[] = [];
+  let ids: string[] = [];
+
+  sqlChunks.push(sql`(case`);
+
+  for (const orderObject of orderObjects) {
+    sqlChunks.push(
+      sql`when ${dashboardsTable.id} = ${orderObject.id} then ${orderObject.xOrder}::integer`
+    );
+    ids.push(orderObject.id);
+  }
+  sqlChunks.push(sql`end)`);
+
+  const finalSql = sql.join(sqlChunks, sql.raw(" "));
+
+  const res = await db
+    .update(dashboardsTable)
+    .set({ xOrder: finalSql })
+    .where(
+      and(inArray(dashboardsTable.id, ids), eq(dashboardsTable.userId, userId))
+    )
+    .returning({ id: dashboardsTable.id, xOrder: dashboardsTable.xOrder });
+  return res;
 }
 
 export type TGetDashboardResult = ReturnType<typeof getDashboard>;

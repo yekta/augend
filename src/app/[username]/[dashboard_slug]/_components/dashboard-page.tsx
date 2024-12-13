@@ -12,7 +12,6 @@ import ThreeLineCard from "@/components/cards/_utils/three-line-card";
 import { TCurrencyPreference } from "@/components/providers/currency-preference-provider";
 import { TNanoBananoAccountFull } from "@/components/providers/nano-banano-balance-provider";
 import { LinkButton } from "@/components/ui/button";
-import { mainDashboardSlug } from "@/lib/constants";
 import { cleanAndSortArray } from "@/server/redis/cache-utils";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
 import { ReactNode, useMemo } from "react";

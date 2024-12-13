@@ -9,6 +9,7 @@ type TDashboardsContext = {
   isPending: boolean;
   isLoadingError: boolean;
   invalidate: () => Promise<void>;
+  cancelQuery: () => void;
   username: string;
   ethereumAddress?: string | null;
 };
@@ -34,6 +35,8 @@ export const DashboardsProvider: React.FC<Props> = ({
   });
   const invalidate = () =>
     utils.ui.getDashboards.invalidate({ username, includeCardCounts });
+  const cancelQuery = () =>
+    utils.ui.getDashboards.cancel({ username, includeCardCounts });
 
   return (
     <DashboardsContext.Provider
@@ -44,6 +47,7 @@ export const DashboardsProvider: React.FC<Props> = ({
         invalidate,
         username,
         ethereumAddress,
+        cancelQuery,
       }}
     >
       {children}

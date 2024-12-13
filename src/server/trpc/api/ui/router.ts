@@ -19,6 +19,7 @@ import {
   getMaximumDashboardXOrder,
   isDashboardSlugAvailable,
   renameDashboard,
+  reorderDashboards,
 } from "@/server/db/repo/dashboard";
 import {
   changeCurrencyPreference,
@@ -280,8 +281,8 @@ export const uiRouter = createTRPCRouter({
           code: "UNAUTHORIZED",
         });
       }
-      await reorderCards({ userId: session.user.id, orderObjects });
-      return true;
+      const res = await reorderCards({ userId: session.user.id, orderObjects });
+      return res;
     }),
   createDashboard: publicProcedure
     .input(
@@ -407,6 +408,25 @@ export const uiRouter = createTRPCRouter({
         username: session.user.username,
         slug,
       };
+    }),
+  reorderDashboards: publicProcedure
+    .input(
+      z.object({
+        orderObjects: z.array(z.object({ id: z.string(), xOrder: z.number() })),
+      })
+    )
+    .mutation(async function ({ input: { orderObjects }, ctx: { session } }) {
+      if (!session?.user) {
+        throw new TRPCError({
+          message: "Unauthorized",
+          code: "UNAUTHORIZED",
+        });
+      }
+      const res = await reorderDashboards({
+        userId: session.user.id,
+        orderObjects,
+      });
+      return res;
     }),
   getUser: publicProcedure.query(async function ({ ctx: { session } }) {
     if (!session || session.user.id === undefined) {

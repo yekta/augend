@@ -2,6 +2,7 @@
 
 import { CreateDashboardButton } from "@/app/[username]/_components/create-dashboard-button";
 import { useDashboards } from "@/app/[username]/_components/dashboards-provider";
+import { useDndDashboards } from "@/app/[username]/_components/dnd-dashboards-provider";
 import EditButtonDashboards from "@/app/[username]/_components/edit-button-dashboards";
 import Blockies from "@/components/blockies/blockies";
 import { LoaderIcon, TriangleAlertIcon } from "lucide-react";
@@ -10,8 +11,8 @@ type Props = {};
 
 export function ProfileTitleBar({}: Props) {
   const { ethereumAddress, username, data } = useDashboards();
-  const isPendingReorderDashboards = false;
-  const isErrorReorderDashboards = false;
+  const { isPendingReorderDashboards, isErrorReorderDashboards } =
+    useDndDashboards();
 
   return (
     <div className="col-span-12 items-center justify-between flex gap-1.5 px-1 pb-1 md:pb-2">
@@ -19,7 +20,7 @@ export function ProfileTitleBar({}: Props) {
         <Blockies
           width={24}
           height={24}
-          className="size-6 rounded-full -my-1"
+          className="size-6 rounded-full -my-1 shrink-0"
           address={ethereumAddress || username}
         />
         <span className="shrink min-w-0 truncate">{username}</span>
