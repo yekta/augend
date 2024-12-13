@@ -5,6 +5,7 @@ import { CardsIcon } from "@/components/icons/cards-icon";
 import { Button } from "@/components/ui/button";
 import { mainDashboardSlug } from "@/lib/constants";
 import { EyeIcon, LoaderIcon, LockIcon, XIcon } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 
 type Props = {
@@ -32,11 +33,12 @@ export default function DashboardCard({
   const [open, setOpen] = useState(false);
   const isMainDashboard = dashboardSlug === mainDashboardSlug;
 
-  const Comp = !isPending && !isEditEnabled && href ? "a" : "div";
+  const Comp = !isPending && !isEditEnabled && href ? Link : "div";
+
   return (
     <Comp
       target="_self"
-      href={href}
+      href={href!}
       data-has-href={!isPending && href !== undefined ? true : undefined}
       data-pending={isPending ? true : undefined}
       className="col-span-12 md:col-span-6 lg:col-span-4 p-1 group/card relative"
