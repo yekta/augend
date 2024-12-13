@@ -1,6 +1,6 @@
 "use client";
 
-import { useEditMode } from "@/app/[username]/[dashboard_slug]/_components/edit-mode-provider";
+import { useEditModeCards } from "@/app/[username]/[dashboard_slug]/_components/edit-mode-cards-provider";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { PencilIcon, XIcon } from "lucide-react";
@@ -8,8 +8,8 @@ import { PencilIcon, XIcon } from "lucide-react";
 type Props = {
   className?: string;
 };
-export const EditButton = ({ className }: Props) => {
-  const { isEnabled, enable, disable } = useEditMode();
+export default function EditButtonCards({ className }: Props) {
+  const { isEnabled, enable, disable } = useEditModeCards();
   return (
     <Button
       onClick={() => (isEnabled ? disable() : enable())}
@@ -29,4 +29,4 @@ export const EditButton = ({ className }: Props) => {
       </div>
     </Button>
   );
-};
+}

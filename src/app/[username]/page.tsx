@@ -1,5 +1,7 @@
+import DashboardsProvider from "@/app/[username]/_components/dashboards-provider";
+import EditModeDashboardsProvider from "@/app/[username]/_components/edit-mode-dashboards-provider";
 import ProfileSections from "@/app/[username]/_components/profile-sections";
-import Blockies from "@/components/blockies/blockies";
+import { ProfileTitleBar } from "@/app/[username]/_components/profile-title-bar";
 import { siteTitle } from "@/lib/constants";
 import { apiServer, HydrateClient } from "@/server/trpc/setup/server";
 import { Metadata } from "next";
@@ -27,22 +29,19 @@ export default async function Page({ params }: Props) {
 
   return (
     <HydrateClient>
-      <div className="w-full flex flex-col items-center flex-1">
-        <div className="w-full flex flex-col max-w-7xl px-1 pb-16 md:pb-20 md:px-5 pt-1 md:pt-2">
-          <div className="w-full flex flex-col px-1 pb-1 md:pb-2 gap-4">
-            <h1 className="w-full flex items-center gap-2 justify-start border border-transparent px-2 py-1.75 md:py-0.5 font-bold text-xl md:text-2xl leading-none">
-              <Blockies
-                width={24}
-                height={24}
-                className="size-6 rounded-full -my-1"
-                address={user?.ethereumAddress || username}
-              />
-              <span className="shrink min-w-0 truncate">{username}</span>
-            </h1>
+      <DashboardsProvider
+        username={username}
+        ethereumAddress={user?.ethereumAddress}
+      >
+        <EditModeDashboardsProvider>
+          <div className="w-full flex flex-col items-center flex-1">
+            <div className="w-full flex flex-col max-w-7xl px-1 pb-16 md:pb-20 md:px-5 pt-1 md:pt-2">
+              <ProfileTitleBar />
+              <ProfileSections />
+            </div>
           </div>
-          <ProfileSections username={username} />
-        </div>
-      </div>
+        </EditModeDashboardsProvider>
+      </DashboardsProvider>
     </HydrateClient>
   );
 }

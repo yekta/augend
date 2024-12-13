@@ -13,13 +13,13 @@ import {
   useState,
 } from "react";
 
-export const dndItemType = "dnd-item";
+export const dndCardItemType = "dnd-card-item";
 
 function getInstanceId() {
   return Symbol("instance-id");
 }
 
-const DndContext = createContext<{
+const DndCardsContext = createContext<{
   instanceId: symbol;
   orderedIds: string[];
   isPendingReorderCards: boolean;
@@ -28,7 +28,7 @@ const DndContext = createContext<{
 
 type Props = { initialIds: string[]; children: ReactNode };
 
-export default function DndProvider({ initialIds, children }: Props) {
+export default function DndCardsProvider({ initialIds, children }: Props) {
   const [orderedIds, setOrderedIds] = useState(initialIds);
   const { invalidateCards, cancelCardsQuery } = useCurrentDashboard();
   const {
@@ -108,7 +108,7 @@ export default function DndProvider({ initialIds, children }: Props) {
   }, []);
 
   return (
-    <DndContext.Provider
+    <DndCardsContext.Provider
       value={{
         instanceId,
         orderedIds,
@@ -117,14 +117,14 @@ export default function DndProvider({ initialIds, children }: Props) {
       }}
     >
       {children}
-    </DndContext.Provider>
+    </DndCardsContext.Provider>
   );
 }
 
-export const useDnd = () => {
-  const context = useContext(DndContext);
+export const useDndCards = () => {
+  const context = useContext(DndCardsContext);
   if (!context) {
-    throw new Error("DndProvider is required for useDnd to work");
+    throw new Error("DndCardsProvider is required for useDndCards to work");
   }
   return context;
 };

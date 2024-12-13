@@ -1,4 +1,4 @@
-import DndProvider from "@/app/[username]/[dashboard_slug]/_components/dnd-provider";
+import DndCardsProvider from "@/app/[username]/[dashboard_slug]/_components/dnd-cards-provider";
 import { ReactNode } from "react";
 
 export default function DashboardGrid({
@@ -11,7 +11,7 @@ export default function DashboardGrid({
   placeholder?: ReactNode;
 }>) {
   return (
-    <DndProvider initialIds={initialIds}>
+    <DndCardsProvider initialIds={initialIds}>
       <div
         data-placeholder={placeholder ? true : undefined}
         className="w-full group/wrapper flex flex-col flex-1 items-center"
@@ -30,6 +30,6 @@ export default function DashboardGrid({
           </div>
         )}
       </div>
-    </DndProvider>
+    </DndCardsProvider>
   );
 }

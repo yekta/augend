@@ -1,6 +1,6 @@
 "use client";
 
-import { useDashboards } from "@/components/providers/dashboards-provider";
+import { useDashboardsAuto } from "@/components/providers/dashboards-auto-provider";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
 import { api } from "@/server/trpc/setup/react";
 import { createContext, FC, ReactNode, useContext, useEffect } from "react";
@@ -58,7 +58,7 @@ export const CurrentDashboardProvider: FC<Props> = ({
     }
   );
 
-  const { invalidate: invalidateDashboards } = useDashboards();
+  const { invalidate: invalidateDashboards } = useDashboardsAuto();
 
   const dashboardName = dataCards?.dashboard?.data.dashboard.title;
   const dataDashboard = dataCards?.dashboard;

@@ -1,13 +1,12 @@
 import { TRPCReactProvider } from "@/server/trpc/setup/react";
 import React from "react";
 
-import DashboardsProvider from "@/components/providers/dashboards-provider";
+import DashboardsAutoProvider from "@/components/providers/dashboards-auto-provider";
 import { IsTouchscreenProvider } from "@/components/providers/is-touchscreen-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { defaultTheme, themes } from "@/components/providers/themes";
 import WagmiProvider from "@/components/providers/wagmi-provider";
 import { SessionProvider } from "next-auth/react";
-import { HydrateClient } from "@/server/trpc/setup/server";
 
 export default async function Providers({
   children,
@@ -23,7 +22,7 @@ export default async function Providers({
         <SessionProvider>
           <WagmiProvider>
             <IsTouchscreenProvider>
-              <DashboardsProvider>{children}</DashboardsProvider>
+              <DashboardsAutoProvider>{children}</DashboardsAutoProvider>
             </IsTouchscreenProvider>
           </WagmiProvider>
         </SessionProvider>

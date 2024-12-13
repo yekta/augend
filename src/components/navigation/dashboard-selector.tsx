@@ -1,16 +1,9 @@
 "use client";
 
-import ErrorLine from "@/components/error-line";
-import { useDashboards } from "@/components/providers/dashboards-provider";
+import CreateDashboardTrigger from "@/components/create-dashboard-trigger";
+import { useDashboardsAuto } from "@/components/providers/dashboards-auto-provider";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,25 +12,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { useAsyncRouterPush } from "@/lib/hooks/use-async-router-push";
-import { CreateDashboardSchemaUI } from "@/server/trpc/api/ui/types-client";
-import { api } from "@/server/trpc/setup/react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { CheckIcon, ChevronDownIcon, LoaderIcon, PlusIcon } from "lucide-react";
+import { CheckIcon, ChevronDownIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 
 type Props = {};
 
@@ -50,9 +29,11 @@ export default function DashboardSelector({}: Props) {
     isDashboardPath,
     username,
     dashboardSlug,
-  } = useDashboards();
+  } = useDashboardsAuto();
 
   const pathname = usePathname();
+  const asyncRouterPush = useAsyncRouterPush();
+
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isCreateDashboardOpen, setIsCreateDashboardOpen] = useState(false);
 
@@ -147,11 +128,31 @@ export default function DashboardSelector({}: Props) {
                   <>
                     {/* Create Dashboard Button */}
                     <DropdownMenuGroup className="p-1">
-                      <CreateDashboardButton
+                      <CreateDashboardTrigger
                         onDashboardCreated={onDashboardCreated}
                         open={isCreateDashboardOpen}
                         onOpenChange={setIsCreateDashboardOpen}
-                      />
+                        afterSuccess={async (d) => {
+                          const path = `/${d.username}/${d.slug}`;
+                          await asyncRouterPush(path);
+                        }}
+                      >
+                        <DropdownMenuItem
+                          onSelect={(e) => e.preventDefault()}
+                          className="p-0"
+                        >
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="w-full justify-start text-left items-center gap-1.25 py-2.25 text-base"
+                          >
+                            <PlusIcon className="size-5 -my-1 -ml-1.25" />
+                            <p className="shrink min-w-0 truncate leading-tight">
+                              Create
+                            </p>
+                          </Button>
+                        </DropdownMenuItem>
+                      </CreateDashboardTrigger>
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator className="py-0 my-0" />
                   </>
@@ -195,113 +196,5 @@ export default function DashboardSelector({}: Props) {
         </DropdownMenu>
       </>
     )
-  );
-}
-
-function CreateDashboardButton({
-  open,
-  onOpenChange,
-  onDashboardCreated,
-}: {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  onDashboardCreated?: (dashboard: {
-    slug: string;
-    title: string;
-    dashboardId: string;
-  }) => void;
-}) {
-  const form = useForm<z.infer<typeof CreateDashboardSchemaUI>>({
-    resolver: zodResolver(CreateDashboardSchemaUI),
-    defaultValues: {
-      title: "",
-    },
-  });
-  const asyncRouterPush = useAsyncRouterPush();
-
-  const {
-    mutate: createDashboard,
-    isPending,
-    error,
-  } = api.ui.createDashboard.useMutation({
-    onSuccess: async (d) => {
-      const path = `/${d.username}/${d.slug}`;
-      await asyncRouterPush(path);
-      onOpenChange(false);
-      onDashboardCreated?.(d);
-    },
-  });
-
-  function onSubmit(values: z.infer<typeof CreateDashboardSchemaUI>) {
-    createDashboard({
-      title: values.title,
-    });
-  }
-
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogTrigger asChild>
-        <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="p-0">
-          <Button
-            size="sm"
-            variant="ghost"
-            className="w-full justify-start text-left items-center gap-1.25 py-2.25 text-base"
-          >
-            <PlusIcon className="size-5 -my-1 -ml-1.25" />
-            <p className="shrink min-w-0 truncate leading-tight">Create</p>
-          </Button>
-        </DropdownMenuItem>
-      </DialogTrigger>
-      <DialogContent
-        classNameInnerWrapper="gap-4"
-        className="w-full max-w-[22rem]"
-      >
-        <DialogHeader>
-          <DialogTitle>Create Dashboard</DialogTitle>
-          <DialogDescription>Give a name to your dashboard.</DialogDescription>
-        </DialogHeader>
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="w-full flex flex-col gap-3"
-          >
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field }) => (
-                <FormItem className="w-full flex flex-col gap-2">
-                  <FormLabel className="w-full sr-only">
-                    Dashboard Name
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      autoComplete="off"
-                      className="w-full"
-                      placeholder="New Dashboard"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button state={isPending ? "loading" : "default"} type="submit">
-              {isPending && (
-                <>
-                  <p className="text-transparent select-none shrink min-w-0 truncate">
-                    Create
-                  </p>
-                  <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                    <LoaderIcon className="size-full animate-spin" />
-                  </div>
-                </>
-              )}
-              {!isPending && "Create"}
-            </Button>
-          </form>
-        </Form>
-        {error && <ErrorLine message={error.message} />}
-      </DialogContent>
-    </Dialog>
   );
 }

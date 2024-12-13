@@ -1,7 +1,7 @@
 import { useCurrentDashboard } from "@/app/[username]/[dashboard_slug]/_components/current-dashboard-provider";
-import { useDnd } from "@/app/[username]/[dashboard_slug]/_components/dnd-provider";
-import { EditButton } from "@/app/[username]/[dashboard_slug]/_components/edit-button";
-import { useEditMode } from "@/app/[username]/[dashboard_slug]/_components/edit-mode-provider";
+import { useDndCards } from "@/app/[username]/[dashboard_slug]/_components/dnd-cards-provider";
+import EditButtonCards from "@/app/[username]/[dashboard_slug]/_components/edit-button-cards";
+import { useEditModeCards } from "@/app/[username]/[dashboard_slug]/_components/edit-mode-cards-provider";
 import { AddCardButton } from "@/components/cards/_utils/add-card";
 import ErrorLine from "@/components/error-line";
 import { Button } from "@/components/ui/button";
@@ -60,7 +60,7 @@ export function DashboardTitleBar({ username, dashboardSlug, isOwner }: Props) {
   });
 
   const asyncPush = useAsyncRouterPush();
-  const { isPendingReorderCards, isErrorReorderCards } = useDnd();
+  const { isPendingReorderCards, isErrorReorderCards } = useDndCards();
 
   const {
     dashboardName,
@@ -70,7 +70,7 @@ export function DashboardTitleBar({ username, dashboardSlug, isOwner }: Props) {
     cancelDashboardsQuery,
     invalidateDashboards,
   } = useCurrentDashboard();
-  const { isEnabled: isEnabledEdit } = useEditMode();
+  const { isEnabled: isEnabledEdit } = useEditModeCards();
 
   const {
     mutate: renameDashboard,
@@ -318,7 +318,7 @@ export function DashboardTitleBar({ username, dashboardSlug, isOwner }: Props) {
             dashboardSlug={dashboardSlug}
             xOrderPreference="first"
           />
-          <EditButton />
+          <EditButtonCards />
         </div>
       ) : (
         <div className="size-9 -mr-2 shrink-0" />

@@ -1,12 +1,12 @@
 "use client";
 
-import { useEditMode } from "@/app/[username]/[dashboard_slug]/_components/edit-mode-provider";
+import { useEditModeCards } from "@/app/[username]/[dashboard_slug]/_components/edit-mode-cards-provider";
 
 import { useCurrentDashboard } from "@/app/[username]/[dashboard_slug]/_components/current-dashboard-provider";
 import {
-  dndItemType,
-  useDnd,
-} from "@/app/[username]/[dashboard_slug]/_components/dnd-provider";
+  dndCardItemType,
+  useDndCards,
+} from "@/app/[username]/[dashboard_slug]/_components/dnd-cards-provider";
 import ErrorLine from "@/components/error-line";
 import { Button } from "@/components/ui/button";
 import {
@@ -77,13 +77,13 @@ export default function CardOuterWrapper({
 
   const { invalidateCards } = useCurrentDashboard();
 
-  const { isEnabled: isEditModeEnabled } = useEditMode();
+  const { isEnabled: isEditModeCardsEnabled } = useEditModeCards();
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [dndState, setDndState] = useState<TDndState>("idle");
   const [preview, setPreview] = useState<HTMLElement | null>(null);
   const [cardSize, setCardSize] = useState<TSize>(defaultCardSize);
-  const { instanceId } = useDnd();
+  const { instanceId } = useDndCards();
 
   const {
     mutate: deleteCard,
@@ -101,13 +101,13 @@ export default function CardOuterWrapper({
   };
 
   useEffect(() => {
-    if (!isEditModeEnabled || !ref.current) return;
+    if (!isEditModeCardsEnabled || !ref.current) return;
     const el = ref.current;
 
     return combine(
       draggable({
         element: el,
-        getInitialData: () => ({ type: dndItemType, cardId, instanceId }),
+        getInitialData: () => ({ type: dndCardItemType, cardId, instanceId }),
         onDragStart: () => {
           setDndState("dragging");
         },
@@ -135,16 +135,16 @@ export default function CardOuterWrapper({
         getData: () => ({ cardId }),
         canDrop: ({ source }) =>
           source.data.instanceId === instanceId &&
-          source.data.type === dndItemType &&
+          source.data.type === dndCardItemType &&
           source.data.cardId !== cardId,
         onDragEnter: () => setDndState("over"),
         onDragLeave: () => setDndState("idle"),
         onDrop: () => setDndState("idle"),
       })
     );
-  }, [instanceId, isEditModeEnabled, cardId]);
+  }, [instanceId, isEditModeCardsEnabled, cardId]);
 
-  if (isEditModeEnabled && cardId) {
+  if (isEditModeCardsEnabled && cardId) {
     const restDiv = rest as TCardOuterWrapperDivProps;
     return (
       <div
@@ -152,7 +152,7 @@ export default function CardOuterWrapper({
           classNameAll,
           "data-[dnd-active]:data-[dnd-dragging]:opacity-50 relative data-[dnd-active]:cursor-grab data-[dnd-over]:z-20"
         )}
-        data-dnd-active={isEditModeEnabled ? true : undefined}
+        data-dnd-active={isEditModeCardsEnabled ? true : undefined}
         data-dnd-over={dndState === "over" ? true : undefined}
         data-dnd-dragging={dndState === "dragging" ? true : undefined}
         {...restDiv}
@@ -160,11 +160,11 @@ export default function CardOuterWrapper({
       >
         {children}
         {/* To block the content below */}
-        {isEditModeEnabled && (
+        {isEditModeCardsEnabled && (
           <div className="w-full h-full inset-0 absolute z-10" />
         )}
         {/* Vertical indicator */}
-        {isEditModeEnabled && (
+        {isEditModeCardsEnabled && (
           <div className="absolute left-0.5 top-0 py-1 h-full pointer-events-none">
             <div
               className="group-data-[dnd-over]/card:scale-y-100 
@@ -174,14 +174,14 @@ export default function CardOuterWrapper({
           </div>
         )}
         {/* Preview for the dragging element */}
-        {isEditModeEnabled &&
+        {isEditModeCardsEnabled &&
           preview &&
           createPortal(
             <CardPreview className={classNameAll} cardSize={cardSize} />,
             preview
           )}
         {/* Delete card button */}
-        {isEditModeEnabled && isRemovable && cardId && (
+        {isEditModeCardsEnabled && isRemovable && cardId && (
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
               <Button

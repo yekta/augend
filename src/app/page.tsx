@@ -1,5 +1,5 @@
 import CurrentDashboardProvider from "@/app/[username]/[dashboard_slug]/_components/current-dashboard-provider";
-import DndProvider from "@/app/[username]/[dashboard_slug]/_components/dnd-provider";
+import DndCardsProvider from "@/app/[username]/[dashboard_slug]/_components/dnd-cards-provider";
 import { cardTypes } from "@/components/cards/_utils/helpers";
 import CryptoMiniCard from "@/components/cards/crypto-mini/card";
 import CryptoPriceChartCard, {
@@ -208,7 +208,7 @@ async function Providers({
               initialData={cryptoInfosInitialData}
             >
               <ForexRatesProvider initialData={forexRatesInitialData}>
-                <DndProvider initialIds={[]}>{children}</DndProvider>
+                <DndCardsProvider initialIds={[]}>{children}</DndCardsProvider>
               </ForexRatesProvider>
             </CmcCryptoInfosProvider>
           </CmcGlobalMetricsProvider>

@@ -10,19 +10,19 @@ import {
   useState,
 } from "react";
 
-type TEditModeContext = {
+type TEditModeCardsContext = {
   isEnabled: boolean;
   enable: () => void;
   disable: () => void;
 };
 
-const EditModeContext = createContext<TEditModeContext>({
+const EditModeCardsContext = createContext<TEditModeCardsContext>({
   isEnabled: false,
   enable: () => {},
   disable: () => {},
 });
 
-export const EditModeProvider: FC<{
+export const EditModeCardsProvider: FC<{
   children: ReactNode;
 }> = ({ children }) => {
   const [isEnabled, setIsEnabled] = useState(false);
@@ -35,7 +35,7 @@ export const EditModeProvider: FC<{
   }, [hasCards]);
 
   return (
-    <EditModeContext.Provider
+    <EditModeCardsContext.Provider
       value={{
         isEnabled,
         enable: () => setIsEnabled(true),
@@ -43,16 +43,18 @@ export const EditModeProvider: FC<{
       }}
     >
       {children}
-    </EditModeContext.Provider>
+    </EditModeCardsContext.Provider>
   );
 };
 
-export const useEditMode = () => {
-  const context = useContext(EditModeContext);
+export const useEditModeCards = () => {
+  const context = useContext(EditModeCardsContext);
   if (!context) {
-    throw new Error("EditModeProvider is required for useEditMode to work");
+    throw new Error(
+      "EditModeCardsProvider is required for useEditModeCards to work"
+    );
   }
   return context;
 };
 
-export default EditModeProvider;
+export default EditModeCardsProvider;

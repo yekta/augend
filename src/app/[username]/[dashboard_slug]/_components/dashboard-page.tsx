@@ -3,8 +3,8 @@
 import { useCurrentDashboard } from "@/app/[username]/[dashboard_slug]/_components/current-dashboard-provider";
 import DashboardGrid from "@/app/[username]/[dashboard_slug]/_components/dashboard-grid";
 import { DashboardTitleBar } from "@/app/[username]/[dashboard_slug]/_components/dashboard-title-bar";
-import { useDnd } from "@/app/[username]/[dashboard_slug]/_components/dnd-provider";
-import EditModeProvider from "@/app/[username]/[dashboard_slug]/_components/edit-mode-provider";
+import { useDndCards } from "@/app/[username]/[dashboard_slug]/_components/dnd-cards-provider";
+import EditModeCardsProvider from "@/app/[username]/[dashboard_slug]/_components/edit-mode-cards-provider";
 import { AddCardButton } from "@/components/cards/_utils/add-card";
 import { CardParser } from "@/components/cards/_utils/card-parser";
 import { ProvidersForCardTypes } from "@/components/cards/_utils/providers-for-card-types";
@@ -137,7 +137,7 @@ export default function DashboardPage({}: {}) {
   const MainProviders = useMemo(
     () =>
       ({ children }: { children: ReactNode }) => {
-        return <EditModeProvider>{children}</EditModeProvider>;
+        return <EditModeCardsProvider>{children}</EditModeCardsProvider>;
       },
     [username, dashboardSlug]
   );
@@ -267,7 +267,7 @@ function Cards({
   cards: NonNullable<AppRouterOutputs["ui"]["getCards"]>["cards"];
   currencies: NonNullable<AppRouterOutputs["ui"]["getCards"]>["currencies"];
 }) {
-  const { orderedIds } = useDnd();
+  const { orderedIds } = useDndCards();
 
   const orderedCards = orderedIds
     .map((id) => cards.find((c) => c.card.id === id))
