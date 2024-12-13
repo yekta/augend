@@ -11,6 +11,11 @@ body {
   scroll-padding-top: 5rem;
 }
 
+a:focus,
+button:focus {
+  outline: none;
+}
+
 .font-mono {
   font-family: var(--font-mono);
 }

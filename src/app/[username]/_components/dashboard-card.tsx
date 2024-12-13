@@ -60,7 +60,7 @@ export default function DashboardCard({
   const { instanceId } = useDndDashboards();
 
   const wrapperClassName =
-    "col-span-12 md:col-span-6 lg:col-span-4 p-1 group/card relative";
+    "col-span-12 md:col-span-6 lg:col-span-4 xl:col-span-3 h-36 flex flex-col p-1 group/card relative";
 
   useEffect(() => {
     if (!isEditEnabled || !ref.current) return;
@@ -116,16 +116,18 @@ export default function DashboardCard({
     () => () =>
       (
         <div
-          className="border rounded-xl flex gap-16 flex-col items-start justify-start px-5 pt-4 pb-4.5 overflow-hidden
+          className="border rounded-xl flex gap-4 flex-1 flex-col items-start justify-between px-5 pt-4 pb-4.5 overflow-hidden
           not-touch:group-data-[has-href]/card:group-hover/card:bg-background-hover group-data-[has-href]/card:group-active/card:bg-background-hover
           group-data-[dnd-active]/card:overflow-visible group-data-[dnd-over]/card:bg-background group-data-[dnd-over]/card:transition
           group-data-[dnd-active]/card:not-touch:group-hover/card:bg-background-hover
-          [&_*]:group-data-[dnd-active]/card:select-none group-data-[dnd-over]/card:translate-x-1"
+          [&_*]:group-data-[dnd-active]/card:select-none group-data-[dnd-over]/card:translate-x-1
+          group-focus-visible/card:ring-1 group-focus-visible/card:ring-foreground/50 
+          group-focus-visible/card:ring-offset-2 group-focus-visible/card:ring-offset-background"
         >
           <div className="w-full flex items-center justify-between gap-4">
             <h2
-              className="max-w-full shrink min-w-0 truncate font-bold text-xl leading-none
-            group-data-[pending]/card:text-transparent group-data-[pending]/card:bg-foreground group-data-[pending]/card:rounded-md group-data-[pending]/card:animate-skeleton"
+              className="max-w-full shrink min-w-0 truncate font-bold text-lg leading-none
+              group-data-[pending]/card:text-transparent group-data-[pending]/card:bg-foreground group-data-[pending]/card:rounded-md group-data-[pending]/card:animate-skeleton"
             >
               {title}
             </h2>

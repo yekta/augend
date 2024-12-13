@@ -98,7 +98,7 @@ export default function WBanSummaryCard({
               key={network.chain}
               className="w-full overflow-hidden min-w-0 flex items-center justify-start first-of-type:border-t-0 border-t"
             >
-              <div className="md:flex-1 flex items-center justify-start gap-2 pl-4 pr-1 md:px-5 py-5">
+              <div className="md:flex-1 border border-transparent flex items-center justify-start gap-2 pl-4 pr-1 md:px-5 py-5">
                 <IconWithPlaceholder
                   Icon={network.Icon}
                   className="size-5 md:size-6 shrink-0"
@@ -116,7 +116,8 @@ export default function WBanSummaryCard({
               <Link
                 target="_blank"
                 href={getExplorerUrl(network.coldWallet)}
-                className="flex-1 flex items-center justify-start gap-1.5 md:gap-2 px-2 md:px-5 not-touch:hover:bg-background-hover active:bg-background-hover py-4 min-w-0"
+                className="flex-1 flex items-center justify-start gap-1.5 md:gap-2 px-2 md:px-5 not-touch:hover:bg-background-hover active:bg-background-hover 
+                border border-transparent focus-visible:border-foreground/50 py-4 min-w-0"
               >
                 <IconWithPlaceholder
                   Icon={SnowflakeIcon}
@@ -149,7 +150,8 @@ export default function WBanSummaryCard({
               <Link
                 target="_blank"
                 href={getExplorerUrl(network.hotWallet)}
-                className="flex-1 flex items-center justify-start gap-1.5 md:gap-2 px-2 md:px-5 not-touch:hover:bg-background-hover active:bg-background-hover py-4 min-w-0"
+                className="flex-1 flex items-center justify-start gap-1.5 md:gap-2 px-2 md:px-5 not-touch:hover:bg-background-hover active:bg-background-hover py-4 min-w-0
+                border border-transparent focus-visible:border-foreground/50"
               >
                 <IconWithPlaceholder
                   Icon={FlameIcon}
@@ -187,7 +189,7 @@ export default function WBanSummaryCard({
                     ? true
                     : undefined
                 }
-                className="flex-1 flex items-center justify-start gap-1.5 md:gap-2 px-2 md:px-5 rounded-lg py-4 group/pending min-w-0 overflow-hidden"
+                className="flex-1 border border-transparent flex items-center justify-start gap-1.5 md:gap-2 px-2 md:px-5 rounded-lg py-4 group/pending min-w-0 overflow-hidden"
               >
                 <IconWithPlaceholder
                   Icon={HourglassIcon}

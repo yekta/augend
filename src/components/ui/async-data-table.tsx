@@ -261,8 +261,9 @@ export default function AsyncDataTable<T>({
                     <PaginationItem key={i}>
                       <PaginationLink
                         data-active={page.current === adjustedPage}
-                        className="px-0.75 py-1.5 flex w-14 h-10 md:h-10.5 items-center justify-center font-medium group/link transition-none rounded-none border-none text-xs md:text-sm 
-                        text-foreground/50 data-[active=true]:text-foreground bg-transparent not-touch:hover:bg-transparent active:bg-transparent not-touch:hover:text-foreground active:text-foreground"
+                        className="px-0.75 py-1.5 flex w-14 h-10 md:h-10.5 items-center justify-center font-medium group/link transition-none border border-transparent text-xs md:text-sm 
+                        text-foreground/50 data-[active=true]:text-foreground bg-transparent not-touch:hover:bg-transparent active:bg-transparent not-touch:hover:text-foreground active:text-foreground
+                        ring-0 focus-visible:ring-0 focus-visible:border-foreground/50 rounded-md"
                         isActive={page.current === adjustedPage}
                         isButton={true}
                         onClick={() =>

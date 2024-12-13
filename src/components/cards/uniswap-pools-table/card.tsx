@@ -110,13 +110,14 @@ export default function UniswapPoolsTableCard({
               href={`https://app.uniswap.org/explore/pools/${network.toLowerCase()}/${
                 row.original.address
               }`}
-              className="w-full group/link gap-2 md:gap-2.5 text-xs md:text-sm leading-none md:leading-none flex items-center justify-start pl-4 md:pl-5 py-2.5 pr-2 md:pr-4"
+              className="w-full group/link gap-2 md:gap-2.5 text-xs md:text-sm leading-none md:leading-none flex items-center justify-start pl-4 md:pl-5 py-2.5 pr-2 md:pr-4 focus-visible:bg-background-hover"
             >
               <div className="shrink min-w-0 gap-2 md:gap-2.5 flex flex-row items-center">
                 <div className="flex -ml-0.75 flex-col justify-center shrink-0">
                   <div
                     className="bg-background not-touch:group-data-[has-data]/table:group-hover/row:bg-background-hover group-data-[has-data]/table:group-active/row:bg-background-hover rounded-full p-0.5
-                    group-data-[dnd-active]/card:group-hover/card:bg-background-hover group-data-[dnd-active]/card:group-active/card:bg-background-hover"
+                    group-data-[dnd-active]/card:group-hover/card:bg-background-hover group-data-[dnd-active]/card:group-active/card:bg-background-hover
+                    group-data-[has-data]/table:group-focus-visible/link:bg-background-hover"
                   >
                     {isPending ? (
                       PendingIcon
@@ -132,7 +133,8 @@ export default function UniswapPoolsTableCard({
                   </div>
                   <div
                     className="-mt-1.5 z-10 bg-background not-touch:group-data-[has-data]/table:group-hover/row:bg-background-hover group-data-[has-data]/table:group-active/row:bg-background-hover rounded-full p-0.5
-                    group-data-[dnd-active]/card:group-hover/card:bg-background-hover group-data-[dnd-active]/card:group-active/card:bg-background-hover"
+                    group-data-[dnd-active]/card:group-hover/card:bg-background-hover group-data-[dnd-active]/card:group-active/card:bg-background-hover
+                    group-data-[has-data]/table:group-focus-visible/link:bg-background-hover"
                   >
                     {isPending ? (
                       PendingIcon
@@ -191,7 +193,7 @@ export default function UniswapPoolsTableCard({
                       className="opacity-0 shrink-0 -ml-0.5 origin-bottom-left scale-50 pointer-events-none size-3 md:size-4 -my-1 transition
                       not-touch:group-data-[has-data]/table:group-hover/link:opacity-100 not-touch:group-data-[has-data]/table:group-hover/link:scale-100
                       group-data-[has-data]/table:group-active/link:opacity-100 group-data-[has-data]/table:group-active/link:scale-100
-                      "
+                      group-data-[has-data]/table:group-focus-visible/link:opacity-100 group-data-[has-data]/table:group-focus-visible/link:scale-100"
                     />
                   </div>
                 </div>

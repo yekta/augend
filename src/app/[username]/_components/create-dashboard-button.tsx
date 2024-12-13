@@ -9,9 +9,13 @@ import { useState } from "react";
 
 type Props = {
   className?: string;
+  variant?: "icon" | "card";
 };
 
-export const CreateDashboardButton = ({ className }: Props) => {
+export const CreateDashboardButton = ({
+  variant = "icon",
+  className,
+}: Props) => {
   const [open, setOpen] = useState(false);
   const { invalidate } = useDashboards();
   return (
@@ -20,11 +24,29 @@ export const CreateDashboardButton = ({ className }: Props) => {
       onOpenChange={setOpen}
       afterSuccess={() => invalidate()}
     >
-      <Button size="icon" variant="outline" className={cn("size-9", className)}>
-        <div className="size-5.5 transition">
-          <PlusIcon className="size-full" />
-        </div>
-      </Button>
+      {variant === "card" ? (
+        <button className="col-span-12 md:col-span-6 lg:col-span-4 xl:col-span-3 h-36 p-1 group/card relative flex flex-col focus:outline-none">
+          <div
+            className="w-full border flex-1 rounded-xl flex items-center justify-center text-muted-foreground px-8 font-medium py-3 gap-1 
+            not-touch:group-hover/card:bg-background-hover group-active/card:bg-background-hover 
+            group-focus-visible/card:ring-1 group-focus-visible/card:ring-foreground/50 
+            group-focus-visible/card:ring-offset-2 group-focus-visible/card:ring-offset-background"
+          >
+            <PlusIcon className="size-5 shrink-0 -ml-1" />
+            <p className="min-w-0 truncate">Create Dashboard</p>
+          </div>
+        </button>
+      ) : (
+        <Button
+          size="icon"
+          variant="outline"
+          className={cn("size-9", className)}
+        >
+          <div className="size-5.5 transition">
+            <PlusIcon className="size-full" />
+          </div>
+        </Button>
+      )}
     </CreateDashboardTrigger>
   );
 };

@@ -1,5 +1,6 @@
 "use client";
 
+import { CreateDashboardButton } from "@/app/[username]/_components/create-dashboard-button";
 import DashboardCard from "@/app/[username]/_components/dashboard-card";
 import DashboardEmpty from "@/app/[username]/_components/dashboard-empty";
 import { useDashboards } from "@/app/[username]/_components/dashboards-provider";
@@ -72,20 +73,24 @@ export default function ProfileDashboardCards({}: Props) {
             </h2>
           </DashboardEmpty>
         )}
-      {!notActive &&
-        orderedDashboards.map((dashboardObject, index) => (
-          <DashboardCard
-            key={dashboardObject.dashboard.id}
-            title={dashboardObject.dashboard.title}
-            cardCount={dashboardObject.cardCount}
-            isPublic={dashboardObject.dashboard.isPublic}
-            isOwner={data ? data.isOwner : false}
-            href={`/${username}/${dashboardObject.dashboard.slug}`}
-            isPending={isPending || isPendingUser}
-            dashboardSlug={dashboardObject.dashboard.slug}
-            dashboardId={dashboardObject.dashboard.id}
-          />
-        ))}
+      {!notActive && (
+        <>
+          {orderedDashboards.map((dashboardObject, index) => (
+            <DashboardCard
+              key={dashboardObject.dashboard.id}
+              title={dashboardObject.dashboard.title}
+              cardCount={dashboardObject.cardCount}
+              isPublic={dashboardObject.dashboard.isPublic}
+              isOwner={data ? data.isOwner : false}
+              href={`/${username}/${dashboardObject.dashboard.slug}`}
+              isPending={isPending || isPendingUser}
+              dashboardSlug={dashboardObject.dashboard.slug}
+              dashboardId={dashboardObject.dashboard.id}
+            />
+          ))}
+          <CreateDashboardButton variant="card" />
+        </>
+      )}
     </>
   );
 }

@@ -219,7 +219,8 @@ function NameColumn({
           : "#"
       }
       className={cn(
-        `w-full pl-4 md:pl-5 ${paddingRight} gap-2 md:gap-2.5 group/link py-3 flex flex-row items-center overflow-hidden`
+        `w-full pl-4 md:pl-5 ${paddingRight} gap-2 md:gap-2.5 group/link py-3 flex flex-row items-center overflow-hidden
+        focus-visible:bg-background-hover`
       )}
     >
       <div className="-ml-1 md:-ml-0.75 flex flex-col items-center justify-center gap-1.5">
@@ -258,7 +259,8 @@ function NameColumn({
           <ExternalLinkIcon
             className="opacity-0 shrink-0 origin-bottom-left scale-50 pointer-events-none size-3 md:size-4 -my-1 transition
               not-touch:group-data-[has-data]/table:group-hover/link:opacity-100 not-touch:group-data-[has-data]/table:group-hover/link:scale-100
-              group-data-[has-data]/table:group-active/link:opacity-100 group-data-[has-data]/table:group-active/link:scale-100"
+              group-data-[has-data]/table:group-active/link:opacity-100 group-data-[has-data]/table:group-active/link:scale-100
+              group-data-[has-data]/table:group-focus-visible/link:opacity-100 group-data-[has-data]/table:group-focus-visible/link:scale-100"
           />
         </div>
         <p
