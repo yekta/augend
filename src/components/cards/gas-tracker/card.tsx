@@ -20,7 +20,7 @@ import {
   DropletIcon,
   SendIcon,
 } from "lucide-react";
-import { ElementType } from "react";
+import { ElementType, useMemo } from "react";
 import CardInnerWrapper from "@/components/cards/_utils/card-inner-wrapper";
 import { useCurrencyPreference } from "@/components/providers/currency-preference-provider";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
@@ -62,6 +62,11 @@ export default function GasTrackerCard({
         }
       : restAsDiv;
 
+  const NetworkIcon = useMemo(
+    () => () => <CryptoIcon cryptoName={network} className="size-full" />,
+    [network]
+  );
+
   return (
     <CardOuterWrapper
       className={className}
@@ -78,9 +83,7 @@ export default function GasTrackerCard({
             text={conditionalValue(
               `${(data?.block || 10_000_000).toLocaleString(defaultLocale)}`
             )}
-            Icon={() => (
-              <CryptoIcon cryptoName={network} className="size-full" />
-            )}
+            Icon={NetworkIcon}
           />
         </div>
         <div className="flex flex-wrap shrink min-w-0 overflow-hidden items-center justify-center">

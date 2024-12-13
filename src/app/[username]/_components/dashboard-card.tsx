@@ -114,46 +114,47 @@ export default function DashboardCard({
   const shouldRenderLink = !isPending && !isEditEnabled && href;
 
   const CardContent = useMemo(
-    () => (
-      <div
-        className="border rounded-xl flex gap-16 flex-col items-start justify-start px-5 pt-4 pb-4.5 overflow-hidden
+    () => () =>
+      (
+        <div
+          className="border rounded-xl flex gap-16 flex-col items-start justify-start px-5 pt-4 pb-4.5 overflow-hidden
         not-touch:group-data-[has-href]/card:group-hover/card:bg-background-hover group-data-[has-href]/card:group-active/card:bg-background-hover
         group-data-[dnd-active]/card:overflow-visible group-data-[dnd-over]/card:bg-background group-data-[dnd-over]/card:transition
         group-data-[dnd-active]/card:not-touch:group-hover/card:bg-background-hover
         [&_*]:group-data-[dnd-active]/card:select-none group-data-[dnd-over]/card:translate-x-1"
-      >
-        <div className="w-full flex items-center justify-between gap-4">
-          <h2
-            className="max-w-full shrink min-w-0 truncate font-bold text-xl leading-none
+        >
+          <div className="w-full flex items-center justify-between gap-4">
+            <h2
+              className="max-w-full shrink min-w-0 truncate font-bold text-xl leading-none
             group-data-[pending]/card:text-transparent group-data-[pending]/card:bg-foreground group-data-[pending]/card:rounded-md group-data-[pending]/card:animate-skeleton"
-          >
-            {title}
-          </h2>
-          {!isPending && isOwner && (
-            <div className="size-5 -my-1 shrink-0 text-muted-foreground -mr-0.5">
-              {isPublic ? (
-                <EyeIcon className="size-full text-warning" />
-              ) : (
-                <LockIcon className="size-full text-success" />
-              )}
+            >
+              {title}
+            </h2>
+            {!isPending && isOwner && (
+              <div className="size-5 -my-1 shrink-0 text-muted-foreground -mr-0.5">
+                {isPublic ? (
+                  <EyeIcon className="size-full text-warning" />
+                ) : (
+                  <LockIcon className="size-full text-success" />
+                )}
+              </div>
+            )}
+          </div>
+          {cardCount !== null ? (
+            <div className="w-full flex gap-1.5 text-right items-center font-medium justify-end text-muted-foreground text-base">
+              {!isPending && <CardsIcon className="size-4 -my-1" />}
+              <p
+                className="shrink min-w-0 truncate leading-none
+            group-data-[pending]/card:text-transparent group-data-[pending]/card:bg-muted-foreground group-data-[pending]/card:rounded group-data-[pending]/card:animate-skeleton"
+              >
+                {cardCount}
+              </p>
             </div>
+          ) : (
+            <div className="w-full" />
           )}
         </div>
-        {cardCount !== null ? (
-          <div className="w-full flex gap-1.5 text-right items-center font-medium justify-end text-muted-foreground text-base">
-            {!isPending && <CardsIcon className="size-4 -my-1" />}
-            <p
-              className="shrink min-w-0 truncate leading-none
-            group-data-[pending]/card:text-transparent group-data-[pending]/card:bg-muted-foreground group-data-[pending]/card:rounded group-data-[pending]/card:animate-skeleton"
-            >
-              {cardCount}
-            </p>
-          </div>
-        ) : (
-          <div className="w-full" />
-        )}
-      </div>
-    ),
+      ),
     [title, cardCount, isOwner, isPublic, isPending]
   );
 
@@ -170,7 +171,7 @@ export default function DashboardCard({
           "data-[dnd-active]:data-[dnd-dragging]:opacity-50 relative data-[dnd-active]:cursor-grab data-[dnd-over]:z-20"
         )}
       >
-        {CardContent}
+        <CardContent />
         {isEditEnabled && (
           <div className="w-full h-full inset-0 absolute z-10" />
         )}
@@ -229,7 +230,7 @@ export default function DashboardCard({
         className={wrapperClassName}
         href={href}
       >
-        {CardContent}
+        <CardContent />
       </Link>
     );
 
@@ -238,7 +239,7 @@ export default function DashboardCard({
       data-pending={isPending ? true : undefined}
       className={wrapperClassName}
     >
-      {CardContent}
+      <CardContent />
     </div>
   );
 }
