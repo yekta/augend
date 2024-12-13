@@ -24,7 +24,7 @@ input[type="number"]::-webkit-outer-spin-button {
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --background-hover: 250 4% 92%;
+    --background-hover: 0 0% 96%;
     --foreground: 250 25% 4%;
     --card: 0 0% 100%;
     --card-foreground: 250 25% 4%;

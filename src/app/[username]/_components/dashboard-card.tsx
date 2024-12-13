@@ -15,7 +15,7 @@ import {
   dropTargetForElements,
 } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview";
-import { EyeIcon, LoaderIcon, LockIcon, XIcon } from "lucide-react";
+import { EyeIcon, LockIcon, MinusIcon } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -58,7 +58,6 @@ export default function DashboardCard({
   const [preview, setPreview] = useState<HTMLElement | null>(null);
   const [cardSize, setCardSize] = useState<TSize>(defaultCardSize);
   const { instanceId } = useDndDashboards();
-  const isPendingDeleteDashboard = false;
 
   const wrapperClassName =
     "col-span-12 md:col-span-6 lg:col-span-4 p-1 group/card relative";
@@ -118,10 +117,10 @@ export default function DashboardCard({
       (
         <div
           className="border rounded-xl flex gap-16 flex-col items-start justify-start px-5 pt-4 pb-4.5 overflow-hidden
-        not-touch:group-data-[has-href]/card:group-hover/card:bg-background-hover group-data-[has-href]/card:group-active/card:bg-background-hover
-        group-data-[dnd-active]/card:overflow-visible group-data-[dnd-over]/card:bg-background group-data-[dnd-over]/card:transition
-        group-data-[dnd-active]/card:not-touch:group-hover/card:bg-background-hover
-        [&_*]:group-data-[dnd-active]/card:select-none group-data-[dnd-over]/card:translate-x-1"
+          not-touch:group-data-[has-href]/card:group-hover/card:bg-background-hover group-data-[has-href]/card:group-active/card:bg-background-hover
+          group-data-[dnd-active]/card:overflow-visible group-data-[dnd-over]/card:bg-background group-data-[dnd-over]/card:transition
+          group-data-[dnd-active]/card:not-touch:group-hover/card:bg-background-hover
+          [&_*]:group-data-[dnd-active]/card:select-none group-data-[dnd-over]/card:translate-x-1"
         >
           <div className="w-full flex items-center justify-between gap-4">
             <h2
@@ -145,7 +144,7 @@ export default function DashboardCard({
               {!isPending && <CardsIcon className="size-4 -my-1" />}
               <p
                 className="shrink min-w-0 truncate leading-none
-            group-data-[pending]/card:text-transparent group-data-[pending]/card:bg-muted-foreground group-data-[pending]/card:rounded group-data-[pending]/card:animate-skeleton"
+                group-data-[pending]/card:text-transparent group-data-[pending]/card:bg-muted-foreground group-data-[pending]/card:rounded group-data-[pending]/card:animate-skeleton"
               >
                 {cardCount}
               </p>
@@ -201,19 +200,17 @@ export default function DashboardCard({
             afterSuccess={() => invalidate()}
           >
             <Button
-              state={isPendingDeleteDashboard ? "loading" : "default"}
+              aria-label="Delete Dashboard"
               size="icon"
               variant="outline"
-              className="z-30 absolute left-0 top-0 size-7 rounded-full transition text-foreground shadow-md 
+              className="z-30 absolute bg-border left-0 top-0 size-7 rounded-full transition-[opacity,transform] shadow-md 
               shadow-shadow/[var(--opacity-shadow)] group-data-[dnd-over]/card:scale-0 group-data-[dnd-dragging]/card:scale-0
-              group-data-[dnd-over]/card:opacity-0 group-data-[dnd-dragging]/card:opacity-0"
+              group-data-[dnd-over]/card:opacity-0 group-data-[dnd-dragging]/card:opacity-0 text-foreground
+              not-touch:hover:bg-destructive not-touch:hover:text-destructive-foreground
+              active:bg-destructive active:text-destructive-foreground"
             >
               <div className="size-4">
-                {isPendingDeleteDashboard ? (
-                  <LoaderIcon className="size-full animate-spin" />
-                ) : (
-                  <XIcon className="size-full" />
-                )}
+                <MinusIcon className="size-full" />
               </div>
             </Button>
           </DeleteDashboardTrigger>

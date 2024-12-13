@@ -158,7 +158,10 @@ function Gauge({
               }}
               className="w-full h-full"
             >
-              <div className="w-full h-full rounded-full bg-background not-touch:group-data-[has-href]/card:group-hover/card:bg-background-hover group-data-[has-href]:group-active/card:bg-background-hover" />
+              <div
+                className="w-full h-full rounded-full bg-background not-touch:group-data-[has-href]/card:group-hover/card:bg-background-hover 
+                group-data-[has-href]/card:group-active/card:bg-background-hover"
+              />
             </div>
           </div>
         </div>

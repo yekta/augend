@@ -163,7 +163,11 @@ export default function AsyncDataTable<T>({
         className="w-full flex-1 relative overflow-auto flex flex-col"
       >
         <Table className="grid">
-          <TableHeader className="grid bg-background sticky top-0 z-10">
+          <TableHeader
+            className="grid bg-background group-data-[dnd-active]/card:group-hover/card:bg-background-hover 
+            group-data-[dnd-active]/card:group-active/card:bg-background-hover 
+            sticky top-0 z-10"
+          >
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow borderless key={headerGroup.id} className="flex w-full">
                 {headerGroup.headers.map((header, i) => (
@@ -178,7 +182,7 @@ export default function AsyncDataTable<T>({
                     className={cn(
                       "flex overflow-hidden",
                       header.column.getCanSort() &&
-                        "cursor-pointer not-touch:hover:bg-background-hover active:bg-background-hover",
+                        "cursor-pointer not-touch:hover:bg-background-hover active:bg-background-hover group-data-[dnd-active]/card:group-hover/card:bg-background-hover group-data-[dnd-active]/card:group-active/card:bg-background-hover",
                       header.column.getIsPinned() && "bg-background",
                       // @ts-ignore
                       header.column.columnDef.meta?.className ||
@@ -228,7 +232,7 @@ export default function AsyncDataTable<T>({
                       className={cn(
                         "p-0 overflow-hidden",
                         cell.column.getIsPinned() &&
-                          "bg-background not-touch:group-data-[has-data]/table:group-hover/row:bg-background-hover group-data-[has-data]/table:group-active/row:bg-background-hover",
+                          "bg-background not-touch:group-data-[has-data]/table:group-hover/row:bg-background-hover group-data-[has-data]/table:group-active/row:bg-background-hover group-data-[dnd-active]/card:group-hover/card:bg-background-hover group-data-[dnd-active]/card:group-active/card:bg-background-hover",
                         // @ts-ignore
                         cell.column.columnDef.meta?.className ||
                           "min-w-22 md:min-w-32"
@@ -258,7 +262,7 @@ export default function AsyncDataTable<T>({
                       <PaginationLink
                         data-active={page.current === adjustedPage}
                         className="px-0.75 py-1.5 flex w-14 h-10 md:h-10.5 items-center justify-center font-medium group/link transition-none rounded-none border-none text-xs md:text-sm 
-                        text-foreground/50 data-[active=true]:text-foreground not-touch:hover:bg-transparent active:bg-transparent not-touch:hover:text-foreground active:text-foreground"
+                        text-foreground/50 data-[active=true]:text-foreground bg-transparent not-touch:hover:bg-transparent active:bg-transparent not-touch:hover:text-foreground active:text-foreground"
                         isActive={page.current === adjustedPage}
                         isButton={true}
                         onClick={() =>

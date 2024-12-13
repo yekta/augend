@@ -114,7 +114,10 @@ export default function UniswapPoolsTableCard({
             >
               <div className="shrink min-w-0 gap-2 md:gap-2.5 flex flex-row items-center">
                 <div className="flex -ml-0.75 flex-col justify-center shrink-0">
-                  <div className="bg-background not-touch:group-data-[has-data]/table:group-hover/row:bg-background-hover group-data-[has-data]/table:group-active/row:bg-background-hover rounded-full p-0.5">
+                  <div
+                    className="bg-background not-touch:group-data-[has-data]/table:group-hover/row:bg-background-hover group-data-[has-data]/table:group-active/row:bg-background-hover rounded-full p-0.5
+                    group-data-[dnd-active]/card:group-hover/card:bg-background-hover group-data-[dnd-active]/card:group-active/card:bg-background-hover"
+                  >
                     {isPending ? (
                       PendingIcon
                     ) : data ? (
@@ -127,7 +130,10 @@ export default function UniswapPoolsTableCard({
                       ErrorIcon
                     )}
                   </div>
-                  <div className="-mt-1.5 z-10 bg-background not-touch:group-data-[has-data]/table:group-hover/row:bg-background-hover group-data-[has-data]/table:group-active/row:bg-background-hover rounded-full p-0.5">
+                  <div
+                    className="-mt-1.5 z-10 bg-background not-touch:group-data-[has-data]/table:group-hover/row:bg-background-hover group-data-[has-data]/table:group-active/row:bg-background-hover rounded-full p-0.5
+                    group-data-[dnd-active]/card:group-hover/card:bg-background-hover group-data-[dnd-active]/card:group-active/card:bg-background-hover"
+                  >
                     {isPending ? (
                       PendingIcon
                     ) : data ? (

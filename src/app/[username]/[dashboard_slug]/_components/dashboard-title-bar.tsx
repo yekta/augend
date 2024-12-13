@@ -212,9 +212,14 @@ export function DashboardTitleBar({ username, dashboardSlug, isOwner }: Props) {
                 await invalidateDashboards();
               }}
             >
-              <Button size="icon" variant="outline" className="size-9 shrink-0">
-                <div className="size-4.5 transition">
-                  <TrashIcon className="size-full text-destructive" />
+              <Button
+                size="icon"
+                variant="outline"
+                className="size-9 shrink-0 text-destructive not-touch:hover:bg-destructive not-touch:hover:text-destructive-foreground
+                active:bg-destructive active:text-destructive-foreground"
+              >
+                <div className="size-4.5">
+                  <TrashIcon className="size-full" />
                 </div>
               </Button>
             </DeleteDashboardTrigger>

@@ -25,7 +25,7 @@ import {
   dropTargetForElements,
 } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview";
-import { LoaderIcon, XIcon } from "lucide-react";
+import { LoaderIcon, MinusIcon } from "lucide-react";
 import Link from "next/link";
 import { ComponentProps, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -155,6 +155,7 @@ export default function CardOuterWrapper({
         data-dnd-active={isEditModeCardsEnabled ? true : undefined}
         data-dnd-over={dndState === "over" ? true : undefined}
         data-dnd-dragging={dndState === "dragging" ? true : undefined}
+        data-has-href={true}
         {...restDiv}
         ref={ref}
       >
@@ -185,19 +186,22 @@ export default function CardOuterWrapper({
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
               <Button
+                aria-label="Delete Card"
                 state={isPendingDeleteCard ? "loading" : "default"}
                 onClick={() => setIsDialogOpen(true)}
                 size="icon"
                 variant="outline"
-                className="absolute left-0 top-0 size-7 rounded-full z-10 transition text-foreground shadow-md 
-                  shadow-shadow/[var(--opacity-shadow)] group-data-[dnd-over]/card:scale-0 group-data-[dnd-dragging]/card:scale-0
-                  group-data-[dnd-over]/card:opacity-0 group-data-[dnd-dragging]/card:opacity-0"
+                className="absolute bg-border left-0 top-0 size-7 rounded-full z-10 transition-[opacity,transform] text-foreground shadow-md 
+                shadow-shadow/[var(--opacity-shadow)] group-data-[dnd-over]/card:scale-0 group-data-[dnd-dragging]/card:scale-0
+                group-data-[dnd-over]/card:opacity-0 group-data-[dnd-dragging]/card:opacity-0
+                not-touch:hover:bg-destructive not-touch:hover:text-destructive-foreground
+                active:bg-destructive active:text-destructive-foreground"
               >
                 <div className="size-4">
                   {isPendingDeleteCard ? (
                     <LoaderIcon className="size-full animate-spin" />
                   ) : (
-                    <XIcon className="size-full" />
+                    <MinusIcon className="size-full" />
                   )}
                 </div>
               </Button>
@@ -253,6 +257,7 @@ export default function CardOuterWrapper({
       href,
       ...restLink
     } = rest as TCardOuterWrapperLinkProps;
+
     return (
       <Link
         data-has-href={href ? true : undefined}
@@ -265,6 +270,7 @@ export default function CardOuterWrapper({
       </Link>
     );
   }
+
   if ("onClick" in rest && rest.onClick) {
     const restButton = rest as TCardOuterWrapperButtonProps;
     return (
