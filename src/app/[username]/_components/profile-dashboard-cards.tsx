@@ -25,8 +25,16 @@ const placeholderData: AppRouterOutputs["ui"]["getDashboards"] = {
   isOwner: false,
 };
 
-export default function ProfileSections({}: Props) {
-  const { data, isPending, isLoadingError, username } = useDashboards();
+export default function ProfileDashboardCards({}: Props) {
+  const {
+    data,
+    isPending,
+    isLoadingError,
+    notActive,
+    username,
+    isPendingUser,
+    isLoadingErrorUser,
+  } = useDashboards();
   const { orderedIds } = useDndDashboards();
 
   const orderedDashboards = data
@@ -37,6 +45,13 @@ export default function ProfileSections({}: Props) {
 
   return (
     <>
+      {!isPendingUser && !isLoadingErrorUser && !username && (
+        <DashboardEmpty>
+          <h2 className="w-full text-center shrink min-w-0 font-medium text-base text-muted-foreground leading-tight">
+            User doesn't exist.
+          </h2>
+        </DashboardEmpty>
+      )}
       {!isPending && isLoadingError && (
         <DashboardEmpty>
           <h2 className="w-full text-center shrink min-w-0 font-medium text-base text-destructive leading-tight">
@@ -57,7 +72,7 @@ export default function ProfileSections({}: Props) {
             </h2>
           </DashboardEmpty>
         )}
-      {(isPending || (data && data.dashboards.length > 0)) &&
+      {!notActive &&
         orderedDashboards.map((dashboardObject, index) => (
           <DashboardCard
             key={dashboardObject.dashboard.id}
@@ -66,7 +81,7 @@ export default function ProfileSections({}: Props) {
             isPublic={dashboardObject.dashboard.isPublic}
             isOwner={data ? data.isOwner : false}
             href={`/${username}/${dashboardObject.dashboard.slug}`}
-            isPending={isPending}
+            isPending={isPending || isPendingUser}
             dashboardSlug={dashboardObject.dashboard.slug}
             dashboardId={dashboardObject.dashboard.id}
           />

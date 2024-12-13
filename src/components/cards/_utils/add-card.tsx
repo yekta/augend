@@ -92,7 +92,7 @@ export function AddCardButton({
         <DialogTrigger asChild>
           {variant === "icon" ? (
             <Button size="icon" variant="outline" className="size-9">
-              <div className="size-5 transition data-[editing]:rotate-90">
+              <div className="size-5.5 transition data-[editing]:rotate-90">
                 <PlusIcon className="size-full" />
               </div>
             </Button>

@@ -10,20 +10,33 @@ import { LoaderIcon, TriangleAlertIcon } from "lucide-react";
 type Props = {};
 
 export function ProfileTitleBar({}: Props) {
-  const { ethereumAddress, username, data } = useDashboards();
+  const {
+    ethereumAddress,
+    username,
+    usernameParam,
+    data,
+    isPendingUser,
+    isLoadingErrorUser,
+  } = useDashboards();
   const { isPendingReorderDashboards, isErrorReorderDashboards } =
     useDndDashboards();
 
   return (
-    <div className="col-span-12 items-center justify-between flex gap-1.5 px-1 pb-1 md:pb-2">
+    <div
+      data-pending={isPendingUser ? true : undefined}
+      data-error={!isPendingUser && isLoadingErrorUser ? true : undefined}
+      className="col-span-12 group/title items-center justify-between flex gap-1.5 px-1 pb-1 md:pb-2"
+    >
       <h1 className="border flex gap-2 items-center justify-start border-transparent px-2 py-1.75 md:py-0.5 rounded-lg font-bold text-xl md:text-2xl leading-none truncate shrink">
         <Blockies
           width={24}
           height={24}
           className="size-6 rounded-full -my-1 shrink-0"
-          address={ethereumAddress || username}
+          address={ethereumAddress || username || usernameParam}
         />
-        <span className="shrink min-w-0 truncate">{username}</span>
+        <span className="shrink min-w-0 truncate">
+          {username || usernameParam}
+        </span>
       </h1>
       {data?.isOwner ? (
         <div className="flex items-center justify-start shrink-0 gap-1.5">

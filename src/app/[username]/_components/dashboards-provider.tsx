@@ -1,5 +1,6 @@
 "use client";
 
+import { useOtherUser } from "@/app/[username]/_components/other-user-provider";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
 import { api } from "@/server/trpc/setup/react";
 import React, { createContext, ReactNode, useContext } from "react";
@@ -10,33 +11,55 @@ type TDashboardsContext = {
   isLoadingError: boolean;
   invalidate: () => Promise<void>;
   cancelQuery: () => void;
-  username: string;
+  username?: string;
+  usernameParam: string;
   ethereumAddress?: string | null;
+  isPendingUser: boolean;
+  isLoadingErrorUser: boolean;
+  notActive: boolean;
 };
 
 const DashboardsContext = createContext<TDashboardsContext | null>(null);
 
 type Props = {
-  username: string;
-  ethereumAddress?: string | null;
   children: ReactNode;
 };
 
-export const DashboardsProvider: React.FC<Props> = ({
-  username,
-  ethereumAddress,
-  children,
-}) => {
+export const DashboardsProvider: React.FC<Props> = ({ children }) => {
   const utils = api.useUtils();
   const includeCardCounts = true;
-  const { data, isPending, isLoadingError } = api.ui.getDashboards.useQuery({
-    username,
-    includeCardCounts,
-  });
+  const {
+    data: userData,
+    isPending: isPendingUser,
+    isLoadingError: isLoadingErrorUser,
+    usernameParam,
+  } = useOtherUser();
+
+  const { data, isPending, isLoadingError } = api.ui.getDashboards.useQuery(
+    {
+      username: userData?.username!,
+      includeCardCounts,
+    },
+    {
+      enabled: userData !== undefined && userData !== null,
+    }
+  );
+
   const invalidate = () =>
-    utils.ui.getDashboards.invalidate({ username, includeCardCounts });
+    userData
+      ? utils.ui.getDashboards.invalidate({
+          username: userData.username,
+          includeCardCounts,
+        })
+      : Promise.resolve();
+
   const cancelQuery = () =>
-    utils.ui.getDashboards.cancel({ username, includeCardCounts });
+    userData
+      ? utils.ui.getDashboards.cancel({
+          username: userData?.username,
+          includeCardCounts,
+        })
+      : null;
 
   return (
     <DashboardsContext.Provider
@@ -45,9 +68,13 @@ export const DashboardsProvider: React.FC<Props> = ({
         isPending,
         isLoadingError,
         invalidate,
-        username,
-        ethereumAddress,
+        isPendingUser,
+        isLoadingErrorUser,
+        username: userData?.username,
+        usernameParam,
+        ethereumAddress: userData?.ethereumAddress,
         cancelQuery,
+        notActive: !isPendingUser && !isLoadingErrorUser && !userData,
       }}
     >
       {children}

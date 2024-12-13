@@ -130,7 +130,7 @@ export default function DashboardCard({
               {title}
             </h2>
             {!isPending && isOwner && (
-              <div className="size-5 -my-1 shrink-0 text-muted-foreground -mr-0.5">
+              <div className="size-4.5 -my-1 shrink-0 text-muted-foreground -mr-0.5">
                 {isPublic ? (
                   <EyeIcon className="size-full text-warning" />
                 ) : (

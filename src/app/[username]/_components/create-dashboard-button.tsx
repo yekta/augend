@@ -21,7 +21,7 @@ export const CreateDashboardButton = ({ className }: Props) => {
       afterSuccess={() => invalidate()}
     >
       <Button size="icon" variant="outline" className={cn("size-9", className)}>
-        <div className="size-4.5 transition">
+        <div className="size-5.5 transition">
           <PlusIcon className="size-full" />
         </div>
       </Button>

@@ -1,8 +1,8 @@
 import DashboardsGrid from "@/app/[username]/_components/dashboards-grid";
 import DashboardsProvider from "@/app/[username]/_components/dashboards-provider";
-import DndDashboardsProvider from "@/app/[username]/_components/dnd-dashboards-provider";
 import EditModeDashboardsProvider from "@/app/[username]/_components/edit-mode-dashboards-provider";
-import ProfileSections from "@/app/[username]/_components/profile-sections";
+import OtherUserProvider from "@/app/[username]/_components/other-user-provider";
+import ProfileDashboardCards from "@/app/[username]/_components/profile-dashboard-cards";
 import { ProfileTitleBar } from "@/app/[username]/_components/profile-title-bar";
 import { siteTitle } from "@/lib/constants";
 import { apiServer, HydrateClient } from "@/server/trpc/setup/server";
@@ -25,8 +25,8 @@ export default async function Page({ params }: Props) {
   const { username } = await params;
   const includeCardCounts = true;
 
-  const [user, _] = await Promise.all([
-    apiServer.ui.getOtherUser({ username }),
+  await Promise.all([
+    apiServer.ui.getOtherUser.prefetch({ username }),
     apiServer.ui.getDashboards.prefetch({
       username,
       includeCardCounts,
@@ -35,17 +35,16 @@ export default async function Page({ params }: Props) {
 
   return (
     <HydrateClient>
-      <DashboardsProvider
-        username={username}
-        ethereumAddress={user?.ethereumAddress}
-      >
-        <EditModeDashboardsProvider>
-          <DashboardsGrid>
-            <ProfileTitleBar />
-            <ProfileSections />
-          </DashboardsGrid>
-        </EditModeDashboardsProvider>
-      </DashboardsProvider>
+      <OtherUserProvider username={username}>
+        <DashboardsProvider>
+          <EditModeDashboardsProvider>
+            <DashboardsGrid>
+              <ProfileTitleBar />
+              <ProfileDashboardCards />
+            </DashboardsGrid>
+          </EditModeDashboardsProvider>
+        </DashboardsProvider>
+      </OtherUserProvider>
     </HydrateClient>
   );
 }
