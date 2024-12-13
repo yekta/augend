@@ -127,7 +127,7 @@ export const cmcRouter = createTRPCRouter({
 
       return result;
     }),
-  getCoinList: cachedPublicProcedure()
+  getCoinList: cachedPublicProcedure("minutes-short")
     .input(
       z.object({
         convert: z.string().optional().default("USD"),
