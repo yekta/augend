@@ -37,13 +37,13 @@ export default function ProfileSections({ username }: Props) {
                   className="col-span-12 md:col-span-6 lg:col-span-4"
                   key={index}
                 >
-                  <CardInnerWrapper className="flex gap-16 flex-col items-start justify-start px-5 py-4 overflow-hidden not-touch:group-data-[has-href]/card:group-hover/card:bg-background-hover group-data-[has-href]/card:group-active/card:bg-background-hover">
+                  <CardInnerWrapper className="flex gap-16 flex-col items-start justify-start px-5 pt-4 pb-4.5 overflow-hidden not-touch:group-data-[has-href]/card:group-hover/card:bg-background-hover group-data-[has-href]/card:group-active/card:bg-background-hover">
                     <h2 className="max-w-full shrink min-w-0 truncate font-bold text-xl leading-none text-transparent bg-foreground animate-skeleton rounded-md">
                       Loading
                     </h2>
                     <div className="w-full flex gap-1.5 text-right items-center font-medium justify-end text-muted-foreground text-base">
                       <p className="shrink min-w-0 truncate leading-none text-transparent bg-muted-foreground animate-skeleton rounded">
-                        Loading
+                        Load...
                       </p>
                     </div>
                   </CardInnerWrapper>
@@ -83,7 +83,7 @@ export default function ProfileSections({ username }: Props) {
                   className="col-span-12 md:col-span-6 lg:col-span-4"
                   key={`${dashboardObject.dashboard.slug}-${index}`}
                 >
-                  <CardInnerWrapper className="flex gap-16 flex-col items-start justify-start px-5 py-4 overflow-hidden not-touch:group-data-[has-href]/card:group-hover/card:bg-background-hover group-data-[has-href]/card:group-active/card:bg-background-hover">
+                  <CardInnerWrapper className="flex gap-16 flex-col items-start justify-start px-5 pt-4 pb-4.5 overflow-hidden not-touch:group-data-[has-href]/card:group-hover/card:bg-background-hover group-data-[has-href]/card:group-active/card:bg-background-hover">
                     <div className="w-full flex items-center justify-between gap-4">
                       <h2 className="max-w-full shrink min-w-0 truncate font-bold text-xl leading-none">
                         {dashboardObject.dashboard.title}
