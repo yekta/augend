@@ -10,6 +10,7 @@ import {
   usernameBlocklistTable,
   usersTable,
 } from "@/server/db/schema";
+import { EthereumAddressSchema } from "@/server/trpc/api/crypto/ethereum/types";
 import { and, eq, notExists } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 
@@ -180,6 +181,19 @@ export async function getUserFull({
   }
 
   return null;
+}
+
+export async function getOtherUser({ username }: { username: string }) {
+  const res = await db
+    .select({
+      username: usersTable.username,
+      ethereumAddress: usersTable.ethereumAddress,
+    })
+    .from(usersTable)
+    .where(eq(usersTable.username, username))
+    .limit(1);
+  if (res.length === 0) return null;
+  return res[0];
 }
 
 export async function changeUsername({

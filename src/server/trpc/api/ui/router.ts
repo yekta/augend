@@ -23,21 +23,22 @@ import {
 import {
   changeCurrencyPreference,
   changeUsername,
+  getOtherUser,
   getUser,
   getUserFull,
   isUsernameAvailable,
 } from "@/server/db/repo/user";
 import { cleanAndSortArray } from "@/server/redis/cache-utils";
 import { CardValueForAddCardsSchema } from "@/server/trpc/api/ui/types";
-import { createTRPCRouter, publicProcedure } from "@/server/trpc/setup/trpc";
-import { TRPCError } from "@trpc/server";
-import { Session } from "next-auth";
 import {
   ChangeCurrencyPreferenceSchemaUI,
   ChangeUsernameSchemaUI,
   CreateDashboardSchemaUI,
   RenameDashboardSchemaUI,
 } from "@/server/trpc/api/ui/types-client";
+import { createTRPCRouter, publicProcedure } from "@/server/trpc/setup/trpc";
+import { TRPCError } from "@trpc/server";
+import { Session } from "next-auth";
 
 function getIsOwner({
   session,
@@ -74,15 +75,20 @@ export const uiRouter = createTRPCRouter({
   getDashboards: publicProcedure
     .input(
       z.object({
+        includeCardCounts: z.boolean().optional().default(false),
         username: z.string(),
       })
     )
-    .query(async function ({ input: { username }, ctx: { session } }) {
+    .query(async function ({
+      input: { username, includeCardCounts },
+      ctx: { session },
+    }) {
       const isOwner = getIsOwner({ session, username });
 
       const result = await getDashboards({
         isOwner,
         username,
+        includeCardCounts,
       });
 
       return {
@@ -404,24 +410,24 @@ export const uiRouter = createTRPCRouter({
     }),
   getUser: publicProcedure.query(async function ({ ctx: { session } }) {
     if (!session || session.user.id === undefined) {
-      throw new TRPCError({
-        message: "Unauthorized",
-        code: "UNAUTHORIZED",
-      });
+      return null;
     }
     const user = await getUser({ userId: session.user.id });
     return user;
   }),
   getUserFull: publicProcedure.query(async function ({ ctx: { session } }) {
     if (!session || session.user.id === undefined) {
-      throw new TRPCError({
-        message: "Unauthorized",
-        code: "UNAUTHORIZED",
-      });
+      return null;
     }
     const user = await getUserFull({ userId: session.user.id });
     return user;
   }),
+  getOtherUser: publicProcedure
+    .input(z.object({ username: z.string() }))
+    .query(async function ({ input: { username } }) {
+      const user = await getOtherUser({ username });
+      return user;
+    }),
   changeUsername: publicProcedure
     .input(z.object({ ...ChangeUsernameSchemaUI.shape }))
     .mutation(async function ({ input: { newUsername }, ctx: { session } }) {

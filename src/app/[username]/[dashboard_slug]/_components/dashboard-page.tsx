@@ -151,11 +151,8 @@ export default function DashboardPage({}: {}) {
             <p className="text-muted-foreground text-lg max-w-full">
               This dashboard doesn't exist.
             </p>
-            <LinkButton
-              href={`/${username}/${mainDashboardSlug}`}
-              className="mt-5 max-w-full"
-            >
-              Return Home
+            <LinkButton href={`/${username}`} className="mt-5 max-w-full">
+              Return to Profile
             </LinkButton>
           </div>
         </div>

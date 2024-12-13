@@ -2,7 +2,8 @@ import { mainDashboardSlug } from "@/lib/constants";
 import { db } from "@/server/db/db";
 import { cardsTable, dashboardsTable, usersTable } from "@/server/db/schema";
 import { TRPCError } from "@trpc/server";
-import { and, asc, desc, eq, inArray, isNull } from "drizzle-orm";
+import { and, asc, count, desc, eq, inArray, isNull } from "drizzle-orm";
+import { alias } from "drizzle-orm/pg-core";
 
 type SharedProps = {
   username: string;
@@ -72,9 +73,11 @@ export async function getDashboard({
 export async function getDashboards({
   username,
   isOwner,
+  includeCardCounts,
 }: {
   username: string;
   isOwner?: boolean;
+  includeCardCounts?: boolean;
 }) {
   const whereFilter = [
     dashboardBelongsToUsername(username),
@@ -85,15 +88,52 @@ export async function getDashboards({
     whereFilter.push(eq(dashboardsTable.isPublic, true));
   }
 
+  if (includeCardCounts) {
+    const res = await db
+      .select({
+        dashboard: {
+          slug: dashboardsTable.slug,
+          icon: dashboardsTable.icon,
+          title: dashboardsTable.title,
+          isPublic: dashboardsTable.isPublic,
+        },
+        user: {
+          username: usersTable.username,
+        },
+        cardCount: count(cardsTable.id),
+      })
+      .from(dashboardsTable)
+      .where(and(...whereFilter))
+      .innerJoin(usersTable, eq(dashboardsTable.userId, usersTable.id))
+      .leftJoin(cardsTable, eq(dashboardsTable.id, cardsTable.dashboardId))
+      .groupBy(
+        dashboardsTable.slug,
+        dashboardsTable.icon,
+        dashboardsTable.title,
+        dashboardsTable.xOrder,
+        dashboardsTable.createdAt,
+        dashboardsTable.id,
+        usersTable.username
+      )
+      .orderBy(
+        asc(dashboardsTable.xOrder),
+        desc(dashboardsTable.createdAt),
+        desc(dashboardsTable.id)
+      );
+    return res;
+  }
+
   const res = await db
     .select({
       dashboard: {
         slug: dashboardsTable.slug,
         icon: dashboardsTable.icon,
         title: dashboardsTable.title,
+        isPublic: dashboardsTable.isPublic,
       },
       user: {
         username: usersTable.username,
+        ethereumAddress: usersTable.ethereumAddress,
       },
     })
     .from(dashboardsTable)
@@ -104,7 +144,7 @@ export async function getDashboards({
       desc(dashboardsTable.createdAt),
       desc(dashboardsTable.id)
     );
-  return res;
+  return res.map((r) => ({ ...r, cardCount: null }));
 }
 
 export async function createDashboard({

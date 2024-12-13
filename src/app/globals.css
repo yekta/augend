@@ -41,6 +41,8 @@ input[type="number"]::-webkit-outer-spin-button {
     --accent-foreground: 0 0% 9%;
     --destructive: 0 84% 30%;
     --destructive-foreground: 0 0% 100%;
+    --warning: 40 100% 25%;
+    --warning-foreground: 0 0% 100%;
     --success: 130 85% 20%;
     --success-foreground: 0 0% 100%;
     --shadow: 0 0% 0%;
@@ -101,6 +103,8 @@ input[type="number"]::-webkit-outer-spin-button {
     --accent-foreground: 250 50% 93%;
     --destructive: 0 88% 72%;
     --destructive-foreground: 250 25% 4%;
+    --warning: 40 85% 60%;
+    --warning-foreground: 250 25% 4%;
     --success: 130 55% 60%;
     --success-foreground: 250 25% 4%;
     --shadow: 250 25% 4%;
