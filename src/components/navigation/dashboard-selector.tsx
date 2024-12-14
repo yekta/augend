@@ -121,7 +121,7 @@ export default function DashboardSelector({}: Props) {
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align="start"
-            className="w-56 max-w-[calc(100vw-4rem)] max-h-[min(calc((100vh-4rem)*0.9),20rem)] shadow-xl shadow-shadow/[var(--opacity-shadow)]"
+            className="w-60 max-w-[calc(100vw-3.5rem)] max-h-[min(calc((100vh-4rem)*0.9),20rem)] shadow-xl shadow-shadow/[var(--opacity-shadow)]"
           >
             {data && (
               <>
@@ -147,10 +147,10 @@ export default function DashboardSelector({}: Props) {
                             variant="ghost"
                             className="w-full px-3 justify-start text-left items-center gap-2 py-2.25 text-base"
                           >
-                            <div className="size-4 -my-1 -ml-0.5 flex items-center justify-center">
+                            <div className="size-4 shrink-0 -my-1 -ml-0.5 flex items-center justify-center">
                               <PlusIcon className="size-5" />
                             </div>
-                            <p className="shrink min-w-0 truncate leading-tight">
+                            <p className="shrink min-w-0 leading-tight">
                               Create
                             </p>
                           </Button>
@@ -170,7 +170,7 @@ export default function DashboardSelector({}: Props) {
                         href={`/${username}`}
                         className="w-full flex items-center justify-start gap-2"
                       >
-                        <div className="size-4 -my-1 -ml-0.5 flex items-center justify-center">
+                        <div className="size-4 -my-1 shrink-0 -ml-0.5 flex items-center justify-center">
                           <FolderIcon className="size-full" />
                         </div>
                         <p className="min-w-0 shrink leading-tight">
