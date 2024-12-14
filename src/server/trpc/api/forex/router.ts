@@ -1,6 +1,6 @@
 import { env } from "@/lib/env";
 import { metalsDevApi } from "@/server/trpc/api/forex/constants";
-import { TMetalsDevsResult } from "@/server/trpc/api/forex/types";
+import { MetalsDevResultSchema } from "@/server/trpc/api/forex/types";
 import {
   cachedPublicProcedure,
   createTRPCRouter,
@@ -38,9 +38,18 @@ export const forexRouter = createTRPCRouter({
 
     const [forexResult] = await Promise.all([fetch(forexUrl)]);
 
-    const [forexData]: [TMetalsDevsResult] = await Promise.all([
-      forexResult.json(),
-    ]);
+    const [forexData]: [unknown] = await Promise.all([forexResult.json()]);
+
+    const { error: forexParseError, data: parsedForexData } =
+      MetalsDevResultSchema.safeParse(forexData);
+
+    if (forexParseError) {
+      console.log(forexParseError);
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: `Failed to parse forex data: ${forexParseError.message}`,
+      });
+    }
 
     let result: TReturn = {
       USD: {},
@@ -48,8 +57,8 @@ export const forexRouter = createTRPCRouter({
 
     for (const metal of metalObjects) {
       if (
-        forexData.metals[metal.key] === undefined ||
-        forexData.metals[metal.key] === null
+        parsedForexData.metals[metal.key] === undefined ||
+        parsedForexData.metals[metal.key] === null
       ) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
@@ -57,13 +66,13 @@ export const forexRouter = createTRPCRouter({
         });
       }
       result.USD[metal.ticker] = {
-        buy: forexData.metals[metal.key],
+        buy: parsedForexData.metals[metal.key],
       };
     }
 
-    for (const currency in forexData.currencies) {
+    for (const currency in parsedForexData.currencies) {
       result.USD[currency] = {
-        buy: forexData.currencies[currency],
+        buy: parsedForexData.currencies[currency],
       };
     }
 
