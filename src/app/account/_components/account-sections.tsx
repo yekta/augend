@@ -78,7 +78,7 @@ export default function AccountSections({}: Props) {
           <p className="max-w-full font-medium px-1 text-sm text-muted-foreground leading-tight">
             Email
           </p>
-          <div className="max-w-full px-1 py-1 flex items-center justify-start gap-1.5">
+          <div className="max-w-full px-1 py-0.5 flex items-center justify-start gap-1.5">
             <p className="font-bold text-lg leading-tight shrink min-w-0">
               {user?.email}
             </p>
@@ -90,7 +90,7 @@ export default function AccountSections({}: Props) {
           <p className="max-w-full font-medium px-1 text-sm text-muted-foreground leading-tight">
             Ethereum Address
           </p>
-          <div className="max-w-full px-1 py-1 flex items-center justify-start gap-1.5">
+          <div className="max-w-full px-1 py-0.5 flex items-center justify-start gap-1.5">
             <p className="font-bold text-lg leading-tight shrink min-w-0">
               {user?.ethereumAddress}
             </p>
@@ -117,7 +117,7 @@ export default function AccountSections({}: Props) {
         <p className="max-w-full font-medium px-1 text-sm text-muted-foreground leading-tight">
           Created At
         </p>
-        <div className="max-w-full flex px-1 py-1 items-center justify-start gap-1.5">
+        <div className="max-w-full flex px-1 py-0.5 items-center justify-start gap-1.5">
           <p
             className="font-bold leading-tight text-lg group-data-[loading-error]/account:text-destructive 
             group-data-[pending]/account:bg-foreground group-data-[pending]/account:text-transparent group-data-[pending]/account:animate-skeleton
@@ -200,7 +200,7 @@ function UsernameButton({
       <DialogTrigger disabled={isPendingUser} asChild>
         <Button
           variant="ghost"
-          className="flex text-left items-center rounded py-1 pl-1 pr-2 justify-start max-w-full gap-1.5"
+          className="flex text-left items-center rounded py-0.5 pl-1 pr-1.5 justify-start max-w-full gap-1.5"
         >
           {isPendingUser || !user ? (
             <div
@@ -466,7 +466,7 @@ function CurrenciesButton({
       <DialogTrigger disabled={isPendingUser} asChild>
         <Button
           variant="ghost"
-          className="flex text-left items-center rounded pl-1 pr-2 py-1 justify-start max-w-full gap-2"
+          className="flex text-left items-center rounded pl-1 pr-1.5 py-0.5 justify-start max-w-full gap-2"
         >
           <p
             className="font-bold leading-tight text-lg group-data-[loading-error]/account:text-destructive 
