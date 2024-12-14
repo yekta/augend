@@ -81,7 +81,8 @@ export default function UserAvatar({ session }: Props) {
         </DropdownMenuTrigger>
         <DropdownMenuContent
           align="end"
-          className="font-semibold max-h-[min(calc((100vh-4rem)*0.9),20rem)] w-60 max-w-[calc(100vw-1.1rem)] shadow-xl shadow-shadow/[var(--opacity-shadow)]"
+          alignOffset={-1}
+          className="font-semibold max-h-[min(calc((100vh-4rem)*0.9),20rem)] w-60 max-w-[calc(100vw-1rem)] shadow-xl shadow-shadow/[var(--opacity-shadow)]"
         >
           <DropdownMenuGroup>
             <DropdownMenuItem asChild className="px-2.5 py-2.25">

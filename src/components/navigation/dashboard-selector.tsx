@@ -121,7 +121,7 @@ export default function DashboardSelector({}: Props) {
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align="start"
-            className="w-60 max-w-[calc(100vw-3.5rem)] max-h-[min(calc((100vh-4rem)*0.9),20rem)] shadow-xl shadow-shadow/[var(--opacity-shadow)]"
+            className="w-60 max-w-[calc(100vw-3.4rem)] max-h-[min(calc((100vh-4rem)*0.9),20rem)] shadow-xl shadow-shadow/[var(--opacity-shadow)]"
           >
             {data && (
               <>
@@ -168,7 +168,7 @@ export default function DashboardSelector({}: Props) {
                     >
                       <Link
                         href={`/${username}`}
-                        className="w-full flex items-center justify-start gap-2"
+                        className="w-full flex items-center justify-start gap-2 break-wordsa"
                       >
                         <div className="size-4 -my-1 shrink-0 -ml-0.5 flex items-center justify-center">
                           <FolderIcon className="size-full" />

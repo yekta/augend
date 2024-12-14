@@ -139,7 +139,7 @@ function UsernameButton({
   const form = useForm<z.infer<typeof ChangeUsernameSchemaUI>>({
     resolver: zodResolver(ChangeUsernameSchemaUI),
     defaultValues: {
-      newUsername: "",
+      newUsername: user?.username || "",
     },
   });
 
