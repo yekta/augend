@@ -75,7 +75,7 @@ export const usersTable = pgTable(
     username: varchar("username", { ...shortText })
       .unique()
       .notNull()
-      .$defaultFn(() => crypto.randomUUID().replaceAll("-", "").slice(0, 20)),
+      .$defaultFn(() => crypto.randomUUID().replaceAll("-", "").slice(0, 16)),
     email: text("email").unique(),
     emailVerified: timestamp("emailVerified", { mode: "date" }),
     ethereumAddress: varchar("ethereum_address", { length: 42 }).unique(),
