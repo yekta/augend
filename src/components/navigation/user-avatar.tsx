@@ -95,7 +95,7 @@ export default function UserAvatar({ session }: Props) {
                   className="size-5 border rounded-full shrink-0 -ml-0.5 -my-1"
                   address={user.ethereumAddress || user.username}
                 />
-                <p className="font-bold text-sm shrink min-w-0 truncate leading-tight">
+                <p className="font-bold shrink min-w-0 truncate leading-tight">
                   {user.username}
                 </p>
               </Link>
