@@ -7,7 +7,17 @@ import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 
 const Select = SelectPrimitive.Root;
 
-const SelectGroup = SelectPrimitive.Group;
+const SelectGroup = React.forwardRef<
+  React.ElementRef<typeof SelectPrimitive.Group>,
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Group> & {
+    inset?: boolean;
+  }
+>(({ className, inset, children, ...props }, ref) => (
+  <SelectPrimitive.Group ref={ref} className={cn("p-1", className)} {...props}>
+    {children}
+  </SelectPrimitive.Group>
+));
+SelectGroup.displayName = SelectPrimitive.Group.displayName;
 
 const SelectValue = SelectPrimitive.Value;
 
@@ -47,7 +57,7 @@ const SelectScrollUpButton = React.forwardRef<
     )}
     {...props}
   >
-    <ChevronUpIcon className="size-4 -my-1" />
+    <ChevronUpIcon className="size-4 text-muted-more-foreground -my-1" />
   </SelectPrimitive.ScrollUpButton>
 ));
 SelectScrollUpButton.displayName = SelectPrimitive.ScrollUpButton.displayName;
@@ -64,7 +74,7 @@ const SelectScrollDownButton = React.forwardRef<
     )}
     {...props}
   >
-    <ChevronDownIcon className="size-4 -my-1" />
+    <ChevronDownIcon className="size-4 text-muted-more-foreground -my-1" />
   </SelectPrimitive.ScrollDownButton>
 ));
 SelectScrollDownButton.displayName =
@@ -143,7 +153,6 @@ const SelectContent = React.forwardRef<
           <SelectScrollUpButton />
           <SelectPrimitive.Viewport
             className={cn(
-              "p-1",
               position === "popper" &&
                 "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)-2px)]"
             )}

@@ -15,6 +15,7 @@ import Indicator from "@/components/ui/indicator";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
@@ -323,20 +324,22 @@ function SelectCustom({
       </SelectTrigger>
       <SelectContent
         className={cn(
-          "font-semibold w-[var(--radix-select-trigger-width)]",
+          "font-semibold w-[var(--radix-select-trigger-width)] max-h-[min(calc((100vh-2rem)*0.5),20rem)]",
           contentClassName
         )}
       >
-        {options.map((option) => (
-          <SelectItem
-            hideTick
-            className="truncate font-mono text-center"
-            key={option.value}
-            value={option.value}
-          >
-            {option.value}
-          </SelectItem>
-        ))}
+        <SelectGroup>
+          {options.map((option) => (
+            <SelectItem
+              hideTick
+              className="truncate font-mono text-center"
+              key={option.value}
+              value={option.value}
+            >
+              {option.value}
+            </SelectItem>
+          ))}
+        </SelectGroup>
       </SelectContent>
     </Select>
   );
