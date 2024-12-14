@@ -73,6 +73,30 @@ export default function AccountSections({}: Props) {
           />
         </div>
       </div>
+      {user?.email && (
+        <div className="w-full flex flex-col px-1 gap-0.5">
+          <p className="max-w-full font-medium px-1 text-sm text-muted-foreground leading-tight">
+            Email
+          </p>
+          <div className="max-w-full px-1 py-1 flex items-center justify-start gap-1.5">
+            <p className="font-bold text-lg leading-tight shrink min-w-0">
+              {user?.email}
+            </p>
+          </div>
+        </div>
+      )}
+      {user?.ethereumAddress && (
+        <div className="w-full flex flex-col px-1 gap-0.5">
+          <p className="max-w-full font-medium px-1 text-sm text-muted-foreground leading-tight">
+            Ethereum Address
+          </p>
+          <div className="max-w-full px-1 py-1 flex items-center justify-start gap-1.5">
+            <p className="font-bold text-lg leading-tight shrink min-w-0">
+              {user?.ethereumAddress}
+            </p>
+          </div>
+        </div>
+      )}
       <div className="w-full flex flex-col px-1 gap-0.5">
         <p className="max-w-full font-medium px-1 text-sm text-muted-foreground leading-tight">
           Currency Preferences
@@ -187,12 +211,12 @@ function UsernameButton({
             <Blockies
               width={24}
               height={24}
-              className="size-5 rounded-full -my-1"
+              className="size-4.5 shrink-0 rounded-full -my-1"
               address={user.ethereumAddress || user.username}
             />
           )}
           <div className="shrink min-w-0 flex items-center justify-start gap-2">
-            <p className="font-bold text-lg leading-tight">
+            <p className="font-bold text-lg leading-tight shrink min-w-0">
               {user?.username
                 ? user.username
                 : isPendingUser
