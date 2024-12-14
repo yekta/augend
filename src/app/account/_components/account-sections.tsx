@@ -211,7 +211,7 @@ function UsernameButton({
             <Blockies
               width={24}
               height={24}
-              className="size-4.5 shrink-0 rounded-full -my-1"
+              className="size-5 shrink-0 rounded-full -my-1"
               address={user.ethereumAddress || user.username}
             />
           )}
@@ -430,9 +430,7 @@ function CurrenciesButton({
       result.primaryCurrencyId === result.tertiaryCurrencyId ||
       result.secondaryCurrencyId === result.tertiaryCurrencyId
     ) {
-      setValidationError(
-        "Primary, secondary, and tertiary currencies must be different."
-      );
+      setValidationError("Currencies must be different.");
       return;
     }
 

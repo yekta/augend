@@ -488,8 +488,7 @@ export const uiRouter = createTRPCRouter({
         secondaryCurrencyId === tertiaryCurrencyId
       ) {
         throw new TRPCError({
-          message:
-            "Primary, secondary, and tertiary currencies must be different.",
+          message: "Currencies must be different.",
           code: "BAD_REQUEST",
         });
       }

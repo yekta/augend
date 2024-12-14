@@ -68,7 +68,7 @@ export default function UserAvatar({ session }: Props) {
             <Blockies
               width={24}
               height={24}
-              className="size-7 group-data-[pending]/trigger:opacity-0 not-touch:group-hover/trigger:rotate-30 group-active/trigger:rotate-30 
+              className="size-6.5 group-data-[pending]/trigger:opacity-0 not-touch:group-hover/trigger:rotate-30 group-active/trigger:rotate-30 
               transition duration-200 group-data-[open]/trigger:rotate-360 rounded-full"
               address={user.ethereumAddress || user.username}
             />
