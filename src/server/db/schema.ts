@@ -14,7 +14,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccountType } from "next-auth/adapters";
-import { symbol, z } from "zod";
+import { z } from "zod";
 
 const shortText = { length: 20 };
 const mediumText = { length: 32 };

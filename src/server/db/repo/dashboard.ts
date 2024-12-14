@@ -13,7 +13,6 @@ import {
   sql,
   SQL,
 } from "drizzle-orm";
-import { alias } from "drizzle-orm/pg-core";
 
 type SharedProps = {
   username: string;
