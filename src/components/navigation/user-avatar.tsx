@@ -16,6 +16,7 @@ import { LoaderIcon, LogOutIcon, UserIcon } from "lucide-react";
 import { useDisconnect } from "wagmi";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 type Props = {
   session: Session;
@@ -81,7 +82,7 @@ export default function UserAvatar({ session }: Props) {
         <DropdownMenuContent
           align="end"
           sideOffset={8}
-          className="font-semibold w-52 max-w-[calc(100vw-1.1rem)] shadow-xl shadow-shadow/[var(--opacity-shadow)]"
+          className="font-semibold max-h-[min(calc((100vh-4rem)*0.9),20rem)] w-52 max-w-[calc(100vw-1.1rem)] shadow-xl shadow-shadow/[var(--opacity-shadow)]"
         >
           <DropdownMenuGroup>
             <DropdownMenuItem asChild className="px-2.5 py-2.25">
@@ -102,35 +103,35 @@ export default function UserAvatar({ session }: Props) {
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuGroup>
-            <DropdownMenuItem asChild>
-              <Link
-                href="/account"
-                className="w-full flex items-center gap-2.5 text-left leading-tight cursor-pointer"
-                type="submit"
-              >
-                <UserIcon className="size-5 shrink-0 -ml-0.5 -my-1" />
-                <p className="shrink min-w-0 leading-tight">Account</p>
-              </Link>
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-          <DropdownMenuGroup>
-            <DropdownMenuItem asChild className="p-0">
-              <form
-                onSubmit={onSubmitSignOut}
-                action={actionSignOut}
-                className="w-full  flex items-center justify-start"
-              >
-                <button
-                  className="w-full flex items-center px-2.5 gap-2.5 text-left leading-tight py-2.25"
+          <ScrollArea>
+            <DropdownMenuGroup>
+              <DropdownMenuItem asChild>
+                <Link
+                  href="/account"
+                  className="w-full flex items-center gap-2.5 text-left leading-tight cursor-pointer"
                   type="submit"
                 >
-                  <LogOutIcon className="size-5 shrink-0 -ml-0.5 -my-1" />
-                  <p className="shrink min-w-0 leading-tight">Sign Out</p>
-                </button>
-              </form>
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
+                  <UserIcon className="size-5 shrink-0 -ml-0.5 -my-1" />
+                  <p className="shrink min-w-0 leading-tight">Account</p>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild className="p-0">
+                <form
+                  onSubmit={onSubmitSignOut}
+                  action={actionSignOut}
+                  className="w-full  flex items-center justify-start"
+                >
+                  <button
+                    className="w-full flex items-center px-2.5 gap-2.5 text-left leading-tight py-2.25"
+                    type="submit"
+                  >
+                    <LogOutIcon className="size-5 shrink-0 -ml-0.5 -my-1" />
+                    <p className="shrink min-w-0 leading-tight">Sign Out</p>
+                  </button>
+                </form>
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+          </ScrollArea>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

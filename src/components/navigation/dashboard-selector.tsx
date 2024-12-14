@@ -12,6 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { useAsyncRouterPush } from "@/lib/hooks/use-async-router-push";
 import { CheckIcon, ChevronDownIcon, FolderIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
@@ -120,14 +121,14 @@ export default function DashboardSelector({}: Props) {
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align="start"
-            className="w-56 max-w-[calc(100vw-4rem)] p-0 flex flex-col max-h-[min(calc((100vh-4rem)*0.7),20rem)] shadow-xl shadow-shadow/[var(--opacity-shadow)]"
+            className="w-56 max-w-[calc(100vw-4rem)] max-h-[min(calc((100vh-4rem)*0.9),20rem)] shadow-xl shadow-shadow/[var(--opacity-shadow)]"
           >
             {data && (
               <>
                 {data.isOwner && (
                   <>
                     {/* Create Dashboard Button */}
-                    <DropdownMenuGroup className="p-1">
+                    <DropdownMenuGroup>
                       <CreateDashboardTrigger
                         onDashboardCreated={onDashboardCreated}
                         open={isCreateDashboardOpen}
@@ -159,8 +160,8 @@ export default function DashboardSelector({}: Props) {
                     <DropdownMenuSeparator className="py-0 my-0 shrink-0" />
                   </>
                 )}
-                <div className="w-full flex flex-col overflow-auto shrink min-w-0">
-                  <DropdownMenuGroup className="p-1">
+                <ScrollArea>
+                  <DropdownMenuGroup>
                     <DropdownMenuItem
                       asChild
                       className="cursor-pointer font-semibold group/item px-3"
@@ -179,7 +180,7 @@ export default function DashboardSelector({}: Props) {
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator className="py-0 my-0 shrink-0" />
-                  <DropdownMenuGroup className="p-1">
+                  <DropdownMenuGroup>
                     {data.dashboards.map((d) => (
                       <DropdownMenuItem
                         key={d.dashboard.slug}
@@ -212,7 +213,7 @@ export default function DashboardSelector({}: Props) {
                       </DropdownMenuItem>
                     ))}
                   </DropdownMenuGroup>
-                </div>
+                </ScrollArea>
               </>
             )}
           </DropdownMenuContent>
