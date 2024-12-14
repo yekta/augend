@@ -5,6 +5,7 @@ type TNetworkInfoBase = {
   address: (s: string) => string;
   cmcId: number;
   okuSlug: string;
+  uniswapSlug: string;
   uniswapPositionManagerAddress: string;
 };
 
@@ -27,6 +28,7 @@ export const ethereumNetworks: Record<TEthereumNetwork, TNetworkInfo> = {
     gasTracker: "https://etherscan.io/gastracker",
     cmcId: 1027,
     okuSlug: "ethereum",
+    uniswapSlug: "ethereum",
     uniswapPositionManagerAddress: "0xC36442b4a4522E871399CD717aBDD847Ab11FE88",
   },
   Arbitrum: {
@@ -35,6 +37,7 @@ export const ethereumNetworks: Record<TEthereumNetwork, TNetworkInfo> = {
     gasTracker: null,
     cmcId: 11841,
     okuSlug: "arbitrum",
+    uniswapSlug: "arbitrum",
     uniswapPositionManagerAddress: "0xc36442b4a4522e871399cd717abdd847ab11fe88",
   },
   BSC: {
@@ -43,6 +46,7 @@ export const ethereumNetworks: Record<TEthereumNetwork, TNetworkInfo> = {
     gasTracker: "https://bscscan.com/gastracker",
     cmcId: 1839,
     okuSlug: "bsc",
+    uniswapSlug: "bsc",
     uniswapPositionManagerAddress: "0x7b8a01b39d58278b5de7e48c8449c9f4f5170613",
   },
 };

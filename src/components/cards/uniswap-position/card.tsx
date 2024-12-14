@@ -73,7 +73,7 @@ export default function UniswapPositionCard({
       },
       defaultQueryOptions.fast
     );
-  const href = `https://app.ethereum.uniswap.org/pools/${positionId}`;
+  const href = `https://app.uniswap.org/positions/v3/${ethereumNetworks[network].uniswapSlug}/${positionId}`;
 
   const [isSwapsOpen, setIsSwapsOpen] = useState(false);
 
