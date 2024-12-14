@@ -7,3 +7,19 @@ export type TForexQuote = {
   askSize: number;
   midPrice: number;
 };
+
+export type TMetalsDevsResult = {
+  status: string;
+  currency: string;
+  unit: string;
+  metals: {
+    [key: string]: number;
+  };
+  currencies: {
+    [key: string]: number;
+  };
+  timestamps: {
+    metal: string;
+    currency: string;
+  };
+};
