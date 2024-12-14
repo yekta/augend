@@ -12,7 +12,7 @@ import { useConditionalValue } from "@/lib/hooks/use-conditional-value";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
 import { ethereumNetworks } from "@/server/trpc/api/crypto/ethereum/constants";
-import { TEthereumNetwork } from "@/server/trpc/api/crypto/ethereum/types";
+import { TEthereumNetwork } from "@/server/trpc/api/crypto/ethereum/constants";
 import { api } from "@/server/trpc/setup/react";
 import {
   ArrowRightLeftIcon,
@@ -32,12 +32,12 @@ export default function GasTrackerCard({
   ...rest
 }: TCardOuterWrapperProps & {
   network: TEthereumNetwork;
-  initialData?: AppRouterOutputs["crypto"]["ethereum"]["getGasInfo"];
+  initialData?: AppRouterOutputs["crypto"]["ethereum"]["general"]["getGasInfo"];
 }) {
   const currencyPreference = useCurrencyPreference();
   const convertCurrency = currencyPreference.primary;
   const { data, isPending, isError, isLoadingError, isRefetching } =
-    api.crypto.ethereum.getGasInfo.useQuery(
+    api.crypto.ethereum.general.getGasInfo.useQuery(
       {
         network,
         convert: convertCurrency.ticker,

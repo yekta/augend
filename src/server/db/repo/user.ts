@@ -10,7 +10,7 @@ import {
   usernameBlocklistTable,
   usersTable,
 } from "@/server/db/schema";
-import { EthereumAddressSchema } from "@/server/trpc/api/crypto/ethereum/types";
+import { EthereumAddressSchema } from "@/server/trpc/api/crypto/ethereum/constants";
 import { and, eq, notExists } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 

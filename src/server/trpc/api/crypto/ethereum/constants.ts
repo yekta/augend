@@ -1,4 +1,3 @@
-import { TEthereumNetwork } from "@/server/trpc/api/crypto/ethereum/types";
 import { z } from "zod";
 
 type TNetworkInfoBase = {
@@ -8,12 +7,15 @@ type TNetworkInfoBase = {
   okuSlug: string;
   uniswapPositionManagerAddress: string;
 };
+
 type TNetworkInfoWithGasTrack = TNetworkInfoBase & {
   gasTracker: null;
 };
+
 type TNetworkInfoWithGasTracker = TNetworkInfoBase & {
   gasTracker: string;
 };
+
 type TNetworkInfo = TNetworkInfoWithGasTrack | TNetworkInfoWithGasTracker;
 
 export const EthereumNetworkSchema = z.enum(["Ethereum", "Arbitrum", "BSC"]);
@@ -44,3 +46,12 @@ export const ethereumNetworks: Record<TEthereumNetwork, TNetworkInfo> = {
     uniswapPositionManagerAddress: "0x7b8a01b39d58278b5de7e48c8449c9f4f5170613",
   },
 };
+
+export type TEthereumNetwork = z.infer<typeof EthereumNetworkSchema>;
+
+const isEthereumAddress = (address: string): boolean =>
+  /^0x[a-fA-F0-9]{40}$/.test(address);
+
+export const EthereumAddressSchema = z.string().refine(isEthereumAddress, {
+  message: "Invalid Ethereum address",
+});

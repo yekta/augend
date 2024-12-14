@@ -1,8 +1,8 @@
 import "server-only";
 
-import { TEthereumNetwork } from "@/server/trpc/api/crypto/ethereum/types";
 import { env } from "@/lib/env";
 import { Alchemy, Network } from "alchemy-sdk";
+import { TEthereumNetwork } from "@/server/trpc/api/crypto/ethereum/constants";
 
 export const ethereumProviders: Record<TEthereumNetwork, Alchemy> = {
   Ethereum: new Alchemy({

@@ -12,8 +12,8 @@ import AsyncDataTable, {
 import { defaultQueryOptions } from "@/lib/constants";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
-import { TEthereumNetwork } from "@/server/trpc/api/crypto/ethereum/types";
-import { TUniswapPoolsResult } from "@/server/trpc/api/crypto/uniswap/types";
+import { TEthereumNetwork } from "@/server/trpc/api/crypto/ethereum/constants";
+import { TUniswapPoolsResult } from "@/server/trpc/api/crypto/ethereum/uniswap/types";
 import { api } from "@/server/trpc/setup/react";
 import { SortingState } from "@tanstack/react-table";
 import { ExternalLinkIcon } from "lucide-react";
@@ -70,7 +70,10 @@ export default function UniswapPoolsTableCard({
   ]);
 
   const { data, isLoadingError, isPending, isError, isRefetching } =
-    api.crypto.uniswap.getPools.useQuery({ network }, defaultQueryOptions.slow);
+    api.crypto.ethereum.uniswap.getPools.useQuery(
+      { network },
+      defaultQueryOptions.slow
+    );
 
   const dataOrFallback = useMemo(() => {
     if (!data) return dataFallback;
@@ -107,7 +110,7 @@ export default function UniswapPoolsTableCard({
           return (
             <Component
               target="_blank"
-              href={`https://app.uniswap.org/explore/pools/${network.toLowerCase()}/${
+              href={`https://app.ethereum.uniswap.org/explore/pools/${network.toLowerCase()}/${
                 row.original.address
               }`}
               className="w-full group/link gap-2 md:gap-2.5 text-xs md:text-sm leading-none md:leading-none flex items-center justify-start pl-4 md:pl-5 py-2.5 pr-2 md:pr-4 focus-visible:bg-background-hover"

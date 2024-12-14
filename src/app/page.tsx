@@ -19,7 +19,7 @@ import { defaultCurrencyPreference, mainDashboardSlug } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { auth } from "@/server/auth/auth";
 import { cleanAndSortArray } from "@/server/redis/cache-utils";
-import { TEthereumNetwork } from "@/server/trpc/api/crypto/ethereum/types";
+import { TEthereumNetwork } from "@/server/trpc/api/crypto/ethereum/constants";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
 import { apiServerStatic, HydrateClient } from "@/server/trpc/setup/server";
 import { unstable_cache as unstableCache } from "next/cache";
@@ -61,7 +61,7 @@ export default async function Home() {
           ids: finalCryptoIds,
         }),
         apiServerStatic.forex.getRates(),
-        apiServerStatic.crypto.ethereum.getGasInfo({
+        apiServerStatic.crypto.ethereum.general.getGasInfo({
           network: gasTrackerNetwork,
           convert: defaultCurrencyPreference.primary.ticker,
         }),

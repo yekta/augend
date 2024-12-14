@@ -138,7 +138,7 @@ export function CardValueCombobox<T>({
           <Command
             shouldFilter={isPending || isLoadingError ? false : true}
             data-pending={isPending ? true : undefined}
-            className="max-h-[15.5rem] group/command"
+            className="max-h-[18rem] group/command"
           >
             <CommandInput placeholder={inputPlaceholder} />
             <CommandList>

@@ -8,7 +8,7 @@ import {
   ethereumNetworks,
   EthereumNetworkSchema,
 } from "@/server/trpc/api/crypto/ethereum/constants";
-import { TEthereumNetwork } from "@/server/trpc/api/crypto/ethereum/types";
+import { TEthereumNetwork } from "@/server/trpc/api/crypto/ethereum/constants";
 import { Dispatch, SetStateAction, useMemo, useState } from "react";
 
 export function GasTrackerValueForm({

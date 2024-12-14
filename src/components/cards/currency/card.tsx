@@ -3,10 +3,12 @@
 import { TCardOuterWrapperProps } from "@/components/cards/_utils/card-outer-wrapper";
 import ThreeLineCard from "@/components/cards/_utils/three-line-card";
 import CryptoIcon from "@/components/icons/crypto-icon";
+import ForexIcon from "@/components/icons/forex-icon";
 import { useCmcCryptoInfos } from "@/components/providers/cmc/cmc-crypto-infos-provider";
 import { useForexRates } from "@/components/providers/forex-rates-provider";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { TCurrencyWithSelectedFields } from "@/server/db/repo/types";
+import { useMemo } from "react";
 
 export default function CurrencyCard({
   baseCurrency,
@@ -49,49 +51,53 @@ export default function CurrencyCard({
   const baseInQuote =
     baseInUsd && quoteInUsd ? baseInUsd / quoteInUsd : undefined;
 
+  const Top = useMemo(() => {
+    return (
+      <div className="max-w-full flex items-center justify-center gap-0.25">
+        <div className="size-4 p-0.25 -my-2 shrink-0">
+          {baseCurrency.isCrypto && baseCurrency.coinId ? (
+            <CryptoIcon
+              cryptoName={baseCurrency.ticker}
+              className="size-full"
+            />
+          ) : (
+            <ForexIcon
+              ticker={baseCurrency.ticker}
+              symbol={baseCurrency.symbol}
+              className="size-full"
+            />
+          )}
+        </div>
+        <div className="shrink min-w-0 truncate">{baseCurrency.ticker}</div>
+      </div>
+    );
+  }, [baseCurrency]);
+
+  const Middle = useMemo(() => {
+    if (baseInQuote === undefined) return undefined;
+    if (quoteCurrency.isCrypto && quoteCurrency.coinId) {
+      return (
+        <div className="max-w-full flex items-center justify-center">
+          <div className="size-6 p-0.25 -my-2 shrink-0">
+            <CryptoIcon
+              cryptoName={quoteCurrency.ticker}
+              className="size-full"
+            />
+          </div>
+          <div className="shrink min-w-0 truncate">
+            {formatNumberTBMK(baseInQuote)}
+          </div>
+        </div>
+      );
+    }
+    return `${quoteCurrency.symbol}${formatNumberTBMK(baseInQuote)}`;
+  }, [quoteCurrency, baseInQuote]);
+
   return (
     <ThreeLineCard
       className={className}
-      top={(() => {
-        if (baseCurrency.isCrypto && baseCurrency.coinId) {
-          return (
-            <div className="max-w-full flex items-center justify-center gap-0.25">
-              <div className="size-4 p-0.25 -my-2 shrink-0">
-                <CryptoIcon
-                  cryptoName={baseCurrency.ticker}
-                  className="size-full"
-                />
-              </div>
-              <div className="shrink min-w-0 truncate">
-                {baseCurrency.ticker}
-              </div>
-            </div>
-          );
-        }
-        return `${baseCurrency.symbol} ${baseCurrency.ticker}`;
-      })()}
-      middle={
-        baseInQuote
-          ? (() => {
-              if (quoteCurrency.isCrypto && quoteCurrency.coinId) {
-                return (
-                  <div className="max-w-full flex items-center justify-center">
-                    <div className="size-6 p-0.25 -my-2 shrink-0">
-                      <CryptoIcon
-                        cryptoName={quoteCurrency.ticker}
-                        className="size-full"
-                      />
-                    </div>
-                    <div className="shrink min-w-0 truncate">
-                      {formatNumberTBMK(baseInQuote)}
-                    </div>
-                  </div>
-                );
-              }
-              return `${quoteCurrency.symbol}${formatNumberTBMK(baseInQuote)}`;
-            })()
-          : undefined
-      }
+      top={Top}
+      middle={Middle}
       bottom={`${baseCurrency.ticker}/${quoteCurrency.ticker}`}
       isPending={isPending}
       isRefetching={isRefetching}

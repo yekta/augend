@@ -85,6 +85,32 @@ export function CalculatorValueForm({
     setLastCurrencyError(null);
   };
 
+  const Icon = useMemo(
+    () =>
+      ({ value, className }: { value: string | null; className?: string }) => {
+        if (!currencies) return null;
+        const idx = currencies.findIndex((c) => c.ticker === value);
+        if (idx === -1) return null;
+        const currency = currencies[idx];
+        if (currency.isCrypto) {
+          return (
+            <CryptoIcon
+              cryptoName={currency.ticker}
+              className={cn("text-foreground", className)}
+            />
+          );
+        }
+        return (
+          <ForexIcon
+            ticker={currency.ticker}
+            symbol={currency.symbol}
+            className={cn("text-foreground", className)}
+          />
+        );
+      },
+    [currencies]
+  );
+
   return (
     <CardValuesFormWrapper onSubmit={onFormSubmitLocal}>
       {selectedCurrencies.length > 0 && (
@@ -98,27 +124,7 @@ export function CalculatorValueForm({
                 iconValue={
                   currencies?.find((c) => getValue(c) === currency)?.ticker
                 }
-                Icon={({ value, className }) => {
-                  if (!currencies) return null;
-                  const idx = currencies.findIndex((c) => c.ticker === value);
-                  if (idx === -1) return null;
-                  const currency = currencies[idx];
-                  if (currency.isCrypto) {
-                    return (
-                      <CryptoIcon
-                        cryptoName={currency.ticker}
-                        className={cn("text-foreground", className)}
-                      />
-                    );
-                  }
-                  return (
-                    <ForexIcon
-                      ticker={currency.ticker}
-                      symbol={currency.symbol}
-                      className={cn("text-foreground", className)}
-                    />
-                  );
-                }}
+                Icon={Icon}
                 value={currency}
                 setValue={(value) => null}
                 onValueChange={(value) => {
@@ -169,27 +175,7 @@ export function CalculatorValueForm({
             iconValue={
               currencies?.find((c) => getValue(c) === lastCurrencyValue)?.ticker
             }
-            Icon={({ value, className }) => {
-              if (!currencies) return null;
-              const idx = currencies.findIndex((c) => c.ticker === value);
-              if (idx === -1) return null;
-              const currency = currencies[idx];
-              if (currency.isCrypto) {
-                return (
-                  <CryptoIcon
-                    cryptoName={currency.ticker}
-                    className={cn("text-foreground", className)}
-                  />
-                );
-              }
-              return (
-                <ForexIcon
-                  ticker={currency.ticker}
-                  symbol={currency.symbol}
-                  className={cn("text-foreground", className)}
-                />
-              );
-            }}
+            Icon={Icon}
             inputErrorMessage={lastCurrencyError}
             value={lastCurrencyValue}
             onValueChange={(value) => {

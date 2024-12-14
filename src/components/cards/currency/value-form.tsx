@@ -3,6 +3,7 @@ import CardValuesFormSubmitButton from "@/components/cards/_utils/values-form/ca
 import CardValuesFormWrapper from "@/components/cards/_utils/values-form/card-values-form-wrapper";
 import { TValueFormProps } from "@/components/cards/_utils/values-form/types";
 import CryptoIcon from "@/components/icons/crypto-icon";
+import ForexIcon from "@/components/icons/forex-icon";
 import { cn } from "@/lib/utils";
 import { api } from "@/server/trpc/setup/react";
 import { useMemo, useState } from "react";
@@ -90,6 +91,32 @@ export function CurrencyValueForm({
     setBaseCurrencyError(null);
   };
 
+  const Icon = useMemo(
+    () =>
+      ({ value, className }: { value: string | null; className?: string }) => {
+        if (!currencies) return null;
+        const idx = currencies.findIndex((c) => c.ticker === value);
+        if (idx === -1) return null;
+        const currency = currencies[idx];
+        if (currency.isCrypto) {
+          return (
+            <CryptoIcon
+              cryptoName={currency.ticker}
+              className={cn("text-foreground", className)}
+            />
+          );
+        }
+        return (
+          <ForexIcon
+            ticker={currency.ticker}
+            symbol={currency.symbol}
+            className={cn("text-foreground", className)}
+          />
+        );
+      },
+    [currencies]
+  );
+
   return (
     <CardValuesFormWrapper onSubmit={onFormSubmitLocal}>
       <CardValueCombobox
@@ -98,30 +125,7 @@ export function CurrencyValueForm({
         iconValue={
           currencies?.find((c) => getValue(c) === baseCurrencyValue)?.ticker
         }
-        Icon={({ value, className }) => {
-          if (!currencies) return null;
-          const idx = currencies.findIndex((c) => c.ticker === value);
-          if (idx === -1) return null;
-          const currency = currencies[idx];
-          if (currency.isCrypto) {
-            return (
-              <CryptoIcon
-                cryptoName={currency.ticker}
-                className={cn("text-foreground", className)}
-              />
-            );
-          }
-          return (
-            <p
-              className={cn(
-                "text-foreground text-center leading-tight",
-                className
-              )}
-            >
-              {currency.symbol}
-            </p>
-          );
-        }}
+        Icon={Icon}
         inputErrorMessage={baseCurrencyError}
         value={baseCurrencyValue}
         onValueChange={(value) => {
@@ -143,30 +147,7 @@ export function CurrencyValueForm({
         iconValue={
           currencies?.find((c) => getValue(c) === quoteCurrencyValue)?.ticker
         }
-        Icon={({ value, className }) => {
-          if (!currencies) return null;
-          const idx = currencies.findIndex((c) => c.ticker === value);
-          if (idx === -1) return null;
-          const currency = currencies[idx];
-          if (currency.isCrypto) {
-            return (
-              <CryptoIcon
-                cryptoName={currency.ticker}
-                className={cn("text-foreground", className)}
-              />
-            );
-          }
-          return (
-            <p
-              className={cn(
-                "text-foreground text-center leading-tight",
-                className
-              )}
-            >
-              {currency.symbol}
-            </p>
-          );
-        }}
+        Icon={Icon}
         inputErrorMessage={quoteCurrencyError}
         value={quoteCurrencyValue}
         onValueChange={(value) => {
