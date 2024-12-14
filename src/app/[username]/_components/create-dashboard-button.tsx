@@ -33,7 +33,7 @@ export const CreateDashboardButton = ({
             group-focus-visible/card:ring-offset-2 group-focus-visible/card:ring-offset-background"
           >
             <PlusIcon className="size-5 shrink-0 -ml-1" />
-            <p className="min-w-0 truncate">Create Dashboard</p>
+            <p className="min-w-0 truncate">Create dashboard</p>
           </div>
         </button>
       ) : (
