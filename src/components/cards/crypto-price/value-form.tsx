@@ -10,6 +10,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import CardVariantFormItem from "@/components/cards/_utils/values-form/form-item-card-variant";
+
+const VariantEnum = z.enum(["default", "mini"]);
+type TCardVariant = z.infer<typeof VariantEnum>;
 
 export default function CryptoPriceValueForm({
   onFormSubmit,
@@ -39,6 +43,7 @@ export default function CryptoPriceValueForm({
 
   const FormSchema = useMemo(() => {
     return z.object({
+      variant: VariantEnum,
       coinValue: z
         .string()
         .refine(
@@ -67,6 +72,7 @@ export default function CryptoPriceValueForm({
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
+      variant: "default",
       coinValue: "",
     },
   });
@@ -88,17 +94,31 @@ export default function CryptoPriceValueForm({
       });
       return;
     }
-    onFormSubmit([
-      {
-        cardTypeInputId: "crypto_price_coin_id",
-        value: coinId,
-      },
-    ]);
+    onFormSubmit({
+      variant: data.variant,
+      values: [
+        {
+          cardTypeInputId: "crypto_price_coin_id",
+          value: coinId,
+        },
+      ],
+    });
   };
 
   return (
     <Form {...form}>
       <CardValuesFormWrapper onSubmit={form.handleSubmit(onSubmit)}>
+        <FormField
+          control={form.control}
+          name="variant"
+          render={({ field }) => (
+            <CardVariantFormItem
+              value={field.value}
+              zodEnum={VariantEnum}
+              onChange={(v) => form.setValue("variant", v as TCardVariant)}
+            />
+          )}
+        />
         <FormField
           control={form.control}
           name="coinValue"

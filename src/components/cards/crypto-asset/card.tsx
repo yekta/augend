@@ -141,12 +141,7 @@ export default function CryptoAssetCard({
           <p className="shrink min-w-0 truncate">
             {valueSymbol}
             {formatNumberTBMK(pnlInCurrencyAbs, 3)}
-          </p>
-        </div>
-        <div className="flex shrink min-w-0">
-          <ChangeIcon className="size-4 shrink-0 -my-0.5" />
-          <p className="shrink min-w-0 truncate">
-            {formatNumberTBMK(pnlPercentageAbs, 3)}%
+            {` `}({formatNumberTBMK(pnlPercentageAbs, 3)}%)
           </p>
         </div>
       </div>

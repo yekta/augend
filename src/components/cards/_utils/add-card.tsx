@@ -39,6 +39,11 @@ type AddCardButtonProps = {
 
 type TSelectedCardType = AppRouterOutputs["ui"]["getCardTypes"][number];
 
+export type TOnFormSubmitProps = {
+  values: TCardValueForAddCards[];
+  variant?: string;
+};
+
 export function AddCardButton({
   dashboardSlug,
   username,
@@ -73,7 +78,7 @@ export function AddCardButton({
     },
   });
 
-  const onSubmit = (values: TCardValueForAddCards[]) => {
+  const onSubmit = ({ values, variant }: TOnFormSubmitProps) => {
     const _values = values.map((value) => ({
       ...value,
       xOrder: value.xOrder ?? 0,
@@ -83,6 +88,7 @@ export function AddCardButton({
       values: _values,
       dashboardSlug,
       xOrderPreference: xOrderPreference,
+      variant,
     });
   };
 
@@ -145,7 +151,7 @@ type AddCardCommandPanelProps = {
   errorForm: { message: string } | null;
   selectedCardType: TSelectedCardType | null;
   setSelectedCardType: Dispatch<SetStateAction<TSelectedCardType | null>>;
-  onSubmit: (values: TCardValueForAddCards[]) => void;
+  onSubmit: (props: TOnFormSubmitProps) => void;
   className?: string;
 };
 

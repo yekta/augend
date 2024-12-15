@@ -21,6 +21,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import CardVariantFormItem from "@/components/cards/_utils/values-form/form-item-card-variant";
+
+const VariantEnum = z.enum(["default", "mini"]);
+type TCardVariant = z.infer<typeof VariantEnum>;
 
 export default function CryptoAssetValueForm({
   onFormSubmit,
@@ -50,6 +54,7 @@ export default function CryptoAssetValueForm({
 
   const FormSchema = useMemo(() => {
     return z.object({
+      variant: VariantEnum,
       coinValue: z.string().refine(
         (value) => {
           if (!shapedIdMaps?.map((i) => getValue(i)).includes(value)) {
@@ -85,6 +90,7 @@ export default function CryptoAssetValueForm({
       boughtAtDate: new Date(),
       buyPriceUsd: "",
       buyAmount: "",
+      variant: "default",
     },
   });
 
@@ -105,29 +111,43 @@ export default function CryptoAssetValueForm({
       });
       return;
     }
-    onFormSubmit([
-      {
-        cardTypeInputId: "crypto_asset_coin_id",
-        value: coinId,
-      },
-      {
-        cardTypeInputId: "crypto_asset_bought_at_timestamp",
-        value: data.boughtAtDate.getTime().toString(),
-      },
-      {
-        cardTypeInputId: "crypto_asset_buy_price_usd",
-        value: data.buyPriceUsd,
-      },
-      {
-        cardTypeInputId: "crypto_asset_buy_amount",
-        value: data.buyAmount,
-      },
-    ]);
+    onFormSubmit({
+      variant: data.variant,
+      values: [
+        {
+          cardTypeInputId: "crypto_asset_coin_id",
+          value: coinId,
+        },
+        {
+          cardTypeInputId: "crypto_asset_bought_at_timestamp",
+          value: data.boughtAtDate.getTime().toString(),
+        },
+        {
+          cardTypeInputId: "crypto_asset_buy_price_usd",
+          value: data.buyPriceUsd,
+        },
+        {
+          cardTypeInputId: "crypto_asset_buy_amount",
+          value: data.buyAmount,
+        },
+      ],
+    });
   };
 
   return (
     <Form {...form}>
       <CardValuesFormWrapper onSubmit={form.handleSubmit(onSubmit)}>
+        <FormField
+          control={form.control}
+          name="variant"
+          render={({ field }) => (
+            <CardVariantFormItem
+              value={field.value}
+              zodEnum={VariantEnum}
+              onChange={(v) => form.setValue("variant", v as TCardVariant)}
+            />
+          )}
+        />
         <FormField
           control={form.control}
           name="coinValue"

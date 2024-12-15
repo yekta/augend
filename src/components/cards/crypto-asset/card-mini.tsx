@@ -186,19 +186,13 @@ export default function CryptoAssetMiniCard({
                     : pnlInCurrencyAbs !== undefined
                     ? `${valueSymbol}${formatNumberTBMK(pnlInCurrencyAbs, 3)}`
                     : "Error"}
-                </p>
-              </div>
-              <div className="flex items-center justify-end shrink min-w-0">
-                {pnlPercentageAbs !== undefined && (
-                  <ChangeIcon className="size-4 shrink-0 -my-0.5" />
-                )}
-                {/* Pnl in percentage */}
-                <p className="shrink min-w-0 truncate">
+                  {` `}(
                   {isPendingCrypto
                     ? "Load"
                     : pnlPercentageAbs !== undefined
                     ? `${formatNumberTBMK(pnlPercentageAbs, 3)}%`
                     : "Error"}
+                  )
                 </p>
               </div>
             </div>

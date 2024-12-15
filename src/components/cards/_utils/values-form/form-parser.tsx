@@ -1,3 +1,4 @@
+import { TOnFormSubmitProps } from "@/components/cards/_utils/add-card";
 import BananoTotalValueForm from "@/components/cards/banano-total/value-form";
 import CalculatorValueForm from "@/components/cards/calculator/value-form";
 import CryptoAssetValueForm from "@/components/cards/crypto-asset/value-form";
@@ -12,11 +13,10 @@ import CryptoOrderBookValueForm from "@/components/cards/order-book/value-form";
 import UniswapPoolsTableValueForm from "@/components/cards/uniswap-pools-table/value-form";
 import UniswapPositionValueForm from "@/components/cards/uniswap-position/value-form";
 import WbanSummaryValueForm from "@/components/cards/wban-summary/value-form";
-import { TCardValueForAddCards } from "@/server/trpc/api/ui/types";
 
 type Props = {
   cardTypeId: string;
-  onFormSubmit: (values: TCardValueForAddCards[]) => void;
+  onFormSubmit: (props: TOnFormSubmitProps) => void;
   isPendingForm: boolean;
 };
 

@@ -8,7 +8,7 @@ export function ValueFormWithNoValue({
 }: TValueFormProps) {
   const onFormSubmitLocal = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    onFormSubmit([]);
+    onFormSubmit({ values: [] });
   };
 
   return (

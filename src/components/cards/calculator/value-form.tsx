@@ -89,13 +89,13 @@ export default function CalculatorValueForm({
       return;
     }
 
-    onFormSubmit(
-      parsedData.currencies.map((id, index) => ({
+    onFormSubmit({
+      values: parsedData.currencies.map((id, index) => ({
         cardTypeInputId: "calculator_currency_id",
         value: id,
         xOrder: index,
-      }))
-    );
+      })),
+    });
   };
 
   const Icon = useMemo(

@@ -60,20 +60,22 @@ export default function UniswapPositionValueForm({
   });
 
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
-    onFormSubmit([
-      {
-        cardTypeInputId: "uniswap_position_network",
-        value: data.network,
-      },
-      {
-        cardTypeInputId: "uniswap_position_position_id",
-        value: `${data.positionId}`,
-      },
-      {
-        cardTypeInputId: "uniswap_position_is_owner",
-        value: `${data.is_owner}`,
-      },
-    ]);
+    onFormSubmit({
+      values: [
+        {
+          cardTypeInputId: "uniswap_position_network",
+          value: data.network,
+        },
+        {
+          cardTypeInputId: "uniswap_position_position_id",
+          value: `${data.positionId}`,
+        },
+        {
+          cardTypeInputId: "uniswap_position_is_owner",
+          value: `${data.is_owner}`,
+        },
+      ],
+    });
   };
 
   return (

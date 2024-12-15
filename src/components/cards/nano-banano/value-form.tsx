@@ -74,16 +74,18 @@ export default function NanoBananoValueForm({
   });
 
   const onFormSubmitLocal = (data: z.infer<typeof FormSchema>) => {
-    onFormSubmit([
-      {
-        cardTypeInputId: `${network}_balance_address`,
-        value: data.address,
-      },
-      {
-        cardTypeInputId: `${network}_balance_is_owner`,
-        value: `${data.is_owner}`,
-      },
-    ]);
+    onFormSubmit({
+      values: [
+        {
+          cardTypeInputId: `${network}_balance_address`,
+          value: data.address,
+        },
+        {
+          cardTypeInputId: `${network}_balance_is_owner`,
+          value: `${data.is_owner}`,
+        },
+      ],
+    });
   };
 
   return (

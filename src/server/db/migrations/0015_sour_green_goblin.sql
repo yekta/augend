@@ -1,0 +1,1 @@
+ALTER TABLE "cards" ALTER COLUMN "variant" SET DATA TYPE varchar(32);

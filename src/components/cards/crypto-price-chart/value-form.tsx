@@ -73,16 +73,18 @@ export default function CryptoPriceChartValueForm({
       return;
     }
 
-    onFormSubmit([
-      {
-        cardTypeInputId: "crypto_price_chart_exchange",
-        value: data.exchange,
-      },
-      {
-        cardTypeInputId: "crypto_price_chart_pair",
-        value: data.pair,
-      },
-    ]);
+    onFormSubmit({
+      values: [
+        {
+          cardTypeInputId: "crypto_price_chart_exchange",
+          value: data.exchange,
+        },
+        {
+          cardTypeInputId: "crypto_price_chart_pair",
+          value: data.pair,
+        },
+      ],
+    });
   };
 
   useEffect(() => {

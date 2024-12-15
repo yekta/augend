@@ -40,12 +40,14 @@ export default function GasTrackerValueForm({
   }, [networks]);
 
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
-    onFormSubmit([
-      {
-        cardTypeInputId: "gas_tracker_network",
-        value: data.network,
-      },
-    ]);
+    onFormSubmit({
+      values: [
+        {
+          cardTypeInputId: "gas_tracker_network",
+          value: data.network,
+        },
+      ],
+    });
   };
 
   return (

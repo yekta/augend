@@ -299,7 +299,9 @@ export const cardsTable = pgTable(
     dashboardId: uuid("dashboard_id")
       .notNull()
       .references(() => dashboardsTable.id, { onDelete: "cascade" }),
-    variant: text("variant").notNull().default("default"),
+    variant: varchar("variant", { ...mediumText })
+      .notNull()
+      .default("default"),
     ...timestamps,
   },
   (table) => ({

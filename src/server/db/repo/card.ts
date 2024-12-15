@@ -167,10 +167,12 @@ export async function createCard({
   cardTypeId,
   dashboardId,
   xOrder,
+  variant,
 }: {
   cardTypeId: string;
   dashboardId: string;
   xOrder: number;
+  variant?: string;
 }) {
   const id = crypto.randomUUID();
   await db.insert(cardsTable).values({
@@ -178,6 +180,7 @@ export async function createCard({
     cardTypeId,
     dashboardId,
     xOrder,
+    variant,
   });
   return id;
 }

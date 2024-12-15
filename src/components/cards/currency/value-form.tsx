@@ -76,16 +76,18 @@ export default function CurrencyValueForm({
       return;
     }
 
-    onFormSubmit([
-      {
-        cardTypeInputId: "currency_currency_id_base",
-        value: baseId,
-      },
-      {
-        cardTypeInputId: "currency_currency_id_quote",
-        value: quoteId,
-      },
-    ]);
+    onFormSubmit({
+      values: [
+        {
+          cardTypeInputId: "currency_currency_id_base",
+          value: baseId,
+        },
+        {
+          cardTypeInputId: "currency_currency_id_quote",
+          value: quoteId,
+        },
+      ],
+    });
   };
 
   const Icon = useMemo(
