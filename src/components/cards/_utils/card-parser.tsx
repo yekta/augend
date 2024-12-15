@@ -11,7 +11,7 @@ import CryptoPriceCard from "@/components/cards/crypto-price/card";
 import CurrencyCard from "@/components/cards/currency/card";
 import FearGreedIndexCard from "@/components/cards/fear-greed-index/card";
 import GasTrackerCard from "@/components/cards/gas-tracker/card";
-import CryptoPriceMiniCard from "@/components/cards/crypto-price-mini/card";
+import CryptoPriceMiniCard from "@/components/cards/crypto-price/card-mini";
 import NanoBananoCard from "@/components/cards/nano-banano/card";
 import OrderBookCard, {
   TOrderBookConfig,
@@ -24,7 +24,7 @@ import { TCurrencyWithSelectedFields } from "@/server/db/repo/types";
 import { TEthereumNetwork } from "@/server/trpc/api/crypto/ethereum/constants";
 import { TExchange } from "@/server/trpc/api/crypto/exchange/types";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
-import CryptoAssetMiniCard from "@/components/cards/crypto-asset-mini/card";
+import CryptoAssetMiniCard from "@/components/cards/crypto-asset/card-mini";
 
 export function CardParser({
   cardObject,
@@ -75,7 +75,6 @@ export function CardParser({
 
   if (cardObject.cardType.id === "crypto_asset_mini") {
     const values = cardObject.values;
-    console.log(values);
     if (!values) return null;
     const coinId = values.find(
       (v) => v.cardTypeInputId === "crypto_asset_mini_coin_id"

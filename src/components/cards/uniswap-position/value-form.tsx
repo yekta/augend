@@ -1,4 +1,4 @@
-import { CardValueCombobox } from "@/components/cards/_utils/values-form/card-value-combobox";
+import CardValueComboboxItem from "@/components/cards/_utils/values-form/card-value-combobox-form-item";
 import CardValuesFormSubmitButton from "@/components/cards/_utils/values-form/card-values-form-submit-button";
 import CardValuesFormWrapper from "@/components/cards/_utils/values-form/card-values-form-wrapper";
 import { TValueFormProps } from "@/components/cards/_utils/values-form/types";
@@ -8,6 +8,7 @@ import {
   FormControl,
   FormDescription,
   FormField,
+  FormHeader,
   FormItem,
   FormLabel,
   FormMessage,
@@ -15,69 +16,54 @@ import {
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
-import { EthereumNetworkSchema } from "@/server/trpc/api/crypto/ethereum/constants";
-import { TEthereumNetwork } from "@/server/trpc/api/crypto/ethereum/constants";
+import {
+  EthereumNetworkSchema,
+  TEthereumNetwork,
+} from "@/server/trpc/api/crypto/ethereum/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Dispatch, SetStateAction, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-export function UniswapPositionValueForm({
+const FormSchema = z.object({
+  network: EthereumNetworkSchema,
+  positionId: z
+    .string()
+    .refine(
+      (val) =>
+        !isNaN(Number(val)) && Number.isInteger(Number(val)) && Number(val) > 0,
+      {
+        message: "Position ID must be a valid integer.",
+      }
+    ),
+  is_owner: z.boolean().default(false).optional(),
+});
+
+export default function UniswapPositionValueForm({
   onFormSubmit,
   isPendingForm,
 }: TValueFormProps) {
   const networks = Object.values(EthereumNetworkSchema.Enum);
   const defaultNetwork = networks[0];
-  const [network, setNetwork] = useState<TEthereumNetwork>(defaultNetwork);
-  const [networkError, setNetworkError] = useState<string | null>(null);
 
   const networkItems = useMemo(() => {
-    return networks.map((e) => ({ label: e, value: e }));
+    return networks.map((e) => ({ value: e }));
   }, [networks]);
-
-  const FormSchema = z.object({
-    positionId: z
-      .string()
-      .refine(
-        (val) =>
-          !isNaN(Number(val)) &&
-          Number.isInteger(Number(val)) &&
-          Number(val) > 0,
-        {
-          message: "Position ID must be a valid integer.",
-        }
-      ),
-    is_owner: z.boolean().default(false).optional(),
-  });
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
+      network: defaultNetwork,
       positionId: "",
       is_owner: true,
     },
   });
 
-  const clearErrors = () => {
-    setNetworkError(null);
-  };
-
-  const onFormSubmitLocal = (data: z.infer<typeof FormSchema>) => {
-    let networkValue: TEthereumNetwork | null = null;
-    try {
-      networkValue = EthereumNetworkSchema.parse(network);
-    } catch {
-      setNetworkError("Invalid network.");
-      return;
-    }
-    if (networkValue === null) {
-      setNetworkError("Select a network.");
-      return;
-    }
+  const onSubmit = (data: z.infer<typeof FormSchema>) => {
     onFormSubmit([
       {
         cardTypeInputId: "uniswap_position_network",
-        value: networkValue,
+        value: data.network,
       },
       {
         cardTypeInputId: "uniswap_position_position_id",
@@ -92,36 +78,40 @@ export function UniswapPositionValueForm({
 
   return (
     <Form {...form}>
-      <CardValuesFormWrapper onSubmit={form.handleSubmit(onFormSubmitLocal)}>
-        <CardValueCombobox
-          inputTitle="Network"
-          inputDescription="The network of the Uniswap position."
-          inputErrorMessage={networkError}
-          value={network}
-          Icon={({ value, className }) => (
-            <div className={cn("text-foreground p-0.25", className)}>
-              <CryptoIcon cryptoName={value} className="size-full" />
-            </div>
+      <CardValuesFormWrapper onSubmit={form.handleSubmit(onSubmit)}>
+        <FormField
+          control={form.control}
+          name="network"
+          render={({ field }) => (
+            <CardValueComboboxItem
+              inputTitle="Network"
+              inputDescription="The network of the Uniswap position."
+              value={field.value}
+              onSelect={(value) =>
+                form.setValue("network", value as TEthereumNetwork)
+              }
+              Icon={({ value, className }) => (
+                <div className={cn("text-foreground p-0.25", className)}>
+                  <CryptoIcon cryptoName={value} className="size-full" />
+                </div>
+              )}
+              disabled={isPendingForm}
+              items={networkItems}
+              placeholder="Select network..."
+              inputPlaceholder="Search networks..."
+              noValueFoundLabel="No network found."
+            />
           )}
-          onValueChange={() => clearErrors()}
-          setValue={setNetwork as Dispatch<SetStateAction<string | null>>}
-          disabled={isPendingForm}
-          items={networkItems}
-          placeholder="Select network..."
-          inputPlaceholder="Search networks..."
-          noValueFoundLabel="No network found."
         />
         <FormField
           control={form.control}
           name="positionId"
           render={({ field }) => (
-            <FormItem className="w-full flex flex-col gap-2.5">
-              <div className="shrink min-w-0 overflow-hidden flex flex-col gap-0.5">
-                <FormLabel className="w-full">Position ID</FormLabel>
-                <FormDescription className="w-full">
-                  ID of the Uniswap position.
-                </FormDescription>
-              </div>
+            <FormItem>
+              <FormHeader>
+                <FormLabel>Position ID</FormLabel>
+                <FormDescription>ID of the Uniswap position.</FormDescription>
+              </FormHeader>
               <FormControl>
                 <Input
                   autoComplete="off"
@@ -140,14 +130,12 @@ export function UniswapPositionValueForm({
           name="is_owner"
           render={({ field }) => (
             <FormItem className="flex flex-row items-center justify-between gap-4">
-              <div className="flex-1 min-w-0 overflow-hidden flex flex-col gap-0.5">
-                <FormLabel className="w-full text-foreground font-semibold group-data-[error]/input:text-destructive">
-                  I own this
-                </FormLabel>
-                <FormDescription className="text-sm text-muted-foreground">
+              <FormHeader>
+                <FormLabel>I own this</FormLabel>
+                <FormDescription>
                   This will help track your total balance.
                 </FormDescription>
-              </div>
+              </FormHeader>
               <FormControl>
                 <Switch
                   checked={field.value}

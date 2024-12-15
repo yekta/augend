@@ -80,7 +80,14 @@ const FormItem = React.forwardRef<
 
   return (
     <FormItemContext.Provider value={{ id }}>
-      <div ref={ref} className={cn(className)} {...props} />
+      <div
+        ref={ref}
+        className={cn(
+          "w-full min-w-0 flex flex-col gap-2.5 group/form-item",
+          className
+        )}
+        {...props}
+      />
     </FormItemContext.Provider>
   );
 });
@@ -97,7 +104,7 @@ const FormLabel = React.forwardRef<
       ref={ref}
       className={cn(
         error && "text-destructive",
-        "px-1 cursor-pointer",
+        "w-full px-1 cursor-pointer font-semibold",
         className
       )}
       htmlFor={formItemId}
@@ -141,7 +148,7 @@ const FormDescription = React.forwardRef<
       ref={ref}
       id={formDescriptionId}
       className={cn(
-        "text-sm px-1 leading-tight text-muted-foreground",
+        "w-full text-sm px-1 leading-tight text-muted-foreground",
         className
       )}
       {...props}
@@ -166,7 +173,7 @@ const FormMessage = React.forwardRef<
       ref={ref}
       id={formMessageId}
       className={cn(
-        "text-destructive text-sm font-medium leading-tight px-1",
+        "w-full -mt-1 text-destructive text-sm font-medium leading-tight px-1",
         className
       )}
       {...props}
@@ -177,6 +184,24 @@ const FormMessage = React.forwardRef<
 });
 FormMessage.displayName = "FormMessage";
 
+const FormHeader = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, children, ...props }, ref) => {
+  return (
+    <div
+      ref={ref}
+      className={cn(
+        "shrink min-w-0 overflow-hidden flex flex-col gap-0.75",
+        className
+      )}
+    >
+      {children}
+    </div>
+  );
+});
+FormHeader.displayName = "FormHeader";
+
 export {
   useFormField,
   Form,
@@ -186,4 +211,5 @@ export {
   FormDescription,
   FormMessage,
   FormField,
+  FormHeader,
 };

@@ -2,7 +2,7 @@
 
 import { useUserFull } from "@/app/[username]/[dashboard_slug]/_components/user-full-provider";
 import Blockies from "@/components/blockies/blockies";
-import { CardValueCombobox } from "@/components/cards/_utils/values-form/card-value-combobox";
+import CardValueComboboxFormItem from "@/components/cards/_utils/values-form/card-value-combobox-form-item";
 import ErrorLine from "@/components/error-line";
 import ForexIcon from "@/components/icons/forex-icon";
 import { Button } from "@/components/ui/button";
@@ -244,7 +244,7 @@ function UsernameButton({
               control={form.control}
               name="newUsername"
               render={({ field }) => (
-                <FormItem className="w-full flex flex-col gap-2">
+                <FormItem>
                   <FormLabel className="w-full sr-only">New Username</FormLabel>
                   <FormControl>
                     <Input
@@ -287,6 +287,12 @@ function UsernameButton({
   );
 }
 
+const CurrencyFormSchema = z.object({
+  primaryCurrencyValue: z.string(),
+  secondaryCurrencyValue: z.string(),
+  tertiaryCurrencyValue: z.string(),
+});
+
 function CurrenciesButton({
   dataUser,
   isPendingUser,
@@ -305,27 +311,24 @@ function CurrenciesButton({
   onOpenChange: (open: boolean) => void;
 }) {
   const asyncRouterRefresh = useAsyncRouterRefresh();
-  const utils = api.useUtils();
 
   const getValue = (c: { name: string; ticker: string }) =>
     `${c.name} (${c.ticker})`;
 
-  type CurrencyValue = string | null;
-  const [primaryCurrencyValue, setPrimaryCurrencyValue] =
-    useState<CurrencyValue>(
-      dataUser?.primaryCurrency ? getValue(dataUser.primaryCurrency) : null
-    );
-
-  const [secondaryCurrencyValue, setSecondaryCurrencyValue] =
-    useState<CurrencyValue>(
-      dataUser?.secondaryCurrency ? getValue(dataUser.secondaryCurrency) : null
-    );
-  const [tertiaryCurrencyValue, setTertiaryCurrencyValue] =
-    useState<CurrencyValue>(
-      dataUser?.tertiaryCurrency ? getValue(dataUser.tertiaryCurrency) : null
-    );
-
-  const [validationError, setValidationError] = useState<string | null>(null);
+  const form = useForm<z.infer<typeof CurrencyFormSchema>>({
+    resolver: zodResolver(CurrencyFormSchema),
+    defaultValues: {
+      primaryCurrencyValue: dataUser ? getValue(dataUser.primaryCurrency) : "",
+      secondaryCurrencyValue: dataUser
+        ? getValue(dataUser.secondaryCurrency)
+        : "",
+      tertiaryCurrencyValue: dataUser
+        ? getValue(dataUser.tertiaryCurrency)
+        : "",
+    },
+  });
+  const primaryCurrencyValue = form.watch("primaryCurrencyValue");
+  const secondaryCurrencyValue = form.watch("secondaryCurrencyValue");
 
   const primaryCurrencyItems = useMemo(() => {
     if (!dataCurrencies) return [];
@@ -352,7 +355,6 @@ function CurrenciesButton({
   }, [secondaryCurrencyItems, secondaryCurrencyValue]);
 
   const clearErrors = () => {
-    setValidationError(null);
     resetChangeCurrencyPreference();
   };
 
@@ -373,78 +375,79 @@ function CurrenciesButton({
     },
   });
 
-  function onSubmit() {
-    if (!dataCurrencies) {
-      setValidationError("Failed to load currencies.");
-      return;
-    }
-    if (!dataUser) {
-      setValidationError("Failed to load user.");
-      return;
-    }
-    const primaryCurrency = dataCurrencies?.find(
-      (c) => getValue(c) === primaryCurrencyValue
-    );
-    if (!primaryCurrency) {
-      setValidationError("Invalid primary currency.");
-      return;
-    }
-    const secondaryCurrency = dataCurrencies?.find(
-      (c) => getValue(c) === secondaryCurrencyValue
-    );
-    if (!secondaryCurrency) {
-      setValidationError("Invalid secondary currency.");
-      return;
-    }
-    const tertiaryCurrency = dataCurrencies?.find(
-      (c) => getValue(c) === tertiaryCurrencyValue
-    );
-    if (!tertiaryCurrency) {
-      setValidationError("Invalid tertiary currency.");
-      return;
-    }
-    let result: z.infer<typeof ChangeCurrencyPreferenceSchemaUI>;
-    try {
-      result = ChangeCurrencyPreferenceSchemaUI.parse({
-        primaryCurrencyId: primaryCurrency.id,
-        secondaryCurrencyId: secondaryCurrency.id,
-        tertiaryCurrencyId: tertiaryCurrency.id,
+  const onSubmit = (data: z.infer<typeof CurrencyFormSchema>) => {
+    const primaryId = dataCurrencies?.find(
+      (c) => getValue(c) === data.primaryCurrencyValue
+    )?.id;
+    if (!primaryId) {
+      form.setError("primaryCurrencyValue", {
+        message: "Invalid primary currency.",
       });
-    } catch (e) {
-      console.log(e);
-      setValidationError("Invalid currency preference.");
       return;
     }
 
-    if (
-      dataUser.primaryCurrency.id === result.primaryCurrencyId &&
-      dataUser.secondaryCurrency.id === result.secondaryCurrencyId &&
-      dataUser.tertiaryCurrency.id === result.tertiaryCurrencyId
-    ) {
-      resetProcess();
+    const secondaryId = dataCurrencies?.find(
+      (c) => getValue(c) === data.secondaryCurrencyValue
+    )?.id;
+    if (!secondaryId) {
+      form.setError("secondaryCurrencyValue", {
+        message: "Invalid secondary currency.",
+      });
       return;
     }
 
-    if (
-      result.primaryCurrencyId === result.secondaryCurrencyId ||
-      result.primaryCurrencyId === result.tertiaryCurrencyId ||
-      result.secondaryCurrencyId === result.tertiaryCurrencyId
-    ) {
-      setValidationError("Currencies must be different.");
+    const tertiaryId = dataCurrencies?.find(
+      (c) => getValue(c) === data.tertiaryCurrencyValue
+    )?.id;
+    if (!tertiaryId) {
+      form.setError("tertiaryCurrencyValue", {
+        message: "Invalid tertiary currency.",
+      });
       return;
     }
 
-    changeCurrencyPreference(result);
-  }
+    if (primaryId === secondaryId) {
+      form.setError("secondaryCurrencyValue", {
+        message: "Currencies must be unique.",
+      });
+      return;
+    }
+    if (primaryId === tertiaryId) {
+      form.setError("tertiaryCurrencyValue", {
+        message: "Currencies must be unique.",
+      });
+      return;
+    }
+    if (secondaryId === tertiaryId) {
+      form.setError("tertiaryCurrencyValue", {
+        message: "Currencies must be unique.",
+      });
+      return;
+    }
+
+    const { data: newCurrencies, success } =
+      ChangeCurrencyPreferenceSchemaUI.safeParse({
+        primaryCurrencyId: primaryId,
+        secondaryCurrencyId: secondaryId,
+        tertiaryCurrencyId: tertiaryId,
+      });
+
+    if (!newCurrencies) {
+      form.setError("primaryCurrencyValue", {
+        message: "Invalid currencies.",
+      });
+      return;
+    }
+
+    changeCurrencyPreference(newCurrencies);
+  };
 
   const Icon = ({
     value,
     className,
-    iconValue,
   }: {
     value: string | null;
     className?: string;
-    iconValue?: string;
   }) => {
     if (!dataCurrencies) return null;
     const idx = dataCurrencies.findIndex((c) => c.ticker === value);
@@ -507,85 +510,109 @@ function CurrenciesButton({
             Set your primary, secondary, and tertiary currencies.
           </DialogDescription>
         </DialogHeader>
-        <CardValueCombobox
-          inputTitle="Primary"
-          iconValue={
-            dataCurrencies?.find((c) => getValue(c) === primaryCurrencyValue)
-              ?.ticker
-          }
-          Icon={Icon}
-          onValueChange={clearErrors}
-          value={primaryCurrencyValue}
-          setValue={setPrimaryCurrencyValue}
-          disabled={isPendingChangeCurrencyPreference}
-          isPending={isPendingCurrencies}
-          isLoadingError={isLoadingErrorCurrencies}
-          isLoadingErrorMessage="Failed to load currencies :("
-          items={primaryCurrencyItems}
-          placeholder="Select currency..."
-          inputPlaceholder="Search currencies..."
-          noValueFoundLabel="No currency found..."
-        />
-        <CardValueCombobox
-          inputTitle="Secondary"
-          iconValue={
-            dataCurrencies
-              ? dataCurrencies.find(
-                  (c) => getValue(c) === secondaryCurrencyValue
-                )?.ticker
-              : undefined
-          }
-          Icon={Icon}
-          onValueChange={clearErrors}
-          value={secondaryCurrencyValue}
-          setValue={setSecondaryCurrencyValue}
-          disabled={isPendingChangeCurrencyPreference}
-          isPending={isPendingCurrencies}
-          isLoadingError={isLoadingErrorCurrencies}
-          isLoadingErrorMessage="Failed to load currencies :("
-          items={secondaryCurrencyItems}
-          placeholder="Select currency..."
-          inputPlaceholder="Search currencies..."
-          noValueFoundLabel="No currency found..."
-        />
-        <CardValueCombobox
-          inputTitle="Tertiary"
-          iconValue={
-            dataCurrencies?.find((c) => getValue(c) === tertiaryCurrencyValue)
-              ?.ticker
-          }
-          Icon={Icon}
-          onValueChange={clearErrors}
-          value={tertiaryCurrencyValue}
-          setValue={setTertiaryCurrencyValue}
-          disabled={isPendingChangeCurrencyPreference}
-          isPending={isPendingCurrencies}
-          isLoadingError={isLoadingErrorCurrencies}
-          isLoadingErrorMessage="Failed to load currencies :("
-          items={tertiaryCurrencyItems}
-          placeholder="Select currency..."
-          inputPlaceholder="Search currencies..."
-          noValueFoundLabel="No currency found..."
-        />
-        {validationError && (
-          <ErrorLine variant="no-bg" message={validationError} />
-        )}
-        <Button
-          state={isPendingChangeCurrencyPreference ? "loading" : "default"}
-          onClick={onSubmit}
-        >
-          {isPendingChangeCurrencyPreference && (
-            <>
-              <p className="text-transparent select-none shrink min-w-0 truncate">
-                Change Preference
-              </p>
-              <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                <LoaderIcon className="size-full animate-spin" />
-              </div>
-            </>
-          )}
-          {!isPendingChangeCurrencyPreference && "Change Preference"}
-        </Button>
+        <Form {...form}>
+          <form
+            className="w-full flex flex-col gap-4"
+            onSubmit={form.handleSubmit(onSubmit)}
+          >
+            <FormField
+              control={form.control}
+              name="primaryCurrencyValue"
+              render={({ field }) => (
+                <CardValueComboboxFormItem
+                  inputTitle="Primary"
+                  iconValue={
+                    dataCurrencies?.find((c) => getValue(c) === field.value)
+                      ?.ticker
+                  }
+                  Icon={Icon}
+                  value={field.value}
+                  onSelect={(value) => {
+                    form.setValue("primaryCurrencyValue", value);
+                  }}
+                  disabled={isPendingChangeCurrencyPreference}
+                  isPending={isPendingCurrencies}
+                  isLoadingError={isLoadingErrorCurrencies}
+                  isLoadingErrorMessage="Failed to load currencies :("
+                  items={primaryCurrencyItems}
+                  placeholder="Select currency..."
+                  inputPlaceholder="Search currencies..."
+                  noValueFoundLabel="No currency found..."
+                />
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="secondaryCurrencyValue"
+              render={({ field }) => (
+                <CardValueComboboxFormItem
+                  inputTitle="Secondary"
+                  iconValue={
+                    dataCurrencies
+                      ? dataCurrencies.find((c) => getValue(c) === field.value)
+                          ?.ticker
+                      : undefined
+                  }
+                  Icon={Icon}
+                  value={field.value}
+                  onSelect={(value) =>
+                    form.setValue("secondaryCurrencyValue", value)
+                  }
+                  disabled={isPendingChangeCurrencyPreference}
+                  isPending={isPendingCurrencies}
+                  isLoadingError={isLoadingErrorCurrencies}
+                  isLoadingErrorMessage="Failed to load currencies :("
+                  items={secondaryCurrencyItems}
+                  placeholder="Select currency..."
+                  inputPlaceholder="Search currencies..."
+                  noValueFoundLabel="No currency found..."
+                />
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="tertiaryCurrencyValue"
+              render={({ field }) => (
+                <CardValueComboboxFormItem
+                  inputTitle="Tertiary"
+                  iconValue={
+                    dataCurrencies?.find((c) => getValue(c) === field.value)
+                      ?.ticker
+                  }
+                  Icon={Icon}
+                  value={field.value}
+                  onSelect={(value) =>
+                    form.setValue("tertiaryCurrencyValue", value)
+                  }
+                  disabled={isPendingChangeCurrencyPreference}
+                  isPending={isPendingCurrencies}
+                  isLoadingError={isLoadingErrorCurrencies}
+                  isLoadingErrorMessage="Failed to load currencies :("
+                  items={tertiaryCurrencyItems}
+                  placeholder="Select currency..."
+                  inputPlaceholder="Search currencies..."
+                  noValueFoundLabel="No currency found..."
+                />
+              )}
+            />
+            <Button
+              state={isPendingChangeCurrencyPreference ? "loading" : "default"}
+              type="submit"
+            >
+              {isPendingChangeCurrencyPreference && (
+                <>
+                  <p className="text-transparent select-none shrink min-w-0 truncate">
+                    Change Preference
+                  </p>
+                  <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                    <LoaderIcon className="size-full animate-spin" />
+                  </div>
+                </>
+              )}
+              {!isPendingChangeCurrencyPreference && "Change Preference"}
+            </Button>
+          </form>
+        </Form>
         {errorChangeCurrencyPreference && (
           <ErrorLine message={errorChangeCurrencyPreference.message} />
         )}

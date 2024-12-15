@@ -8,16 +8,21 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import {
+  FormDescription,
+  FormHeader,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
 import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
-import { Dispatch, ReactNode, SetStateAction, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 type TItem = {
-  label: string;
   value: string;
   iconValue?: string;
 };
@@ -27,15 +32,13 @@ export type TValueComboboxProps = {
   placeholder: string;
   inputPlaceholder: string;
   noValueFoundLabel: string;
-  onValueChange?: (value: string) => void;
   isPending?: boolean;
   isLoadingError?: boolean;
   isLoadingErrorMessage?: string | null;
-  inputErrorMessage?: string | null;
   className?: string;
   value: string | null;
+  onSelect: (value: string) => void;
   iconValue?: string | null;
-  setValue: Dispatch<SetStateAction<string | null>>;
   inputTitle?: string;
   inputDescription?: string;
   disabled?: boolean;
@@ -48,25 +51,21 @@ export type TValueComboboxProps = {
 
 const itemsPlaceholder: TItem[] = Array.from({ length: 20 }).map(
   (i, index) => ({
-    label: `Loading ${index}`,
-    value: `${index}`,
+    value: `Loading ${index}`,
   })
 );
 
-export function CardValueCombobox<T>({
+export default function CardValueComboboxFormItem<T>({
   items,
-  onValueChange,
+  onSelect,
   placeholder,
   inputPlaceholder,
   noValueFoundLabel,
   isPending,
-  inputErrorMessage,
   isLoadingError,
   isLoadingErrorMessage,
-  className,
   value,
   iconValue,
-  setValue,
   inputTitle,
   inputDescription,
   disabled,
@@ -81,23 +80,15 @@ export function CardValueCombobox<T>({
     return items;
   }, [items, isPending, isHardError]);
 
-  const label = useMemo(() => {
-    return itemsOrPlaceholder.find((item) => item.value === value)?.label;
-  }, [value]);
-
   return (
-    <div
-      data-error={inputErrorMessage ? true : undefined}
-      className={cn(
-        "w-full min-w-0 flex flex-col gap-2.5 group/input",
-        className
-      )}
-    >
+    <FormItem>
       {(inputTitle || inputDescription) && (
-        <TitleAndDescription
-          title={inputTitle}
-          description={inputDescription}
-        />
+        <FormHeader>
+          {inputTitle && <FormLabel>{inputTitle}</FormLabel>}
+          {inputDescription && (
+            <FormDescription>{inputDescription}</FormDescription>
+          )}
+        </FormHeader>
       )}
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
@@ -108,7 +99,7 @@ export function CardValueCombobox<T>({
             aria-expanded={open}
             data-pending={isPending ? true : undefined}
             data-loading-error={isHardError ? true : undefined}
-            data-showing-placeholder={!label ? true : undefined}
+            data-showing-placeholder={!value ? true : undefined}
             data-has-icon={Icon ? true : undefined}
             fadeOnDisabled={false}
             className={
@@ -116,7 +107,7 @@ export function CardValueCombobox<T>({
             }
           >
             <div className="flex-shrink min-w-0 overflow-hidden flex items-center gap-1.5 group-data-[has-icon]/button:-ml-1">
-              {!isPending && !isLoadingError && Icon && value && label && (
+              {!isPending && !isLoadingError && Icon && value && (
                 <Icon
                   value={iconValue ?? value}
                   className="shrink-0 size-5 -my-1"
@@ -124,7 +115,7 @@ export function CardValueCombobox<T>({
               )}
               <p className="min-w-0 group-data-[showing-placeholder]/button:text-muted-foreground truncate shrink whitespace-nowrap">
                 <WithHighlightedParentheses
-                  text={label ? label : placeholder}
+                  text={value ? value : placeholder}
                 />
               </p>
             </div>
@@ -163,9 +154,8 @@ export function CardValueCombobox<T>({
                         key={`${item.value}-${index}`}
                         value={item.value}
                         onSelect={(currentValue) => {
-                          setValue(currentValue);
+                          onSelect(currentValue);
                           setOpen(false);
-                          onValueChange?.(currentValue);
                         }}
                       >
                         {!isPending && !isLoadingError && Icon && (
@@ -178,7 +168,7 @@ export function CardValueCombobox<T>({
                           className="shrink leading-tight min-w-0 truncate 
                           group-data-[pending]/command:text-transparent group-data-[pending]/command:bg-foreground group-data-[pending]/command:rounded group-data-[pending]/command:animate-skeleton"
                         >
-                          <WithHighlightedParentheses text={item.label} />
+                          <WithHighlightedParentheses text={item.value} />
                         </p>
                         {!isPending && (
                           <CheckIcon
@@ -194,37 +184,8 @@ export function CardValueCombobox<T>({
           </Command>
         </PopoverContent>
       </Popover>
-      {inputErrorMessage && <ErrorLine>{inputErrorMessage}</ErrorLine>}
-    </div>
-  );
-}
-
-function TitleAndDescription({
-  title,
-  description,
-}: {
-  title?: string;
-  description?: string;
-}) {
-  return (
-    <div className="w-full flex flex-col px-1 leading-tight gap-0.5 pr-10">
-      {title && (
-        <p className="w-full text-foreground font-semibold group-data-[error]/input:text-destructive">
-          {title}
-        </p>
-      )}
-      {description && (
-        <p className="text-sm text-muted-foreground">{description}</p>
-      )}
-    </div>
-  );
-}
-
-function ErrorLine({ children }: { children: ReactNode }) {
-  return (
-    <p className="text-destructive text-sm font-medium leading-tight px-1">
-      {children}
-    </p>
+      <FormMessage />
+    </FormItem>
   );
 }
 

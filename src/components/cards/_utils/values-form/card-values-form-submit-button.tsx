@@ -13,6 +13,7 @@ export default function CardValuesFormSubmitButton({
     <Button
       className={cn("w-full", className)}
       state={isPending ? "loading" : undefined}
+      type="submit"
     >
       {isPending && (
         <>

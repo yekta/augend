@@ -1,17 +1,25 @@
-import { CardValueCombobox } from "@/components/cards/_utils/values-form/card-value-combobox";
+import CardValueComboboxFormItem from "@/components/cards/_utils/values-form/card-value-combobox-form-item";
 import CardValuesFormSubmitButton from "@/components/cards/_utils/values-form/card-values-form-submit-button";
 import CardValuesFormWrapper from "@/components/cards/_utils/values-form/card-values-form-wrapper";
 import { TValueFormProps } from "@/components/cards/_utils/values-form/types";
 import CryptoIcon from "@/components/icons/crypto-icon";
+import { Form, FormField } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
 import {
   ethereumNetworks,
   EthereumNetworkSchema,
+  TEthereumNetwork,
 } from "@/server/trpc/api/crypto/ethereum/constants";
-import { TEthereumNetwork } from "@/server/trpc/api/crypto/ethereum/constants";
-import { Dispatch, SetStateAction, useMemo, useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMemo } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
-export function GasTrackerValueForm({
+const FormSchema = z.object({
+  network: EthereumNetworkSchema,
+});
+
+export default function GasTrackerValueForm({
   onFormSubmit,
   isPendingForm,
 }: TValueFormProps) {
@@ -19,59 +27,66 @@ export function GasTrackerValueForm({
     (v) => ethereumNetworks[v].gasTracker !== null
   );
   const defaultNetwork = networks[0];
-  const [network, setNetwork] = useState<TEthereumNetwork>(defaultNetwork);
-  const [networkError, setNetworkError] = useState<string | null>(null);
+
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      network: defaultNetwork,
+    },
+  });
 
   const items = useMemo(() => {
     return networks.map((e) => ({ label: e, value: e }));
   }, [networks]);
 
-  const onFormSubmitLocal = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    let networkValue: TEthereumNetwork | null = null;
-    try {
-      networkValue = EthereumNetworkSchema.parse(network);
-    } catch {
-      setNetworkError("Invalid network.");
-      return;
-    }
-    if (networkValue === null) {
-      setNetworkError("Select a network.");
-      return;
-    }
+  const onSubmit = (data: z.infer<typeof FormSchema>) => {
     onFormSubmit([
       {
         cardTypeInputId: "gas_tracker_network",
-        value: networkValue,
+        value: data.network,
       },
     ]);
   };
 
-  const clearErrors = () => {
-    setNetworkError(null);
-  };
-
   return (
-    <CardValuesFormWrapper onSubmit={onFormSubmitLocal}>
-      <CardValueCombobox
-        inputTitle="Network"
-        inputDescription="The network to track gas prices on."
-        inputErrorMessage={networkError}
-        value={network}
-        Icon={({ value, className }) => (
-          <div className={cn("text-foreground p-0.25", className)}>
-            <CryptoIcon cryptoName={value} className="size-full" />
-          </div>
-        )}
-        onValueChange={() => clearErrors()}
-        setValue={setNetwork as Dispatch<SetStateAction<string | null>>}
-        disabled={isPendingForm}
-        items={items}
-        placeholder="Select network..."
-        inputPlaceholder="Search networks..."
-        noValueFoundLabel="No network found."
-      />
-      <CardValuesFormSubmitButton isPending={isPendingForm} />
-    </CardValuesFormWrapper>
+    <Form {...form}>
+      <CardValuesFormWrapper onSubmit={form.handleSubmit(onSubmit)}>
+        <FormField
+          name="network"
+          control={form.control}
+          render={({ field }) => (
+            <CardValueComboboxFormItem
+              inputTitle="Network"
+              inputDescription="The network to track gas prices on."
+              value={field.value}
+              onSelect={(value) =>
+                form.setValue("network", value as TEthereumNetwork)
+              }
+              Icon={Icon}
+              disabled={isPendingForm}
+              items={items}
+              placeholder="Select network..."
+              inputPlaceholder="Search networks..."
+              noValueFoundLabel="No network found."
+            />
+          )}
+        />
+        <CardValuesFormSubmitButton isPending={isPendingForm} />
+      </CardValuesFormWrapper>
+    </Form>
+  );
+}
+
+function Icon({
+  value,
+  className,
+}: {
+  value: string | null;
+  className?: string;
+}) {
+  return (
+    <div className={cn("text-foreground p-0.25", className)}>
+      <CryptoIcon cryptoName={value} className="size-full" />
+    </div>
   );
 }

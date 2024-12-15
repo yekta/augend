@@ -6,6 +6,7 @@ import {
   FormControl,
   FormDescription,
   FormField,
+  FormHeader,
   FormItem,
   FormLabel,
   FormMessage,
@@ -13,53 +14,56 @@ import {
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-export function NanoBananoValueForm({
+export default function NanoBananoValueForm({
   onFormSubmit,
   isPendingForm,
   network,
 }: TValueFormProps & { network: "nano" | "banano" }) {
   const characterCount = network === "nano" ? 65 : 64;
   const prefix = network === "nano" ? "nano_" : "ban_";
-  const FormSchema = z.object({
-    address: z
-      .string()
-      .length(
-        characterCount,
-        `Address should be ${characterCount} characters long.`
-      )
-      .refine(
-        (address) => {
-          const publicKey = address.slice(prefix.length);
-          return /^[13]/.test(publicKey);
-        },
-        {
-          message: `Address should start with "${prefix}_1" or "${prefix}_3".`,
-        }
-      )
-      .refine(
-        (address) => {
-          const publicKey = address.slice(prefix.length);
-          const isValidPublicKey = /^[a-z0-9]+$/.test(publicKey);
-          return isValidPublicKey;
-        },
-        {
-          message: "Address has an invalid character.",
-        }
-      )
-      .refine(
-        (address) => {
-          const publicKey = address.slice(prefix.length);
-          return !/[0l]/.test(publicKey); // Must not contain '0' or 'l'
-        },
-        {
-          message: `Address can't contain "0" or "l".`,
-        }
-      ),
-    is_owner: z.boolean().default(false).optional(),
-  });
+  const FormSchema = useMemo(() => {
+    return z.object({
+      address: z
+        .string()
+        .length(
+          characterCount,
+          `Address should be ${characterCount} characters long.`
+        )
+        .refine(
+          (address) => {
+            const publicKey = address.slice(prefix.length);
+            return /^[13]/.test(publicKey);
+          },
+          {
+            message: `Address should start with "${prefix}_1" or "${prefix}_3".`,
+          }
+        )
+        .refine(
+          (address) => {
+            const publicKey = address.slice(prefix.length);
+            const isValidPublicKey = /^[a-z0-9]+$/.test(publicKey);
+            return isValidPublicKey;
+          },
+          {
+            message: "Address has an invalid character.",
+          }
+        )
+        .refine(
+          (address) => {
+            const publicKey = address.slice(prefix.length);
+            return !/[0l]/.test(publicKey); // Must not contain '0' or 'l'
+          },
+          {
+            message: `Address can't contain "0" or "l".`,
+          }
+        ),
+      is_owner: z.boolean().default(false).optional(),
+    });
+  }, [prefix, characterCount]);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -89,17 +93,17 @@ export function NanoBananoValueForm({
           control={form.control}
           name="address"
           render={({ field }) => (
-            <FormItem className="w-full flex flex-col gap-2.5">
-              <div className="shrink min-w-0 overflow-hidden flex flex-col gap-0.5">
-                <FormLabel className="w-full">Address</FormLabel>
-                <FormDescription className="w-full">
+            <FormItem>
+              <FormHeader>
+                <FormLabel>Address</FormLabel>
+                <FormDescription>
                   Address of the account. Starts with{" "}
                   <span className="font-semibold bg-muted-foreground/15 rounded px-1">
                     {prefix}
                   </span>
                   {" ."}
                 </FormDescription>
-              </div>
+              </FormHeader>
               <FormControl>
                 <Input
                   autoComplete="off"
@@ -121,14 +125,12 @@ export function NanoBananoValueForm({
           name="is_owner"
           render={({ field }) => (
             <FormItem className="flex flex-row items-center justify-between gap-4">
-              <div className="flex-1 min-w-0 overflow-hidden flex flex-col gap-0.5">
-                <FormLabel className="w-full text-foreground font-semibold group-data-[error]/input:text-destructive">
-                  I own this
-                </FormLabel>
-                <FormDescription className="text-sm text-muted-foreground">
+              <FormHeader>
+                <FormLabel>I own this</FormLabel>
+                <FormDescription>
                   This will help track your total balance.
                 </FormDescription>
-              </div>
+              </FormHeader>
               <FormControl>
                 <Switch
                   checked={field.value}

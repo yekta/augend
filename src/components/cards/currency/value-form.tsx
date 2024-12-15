@@ -1,14 +1,23 @@
-import { CardValueCombobox } from "@/components/cards/_utils/values-form/card-value-combobox";
+import CardValueComboboxFormItem from "@/components/cards/_utils/values-form/card-value-combobox-form-item";
 import CardValuesFormSubmitButton from "@/components/cards/_utils/values-form/card-values-form-submit-button";
 import CardValuesFormWrapper from "@/components/cards/_utils/values-form/card-values-form-wrapper";
 import { TValueFormProps } from "@/components/cards/_utils/values-form/types";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import ForexIcon from "@/components/icons/forex-icon";
+import { Form, FormField } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
 import { api } from "@/server/trpc/setup/react";
-import { useMemo, useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMemo } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
-export function CurrencyValueForm({
+const FormSchema = z.object({
+  baseCurrencyValue: z.string(),
+  quoteCurrencyValue: z.string(),
+});
+
+export default function CurrencyValueForm({
   onFormSubmit,
   isPendingForm,
 }: TValueFormProps) {
@@ -18,60 +27,52 @@ export function CurrencyValueForm({
     isLoadingError: isLoadingError,
   } = api.ui.getCurrencies.useQuery({});
 
-  const [baseCurrencyValue, setBaseCurrencyValue] = useState<string | null>(
-    null
-  );
-  const [baseCurrencyError, setBaseCurrencyError] = useState<string | null>(
-    null
-  );
-  const [quoteCurrencyValue, setQuoteCurrencyValue] = useState<string | null>(
-    null
-  );
-  const [quoteCurrencyError, setQuoteCurrencyError] = useState<string | null>(
-    null
-  );
-
   const getValue = (c: { name: string; ticker: string }) =>
     `${c.name} (${c.ticker})`;
 
   const baseCurrencyItems = useMemo(() => {
     return currencies?.map((c) => ({
-      label: getValue(c),
       value: getValue(c),
       iconValue: c.ticker,
     }));
   }, [currencies]);
 
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      baseCurrencyValue: "",
+      quoteCurrencyValue: "",
+    },
+  });
+  const baseCurrencyValue = form.watch("baseCurrencyValue");
+
   const quoteCurrencyItems = useMemo(() => {
     return currencies
       ?.map((c) => ({
-        label: getValue(c),
         value: getValue(c),
         iconValue: c.ticker,
       }))
       .filter((c) => c.value !== baseCurrencyValue);
   }, [currencies, baseCurrencyValue]);
 
-  const onFormSubmitLocal = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onSubmit = (data: z.infer<typeof FormSchema>) => {
     const baseId = currencies?.find(
-      (c) => getValue(c) === baseCurrencyValue
+      (c) => getValue(c) === data.baseCurrencyValue
     )?.id;
-    if (!baseId) {
-      setBaseCurrencyError("Base currency is required.");
-      return;
-    }
-    const quoteId = currencies?.find(
-      (c) => getValue(c) === quoteCurrencyValue
-    )?.id;
-    if (!quoteId) {
-      setQuoteCurrencyError("Quote currency is required.");
+    if (baseId === undefined) {
+      form.setError("baseCurrencyValue", {
+        message: "Base currency is required.",
+      });
       return;
     }
 
-    if (baseId === quoteId) {
-      setBaseCurrencyError("Currencies must be different.");
-      setQuoteCurrencyError("Currencies must be different.");
+    const quoteId = currencies?.find(
+      (c) => getValue(c) === data.quoteCurrencyValue
+    )?.id;
+    if (quoteId === undefined) {
+      form.setError("quoteCurrencyValue", {
+        message: "Quote currency is required.",
+      });
       return;
     }
 
@@ -85,10 +86,6 @@ export function CurrencyValueForm({
         value: quoteId,
       },
     ]);
-  };
-
-  const clearErrors = () => {
-    setBaseCurrencyError(null);
   };
 
   const Icon = useMemo(
@@ -118,52 +115,64 @@ export function CurrencyValueForm({
   );
 
   return (
-    <CardValuesFormWrapper onSubmit={onFormSubmitLocal}>
-      <CardValueCombobox
-        inputTitle="Base Currency"
-        inputDescription="Select the base currency."
-        iconValue={
-          currencies?.find((c) => getValue(c) === baseCurrencyValue)?.ticker
-        }
-        Icon={Icon}
-        inputErrorMessage={baseCurrencyError}
-        value={baseCurrencyValue}
-        onValueChange={(value) => {
-          clearErrors();
-        }}
-        setValue={setBaseCurrencyValue}
-        disabled={isPendingForm}
-        isPending={isPending}
-        isLoadingError={isLoadingError}
-        isLoadingErrorMessage="Failed to load currencies :("
-        items={baseCurrencyItems}
-        placeholder="Select currency..."
-        inputPlaceholder="Search currencies..."
-        noValueFoundLabel="No currency found..."
-      />
-      <CardValueCombobox
-        inputTitle="Quote Currency"
-        inputDescription="Select the quote currency."
-        iconValue={
-          currencies?.find((c) => getValue(c) === quoteCurrencyValue)?.ticker
-        }
-        Icon={Icon}
-        inputErrorMessage={quoteCurrencyError}
-        value={quoteCurrencyValue}
-        onValueChange={(value) => {
-          clearErrors();
-        }}
-        setValue={setQuoteCurrencyValue}
-        disabled={isPendingForm}
-        isPending={isPending}
-        isLoadingError={isLoadingError}
-        isLoadingErrorMessage="Failed to load currencies :("
-        items={quoteCurrencyItems}
-        placeholder="Select currency..."
-        inputPlaceholder="Search currencies..."
-        noValueFoundLabel="No currency found..."
-      />
-      <CardValuesFormSubmitButton isPending={isPendingForm} />
-    </CardValuesFormWrapper>
+    <Form {...form}>
+      <CardValuesFormWrapper onSubmit={form.handleSubmit(onSubmit)}>
+        <FormField
+          control={form.control}
+          name="baseCurrencyValue"
+          render={({ field }) => (
+            <CardValueComboboxFormItem
+              inputTitle="Base Currency"
+              inputDescription="Select the base currency."
+              iconValue={
+                currencies?.find((c) => getValue(c) === field.value)?.ticker
+              }
+              Icon={Icon}
+              value={field.value}
+              onSelect={(v) => {
+                form.clearErrors("baseCurrencyValue");
+                form.setValue("baseCurrencyValue", v);
+              }}
+              disabled={isPendingForm}
+              isPending={isPending}
+              isLoadingError={isLoadingError}
+              isLoadingErrorMessage="Failed to load currencies :("
+              items={baseCurrencyItems}
+              placeholder="Select currency..."
+              inputPlaceholder="Search currencies..."
+              noValueFoundLabel="No currency found..."
+            />
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="quoteCurrencyValue"
+          render={({ field }) => (
+            <CardValueComboboxFormItem
+              inputTitle="Quote Currency"
+              inputDescription="Select the quote currency."
+              iconValue={
+                currencies?.find((c) => getValue(c) === field.value)?.ticker
+              }
+              Icon={Icon}
+              value={field.value}
+              onSelect={(v) => {
+                form.clearErrors("quoteCurrencyValue");
+                form.setValue("quoteCurrencyValue", v);
+              }}
+              disabled={isPendingForm}
+              isPending={isPending}
+              isLoadingError={isLoadingError}
+              isLoadingErrorMessage="Failed to load currencies :("
+              items={quoteCurrencyItems}
+              placeholder="Select currency..."
+              inputPlaceholder="Search currencies..."
+              noValueFoundLabel="No currency found..."
+            />
+          )}
+        />
+        <CardValuesFormSubmitButton isPending={isPendingForm} />
+      </CardValuesFormWrapper>
+    </Form>
   );
 }

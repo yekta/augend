@@ -1,19 +1,38 @@
-import { CardValueCombobox } from "@/components/cards/_utils/values-form/card-value-combobox";
+import CardValueComboboxFormItem from "@/components/cards/_utils/values-form/card-value-combobox-form-item";
 import CardValuesFormSubmitButton from "@/components/cards/_utils/values-form/card-values-form-submit-button";
 import CardValuesFormWrapper from "@/components/cards/_utils/values-form/card-values-form-wrapper";
 import { TValueFormProps } from "@/components/cards/_utils/values-form/types";
+import ErrorLine from "@/components/error-line";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import ForexIcon from "@/components/icons/forex-icon";
 import { Button } from "@/components/ui/button";
+import { Form, FormField } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
 import { cleanArray } from "@/server/redis/cache-utils";
 import { api } from "@/server/trpc/setup/react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { XIcon } from "lucide-react";
 import { useMemo, useState } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
+import { z } from "zod";
 
 const maxCurrencies = 10;
 
-export function CalculatorValueForm({
+const FormSchema = z.object({
+  currencies: z.array(z.object({ value: z.string() })),
+});
+
+const FinalFormSchema = z.object({
+  currencies: z
+    .array(z.string().uuid("Invalid currency."))
+    .min(2, "Select at least 2 currencies.")
+    .max(maxCurrencies, `Select at most ${maxCurrencies} currencies.`),
+});
+
+const getValue = (c: { name: string; ticker: string }) =>
+  `${c.name} (${c.ticker})`;
+
+export default function CalculatorValueForm({
   onFormSubmit,
   isPendingForm,
 }: TValueFormProps) {
@@ -23,20 +42,22 @@ export function CalculatorValueForm({
     isLoadingError: isLoadingError,
   } = api.ui.getCurrencies.useQuery({});
 
-  const [selectedCurrencies, setSelectedCurrencies] = useState<string[]>([]);
-  const [lastCurrencyValue, setLastCurrencyValue] = useState<string | null>(
-    null
-  );
-  const [lastCurrencyError, setLastCurrencyError] = useState<string | null>(
-    null
-  );
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      currencies: [],
+    },
+  });
+  const [formError, setFormError] = useState<string | null>(null);
+  const selectedCurrencies = form.watch("currencies");
 
-  const getValue = (c: { name: string; ticker: string }) =>
-    `${c.name} (${c.ticker})`;
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "currencies",
+  });
 
   const currencyItems = useMemo(() => {
     return currencies?.map((c) => ({
-      label: getValue(c),
       value: getValue(c),
       iconValue: c.ticker,
     }));
@@ -44,7 +65,9 @@ export function CalculatorValueForm({
 
   const lastCurrencyItems = useMemo(() => {
     return currencies
-      ?.filter((c) => !selectedCurrencies.includes(getValue(c)))
+      ?.filter(
+        (c) => !selectedCurrencies.map((s) => s.value).includes(getValue(c))
+      )
       ?.map((c) => ({
         label: getValue(c),
         value: getValue(c),
@@ -52,37 +75,27 @@ export function CalculatorValueForm({
       }));
   }, [currencies, selectedCurrencies]);
 
-  const onFormSubmitLocal = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onSubmit = (data: z.infer<typeof FormSchema>) => {
+    const currencyIds: string[] = cleanArray(
+      data.currencies
+        .map((c) => currencies?.find((cc) => getValue(cc) === c.value)?.id)
+        .filter((c) => c !== undefined && c !== null && c !== "") as string[]
+    );
+    const { data: parsedData, error } = FinalFormSchema.safeParse({
+      currencies: currencyIds,
+    });
+    if (error) {
+      setFormError(error.errors[0].message);
+      return;
+    }
 
-    const cleanedCurrencies = cleanArray(selectedCurrencies);
-    let currencyIds: string[] = [];
-    for (let i = 0; i < cleanedCurrencies.length; i++) {
-      const id = currencies?.find(
-        (c) => getValue(c) === cleanedCurrencies[i]
-      )?.id;
-      if (!id) continue;
-      currencyIds.push(id);
-    }
-    if (currencyIds.length < 2) {
-      setLastCurrencyError("Select at least two distinct currencies.");
-      return;
-    }
-    if (currencyIds.length > maxCurrencies) {
-      setLastCurrencyError(`Maxiumum ${maxCurrencies} currencies are allowed.`);
-      return;
-    }
     onFormSubmit(
-      currencyIds.map((id, index) => ({
+      parsedData.currencies.map((id, index) => ({
         cardTypeInputId: "calculator_currency_id",
         value: id,
         xOrder: index,
       }))
     );
-  };
-
-  const clearErrors = () => {
-    setLastCurrencyError(null);
   };
 
   const Icon = useMemo(
@@ -112,58 +125,59 @@ export function CalculatorValueForm({
   );
 
   return (
-    <CardValuesFormWrapper onSubmit={onFormSubmitLocal}>
-      {selectedCurrencies.length > 0 && (
-        <div className="w-full flex flex-col gap-2 pt-0.5">
-          {selectedCurrencies.map((currency, index) => (
-            <div
-              key={`${currency}-${index}`}
-              className="w-full flex items-stretch justify-between relative gap-1"
-            >
-              <CardValueCombobox
-                iconValue={
-                  currencies?.find((c) => getValue(c) === currency)?.ticker
-                }
-                Icon={Icon}
-                value={currency}
-                setValue={(value) => null}
-                onValueChange={(value) => {
-                  clearErrors();
-                  if (value === null || value === undefined) return;
-                  let newCurrencyList = [...selectedCurrencies];
-                  newCurrencyList[index] = value;
-                  setSelectedCurrencies(newCurrencyList);
-                }}
-                disabled={isPendingForm}
-                isPending={isPending}
-                isLoadingError={isLoadingError}
-                isLoadingErrorMessage="Failed to load currencies :("
-                items={currencyItems}
-                placeholder="Select currency..."
-                inputPlaceholder="Search currencies..."
-                noValueFoundLabel="No currency found..."
-              />
-              <Button
-                variant="outline"
-                size="icon"
-                type="button"
-                className="w-8 -mr-1 border-none h-auto shrink-0 self-stretch text-muted-more-foreground"
-                onClick={() => {
-                  let newCurrencyList = [...selectedCurrencies];
-                  newCurrencyList.splice(index, 1);
-                  setSelectedCurrencies(newCurrencyList);
-                }}
+    <Form {...form}>
+      <CardValuesFormWrapper onSubmit={form.handleSubmit(onSubmit)}>
+        {fields.length > 0 && (
+          <div className="w-full flex flex-col gap-2 pt-0.5">
+            {fields.map((f, index) => (
+              <div
+                key={`${f.value}-${index}`}
+                className="w-full flex items-stretch justify-between relative gap-1"
               >
-                <XIcon className="size-5" />
-              </Button>
-            </div>
-          ))}
-        </div>
-      )}
-      {/* The Extra Field */}
-      {(!lastCurrencyItems || lastCurrencyItems.length > 0) &&
-        selectedCurrencies.length < maxCurrencies && (
-          <CardValueCombobox
+                <FormField
+                  control={form.control}
+                  name={`currencies.${index}.value`}
+                  render={({ field }) => (
+                    <CardValueComboboxFormItem
+                      iconValue={
+                        currencies?.find((c) => getValue(c) === field.value)
+                          ?.ticker
+                      }
+                      Icon={Icon}
+                      value={field.value}
+                      onSelect={(v) => {
+                        form.setValue(`currencies.${index}.value`, v);
+                        setFormError(null);
+                      }}
+                      disabled={isPendingForm}
+                      isPending={isPending}
+                      isLoadingError={isLoadingError}
+                      isLoadingErrorMessage="Failed to load currencies :("
+                      items={currencyItems}
+                      placeholder="Select currency..."
+                      inputPlaceholder="Search currencies..."
+                      noValueFoundLabel="No currency found..."
+                    />
+                  )}
+                />
+                <Button
+                  variant="outline"
+                  size="icon"
+                  type="button"
+                  className="w-8 -mr-1 border-none h-auto shrink-0 self-stretch text-muted-more-foreground"
+                  onClick={() => {
+                    remove(index);
+                  }}
+                >
+                  <XIcon className="size-5" />
+                </Button>
+              </div>
+            ))}
+          </div>
+        )}
+        {/* The Extra Field */}
+        {fields.length < maxCurrencies && (
+          <CardValueComboboxFormItem
             inputTitle={
               selectedCurrencies.length === 0 ? "Currency" : "Add Currency"
             }
@@ -172,19 +186,12 @@ export function CalculatorValueForm({
                 ? "Add a currency."
                 : "Add another currency."
             }
-            iconValue={
-              currencies?.find((c) => getValue(c) === lastCurrencyValue)?.ticker
-            }
             Icon={Icon}
-            inputErrorMessage={lastCurrencyError}
-            value={lastCurrencyValue}
-            onValueChange={(value) => {
-              clearErrors();
-              if (value === null) return;
-              setSelectedCurrencies([...selectedCurrencies, value]);
-              setLastCurrencyValue(null);
+            value={null}
+            onSelect={(v) => {
+              append({ value: v });
+              setFormError(null);
             }}
-            setValue={setLastCurrencyValue}
             disabled={isPendingForm}
             isPending={isPending}
             isLoadingError={isLoadingError}
@@ -195,7 +202,9 @@ export function CalculatorValueForm({
             noValueFoundLabel="No currency found..."
           />
         )}
-      <CardValuesFormSubmitButton isPending={isPendingForm} />
-    </CardValuesFormWrapper>
+        {formError && <ErrorLine message={formError} variant="no-bg" />}
+        <CardValuesFormSubmitButton isPending={isPendingForm} />
+      </CardValuesFormWrapper>
+    </Form>
   );
 }

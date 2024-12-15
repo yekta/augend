@@ -1,7 +1,7 @@
 import { TValueFormProps } from "@/components/cards/_utils/values-form/types";
 import { ValueFormWithNoValue } from "@/components/cards/_utils/values-form/value-form-with-no-value";
 
-export function UniswapPoolsTableValueForm({
+export default function UniswapPoolsTableValueForm({
   onFormSubmit,
   isPendingForm,
 }: TValueFormProps) {

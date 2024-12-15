@@ -11,7 +11,7 @@ import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-export default function CryptoPriceValueForm({
+export default function CryptoAssetValueForm({
   onFormSubmit,
   isPendingForm,
   variant,
@@ -40,28 +40,20 @@ export default function CryptoPriceValueForm({
 
   const FormSchema = useMemo(() => {
     return z.object({
-      coinValue: z
-        .string()
-        .refine(
-          (value) => value !== undefined && value !== null && value !== "",
-          {
-            message: `Select a cryptocurrency.`,
+      coinValue: z.string().refine(
+        (value) => {
+          if (!shapedIdMaps?.map((i) => getValue(i)).includes(value)) {
+            return false;
           }
-        )
-        .refine(
-          (value) => {
-            if (!shapedIdMaps?.map((i) => getValue(i)).includes(value)) {
-              return false;
-            }
-            let coinId = shapedIdMaps?.find((i) => getValue(i) === value)?.id;
-            if (coinId === undefined) return false;
+          let coinId = shapedIdMaps?.find((i) => getValue(i) === value)?.id;
+          if (coinId === undefined) return false;
 
-            return true;
-          },
-          {
-            message: `Invalid cryptocurrency.`,
-          }
-        ),
+          return true;
+        },
+        {
+          message: `Invalid cryptocurrency.`,
+        }
+      ),
     });
   }, [shapedIdMaps]);
 
@@ -112,10 +104,7 @@ export default function CryptoPriceValueForm({
               inputDescription="The cryptocurrency to track."
               value={field.value}
               iconValue={iconValue}
-              onSelect={(v) => {
-                form.clearErrors("coinValue");
-                form.setValue("coinValue", v);
-              }}
+              onSelect={(v) => form.setValue("coinValue", v)}
               Icon={({ className, value }) => (
                 <div className={cn("text-foreground p-0.25", className)}>
                   <CryptoIcon cryptoName={value} className="size-full" />

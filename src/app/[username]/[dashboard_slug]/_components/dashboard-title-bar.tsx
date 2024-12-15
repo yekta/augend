@@ -159,7 +159,7 @@ export function DashboardTitleBar({ username, dashboardSlug, isOwner }: Props) {
                     control={renameDashboardForm.control}
                     name="title"
                     render={({ field }) => (
-                      <FormItem className="w-full flex flex-col gap-2">
+                      <FormItem>
                         <FormLabel className="w-full sr-only">
                           Dashboard Name
                         </FormLabel>

@@ -1,19 +1,18 @@
-import { BananoTotalValueForm } from "@/components/cards/banano-total/value-form";
-import { CalculatorValueForm } from "@/components/cards/calculator/value-form";
-import { CryptoPriceChartValueForm } from "@/components/cards/crypto-price-chart/value-form";
-import { CryptoTableValueForm } from "@/components/cards/crypto-table/value-form";
-import { CryptoPriceValueForm } from "@/components/cards/crypto-price/value-form";
-import { GasTrackerValueForm } from "@/components/cards/gas-tracker/value-form";
-import { FearGreedIndexValueForm } from "@/components/cards/fear-greed-index/value-form";
-import { CryptoPriceMiniValueForm } from "@/components/cards/crypto-price-mini/value-form";
-import { NanoBananoValueForm } from "@/components/cards/nano-banano/value-form";
-import { CryptoOrderBookValueForm } from "@/components/cards/order-book/value-form";
-import { UniswapPoolsTableValueForm } from "@/components/cards/uniswap-pools-table/value-form";
-import { UniswapPositionValueForm } from "@/components/cards/uniswap-position/value-form";
-import { WbanSummaryValueForm } from "@/components/cards/wban-summary/value-form";
+import BananoTotalValueForm from "@/components/cards/banano-total/value-form";
+import CalculatorValueForm from "@/components/cards/calculator/value-form";
+import CryptoAssetValueForm from "@/components/cards/crypto-asset/value-form";
+import CryptoPriceChartValueForm from "@/components/cards/crypto-price-chart/value-form";
+import CryptoPriceValueForm from "@/components/cards/crypto-price/value-form";
+import CryptoTableValueForm from "@/components/cards/crypto-table/value-form";
+import CurrencyValueForm from "@/components/cards/currency/value-form";
+import FearGreedIndexValueForm from "@/components/cards/fear-greed-index/value-form";
+import GasTrackerValueForm from "@/components/cards/gas-tracker/value-form";
+import NanoBananoValueForm from "@/components/cards/nano-banano/value-form";
+import CryptoOrderBookValueForm from "@/components/cards/order-book/value-form";
+import UniswapPoolsTableValueForm from "@/components/cards/uniswap-pools-table/value-form";
+import UniswapPositionValueForm from "@/components/cards/uniswap-position/value-form";
+import WbanSummaryValueForm from "@/components/cards/wban-summary/value-form";
 import { TCardValueForAddCards } from "@/server/trpc/api/ui/types";
-import { CurrencyValueForm } from "@/components/cards/currency/value-form";
-import { CryptoAssetMiniValueForm } from "@/components/cards/crypto-asset-mini/value-form";
 
 type Props = {
   cardTypeId: string;
@@ -21,7 +20,7 @@ type Props = {
   isPendingForm: boolean;
 };
 
-export default function CardValuesFormParser({
+export default function CardValueFormParser({
   cardTypeId,
   onFormSubmit,
   isPendingForm,
@@ -34,11 +33,13 @@ export default function CardValuesFormParser({
   if (cardTypeId === "gas_tracker")
     return <GasTrackerValueForm {...sharedProps} />;
   if (cardTypeId === "crypto_price")
-    return <CryptoPriceValueForm {...sharedProps} />;
+    return <CryptoPriceValueForm variant="default" {...sharedProps} />;
   if (cardTypeId === "crypto_price_mini")
-    return <CryptoPriceMiniValueForm {...sharedProps} />;
+    return <CryptoPriceValueForm variant="mini" {...sharedProps} />;
   if (cardTypeId === "crypto_asset_mini")
-    return <CryptoAssetMiniValueForm {...sharedProps} />;
+    return <CryptoAssetValueForm variant="mini" {...sharedProps} />;
+  if (cardTypeId === "crypto_asset")
+    return <CryptoAssetValueForm variant="default" {...sharedProps} />;
   if (cardTypeId === "banano_total")
     return <BananoTotalValueForm {...sharedProps} />;
   if (cardTypeId === "crypto_table")
