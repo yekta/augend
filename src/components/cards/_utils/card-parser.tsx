@@ -131,9 +131,9 @@ export function CardParser({
     if (buyAmount === undefined) return null;
 
     return (
-      <CardErrorBoundary className={cn(cardTypes.sm2.className, className)}>
+      <CardErrorBoundary className={cn(cardTypes.sm.className, className)}>
         <CryptoAssetCard
-          className={cn(cardTypes.sm2.className, className)}
+          className={cn(cardTypes.sm.className, className)}
           coinId={Number(coinId)}
           boughtAtTimestamp={Number(boughtAtTimestamp)}
           buyPriceUsd={Number(buyPriceUsd)}
