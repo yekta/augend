@@ -32,7 +32,7 @@ export default function CardVariantFormItem<T extends string>({
         <RadioGroup
           onValueChange={onChange}
           defaultValue={value}
-          className="w-full min-w-0 flex flex-row gap-1"
+          className="w-full min-w-0 flex flex-row gap-2"
         >
           {enumValues.map((enumValue) => (
             <FormItem
@@ -48,8 +48,8 @@ export default function CardVariantFormItem<T extends string>({
               <FormLabel
                 className="flex-1 h-full min-w-0 overflow-hidden cursor-pointer 
                 rounded-lg px-3 md:px-4 py-1.25 md:py-2 border 
-                peer-data-[state=checked]:border-foreground
-                not-touch:peer-data-[state=checked]:border-foreground
+                peer-data-[state=checked]:border-muted-foreground
+                not-touch:peer-data-[state=checked]:border-muted-foreground
                 not-touch:hover:bg-border
                 active:bg-border
                 flex items-center justify-center text-center font-semibold text-sm md:text-base"
