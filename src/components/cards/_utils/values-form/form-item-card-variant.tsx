@@ -42,7 +42,7 @@ export default function CardVariantFormItem<T extends string>({
               <FormControl>
                 <RadioGroupItem
                   value={enumValue}
-                  className="size-0 shrink-0 overflow-hidden opacity-0 peer"
+                  className="size-0 ring-0 border-0 shrink-0 focus-visible:ring-0 overflow-hidden peer absolute"
                 />
               </FormControl>
               <FormLabel
@@ -73,7 +73,7 @@ export default function CardVariantFormItem<T extends string>({
                         <div className="w-1/2 h-[3px] bg-muted-foreground rounded-sm" />
                       </div>
                       <div className="w-full px-1 gap-0.75 h-full flex-col items-center justify-center hidden group-data-[variant=mini]/variant:flex">
-                        <div className="w-full flex gap-2 items-center justify-between">
+                        <div className="w-full flex gap-2.5 items-center justify-between">
                           <div className="flex-1 h-[2px] bg-muted-foreground rounded-sm" />
                           <div className="flex-1 h-[2px] bg-muted-foreground rounded-sm" />
                         </div>
