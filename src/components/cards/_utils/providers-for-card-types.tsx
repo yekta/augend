@@ -40,7 +40,7 @@ export function ProvidersForCardTypes({
       "currency",
       "banano_total_balance",
       "calculator",
-      "crypto_asset_mini",
+      "crypto_asset",
     ])
   ) {
     wrappedChildren = (

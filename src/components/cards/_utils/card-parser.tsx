@@ -44,65 +44,23 @@ export function CardParser({
     )?.value;
     if (!coinId) return null;
 
+    if (cardObject.card.variant === "mini") {
+      return (
+        <CardErrorBoundary className={cn(cardTypes.sm.className, className)}>
+          <CryptoPriceMiniCard
+            className={cn(cardTypes.sm.className, className)}
+            coinId={Number(coinId)}
+            {...rest}
+          />
+        </CardErrorBoundary>
+      );
+    }
+
     return (
       <CardErrorBoundary className={cn(cardTypes.sm.className, className)}>
         <CryptoPriceCard
           className={cn(cardTypes.sm.className, className)}
           coinId={Number(coinId)}
-          {...rest}
-        />
-      </CardErrorBoundary>
-    );
-  }
-
-  if (cardObject.cardType.id === "crypto_price_mini") {
-    const values = cardObject.values;
-    if (!values) return null;
-    const coinId = values.find(
-      (v) => v.cardTypeInputId === "crypto_price_mini_coin_id"
-    )?.value;
-    if (!coinId) return null;
-
-    return (
-      <CardErrorBoundary className={cn(cardTypes.sm.className, className)}>
-        <CryptoPriceMiniCard
-          className={cn(cardTypes.sm.className, className)}
-          coinId={Number(coinId)}
-          {...rest}
-        />
-      </CardErrorBoundary>
-    );
-  }
-
-  if (cardObject.cardType.id === "crypto_asset_mini") {
-    const values = cardObject.values;
-    if (!values) return null;
-    const coinId = values.find(
-      (v) => v.cardTypeInputId === "crypto_asset_mini_coin_id"
-    )?.value;
-    if (!coinId) return null;
-    const boughtAtTimestamp = values.find(
-      (v) => v.cardTypeInputId === "crypto_asset_mini_bought_at_timestamp"
-    )?.value;
-    if (boughtAtTimestamp === undefined) return null;
-    const buyPriceUsd = values.find(
-      (v) => v.cardTypeInputId === "crypto_asset_mini_buy_price_usd"
-    )?.value;
-    if (buyPriceUsd === undefined) return null;
-    if (boughtAtTimestamp === undefined) return null;
-    const buyAmount = values.find(
-      (v) => v.cardTypeInputId === "crypto_asset_mini_buy_amount"
-    )?.value;
-    if (buyAmount === undefined) return null;
-
-    return (
-      <CardErrorBoundary className={cn(cardTypes.sm2.className, className)}>
-        <CryptoAssetMiniCard
-          className={cn(cardTypes.sm2.className, className)}
-          coinId={Number(coinId)}
-          boughtAtTimestamp={Number(boughtAtTimestamp)}
-          buyPriceUsd={Number(buyPriceUsd)}
-          buyAmount={Number(buyAmount)}
           {...rest}
         />
       </CardErrorBoundary>
@@ -129,6 +87,21 @@ export function CardParser({
       (v) => v.cardTypeInputId === "crypto_asset_buy_amount"
     )?.value;
     if (buyAmount === undefined) return null;
+
+    if (cardObject.card.variant === "mini") {
+      return (
+        <CardErrorBoundary className={cn(cardTypes.sm2.className, className)}>
+          <CryptoAssetMiniCard
+            className={cn(cardTypes.sm2.className, className)}
+            coinId={Number(coinId)}
+            boughtAtTimestamp={Number(boughtAtTimestamp)}
+            buyPriceUsd={Number(buyPriceUsd)}
+            buyAmount={Number(buyAmount)}
+            {...rest}
+          />
+        </CardErrorBoundary>
+      );
+    }
 
     return (
       <CardErrorBoundary className={cn(cardTypes.sm.className, className)}>

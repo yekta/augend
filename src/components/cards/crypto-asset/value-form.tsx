@@ -25,8 +25,7 @@ import { z } from "zod";
 export default function CryptoAssetValueForm({
   onFormSubmit,
   isPendingForm,
-  variant,
-}: TValueFormProps & { variant: "default" | "mini" }) {
+}: TValueFormProps) {
   const {
     data: idMaps,
     isPending: isPendingIdMaps,
@@ -108,31 +107,19 @@ export default function CryptoAssetValueForm({
     }
     onFormSubmit([
       {
-        cardTypeInputId:
-          variant === "mini"
-            ? "crypto_asset_mini_coin_id"
-            : "crypto_asset_coin_id",
+        cardTypeInputId: "crypto_asset_coin_id",
         value: coinId,
       },
       {
-        cardTypeInputId:
-          variant === "mini"
-            ? "crypto_asset_mini_bought_at_timestamp"
-            : "crypto_asset_bought_at_timestamp",
+        cardTypeInputId: "crypto_asset_bought_at_timestamp",
         value: data.boughtAtDate.getTime().toString(),
       },
       {
-        cardTypeInputId:
-          variant === "mini"
-            ? "crypto_asset_mini_buy_price_usd"
-            : "crypto_asset_buy_price_usd",
+        cardTypeInputId: "crypto_asset_buy_price_usd",
         value: data.buyPriceUsd,
       },
       {
-        cardTypeInputId:
-          variant === "mini"
-            ? "crypto_asset_mini_buy_amount"
-            : "crypto_asset_buy_amount",
+        cardTypeInputId: "crypto_asset_buy_amount",
         value: data.buyAmount,
       },
     ]);

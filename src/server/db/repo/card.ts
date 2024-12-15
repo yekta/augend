@@ -75,6 +75,7 @@ export async function getCards({
     .select({
       card: {
         id: cardsTable.id,
+        variant: cardsTable.variant,
       },
       cardType: {
         id: cardTypesTable.id,

@@ -33,13 +33,9 @@ export default function CardValueFormParser({
   if (cardTypeId === "gas_tracker")
     return <GasTrackerValueForm {...sharedProps} />;
   if (cardTypeId === "crypto_price")
-    return <CryptoPriceValueForm variant="default" {...sharedProps} />;
-  if (cardTypeId === "crypto_price_mini")
-    return <CryptoPriceValueForm variant="mini" {...sharedProps} />;
-  if (cardTypeId === "crypto_asset_mini")
-    return <CryptoAssetValueForm variant="mini" {...sharedProps} />;
+    return <CryptoPriceValueForm {...sharedProps} />;
   if (cardTypeId === "crypto_asset")
-    return <CryptoAssetValueForm variant="default" {...sharedProps} />;
+    return <CryptoAssetValueForm {...sharedProps} />;
   if (cardTypeId === "banano_total")
     return <BananoTotalValueForm {...sharedProps} />;
   if (cardTypeId === "crypto_table")

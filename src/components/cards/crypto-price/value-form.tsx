@@ -14,8 +14,7 @@ import { z } from "zod";
 export default function CryptoPriceValueForm({
   onFormSubmit,
   isPendingForm,
-  variant,
-}: TValueFormProps & { variant: "default" | "mini" }) {
+}: TValueFormProps) {
   const {
     data: idMaps,
     isPending: isPendingIdMaps,
@@ -91,10 +90,7 @@ export default function CryptoPriceValueForm({
     }
     onFormSubmit([
       {
-        cardTypeInputId:
-          variant === "mini"
-            ? "crypto_price_mini_coin_id"
-            : "crypto_price_coin_id",
+        cardTypeInputId: "crypto_price_coin_id",
         value: coinId,
       },
     ]);
