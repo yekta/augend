@@ -81,7 +81,7 @@ export default function CryptoPriceMiniCard({
             className="size-5 md:size-6 shrink-0 group-data-[loading-error]/card:text-destructive"
           />
         )}
-        <div className="flex-1 flex flex-col overflow-hidden gap-1.5 md:gap-1.75">
+        <div className="flex-1 flex flex-col overflow-hidden gap-1.5">
           {/* Top line */}
           <div className="w-full flex flex-row items-center justify-between gap-3">
             <div

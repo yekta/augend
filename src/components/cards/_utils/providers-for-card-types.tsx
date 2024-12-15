@@ -35,7 +35,14 @@ export function ProvidersForCardTypes({
   const includesAny = (ids: string[]) =>
     cardTypeIds.some((id) => ids.includes(id));
 
-  if (includesAny(["currency", "banano_total_balance", "calculator"])) {
+  if (
+    includesAny([
+      "currency",
+      "banano_total_balance",
+      "calculator",
+      "crypto_asset_mini",
+    ])
+  ) {
     wrappedChildren = (
       <ForexRatesProvider>{wrappedChildren}</ForexRatesProvider>
     );

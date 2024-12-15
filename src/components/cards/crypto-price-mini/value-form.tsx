@@ -89,7 +89,7 @@ export function CryptoPriceMiniValueForm({
         disabled={isPendingForm}
         isPending={isPendingIdMaps}
         isLoadingError={isLoadingErrorIdMaps}
-        isLoadingErrorMessage="Failed to load idMaps :("
+        isLoadingErrorMessage="Failed to load crypto list :("
         items={items}
         placeholder="Select crypto..."
         inputPlaceholder="Search cryptos..."

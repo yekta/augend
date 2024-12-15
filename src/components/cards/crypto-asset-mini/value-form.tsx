@@ -59,10 +59,27 @@ export function CryptoAssetMiniValueForm({
       setIdMapError("Invalid cryptocurrency.");
       return;
     }
+
+    const boughtAtTimestamp = Date.now();
+    const buyPriceUsd = 2000;
+    const buyAmount = 1.554;
+
     onFormSubmit([
       {
-        cardTypeInputId: "crypto_mini_coin_id",
+        cardTypeInputId: "crypto_asset_mini_coin_id",
         value: coinId,
+      },
+      {
+        cardTypeInputId: "crypto_asset_mini_bought_at_timestamp",
+        value: boughtAtTimestamp.toString(),
+      },
+      {
+        cardTypeInputId: "crypto_asset_mini_buy_price_usd",
+        value: buyPriceUsd.toString(),
+      },
+      {
+        cardTypeInputId: "crypto_asset_mini_buy_amount",
+        value: buyAmount.toString(),
       },
     ]);
   };
@@ -75,7 +92,7 @@ export function CryptoAssetMiniValueForm({
     <CardValuesFormWrapper onSubmit={onFormSubmitLocal}>
       <CardValueCombobox
         inputTitle="Crypto"
-        inputDescription="The cryptocurrency to track."
+        inputDescription="The cryptocurrency you own."
         inputErrorMessage={idMapError}
         value={coinNameAndTicker}
         iconValue={iconValue}
@@ -89,7 +106,7 @@ export function CryptoAssetMiniValueForm({
         disabled={isPendingForm}
         isPending={isPendingIdMaps}
         isLoadingError={isLoadingErrorIdMaps}
-        isLoadingErrorMessage="Failed to load idMaps :("
+        isLoadingErrorMessage="Failed to load crypto list :("
         items={items}
         placeholder="Select crypto..."
         inputPlaceholder="Search cryptos..."

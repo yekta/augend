@@ -24,6 +24,7 @@ import { TCurrencyWithSelectedFields } from "@/server/db/repo/types";
 import { TEthereumNetwork } from "@/server/trpc/api/crypto/ethereum/constants";
 import { TExchange } from "@/server/trpc/api/crypto/exchange/types";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
+import CryptoAssetMiniCard from "@/components/cards/crypto-asset-mini/card";
 
 export function CardParser({
   cardObject,
@@ -41,6 +42,7 @@ export function CardParser({
       (v) => v.cardTypeInputId === "crypto_price_coin_id"
     )?.value;
     if (!coinId) return null;
+
     return (
       <CardErrorBoundary className={cn(cardTypes.sm.className, className)}>
         <CryptoPriceCard
@@ -59,11 +61,48 @@ export function CardParser({
       (v) => v.cardTypeInputId === "crypto_price_mini_coin_id"
     )?.value;
     if (!coinId) return null;
+
     return (
       <CardErrorBoundary className={cn(cardTypes.sm.className, className)}>
         <CryptoPriceMiniCard
           className={cn(cardTypes.sm.className, className)}
           coinId={Number(coinId)}
+          {...rest}
+        />
+      </CardErrorBoundary>
+    );
+  }
+
+  if (cardObject.cardType.id === "crypto_asset_mini") {
+    const values = cardObject.values;
+    console.log(values);
+    if (!values) return null;
+    const coinId = values.find(
+      (v) => v.cardTypeInputId === "crypto_asset_mini_coin_id"
+    )?.value;
+    if (!coinId) return null;
+    const boughtAtTimestamp = values.find(
+      (v) => v.cardTypeInputId === "crypto_asset_mini_bought_at_timestamp"
+    )?.value;
+    if (boughtAtTimestamp === undefined) return null;
+    const buyPriceUsd = values.find(
+      (v) => v.cardTypeInputId === "crypto_asset_mini_buy_price_usd"
+    )?.value;
+    if (buyPriceUsd === undefined) return null;
+    if (boughtAtTimestamp === undefined) return null;
+    const buyAmount = values.find(
+      (v) => v.cardTypeInputId === "crypto_asset_mini_buy_amount"
+    )?.value;
+    if (buyAmount === undefined) return null;
+
+    return (
+      <CardErrorBoundary className={cn(cardTypes.sm2.className, className)}>
+        <CryptoAssetMiniCard
+          className={cn(cardTypes.sm2.className, className)}
+          coinId={Number(coinId)}
+          boughtAtTimestamp={Number(boughtAtTimestamp)}
+          buyPriceUsd={Number(buyPriceUsd)}
+          buyAmount={Number(buyAmount)}
           {...rest}
         />
       </CardErrorBoundary>
@@ -105,6 +144,7 @@ export function CardParser({
     const baseCurrency = currencies?.find((c) => c.id === baseId);
     const quoteCurrency = currencies?.find((c) => c.id === quoteId);
     if (!baseCurrency || !quoteCurrency) return null;
+
     return (
       <CardErrorBoundary className={cn(cardTypes.sm.className, className)}>
         <CurrencyCard
@@ -134,6 +174,7 @@ export function CardParser({
         v.cardTypeInputId === "banano_balance_is_owner"
     )?.value;
     if (address === undefined || isOwner === undefined) return null;
+
     return (
       <CardErrorBoundary className={cn(cardTypes.sm.className, className)}>
         <NanoBananoCard
@@ -158,6 +199,7 @@ export function CardParser({
     const selectedCurrencies = currencies
       .filter((c) => ids.includes(c.id))
       .sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id));
+
     return (
       <CardErrorBoundary className={cn(cardTypes.md.className, className)}>
         <CalculatorCard
@@ -184,6 +226,7 @@ export function CardParser({
       limit: 10,
       pair: pair,
     };
+
     return (
       <CardErrorBoundary className={cn(cardTypes.md.className, className)}>
         <OrderBookCard
@@ -209,6 +252,7 @@ export function CardParser({
       exchange: exchange as TExchange,
       pair: pair,
     };
+
     return (
       <CardErrorBoundary className={cn(cardTypes.lg.className, className)}>
         <CryptoPriceChartCard
@@ -244,6 +288,7 @@ export function CardParser({
       (v) => v.cardTypeInputId === "uniswap_position_is_owner"
     )?.value;
     if (!network || !positionId || !isOwner) return null;
+
     return (
       <CardErrorBoundary className={cn(cardTypes.xl.className, className)}>
         <UniswapPositionCard
@@ -286,6 +331,7 @@ export function CardParser({
       (v) => v.cardTypeInputId === "gas_tracker_network"
     )?.value;
     if (!network) return null;
+
     return (
       <CardErrorBoundary className={cn(cardTypes.xl.className, className)}>
         <GasTrackerCard

@@ -13,6 +13,7 @@ import { UniswapPositionValueForm } from "@/components/cards/uniswap-position/va
 import { WbanSummaryValueForm } from "@/components/cards/wban-summary/value-form";
 import { TCardValueForAddCards } from "@/server/trpc/api/ui/types";
 import { CurrencyValueForm } from "@/components/cards/currency/value-form";
+import { CryptoAssetMiniValueForm } from "@/components/cards/crypto-asset-mini/value-form";
 
 type Props = {
   cardTypeId: string;
@@ -36,6 +37,8 @@ export default function CardValuesFormParser({
     return <CryptoPriceValueForm {...sharedProps} />;
   if (cardTypeId === "crypto_price_mini")
     return <CryptoPriceMiniValueForm {...sharedProps} />;
+  if (cardTypeId === "crypto_asset_mini")
+    return <CryptoAssetMiniValueForm {...sharedProps} />;
   if (cardTypeId === "banano_total")
     return <BananoTotalValueForm {...sharedProps} />;
   if (cardTypeId === "crypto_table")

@@ -180,13 +180,18 @@ export const cmcRouter = createTRPCRouter({
         sortBy: z.enum(["cmc_rank", "id"]).optional().default("cmc_rank"),
       })
     )
-    .query(async ({ input: { limit, sortBy } }) => {
+    .query(async ({ input: { limit, sortBy }, ctx }) => {
       type TReturn = {
         id: number;
         name: string;
         rank: number;
         symbol: string;
       }[];
+
+      if (ctx.cachedResult) {
+        return ctx.cachedResult as TReturn;
+      }
+
       const url = `${cmcApiUrl}/v1/cryptocurrency/map?sort=${sortBy}&limit=${limit}`;
       const res = await fetch(url, cmcFetchOptions);
 
