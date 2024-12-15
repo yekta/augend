@@ -31,19 +31,24 @@ export default function CryptoAssetMiniCard({
   const currencyPreference = useCurrencyPreference();
   const {
     data: dataForex,
+    isPending: isPendingForex,
     isError: isErrorForex,
     isLoadingError: isLoadingErrorForex,
-    isPending: isPendingForex,
     isRefetching: isRefetchingForex,
   } = useForexRates();
 
   const {
     data: allDataCrypto,
+    isPending: isPendingCrypto,
     isError: isErrorCrypto,
     isLoadingError: isLoadingErrorCrypto,
-    isPending: isPendingCrypto,
     isRefetching: isRefetchingCrypto,
   } = useCmcCryptoInfos();
+
+  const isPending = isPendingForex || isPendingCrypto;
+  const isError = isErrorForex || isErrorCrypto;
+  const isRefetching = isRefetchingForex || isRefetchingCrypto;
+  const hasData = allDataCrypto !== undefined && dataForex !== undefined;
 
   const dataCrypto = allDataCrypto?.[coinId];
   const convertCurrency = currencyPreference.primary;
@@ -198,10 +203,10 @@ export default function CryptoAssetMiniCard({
           </div>
         </div>
         <Indicator
-          isError={isErrorCrypto}
-          isPending={isPendingCrypto}
-          isRefetching={isRefetchingCrypto}
-          hasData={dataCrypto !== undefined}
+          isPending={isPending}
+          isError={isError}
+          isRefetching={isRefetching}
+          hasData={hasData}
           className="left-0 top-0 bottom-auto right-auto"
         />
       </CardInnerWrapper>

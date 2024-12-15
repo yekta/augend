@@ -25,6 +25,7 @@ import { TEthereumNetwork } from "@/server/trpc/api/crypto/ethereum/constants";
 import { TExchange } from "@/server/trpc/api/crypto/exchange/types";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
 import CryptoAssetMiniCard from "@/components/cards/crypto-asset/card-mini";
+import CryptoAssetCard from "@/components/cards/crypto-asset/card";
 
 export function CardParser({
   cardObject,
@@ -97,6 +98,41 @@ export function CardParser({
     return (
       <CardErrorBoundary className={cn(cardTypes.sm2.className, className)}>
         <CryptoAssetMiniCard
+          className={cn(cardTypes.sm2.className, className)}
+          coinId={Number(coinId)}
+          boughtAtTimestamp={Number(boughtAtTimestamp)}
+          buyPriceUsd={Number(buyPriceUsd)}
+          buyAmount={Number(buyAmount)}
+          {...rest}
+        />
+      </CardErrorBoundary>
+    );
+  }
+
+  if (cardObject.cardType.id === "crypto_asset") {
+    const values = cardObject.values;
+    if (!values) return null;
+    const coinId = values.find(
+      (v) => v.cardTypeInputId === "crypto_asset_coin_id"
+    )?.value;
+    if (!coinId) return null;
+    const boughtAtTimestamp = values.find(
+      (v) => v.cardTypeInputId === "crypto_asset_bought_at_timestamp"
+    )?.value;
+    if (boughtAtTimestamp === undefined) return null;
+    const buyPriceUsd = values.find(
+      (v) => v.cardTypeInputId === "crypto_asset_buy_price_usd"
+    )?.value;
+    if (buyPriceUsd === undefined) return null;
+    if (boughtAtTimestamp === undefined) return null;
+    const buyAmount = values.find(
+      (v) => v.cardTypeInputId === "crypto_asset_buy_amount"
+    )?.value;
+    if (buyAmount === undefined) return null;
+
+    return (
+      <CardErrorBoundary className={cn(cardTypes.sm2.className, className)}>
+        <CryptoAssetCard
           className={cn(cardTypes.sm2.className, className)}
           coinId={Number(coinId)}
           boughtAtTimestamp={Number(boughtAtTimestamp)}
