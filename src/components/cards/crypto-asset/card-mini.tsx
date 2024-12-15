@@ -115,23 +115,25 @@ export default function CryptoAssetMiniCard({
       {...restTyped}
     >
       <CardInnerWrapper
-        className="flex px-2.5 md:pl-3.5 md:pr-3.75 py-3 md:py-4 gap-2.25 md:gap-3 flex-row items-center text-left
+        className="flex pl-3.5 pr-4 sm:px-3 md:px-4 py-4 sm:py-3 md:py-4 gap-3 sm:gap-2.25 md:gap-3 flex-row items-center text-left
         not-touch:group-data-[has-href]/card:group-hover/card:bg-background-hover group-data-[has-href]/card:group-active/card:bg-background-hover relative overflow-hidden"
       >
-        {isPendingCrypto ? (
-          <div className="size-5 md:size-6 rounded-md bg-foreground animate-skeleton shrink-0" />
-        ) : (
-          <CryptoIcon
-            cryptoName={ticker}
-            className="size-5 md:size-6 shrink-0 group-data-[loading-error]/card:text-destructive"
-          />
-        )}
+        <div className="size-6 sm:size-5 md:size-6 shrink-0 -ml-0.5">
+          {isPendingCrypto ? (
+            <div className="size-full rounded-md bg-foreground animate-skeleton" />
+          ) : (
+            <CryptoIcon
+              cryptoName={ticker}
+              className="size-full group-data-[loading-error]/card:text-destructive"
+            />
+          )}
+        </div>
         <div className="flex-1 flex flex-col overflow-hidden gap-1.5">
           {/* Top line */}
           <div className="w-full flex flex-row items-center justify-between gap-3">
             {/* Amount */}
             <p
-              className="shrink text-sm md:text-base font-semibold truncate leading-none md:leading-none
+              className="shrink text-base sm:text-sm md:text-base font-semibold truncate leading-none sm:leading-none md:leading-none
               group-data-[pending]/card:rounded-sm group-data-[pending]/card:text-transparent group-data-[pending]/card:bg-foreground group-data-[pending]/card:animate-skeleton
               group-data-[loading-error]/card:text-destructive"
             >
@@ -143,7 +145,7 @@ export default function CryptoAssetMiniCard({
             </p>
             {/* Current value in currency */}
             <p
-              className="shrink text-sm md:text-base font-semibold truncate leading-none md:leading-none
+              className="shrink text-base sm:text-sm md:text-base font-semibold truncate leading-none sm:leading-none md:leading-none
               group-data-[pending]/card:rounded-sm group-data-[pending]/card:text-transparent group-data-[pending]/card:bg-foreground group-data-[pending]/card:animate-skeleton
               group-data-[loading-error]/card:text-destructive"
             >
@@ -158,7 +160,7 @@ export default function CryptoAssetMiniCard({
           <div className="w-full flex flex-row items-center justify-between gap-3">
             {/* Ticker */}
             <div
-              className="shrink min-w-0 flex items-center justify-start gap-1.25 text-muted-foreground text-xs md:text-sm truncate leading-none md:leading-none
+              className="shrink min-w-0 flex items-center justify-start gap-1.25 text-muted-foreground text-sm sm:text-xs md:text-sm truncate leading-none sm:leading-none md:leading-none
               group-data-[pending]/card:rounded-sm group-data-[pending]/card:text-transparent group-data-[pending]/card:bg-muted-foreground group-data-[pending]/card:animate-skeleton
               group-data-[loading-error]/card:text-destructive/60"
             >
@@ -168,7 +170,7 @@ export default function CryptoAssetMiniCard({
             </div>
             {/* Pnl */}
             <div
-              className="shrink min-w-0 flex items-center justify-start gap-1.5 text-xs md:text-sm truncate leading-none md:leading-none
+              className="shrink min-w-0 flex items-center justify-start gap-1.5 text-sm sm:text-xs md:text-sm truncate leading-none sm:leading-none md:leading-none
               group-data-[pending]/card:rounded-sm group-data-[pending]/card:text-transparent group-data-[pending]/card:bg-muted-foreground group-data-[pending]/card:animate-skeleton
               group-data-[loading-error]/card:text-destructive/60
               group-data-[pnl-positive]/card:text-success group-data-[pnl-negative]/card:text-destructive"

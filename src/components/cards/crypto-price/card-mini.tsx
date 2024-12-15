@@ -70,17 +70,21 @@ export default function CryptoPriceMiniCard({
       {...restTyped}
     >
       <CardInnerWrapper
-        className="flex px-2.5 md:pl-3.5 md:pr-3.75 py-3 md:py-4 gap-2.25 md:gap-3 flex-row items-center text-left
+        className="flex px-3 md:pl-3.5 md:pr-4 py-3 md:py-4 gap-2.25 md:gap-3 flex-row items-center text-left
         not-touch:group-data-[has-href]/card:group-hover/card:bg-background-hover group-data-[has-href]/card:group-active/card:bg-background-hover relative overflow-hidden"
       >
-        {isPending ? (
-          <div className="size-5 md:size-6 rounded-md bg-foreground animate-skeleton shrink-0" />
-        ) : (
-          <CryptoIcon
-            cryptoName={ticker}
-            className="size-5 md:size-6 shrink-0 group-data-[loading-error]/card:text-destructive"
-          />
-        )}
+        <div className="size-5 md:size-6 shrink-0 -ml-0.5">
+          {" "}
+          {isPending ? (
+            <div className="size-full rounded-md bg-foreground animate-skeleton" />
+          ) : (
+            <CryptoIcon
+              cryptoName={ticker}
+              className="size-full group-data-[loading-error]/card:text-destructive"
+            />
+          )}
+        </div>
+
         <div className="flex-1 flex flex-col overflow-hidden gap-1.5">
           {/* Top line */}
           <div className="w-full flex flex-row items-center justify-between gap-3">
