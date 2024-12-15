@@ -35,10 +35,12 @@ export default function CurrencyCard({
     isRefetching: isRefetchingCmc,
   } = useCmcCryptoInfos();
 
-  const isPending = isPendingForex || isPendingCmc;
-  const isError = isErrorForex || isErrorCmc;
-  const isLoadingError = isLoadingErrorForex || isLoadingErrorCmc;
-  const isRefetching = isRefetchingForex || isRefetchingCmc;
+  const someIsCrypto = baseCurrency.isCrypto || quoteCurrency.isCrypto;
+  const isPending = isPendingForex || (isPendingCmc && someIsCrypto);
+  const isError = isErrorForex || (isErrorCmc && someIsCrypto);
+  const isLoadingError =
+    isLoadingErrorForex || (isLoadingErrorCmc && someIsCrypto);
+  const isRefetching = isRefetchingForex || (isRefetchingCmc && someIsCrypto);
 
   const baseInUsd =
     baseCurrency.isCrypto && baseCurrency.coinId

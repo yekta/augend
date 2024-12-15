@@ -1,12 +1,12 @@
 import CurrentDashboardProvider from "@/app/[username]/[dashboard_slug]/_components/current-dashboard-provider";
 import DndCardsProvider from "@/app/[username]/[dashboard_slug]/_components/dnd-cards-provider";
 import { cardTypes } from "@/components/cards/_utils/helpers";
-import CryptoMiniCard from "@/components/cards/crypto-mini/card";
+import CryptoPriceMiniCard from "@/components/cards/crypto-price-mini/card";
 import CryptoPriceChartCard, {
   TOhlcvChartConfig,
 } from "@/components/cards/crypto-price-chart/card";
 import { cryptoPriceChartIntervalDefault } from "@/components/cards/crypto-price-chart/constants";
-import CryptoCard from "@/components/cards/crypto/card";
+import CryptoPriceCard from "@/components/cards/crypto-price/card";
 import CurrencyCard from "@/components/cards/currency/card";
 import FearGreedIndexCard from "@/components/cards/fear-greed-index/card";
 import GasTrackerCard from "@/components/cards/gas-tracker/card";
@@ -106,7 +106,7 @@ export default async function Home() {
             forexRatesInitialData={forexRates}
           >
             {cryptoIds.map((id, index) => (
-              <CryptoCard
+              <CryptoPriceCard
                 noHref
                 key={`${id}-${index}`}
                 coinId={id}
@@ -139,7 +139,7 @@ export default async function Home() {
               }}
             />
             {miniCryptoIds.map((id, index) => (
-              <CryptoMiniCard
+              <CryptoPriceMiniCard
                 noHref
                 key={id}
                 coinId={id}

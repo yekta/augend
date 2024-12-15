@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { api } from "@/server/trpc/setup/react";
 import { useMemo, useState } from "react";
 
-export function MiniCryptoValueForm({
+export function CryptoAssetMiniValueForm({
   onFormSubmit,
   isPendingForm,
 }: TValueFormProps) {

@@ -63,7 +63,14 @@ export default function GasTrackerCard({
       : restAsDiv;
 
   const NetworkIcon = useMemo(
-    () => () => <CryptoIcon cryptoName={network} className="size-full" />,
+    () =>
+      ({ className }: { className?: string }) =>
+        (
+          <CryptoIcon
+            cryptoName={network}
+            className={cn("size-full", className)}
+          />
+        ),
     [network]
   );
 

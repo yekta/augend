@@ -55,7 +55,7 @@ export default function ForexIcon({
   return (
     <p
       className={cn(
-        "text-foreground flex items-center justify-center text-center leading-tight",
+        "flex items-center justify-center text-center leading-tight",
         defaultClassName,
         className
       )}

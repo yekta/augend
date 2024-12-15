@@ -7,11 +7,11 @@ import CryptoPriceChartCard, {
   TOhlcvChartConfig,
 } from "@/components/cards/crypto-price-chart/card";
 import CryptoTableCard from "@/components/cards/crypto-table/card";
-import CryptoCard from "@/components/cards/crypto/card";
+import CryptoPriceCard from "@/components/cards/crypto-price/card";
 import CurrencyCard from "@/components/cards/currency/card";
 import FearGreedIndexCard from "@/components/cards/fear-greed-index/card";
 import GasTrackerCard from "@/components/cards/gas-tracker/card";
-import CryptoMiniCard from "@/components/cards/crypto-mini/card";
+import CryptoPriceMiniCard from "@/components/cards/crypto-price-mini/card";
 import NanoBananoCard from "@/components/cards/nano-banano/card";
 import OrderBookCard, {
   TOrderBookConfig,
@@ -34,16 +34,16 @@ export function CardParser({
   cardObject: NonNullable<AppRouterOutputs["ui"]["getCards"]>["cards"][number];
   currencies: TCurrencyWithSelectedFields[] | null;
 } & TCardOuterWrapperProps) {
-  if (cardObject.cardType.id === "crypto") {
+  if (cardObject.cardType.id === "crypto_price") {
     const values = cardObject.values;
     if (!values) return null;
     const coinId = values.find(
-      (v) => v.cardTypeInputId === "crypto_coin_id"
+      (v) => v.cardTypeInputId === "crypto_price_coin_id"
     )?.value;
     if (!coinId) return null;
     return (
       <CardErrorBoundary className={cn(cardTypes.sm.className, className)}>
-        <CryptoCard
+        <CryptoPriceCard
           className={cn(cardTypes.sm.className, className)}
           coinId={Number(coinId)}
           {...rest}
@@ -52,16 +52,16 @@ export function CardParser({
     );
   }
 
-  if (cardObject.cardType.id === "crypto_mini") {
+  if (cardObject.cardType.id === "crypto_price_mini") {
     const values = cardObject.values;
     if (!values) return null;
     const coinId = values.find(
-      (v) => v.cardTypeInputId === "crypto_mini_coin_id"
+      (v) => v.cardTypeInputId === "crypto_price_mini_coin_id"
     )?.value;
     if (!coinId) return null;
     return (
       <CardErrorBoundary className={cn(cardTypes.sm.className, className)}>
-        <CryptoMiniCard
+        <CryptoPriceMiniCard
           className={cn(cardTypes.sm.className, className)}
           coinId={Number(coinId)}
           {...rest}

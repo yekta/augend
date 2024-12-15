@@ -14,7 +14,7 @@ import { formatNumberTBMK } from "@/lib/number-formatters";
 import { ArrowDownIcon, ArrowRightIcon, ArrowUpIcon } from "lucide-react";
 import { useMemo } from "react";
 
-export default function CryptoCard({
+export default function CryptoPriceCard({
   coinId,
   className,
   ...rest

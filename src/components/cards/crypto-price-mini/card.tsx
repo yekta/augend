@@ -14,7 +14,7 @@ import { getCmcUrl } from "@/lib/get-cmc-url";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { ArrowDownIcon, ArrowRightIcon, ArrowUpIcon } from "lucide-react";
 
-export default function CryptoMiniCard({
+export default function CryptoPriceMiniCard({
   coinId,
   className,
   ...rest
@@ -61,6 +61,7 @@ export default function CryptoMiniCard({
         href: restAsLink.href || getCmcUrl(slug),
       }
     : restAsDiv;
+
   return (
     <CardOuterWrapper
       className={className}

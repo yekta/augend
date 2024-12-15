@@ -106,15 +106,17 @@ export default function DashboardPage({}: {}) {
     if (!cards || !currencies) return undefined;
     let ids = cards
       .filter(
-        (c) => c.cardType.id === "crypto" || c.cardType.id === "crypto_mini"
+        (c) =>
+          c.cardType.id === "crypto_price" ||
+          c.cardType.id === "crypto_price_mini"
       )
       .map((c) => {
         const values = c.values;
         if (!values) return null;
         const value = values.find(
           (v) =>
-            v.cardTypeInputId === "crypto_coin_id" ||
-            v.cardTypeInputId === "crypto_mini_coin_id"
+            v.cardTypeInputId === "crypto_price_coin_id" ||
+            v.cardTypeInputId === "crypto_price_mini_coin_id"
         )?.value;
         if (!value) return null;
         return value;

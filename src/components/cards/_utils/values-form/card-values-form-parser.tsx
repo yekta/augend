@@ -2,10 +2,10 @@ import { BananoTotalValueForm } from "@/components/cards/banano-total/value-form
 import { CalculatorValueForm } from "@/components/cards/calculator/value-form";
 import { CryptoPriceChartValueForm } from "@/components/cards/crypto-price-chart/value-form";
 import { CryptoTableValueForm } from "@/components/cards/crypto-table/value-form";
-import { CryptoValueForm } from "@/components/cards/crypto/value-form";
+import { CryptoPriceValueForm } from "@/components/cards/crypto-price/value-form";
 import { GasTrackerValueForm } from "@/components/cards/gas-tracker/value-form";
 import { FearGreedIndexValueForm } from "@/components/cards/fear-greed-index/value-form";
-import { MiniCryptoValueForm } from "@/components/cards/crypto-mini/value-form";
+import { CryptoPriceMiniValueForm } from "@/components/cards/crypto-price-mini/value-form";
 import { NanoBananoValueForm } from "@/components/cards/nano-banano/value-form";
 import { CryptoOrderBookValueForm } from "@/components/cards/order-book/value-form";
 import { UniswapPoolsTableValueForm } from "@/components/cards/uniswap-pools-table/value-form";
@@ -32,9 +32,10 @@ export default function CardValuesFormParser({
     return <CryptoOrderBookValueForm {...sharedProps} />;
   if (cardTypeId === "gas_tracker")
     return <GasTrackerValueForm {...sharedProps} />;
-  if (cardTypeId === "crypto") return <CryptoValueForm {...sharedProps} />;
-  if (cardTypeId === "crypto_mini")
-    return <MiniCryptoValueForm {...sharedProps} />;
+  if (cardTypeId === "crypto_price")
+    return <CryptoPriceValueForm {...sharedProps} />;
+  if (cardTypeId === "crypto_price_mini")
+    return <CryptoPriceMiniValueForm {...sharedProps} />;
   if (cardTypeId === "banano_total")
     return <BananoTotalValueForm {...sharedProps} />;
   if (cardTypeId === "crypto_table")

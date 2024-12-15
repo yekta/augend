@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { api } from "@/server/trpc/setup/react";
 import { useMemo, useState } from "react";
 
-export function CryptoValueForm({
+export function CryptoPriceMiniValueForm({
   onFormSubmit,
   isPendingForm,
 }: TValueFormProps) {
@@ -61,7 +61,7 @@ export function CryptoValueForm({
     }
     onFormSubmit([
       {
-        cardTypeInputId: "crypto_coin_id",
+        cardTypeInputId: "crypto_mini_coin_id",
         value: coinId,
       },
     ]);
