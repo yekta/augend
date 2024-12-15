@@ -1,9 +1,20 @@
-import CardValueComboboxFormItem from "@/components/cards/_utils/values-form/card-value-combobox-form-item";
-import CardValuesFormSubmitButton from "@/components/cards/_utils/values-form/card-values-form-submit-button";
-import CardValuesFormWrapper from "@/components/cards/_utils/values-form/card-values-form-wrapper";
+import CardValueDateTimePickerFormItem from "@/components/cards/_utils/values-form/form-item-date-time-picker";
+import CardValueFormItemCombobox from "@/components/cards/_utils/values-form/form-item-combobox";
+import CardValuesFormWrapper from "@/components/cards/_utils/values-form/form-wrapper";
+import CardValuesFormSubmitButton from "@/components/cards/_utils/values-form/submit-button";
 import { TValueFormProps } from "@/components/cards/_utils/values-form/types";
 import CryptoIcon from "@/components/icons/crypto-icon";
-import { Form, FormField } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormHeader,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { api } from "@/server/trpc/setup/react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -54,6 +65,17 @@ export default function CryptoAssetValueForm({
           message: `Invalid cryptocurrency.`,
         }
       ),
+      buyPriceUsd: z
+        .string()
+        .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
+          message: "Buy price must be a positive number.",
+        }),
+      buyAmount: z
+        .string()
+        .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
+          message: "Buy amount must be a positive number.",
+        }),
+      boughtAtDate: z.date(),
     });
   }, [shapedIdMaps]);
 
@@ -61,6 +83,9 @@ export default function CryptoAssetValueForm({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       coinValue: "",
+      boughtAtDate: new Date(),
+      buyPriceUsd: "",
+      buyAmount: "",
     },
   });
 
@@ -85,9 +110,30 @@ export default function CryptoAssetValueForm({
       {
         cardTypeInputId:
           variant === "mini"
-            ? "crypto_price_mini_coin_id"
-            : "crypto_price_coin_id",
+            ? "crypto_asset_mini_coin_id"
+            : "crypto_asset_coin_id",
         value: coinId,
+      },
+      {
+        cardTypeInputId:
+          variant === "mini"
+            ? "crypto_asset_mini_bought_at_timestamp"
+            : "crypto_asset_bought_at_timestamp",
+        value: data.boughtAtDate.getTime().toString(),
+      },
+      {
+        cardTypeInputId:
+          variant === "mini"
+            ? "crypto_asset_mini_buy_price_usd"
+            : "crypto_asset_buy_price_usd",
+        value: data.buyPriceUsd,
+      },
+      {
+        cardTypeInputId:
+          variant === "mini"
+            ? "crypto_asset_mini_buy_amount"
+            : "crypto_asset_buy_amount",
+        value: data.buyAmount,
       },
     ]);
   };
@@ -99,14 +145,17 @@ export default function CryptoAssetValueForm({
           control={form.control}
           name="coinValue"
           render={({ field }) => (
-            <CardValueComboboxFormItem
+            <CardValueFormItemCombobox
               inputTitle="Crypto"
-              inputDescription="The cryptocurrency to track."
+              inputDescription="Which crypto do you hold?"
               value={field.value}
               iconValue={iconValue}
-              onSelect={(v) => form.setValue("coinValue", v)}
+              onSelect={(v) => {
+                form.clearErrors("coinValue");
+                form.setValue("coinValue", v);
+              }}
               Icon={({ className, value }) => (
-                <div className={cn("text-foreground p-0.25", className)}>
+                <div className={cn("", className)}>
                   <CryptoIcon cryptoName={value} className="size-full" />
                 </div>
               )}
@@ -119,6 +168,84 @@ export default function CryptoAssetValueForm({
               inputPlaceholder="Search cryptos..."
               noValueFoundLabel="No crypto found..."
             />
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="boughtAtDate"
+          render={({ field }) => (
+            <CardValueDateTimePickerFormItem
+              inputTitle="Date & Time"
+              inputDescription="When did you buy?"
+              value={field.value}
+              onSelect={(v) => {
+                form.clearErrors("boughtAtDate");
+                if (!v) return;
+                form.setValue("boughtAtDate", v);
+              }}
+              disabled={isPendingForm}
+            />
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="buyPriceUsd"
+          render={({ field }) => (
+            <FormItem>
+              <FormHeader>
+                <FormLabel>Buy Price (USD)</FormLabel>
+                <FormDescription>
+                  How much did you pay per coin?
+                </FormDescription>
+              </FormHeader>
+              <FormControl>
+                <div className="w-full relative">
+                  <Input
+                    autoComplete="off"
+                    type="number"
+                    className="w-full pl-10"
+                    placeholder="1000"
+                    {...field}
+                  />
+                  <div className="size-5 text-lg absolute left-3 font-bold top-1/2 -translate-y-1/2 flex items-center justify-center">
+                    $
+                  </div>
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="buyAmount"
+          render={({ field }) => (
+            <FormItem>
+              <FormHeader>
+                <FormLabel>Amount Bought</FormLabel>
+                <FormDescription>How many coins did you buy?</FormDescription>
+              </FormHeader>
+              <FormControl>
+                <div className="w-full relative">
+                  <Input
+                    autoComplete="off"
+                    type="number"
+                    className="w-full pl-9.5"
+                    placeholder="100"
+                    {...field}
+                  />
+                  <div className="size-5 absolute left-3 font-bold top-1/2 -translate-y-1/2 flex items-center justify-center">
+                    {iconValue && (
+                      <CryptoIcon
+                        cryptoName={iconValue}
+                        className="size-full"
+                      />
+                    )}
+                  </div>
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
           )}
         />
         <CardValuesFormSubmitButton isPending={isPendingForm} />

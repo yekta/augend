@@ -1,6 +1,6 @@
-import CardValueComboboxFormItem from "@/components/cards/_utils/values-form/card-value-combobox-form-item";
-import CardValuesFormSubmitButton from "@/components/cards/_utils/values-form/card-values-form-submit-button";
-import CardValuesFormWrapper from "@/components/cards/_utils/values-form/card-values-form-wrapper";
+import CardValueFormItemCombobox from "@/components/cards/_utils/values-form/form-item-combobox";
+import CardValuesFormSubmitButton from "@/components/cards/_utils/values-form/submit-button";
+import CardValuesFormWrapper from "@/components/cards/_utils/values-form/form-wrapper";
 import { TValueFormProps } from "@/components/cards/_utils/values-form/types";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import { Form, FormField } from "@/components/ui/form";
@@ -105,7 +105,7 @@ export default function CryptoOrderBookValueForm({
           control={form.control}
           name="exchange"
           render={({ field }) => (
-            <CardValueComboboxFormItem
+            <CardValueFormItemCombobox
               inputTitle="Exchange"
               inputDescription="The cryptocurrency exchange for the pair."
               value={field.value}
@@ -132,7 +132,7 @@ export default function CryptoOrderBookValueForm({
           control={form.control}
           name="pair"
           render={({ field }) => (
-            <CardValueComboboxFormItem
+            <CardValueFormItemCombobox
               inputTitle="Pair"
               inputDescription="The pair to get the order book for."
               value={field.value}

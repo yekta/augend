@@ -1,6 +1,6 @@
-import CardValueComboboxFormItem from "@/components/cards/_utils/values-form/card-value-combobox-form-item";
-import CardValuesFormSubmitButton from "@/components/cards/_utils/values-form/card-values-form-submit-button";
-import CardValuesFormWrapper from "@/components/cards/_utils/values-form/card-values-form-wrapper";
+import CardValueFormItemCombobox from "@/components/cards/_utils/values-form/form-item-combobox";
+import CardValuesFormSubmitButton from "@/components/cards/_utils/values-form/submit-button";
+import CardValuesFormWrapper from "@/components/cards/_utils/values-form/form-wrapper";
 import { TValueFormProps } from "@/components/cards/_utils/values-form/types";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import ForexIcon from "@/components/icons/forex-icon";
@@ -121,7 +121,7 @@ export default function CurrencyValueForm({
           control={form.control}
           name="baseCurrencyValue"
           render={({ field }) => (
-            <CardValueComboboxFormItem
+            <CardValueFormItemCombobox
               inputTitle="Base Currency"
               inputDescription="Select the base currency."
               iconValue={
@@ -148,7 +148,7 @@ export default function CurrencyValueForm({
           control={form.control}
           name="quoteCurrencyValue"
           render={({ field }) => (
-            <CardValueComboboxFormItem
+            <CardValueFormItemCombobox
               inputTitle="Quote Currency"
               inputDescription="Select the quote currency."
               iconValue={

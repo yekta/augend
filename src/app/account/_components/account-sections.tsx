@@ -2,7 +2,7 @@
 
 import { useUserFull } from "@/app/[username]/[dashboard_slug]/_components/user-full-provider";
 import Blockies from "@/components/blockies/blockies";
-import CardValueComboboxFormItem from "@/components/cards/_utils/values-form/card-value-combobox-form-item";
+import CardValueFormItemCombobox from "@/components/cards/_utils/values-form/form-item-combobox";
 import ErrorLine from "@/components/error-line";
 import ForexIcon from "@/components/icons/forex-icon";
 import { Button } from "@/components/ui/button";
@@ -519,7 +519,7 @@ function CurrenciesButton({
               control={form.control}
               name="primaryCurrencyValue"
               render={({ field }) => (
-                <CardValueComboboxFormItem
+                <CardValueFormItemCombobox
                   inputTitle="Primary"
                   iconValue={
                     dataCurrencies?.find((c) => getValue(c) === field.value)
@@ -545,7 +545,7 @@ function CurrenciesButton({
               control={form.control}
               name="secondaryCurrencyValue"
               render={({ field }) => (
-                <CardValueComboboxFormItem
+                <CardValueFormItemCombobox
                   inputTitle="Secondary"
                   iconValue={
                     dataCurrencies
@@ -573,7 +573,7 @@ function CurrenciesButton({
               control={form.control}
               name="tertiaryCurrencyValue"
               render={({ field }) => (
-                <CardValueComboboxFormItem
+                <CardValueFormItemCombobox
                   inputTitle="Tertiary"
                   iconValue={
                     dataCurrencies?.find((c) => getValue(c) === field.value)

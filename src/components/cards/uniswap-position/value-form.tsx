@@ -1,6 +1,6 @@
-import CardValueComboboxItem from "@/components/cards/_utils/values-form/card-value-combobox-form-item";
-import CardValuesFormSubmitButton from "@/components/cards/_utils/values-form/card-values-form-submit-button";
-import CardValuesFormWrapper from "@/components/cards/_utils/values-form/card-values-form-wrapper";
+import CardValueComboboxItem from "@/components/cards/_utils/values-form/form-item-combobox";
+import CardValuesFormSubmitButton from "@/components/cards/_utils/values-form/submit-button";
+import CardValuesFormWrapper from "@/components/cards/_utils/values-form/form-wrapper";
 import { TValueFormProps } from "@/components/cards/_utils/values-form/types";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import {
@@ -91,7 +91,7 @@ export default function UniswapPositionValueForm({
                 form.setValue("network", value as TEthereumNetwork)
               }
               Icon={({ value, className }) => (
-                <div className={cn("text-foreground p-0.25", className)}>
+                <div className={cn("", className)}>
                   <CryptoIcon cryptoName={value} className="size-full" />
                 </div>
               )}

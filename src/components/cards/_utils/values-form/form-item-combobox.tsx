@@ -55,7 +55,7 @@ const itemsPlaceholder: TItem[] = Array.from({ length: 20 }).map(
   })
 );
 
-export default function CardValueComboboxFormItem<T>({
+export default function CardValueFormItemCombobox<T>({
   items,
   onSelect,
   placeholder,
@@ -106,11 +106,11 @@ export default function CardValueComboboxFormItem<T>({
               "w-full min-w-0 overflow-hidden font-semibold justify-between group/button"
             }
           >
-            <div className="flex-shrink min-w-0 overflow-hidden flex items-center gap-1.5 group-data-[has-icon]/button:-ml-1">
+            <div className="flex-shrink min-w-0 overflow-hidden flex items-center gap-2 group-data-[has-icon]/button:-ml-1">
               {!isPending && !isLoadingError && Icon && value && (
                 <Icon
                   value={iconValue ?? value}
-                  className="shrink-0 size-5 -my-1"
+                  className="shrink-0 size-5 -my-1 flex items-center justify-center"
                 />
               )}
               <p className="min-w-0 group-data-[showing-placeholder]/button:text-muted-foreground truncate shrink whitespace-nowrap">
@@ -150,7 +150,7 @@ export default function CardValueComboboxFormItem<T>({
                         data-item-selected={
                           value === item.value ? true : undefined
                         }
-                        className="w-full font-medium group/command-item px-3 py-2 gap-1.5"
+                        className="w-full font-medium group/command-item px-3 py-2 gap-2"
                         key={`${item.value}-${index}`}
                         value={item.value}
                         onSelect={(currentValue) => {
@@ -161,7 +161,7 @@ export default function CardValueComboboxFormItem<T>({
                         {!isPending && !isLoadingError && Icon && (
                           <Icon
                             value={item.iconValue ?? item.value}
-                            className="shrink-0 size-5 -ml-1 -my-1"
+                            className="shrink-0 size-5 -ml-1 -my-1 flex items-center justify-center"
                           />
                         )}
                         <p

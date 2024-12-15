@@ -2,7 +2,7 @@ import { useCurrentDashboard } from "@/app/[username]/[dashboard_slug]/_componen
 import CardInnerWrapper from "@/components/cards/_utils/card-inner-wrapper";
 import CardOuterWrapper from "@/components/cards/_utils/card-outer-wrapper";
 import { cardTypes } from "@/components/cards/_utils/helpers";
-import CardValueFormParser from "@/components/cards/_utils/values-form/card-values-form-parser";
+import CardValueFormParser from "@/components/cards/_utils/values-form/form-parser";
 import ErrorLine from "@/components/error-line";
 import { Button } from "@/components/ui/button";
 import {
@@ -186,7 +186,7 @@ export function AddCardCommandPanel({
             </Button>
           </div>
           <div className="w-full bg-border h-px" />
-          <div className="w-full flex flex-col items-start px-4 pt-2.5 pb-4 gap-1 relative">
+          <div className="w-full flex flex-col items-start px-5 pt-2.5 pb-4 gap-1 relative">
             <h1 className="w-full font-bold text-lg leading-tight mt-1">
               {selectedCardType.cardType.title}
             </h1>

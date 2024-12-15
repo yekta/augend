@@ -30,7 +30,7 @@ const SelectTrigger = React.forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      "flex px-3 gap-1.25 group/trigger before:w-full before:h-full before:min-w-[48px] before:min-h-[48px] before:left-1/2 before:top-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:z-[-1] select-none z-0 before:bg-transparent before:absolute touch-manipulation items-center justify-between whitespace-nowrap rounded-md not-touch:hover:bg-border active:bg-border border border-input bg-transparent leading-tight py-1.5 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus-visible:ring-1 focus-visible:ring-offset-2 focus-visible:ring-foreground/50 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
+      "flex px-3 font-semibold gap-1.25 relative group/trigger before:w-full before:h-full before:min-w-[48px] before:min-h-[48px] before:left-1/2 before:top-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:z-[-1] select-none z-0 before:bg-transparent before:absolute touch-manipulation items-center justify-between whitespace-nowrap rounded-md not-touch:hover:bg-border active:bg-border border border-input bg-transparent leading-tight py-1.5 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus-visible:ring-1 focus-visible:ring-offset-2 focus-visible:ring-foreground/50 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
       className
     )}
     {...props}
@@ -38,7 +38,7 @@ const SelectTrigger = React.forwardRef<
     <div className="shrink min-w-0 truncate">{children}</div>
     {!hideChevron && (
       <SelectPrimitive.Icon asChild>
-        <ChevronDownIcon className="size-4 -my-1 -mr-1.5 shrink-0 text-muted-more-foreground group-data-[state=open]/trigger:rotate-180 transition-transform" />
+        <ChevronDownIcon className="size-4 -my-1 -mr-1.25 shrink-0 text-muted-more-foreground group-data-[state=open]/trigger:rotate-180 transition-transform" />
       </SelectPrimitive.Icon>
     )}
   </SelectPrimitive.Trigger>
@@ -188,7 +188,7 @@ const SelectItem = React.forwardRef<
   <SelectPrimitive.Item
     ref={ref}
     className={cn(
-      "relative w-full cursor-default select-none items-center pl-2 pr-8 rounded-sm py-1.5 leading-tight text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      "relative w-full cursor-default font-medium select-none items-center pl-2 pr-8 rounded-sm py-1.5 leading-tight text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       hideTick && "px-2",
       className
     )}

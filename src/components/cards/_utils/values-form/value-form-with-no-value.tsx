@@ -1,5 +1,5 @@
-import CardValuesFormSubmitButton from "@/components/cards/_utils/values-form/card-values-form-submit-button";
-import CardValuesFormWrapper from "@/components/cards/_utils/values-form/card-values-form-wrapper";
+import CardValuesFormSubmitButton from "@/components/cards/_utils/values-form/submit-button";
+import CardValuesFormWrapper from "@/components/cards/_utils/values-form/form-wrapper";
 import { TValueFormProps } from "@/components/cards/_utils/values-form/types";
 
 export function ValueFormWithNoValue({

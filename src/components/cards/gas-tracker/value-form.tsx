@@ -1,6 +1,6 @@
-import CardValueComboboxFormItem from "@/components/cards/_utils/values-form/card-value-combobox-form-item";
-import CardValuesFormSubmitButton from "@/components/cards/_utils/values-form/card-values-form-submit-button";
-import CardValuesFormWrapper from "@/components/cards/_utils/values-form/card-values-form-wrapper";
+import CardValueFormItemCombobox from "@/components/cards/_utils/values-form/form-item-combobox";
+import CardValuesFormSubmitButton from "@/components/cards/_utils/values-form/submit-button";
+import CardValuesFormWrapper from "@/components/cards/_utils/values-form/form-wrapper";
 import { TValueFormProps } from "@/components/cards/_utils/values-form/types";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import { Form, FormField } from "@/components/ui/form";
@@ -55,7 +55,7 @@ export default function GasTrackerValueForm({
           name="network"
           control={form.control}
           render={({ field }) => (
-            <CardValueComboboxFormItem
+            <CardValueFormItemCombobox
               inputTitle="Network"
               inputDescription="The network to track gas prices on."
               value={field.value}
@@ -85,7 +85,7 @@ function Icon({
   className?: string;
 }) {
   return (
-    <div className={cn("text-foreground p-0.25", className)}>
+    <div className={cn("", className)}>
       <CryptoIcon cryptoName={value} className="size-full" />
     </div>
   );

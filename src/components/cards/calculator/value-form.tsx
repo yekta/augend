@@ -1,6 +1,6 @@
-import CardValueComboboxFormItem from "@/components/cards/_utils/values-form/card-value-combobox-form-item";
-import CardValuesFormSubmitButton from "@/components/cards/_utils/values-form/card-values-form-submit-button";
-import CardValuesFormWrapper from "@/components/cards/_utils/values-form/card-values-form-wrapper";
+import CardValueFormItemCombobox from "@/components/cards/_utils/values-form/form-item-combobox";
+import CardValuesFormSubmitButton from "@/components/cards/_utils/values-form/submit-button";
+import CardValuesFormWrapper from "@/components/cards/_utils/values-form/form-wrapper";
 import { TValueFormProps } from "@/components/cards/_utils/values-form/types";
 import ErrorLine from "@/components/error-line";
 import CryptoIcon from "@/components/icons/crypto-icon";
@@ -138,7 +138,7 @@ export default function CalculatorValueForm({
                   control={form.control}
                   name={`currencies.${index}.value`}
                   render={({ field }) => (
-                    <CardValueComboboxFormItem
+                    <CardValueFormItemCombobox
                       iconValue={
                         currencies?.find((c) => getValue(c) === field.value)
                           ?.ticker
@@ -177,7 +177,7 @@ export default function CalculatorValueForm({
         )}
         {/* The Extra Field */}
         {fields.length < maxCurrencies && (
-          <CardValueComboboxFormItem
+          <CardValueFormItemCombobox
             inputTitle={
               selectedCurrencies.length === 0 ? "Currency" : "Add Currency"
             }
