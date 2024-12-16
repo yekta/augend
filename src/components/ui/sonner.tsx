@@ -15,15 +15,17 @@ const Toaster = ({ ...props }: ToasterProps) => {
       toastOptions={{
         unstyled: true,
         classNames: {
-          icon: "text-foreground group-data-[type=error]/toast:text-destructive size-6 [&>svg]:size-full",
+          icon: "text-foreground group-data-[type=error]/toast:text-destructive size-5 [&>svg]:size-full",
           default:
-            "w-full group/toast shadow-xl shadow-shadow/[var(--opacity-shadow)]",
+            "w-full group/toast shadow-lg shadow-shadow/[var(--opacity-shadow)]",
           title:
             "text-foreground group-data-[type=error]/toast:text-destructive font-semibold leading-tight",
           toast:
-            "bg-background border border-border rounded-xl px-4 py-3.75 flex flex-row items-center gap-1.25",
+            "bg-background border border-border rounded-xl px-4.5 py-3.5 flex flex-row items-center gap-1.5",
           content: "shrink min-w-0 flex flex-col gap-1",
           description: "text-muted-foreground text-sm leading-snug",
+          closeButton:
+            "size-6 p-1 shadow-md shadow-shadow/[var(--opacity-shadow)] border border-border before:w-full before:h-full before:min-w-[48px] before:min-h-[48px] before:z-[-1] z-10 before:bg-transparent before:absolute group-data-[sonner-toast]/toast:data-[close-button=true]:hover:text-muted-foreground group-data-[sonner-toast]/toast:data-[close-button=true]:hover:border-border group-data-[sonner-toast]/toast:data-[close-button=true]:hover:bg-border group-data-[sonner-toast]/toast:data-[close-button=true]:bg-background group-data-[sonner-toast]/toast:data-[close-button=true]:text-muted-more-foreground left-1 top-1",
           actionButton:
             "group-[.toast]:bg-primary group-[.toast]:text-primary-foreground",
           cancelButton:

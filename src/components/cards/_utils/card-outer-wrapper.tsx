@@ -106,6 +106,7 @@ export default function CardOuterWrapper({
       toast.error("Card deletion failed.", {
         description: "Please try again.",
         duration: 5000,
+        closeButton: false,
       });
       if (context?.dataCards) {
         setDataCards(context.dataCards);
