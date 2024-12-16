@@ -22,6 +22,7 @@ import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import CardVariantFormItem from "@/components/cards/_utils/values-form/form-item-card-variant";
+import { HourglassIcon } from "lucide-react";
 
 const VariantEnum = z.enum(["default", "mini"]);
 type TCardVariant = z.infer<typeof VariantEnum>;
@@ -238,11 +239,13 @@ export default function CryptoAssetValueForm({
                     {...field}
                   />
                   <div className="size-5 absolute left-3 font-bold top-1/2 -translate-y-1/2 flex items-center justify-center">
-                    {tickerValue && (
+                    {tickerValue ? (
                       <CryptoIcon
                         cryptoName={tickerValue}
                         className="size-full"
                       />
+                    ) : (
+                      <HourglassIcon className="size-full text-muted-foreground opacity-70" />
                     )}
                   </div>
                 </div>

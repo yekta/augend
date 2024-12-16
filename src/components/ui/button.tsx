@@ -6,7 +6,7 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "relative text-center inline-flex items-center select-none before:w-full before:h-full before:min-w-[48px] before:min-h-[48px] before:z-[-1] z-0 before:bg-transparent before:absolute touch-manipulation justify-center gap-2 rounded-lg font-bold focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:ring-foreground/50 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 before:-translate-y-1/2 before:top-1/2 before:-translate-x-1/2 before:left-1/2",
+  "relative text-center leading-tight inline-flex items-center select-none before:w-full before:h-full before:min-w-[48px] before:min-h-[48px] before:z-[-1] z-0 before:bg-transparent before:absolute touch-manipulation justify-center gap-2 rounded-lg font-bold focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-foreground/50 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 before:-translate-y-1/2 before:top-1/2 before:-translate-x-1/2 before:left-1/2",
   {
     variants: {
       variant: {
@@ -36,7 +36,7 @@ const buttonVariants = cva(
           "bg-email text-email-foreground not-touch:hover:bg-email/90 active:bg-email/90",
       },
       size: {
-        default: "px-4 py-2.5",
+        default: "px-4 py-2.75",
         sm: "rounded-md px-3 py-1.5 text-sm",
         lg: "rounded-lg px-8 py-2.5",
         icon: "size-9",
@@ -49,12 +49,18 @@ const buttonVariants = cva(
         default: "",
         false: "disabled:opacity-100",
       },
+      focusVariant: {
+        default:
+          "focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+        "input-like": "",
+      },
     },
     defaultVariants: {
       variant: "default",
       size: "default",
       state: "default",
       fadeOnDisabled: "default",
+      focusVariant: "default",
     },
   }
 );
@@ -79,6 +85,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       size,
       disabled,
       fadeOnDisabled,
+      focusVariant,
       state,
       asChild = false,
       ...props
@@ -89,7 +96,14 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <Comp
         className={cn(
-          buttonVariants({ variant, size, className, state, fadeOnDisabled })
+          buttonVariants({
+            variant,
+            size,
+            className,
+            state,
+            fadeOnDisabled,
+            focusVariant,
+          })
         )}
         ref={ref}
         disabled={state === "loading" ? true : disabled}
@@ -101,11 +115,21 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 Button.displayName = "Button";
 
 const LinkButton = React.forwardRef<HTMLAnchorElement, LinkButtonProps>(
-  ({ className, variant, size, state, fadeOnDisabled, ...props }, ref) => {
+  (
+    { className, variant, size, state, fadeOnDisabled, focusVariant, ...props },
+    ref
+  ) => {
     return (
       <Link
         className={cn(
-          buttonVariants({ variant, size, className, state, fadeOnDisabled })
+          buttonVariants({
+            variant,
+            size,
+            className,
+            state,
+            fadeOnDisabled,
+            focusVariant,
+          })
         )}
         ref={ref}
         {...props}

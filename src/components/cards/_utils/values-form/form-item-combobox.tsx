@@ -98,6 +98,7 @@ export default function CardValueFormItemCombobox<T>({
           <Button
             disabled={disabled}
             variant="outline"
+            focusVariant="input-like"
             role="combobox"
             aria-expanded={open}
             data-pending={isPending ? true : undefined}
@@ -124,7 +125,7 @@ export default function CardValueFormItemCombobox<T>({
             </div>
             <ChevronsUpDownIcon
               strokeWidth={1.5}
-              className="text-muted-more-foreground size-5 -mr-2"
+              className="text-muted-more-foreground size-5 -my-1 -mr-2"
             />
           </Button>
         </PopoverTrigger>

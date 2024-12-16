@@ -180,13 +180,19 @@ export function AddCardCommandPanel({
   className,
 }: AddCardCommandPanelProps) {
   const listRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const scrollId = useRef<NodeJS.Timeout | undefined>();
   const { data, isPending, isLoadingError } = getCardTypesQuery;
 
+  const onBackButtonClick = () => {
+    setSelectedCardType(null);
+    setTimeout(() => {
+      inputRef?.current?.focus();
+    });
+  };
+
   useHotkeys("esc", (e) => {
-    if (selectedCardType !== null) {
-      setSelectedCardType(null);
-    }
+    onBackButtonClick();
   });
 
   return (
@@ -195,7 +201,7 @@ export function AddCardCommandPanel({
         <div className="w-full bg-background border rounded-xl shadow-dialog shadow-shadow/[var(--opacity-shadow)]">
           <div className="w-full flex flex-row p-1">
             <Button
-              onClick={() => setSelectedCardType(null)}
+              onClick={onBackButtonClick}
               variant="outline"
               className="border-none text-muted-foreground font-semibold pl-2.5 pr-3.5 py-1.5 text-left gap-1.5"
             >
@@ -235,6 +241,7 @@ export function AddCardCommandPanel({
           )}
         >
           <CommandInput
+            ref={inputRef}
             onValueChange={() => {
               clearTimeout(scrollId.current);
               scrollId.current = setTimeout(() => {

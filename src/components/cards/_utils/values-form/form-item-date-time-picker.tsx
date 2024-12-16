@@ -49,6 +49,7 @@ export default function CardValueDateTimePickerFormItem({
               disabled={disabled}
               fadeOnDisabled={false}
               variant="outline"
+              focusVariant="input-like"
               className={cn(
                 "w-full min-w-0 overflow-hidden font-semibold justify-between group/button"
               )}
@@ -61,7 +62,7 @@ export default function CardValueDateTimePickerFormItem({
               </div>
               <ChevronsUpDownIcon
                 strokeWidth={1.5}
-                className="text-muted-more-foreground size-5 -mr-2"
+                className="text-muted-more-foreground size-5 -my-1 -mr-2"
               />
             </Button>
           </PopoverTrigger>
