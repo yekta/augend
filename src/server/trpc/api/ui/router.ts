@@ -245,17 +245,25 @@ export const uiRouter = createTRPCRouter({
           xOrder: xOrderSelected,
           variant,
         });
-        const vals = Object.values(values);
-        if (vals.length > 0) {
-          let cardValues: TInsertCardValue[] = [];
 
-          for (const [key, v] of Object.entries(values)) {
-            cardValues.push({
-              cardTypeInputId: key,
-              cardId: newCardId,
-              value: v.value,
-              xOrder: v.xOrder,
-            });
+        const valuesArray = Array.isArray(values)
+          ? values
+          : Object.keys(values).length > 0
+          ? [values]
+          : [];
+
+        if (valuesArray.length > 0) {
+          let cardValues: TInsertCardValue[] = [];
+          for (const value of valuesArray) {
+            for (const [key, v] of Object.entries(value)) {
+              const valueObject = v as { value: string; xOrder: number };
+              cardValues.push({
+                cardTypeInputId: key,
+                cardId: newCardId,
+                value: valueObject.value,
+                xOrder: valueObject.xOrder,
+              });
+            }
           }
           await createCardValues({
             tx,
