@@ -75,10 +75,13 @@ export function CardParser({
     )?.value;
     if (buyAmount === undefined) return null;
 
+    const cardTypeClassName = cardObject.card.variant
+      ? cardTypes.sm2.className
+      : cardTypes.sm.className;
     return (
-      <CardErrorBoundary className={cn(cardTypes.sm.className, className)}>
+      <CardErrorBoundary className={cn(cardTypeClassName, className)}>
         <CryptoAssetCard
-          className={cn(cardTypes.sm.className, className)}
+          className={cn(cardTypeClassName, className)}
           coinId={Number(coinId)}
           boughtAtTimestamp={Number(boughtAtTimestamp)}
           buyPriceUsd={Number(buyPriceUsd)}
@@ -182,9 +185,9 @@ export function CardParser({
       .sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id));
 
     return (
-      <CardErrorBoundary className={cn(cardTypes.md.className, className)}>
+      <CardErrorBoundary className={cn(cardTypes.sm2.className, className)}>
         <CalculatorCard
-          className={cn(cardTypes.md.className, className)}
+          className={cn(cardTypes.sm2.className, className)}
           currencies={selectedCurrencies}
           {...rest}
         />

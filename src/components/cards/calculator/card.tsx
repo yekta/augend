@@ -171,16 +171,16 @@ export default function CalculatorCard({
               data-ticker={c.ticker}
               data-id={c.id}
               data-coin-id={c.coinId !== null ? c.coinId : undefined}
-              className="text-lg pl-9.5 py-1.25 h-auto font-semibold rounded-lg group-data-[pending]/input:pr-10"
+              className="pl-8.5 py-2.25 h-auto font-semibold rounded-lg group-data-[pending]/input:pr-10"
             />
-            <div className="absolute left-2 size-6 flex items-center justify-center top-1/2 text-xl transform -translate-y-1/2 font-semibold">
+            <div className="absolute left-2 size-5.5 flex items-center justify-center top-1/2 text-lg leading-none transform -translate-y-1/2 font-bold">
               {c.isCrypto ? (
-                <CryptoIcon cryptoName={c.ticker} className="size-5.5" />
+                <CryptoIcon cryptoName={c.ticker} className="size-5" />
               ) : (
                 <ForexIcon
                   symbol={c.symbol}
                   ticker={c.ticker}
-                  className="size-6"
+                  className="size-full"
                 />
               )}
             </div>

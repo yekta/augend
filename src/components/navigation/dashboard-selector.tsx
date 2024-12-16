@@ -121,7 +121,7 @@ export default function DashboardSelector({}: Props) {
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align="start"
-            className="w-60 max-w-[calc(100vw-3.4rem)] max-h-[min(calc((100vh-4rem)*0.9),20rem)] shadow-xl shadow-shadow/[var(--opacity-shadow)]"
+            className="w-60 max-w-[calc(100vw-3.4rem)] max-h-[min(calc((100vh-4rem)*0.9),20rem)]"
           >
             {data && (
               <>
