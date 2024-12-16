@@ -1,7 +1,7 @@
 import DndCardsProvider from "@/app/[username]/[dashboard_slug]/_components/dnd-cards-provider";
 import { ReactNode } from "react";
 
-export default function DashboardGrid({
+export default function CardsGrid({
   children,
   initialIds,
   placeholder,

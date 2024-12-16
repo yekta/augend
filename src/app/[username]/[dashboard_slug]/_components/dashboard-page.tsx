@@ -1,7 +1,7 @@
 "use client";
 
 import { useCurrentDashboard } from "@/app/[username]/[dashboard_slug]/_components/current-dashboard-provider";
-import DashboardGrid from "@/app/[username]/[dashboard_slug]/_components/dashboard-grid";
+import CardsGrid from "@/app/[username]/[dashboard_slug]/_components/cards-grid";
 import { DashboardTitleBar } from "@/app/[username]/[dashboard_slug]/_components/dashboard-title-bar";
 import { useDndCards } from "@/app/[username]/[dashboard_slug]/_components/dnd-cards-provider";
 import EditModeCardsProvider from "@/app/[username]/[dashboard_slug]/_components/edit-mode-cards-provider";
@@ -163,12 +163,12 @@ export default function DashboardPage({}: {}) {
   if (isLoadingErrorCards) {
     return (
       <MainProviders>
-        <DashboardGrid
+        <CardsGrid
           initialIds={[]}
           placeholder={
             <span className="text-destructive">Something went wrong :(</span>
           }
-        ></DashboardGrid>
+        ></CardsGrid>
       </MainProviders>
     );
   }
@@ -184,7 +184,7 @@ export default function DashboardPage({}: {}) {
   ) {
     return (
       <MainProviders>
-        <DashboardGrid initialIds={[]}>
+        <CardsGrid initialIds={[]}>
           {Array.from({ length: 50 }).map((_, index) => (
             <ThreeLineCard
               key={index}
@@ -197,7 +197,7 @@ export default function DashboardPage({}: {}) {
               isRefetching={false}
             />
           ))}
-        </DashboardGrid>
+        </CardsGrid>
       </MainProviders>
     );
   }
@@ -205,14 +205,14 @@ export default function DashboardPage({}: {}) {
   if (cards.length === 0 && dashboard.isOwner) {
     return (
       <MainProviders>
-        <DashboardGrid initialIds={cards.map((c) => c.card.id)}>
+        <CardsGrid initialIds={cards.map((c) => c.card.id)}>
           <DashboardTitleBar
             isOwner={dashboard.isOwner}
             username={username}
             dashboardSlug={dashboardSlug}
           />
           <AddCardButton username={username} dashboardSlug={dashboardSlug} />
-        </DashboardGrid>
+        </CardsGrid>
       </MainProviders>
     );
   }
@@ -220,7 +220,7 @@ export default function DashboardPage({}: {}) {
   if (cards.length === 0 && !dashboard.isOwner) {
     return (
       <MainProviders>
-        <DashboardGrid
+        <CardsGrid
           initialIds={[]}
           placeholder="This dashboard doesn't have any cards yet."
         >
@@ -229,7 +229,7 @@ export default function DashboardPage({}: {}) {
             username={username}
             dashboardSlug={dashboardSlug}
           />
-        </DashboardGrid>
+        </CardsGrid>
       </MainProviders>
     );
   }
@@ -244,7 +244,7 @@ export default function DashboardPage({}: {}) {
         cryptoCurrencyIds={cryptoCurrencyIds}
         currencyPreference={currencyPreference}
       >
-        <DashboardGrid initialIds={cards.map((c) => c.card.id)}>
+        <CardsGrid initialIds={cards.map((c) => c.card.id)}>
           <DashboardTitleBar
             isOwner={dashboard.isOwner}
             username={username}
@@ -254,7 +254,7 @@ export default function DashboardPage({}: {}) {
           {dashboard.isOwner && (
             <AddCardButton username={username} dashboardSlug={dashboardSlug} />
           )}
-        </DashboardGrid>
+        </CardsGrid>
       </ProvidersForCardTypes>
     </MainProviders>
   );
