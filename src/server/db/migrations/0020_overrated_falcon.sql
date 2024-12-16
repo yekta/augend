@@ -1,0 +1,1 @@
+ALTER TABLE "cache"."cmc_crypto_infos" ALTER COLUMN "max_supply" DROP NOT NULL;

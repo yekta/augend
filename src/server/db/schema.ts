@@ -5,6 +5,7 @@ import {
   index,
   integer,
   pgEnum,
+  pgSchema,
   pgTable,
   primaryKey,
   text,
@@ -12,9 +13,11 @@ import {
   unique,
   uuid,
   varchar,
+  doublePrecision,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccountType } from "next-auth/adapters";
 import { z } from "zod";
+import { createInsertSchema } from "drizzle-zod";
 
 const shortText = { length: 20 };
 const mediumText = { length: 32 };
@@ -180,6 +183,7 @@ export const cardTypeInputTypeEnum = pgEnum("card_type_input_type", [
   "enum",
   "string[]",
 ]);
+export const CardTypeInputTypeSchema = z.enum(cardTypeInputTypeEnum.enumValues);
 
 export const cardTypeInputsTable = pgTable(
   "card_type_inputs",
@@ -313,4 +317,98 @@ export const cardsTable = pgTable(
   })
 );
 
-export const CardTypeInputTypeSchema = z.enum(cardTypeInputTypeEnum.enumValues);
+/////////////////////////////
+//// Cache schema tables ////
+/////////////////////////////
+
+export const cacheSchema = pgSchema("cache");
+
+export const cmcCryptoInfosTable = cacheSchema.table(
+  "cmc_crypto_infos",
+  {
+    id: uuid("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    coinId: integer("coin_id").notNull(),
+    name: text("name").notNull(),
+    symbol: text("symbol").notNull(),
+    slug: text("slug").notNull(),
+    circulatingSupply: doublePrecision("circulating_supply").notNull(),
+    cmcRank: integer("cmc_rank").notNull(),
+    maxSupply: doublePrecision("max_supply"),
+    totalSupply: doublePrecision("total_supply").notNull(),
+    lastUpdated: timestamp("last_updated").notNull(),
+    ...timestamps,
+  },
+  (table) => ({
+    coinIdIdx: index("cmc_crypto_infos_coin_id_idx").on(table.coinId),
+    nameIdx: index("cmc_crypto_infos_name_idx").on(table.name),
+    symbolIdx: index("cmc_crypto_infos_symbol_idx").on(table.symbol),
+    slugIdx: index("cmc_crypto_infos_slug_idx").on(table.slug),
+    cmcRankIdx: index("cmc_crypto_infos_cmc_rank_idx").on(table.cmcRank),
+    lastUpdatedIdx: index("cmc_crypto_infos_last_updated_idx").on(
+      table.lastUpdated
+    ),
+    createdAtIdx: index("cmc_crypto_infos_created_at_idx").on(table.createdAt),
+    updatedAtIdx: index("cmc_crypto_infos_updated_at_idx").on(table.updatedAt),
+    deletedAtIdx: index("cmc_crypto_infos_deleted_at_idx").on(table.deletedAt),
+  })
+);
+
+export const cmcCryptoInfoQuotesTable = cacheSchema.table(
+  "cmc_crypto_info_quotes",
+  {
+    id: uuid("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    infoId: uuid("info_id")
+      .notNull()
+      .references(() => cmcCryptoInfosTable.id, { onDelete: "cascade" }),
+    currencyTicker: text("currency_ticker").notNull(),
+    price: doublePrecision("price").notNull(),
+    volume24h: doublePrecision("volume_24h").notNull(),
+    volumeChange24h: doublePrecision("volume_change_24h").notNull(),
+    percentChange1h: doublePrecision("percent_change_1h").notNull(),
+    percentChange24h: doublePrecision("percent_change_24h").notNull(),
+    percentChange7d: doublePrecision("percent_change_7d").notNull(),
+    percentChange30d: doublePrecision("percent_change_30d").notNull(),
+    percentChange60d: doublePrecision("percent_change_60d").notNull(),
+    percentChange90d: doublePrecision("percent_change_90d").notNull(),
+    marketCap: doublePrecision("market_cap").notNull(),
+    marketCapDominance: doublePrecision("market_cap_dominance").notNull(),
+    fullyDilutedMarketCap: doublePrecision(
+      "fully_diluted_market_cap"
+    ).notNull(),
+    lastUpdated: timestamp("last_updated").notNull(),
+    ...timestamps,
+  },
+  (table) => ({
+    infoIdIdx: index("cmc_crypto_info_quotes_info_id_idx").on(table.infoId),
+    currencyTickerIdx: index("cmc_crypto_info_quotes_currency_ticker_idx").on(
+      table.currencyTicker
+    ),
+    lastUpdatedIdx: index("cmc_crypto_info_quotes_last_updated_idx").on(
+      table.lastUpdated
+    ),
+    createdAtIdx: index("cmc_crypto_info_quotes_created_at_idx").on(
+      table.createdAt
+    ),
+    updatedAtIdx: index("cmc_crypto_info_quotes_updated_at_idx").on(
+      table.updatedAt
+    ),
+    deletedAtIdx: index("cmc_crypto_info_quotes_deleted_at_idx").on(
+      table.deletedAt
+    ),
+  })
+);
+
+export const InsertCmcCryptoInfosSchema =
+  createInsertSchema(cmcCryptoInfosTable);
+export type TInsertCmcCryptoInfo = z.infer<typeof InsertCmcCryptoInfosSchema>;
+
+export const InsertCmcCryptoInfoQuotesSchema = createInsertSchema(
+  cmcCryptoInfoQuotesTable
+);
+export type TInsertCmcCryptoInfoQuote = z.infer<
+  typeof InsertCmcCryptoInfoQuotesSchema
+>;

@@ -1,0 +1,1 @@
+ALTER TABLE "cache"."cmc_crypto_infos" ALTER COLUMN "circulating_supply" SET DATA TYPE double precision;

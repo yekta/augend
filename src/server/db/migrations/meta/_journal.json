@@ -113,6 +113,41 @@
       "when": 1734289044726,
       "tag": "0015_sour_green_goblin",
       "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1734385507569,
+      "tag": "0016_polite_bug",
+      "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1734386637625,
+      "tag": "0017_unknown_zeigeist",
+      "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1734387155592,
+      "tag": "0018_faithful_mac_gargan",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1734387193745,
+      "tag": "0019_square_wonder_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1734387241216,
+      "tag": "0020_overrated_falcon",
+      "breakpoints": true
     }
   ]
 }

@@ -12,6 +12,14 @@ import {
 } from "@/server/trpc/setup/trpc";
 import { TRPCError } from "@trpc/server";
 import { cleanAndSortArray } from "@/server/redis/cache-utils";
+import {
+  insertCmcCryptoInfoQuotes,
+  insertCmcCryptoInfos,
+} from "@/server/db/repo/cmc";
+import {
+  TInsertCmcCryptoInfo,
+  TInsertCmcCryptoInfoQuote,
+} from "@/server/db/schema";
 
 export const cmcRouter = createTRPCRouter({
   getCryptoInfos: cachedPublicProcedure()
@@ -59,7 +67,22 @@ export const cmcRouter = createTRPCRouter({
         for (const result of results) {
           const quote = result.data[key].quote;
           for (const currency in quote) {
-            quoteObj[currency] = quote[currency];
+            quoteObj[currency] = {
+              price: quote[currency].price,
+              volume_24h: quote[currency].volume_24h,
+              volume_change_24h: quote[currency].volume_change_24h,
+              percent_change_1h: quote[currency].percent_change_1h,
+              percent_change_24h: quote[currency].percent_change_24h,
+              percent_change_7d: quote[currency].percent_change_7d,
+              percent_change_30d: quote[currency].percent_change_30d,
+              percent_change_60d: quote[currency].percent_change_60d,
+              percent_change_90d: quote[currency].percent_change_90d,
+              market_cap: quote[currency].market_cap,
+              market_cap_dominance: quote[currency].market_cap_dominance,
+              fully_diluted_market_cap:
+                quote[currency].fully_diluted_market_cap,
+              last_updated: quote[currency].last_updated,
+            };
           }
         }
         editedResult[key] = {
@@ -70,11 +93,61 @@ export const cmcRouter = createTRPCRouter({
           circulating_supply: firstResult.data[key].circulating_supply,
           cmc_rank: firstResult.data[key].cmc_rank,
           max_supply: firstResult.data[key].max_supply,
-          platform: firstResult.data[key].platform,
           total_supply: firstResult.data[key].total_supply,
+          last_updated: firstResult.data[key].last_updated,
           quote: quoteObj,
         };
       }
+
+      const start = performance.now();
+      let infos: TInsertCmcCryptoInfo[] = [];
+      let quotes: TInsertCmcCryptoInfoQuote[] = [];
+      for (const key in editedResult) {
+        const cryptoInfo = editedResult[key];
+        const infoId = crypto.randomUUID();
+        infos.push({
+          id: infoId,
+          coinId: cryptoInfo.id,
+          name: cryptoInfo.name,
+          symbol: cryptoInfo.symbol,
+          slug: cryptoInfo.slug,
+          circulatingSupply: cryptoInfo.circulating_supply,
+          cmcRank: cryptoInfo.cmc_rank,
+          maxSupply: cryptoInfo.max_supply,
+          totalSupply: cryptoInfo.total_supply,
+          lastUpdated: new Date(cryptoInfo.last_updated),
+        });
+        for (const currency in cryptoInfo.quote) {
+          const quote = cryptoInfo.quote[currency];
+          quotes.push({
+            infoId,
+            currencyTicker: currency,
+            price: quote.price,
+            volume24h: quote.volume_24h,
+            volumeChange24h: quote.volume_change_24h,
+            percentChange1h: quote.percent_change_1h,
+            percentChange24h: quote.percent_change_24h,
+            percentChange7d: quote.percent_change_7d,
+            percentChange30d: quote.percent_change_30d,
+            percentChange60d: quote.percent_change_60d,
+            percentChange90d: quote.percent_change_90d,
+            marketCap: quote.market_cap,
+            marketCapDominance: quote.market_cap_dominance,
+            fullyDilutedMarketCap: quote.fully_diluted_market_cap,
+            lastUpdated: new Date(quote.last_updated),
+          });
+        }
+      }
+      await Promise.all([
+        insertCmcCryptoInfos({ infos }),
+        insertCmcCryptoInfoQuotes({ quotes }),
+      ]);
+      console.log(
+        `[POSTGRES_CACHE]: getCryptoInfos | ${Math.floor(
+          performance.now() - start
+        )}ms`
+      );
+
       return editedResult;
     }),
   getGlobalMetrics: cachedPublicProcedure("minutes-short")

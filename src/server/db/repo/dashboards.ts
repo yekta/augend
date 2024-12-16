@@ -280,7 +280,7 @@ export async function reorderDashboards({
   orderObjects: { id: string; xOrder: number }[];
 }) {
   if (orderObjects.length < 1) {
-    throw new Error("orderObjects array must be provided be longer than 0");
+    throw new Error("orderObjects array must be be longer than 0");
   }
 
   let sqlChunks: SQL[] = [];
