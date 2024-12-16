@@ -110,7 +110,7 @@ export default function UniswapPoolsTableCard({
           return (
             <Component
               target="_blank"
-              href={`https://app.ethereum.uniswap.org/explore/pools/${network.toLowerCase()}/${
+              href={`https://app.uniswap.org/explore/pools/${network.toLowerCase()}/${
                 row.original.address
               }`}
               className="w-full group/link gap-2 md:gap-2.5 text-xs md:text-sm leading-none md:leading-none flex items-center justify-start pl-4 md:pl-5 py-2.5 pr-2 md:pr-4 focus-visible:bg-background-hover"
