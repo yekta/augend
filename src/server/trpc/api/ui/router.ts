@@ -7,9 +7,9 @@ import {
   getCards,
   getMaximumCardXOrder,
   reorderCards,
-} from "@/server/db/repo/card";
-import { getCardTypes } from "@/server/db/repo/card_types";
-import { createCardValues } from "@/server/db/repo/card_values";
+} from "@/server/db/repo/cards";
+import { getCardTypes } from "@/server/db/repo/card-types";
+import { createCardValues } from "@/server/db/repo/card-values";
 import { getCurrencies } from "@/server/db/repo/currencies";
 import {
   createDashboard,
@@ -20,7 +20,7 @@ import {
   isDashboardSlugAvailable,
   renameDashboard,
   reorderDashboards,
-} from "@/server/db/repo/dashboard";
+} from "@/server/db/repo/dashboards";
 import {
   changeCurrencyPreference,
   changeUsername,
@@ -28,7 +28,7 @@ import {
   getUser,
   getUserFull,
   isUsernameAvailable,
-} from "@/server/db/repo/user";
+} from "@/server/db/repo/users";
 import { cleanAndSortArray } from "@/server/redis/cache-utils";
 import { CardValueForAddCardsSchema } from "@/server/trpc/api/ui/types";
 import {

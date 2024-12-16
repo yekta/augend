@@ -241,6 +241,7 @@ export function DashboardTitleBar({ username, dashboardSlug, isOwner }: Props) {
             username={username}
             dashboardSlug={dashboardSlug}
             xOrderPreference="first"
+            shortcutEnabled
           />
           <EditButtonCards />
         </div>

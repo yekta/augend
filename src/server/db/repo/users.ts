@@ -4,7 +4,7 @@ import {
   primaryCurrencyAlias,
   secondaryCurrencyAlias,
   tertiaryCurrencyAlias,
-} from "@/server/db/repo/card";
+} from "@/server/db/repo/cards";
 import { usernameBlocklistTable, usersTable } from "@/server/db/schema";
 import { and, eq, notExists } from "drizzle-orm";
 

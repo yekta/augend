@@ -3,7 +3,7 @@ import "server-only";
 
 import { env } from "@/lib/env";
 import { db } from "@/server/db/db";
-import { createUser, getUser } from "@/server/db/repo/user";
+import { createUser, getUser } from "@/server/db/repo/users";
 import {
   accountsTable,
   authenticatorsTable,

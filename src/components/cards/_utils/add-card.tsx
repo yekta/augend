@@ -35,6 +35,7 @@ type AddCardButtonProps = {
   className?: string;
   variant?: "full" | "icon";
   xOrderPreference?: "first" | "last";
+  shortcutEnabled?: boolean;
 };
 
 type TSelectedCardType = AppRouterOutputs["ui"]["getCardTypes"][number];
@@ -50,10 +51,23 @@ export function AddCardButton({
   className,
   variant = "full",
   xOrderPreference = "last",
+  shortcutEnabled = false,
 }: AddCardButtonProps) {
   const [open, setOpen] = useState(false);
   const [selectedCardType, setSelectedCardType] =
     useState<TSelectedCardType | null>(null);
+
+  useHotkeys(
+    "mod+k",
+    (e) => {
+      setOpen((o) => !o);
+    },
+    {
+      enabled: shortcutEnabled,
+      enableOnContentEditable: true,
+      enableOnFormTags: true,
+    }
+  );
 
   const getCardTypesQuery = api.ui.getCardTypes.useQuery(
     {},
@@ -169,15 +183,11 @@ export function AddCardCommandPanel({
   const scrollId = useRef<NodeJS.Timeout | undefined>();
   const { data, isPending, isLoadingError } = getCardTypesQuery;
 
-  useHotkeys(
-    "esc",
-    (e) => {
-      if (selectedCardType !== null) {
-        setSelectedCardType(null);
-      }
-    },
-    { enableOnFormTags: true }
-  );
+  useHotkeys("esc", (e) => {
+    if (selectedCardType !== null) {
+      setSelectedCardType(null);
+    }
+  });
 
   return (
     <>

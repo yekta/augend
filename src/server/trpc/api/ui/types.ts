@@ -1,4 +1,4 @@
-import { InsertCardValueSchema } from "@/server/db/repo/card_values";
+import { InsertCardValueSchema } from "@/server/db/repo/card-values";
 import { z } from "zod";
 
 export const CardValueForAddCardsSchema = InsertCardValueSchema.pick({
