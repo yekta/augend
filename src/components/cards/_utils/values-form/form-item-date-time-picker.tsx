@@ -43,8 +43,8 @@ export default function CardValueDateTimePickerFormItem({
         </FormHeader>
       )}
       <Popover>
-        <FormControl>
-          <PopoverTrigger asChild>
+        <PopoverTrigger asChild>
+          <FormControl>
             <Button
               disabled={disabled}
               fadeOnDisabled={false}
@@ -65,8 +65,8 @@ export default function CardValueDateTimePickerFormItem({
                 className="text-muted-more-foreground size-5 -my-1 -mr-2"
               />
             </Button>
-          </PopoverTrigger>
-        </FormControl>
+          </FormControl>
+        </PopoverTrigger>
         <PopoverContent className="w-auto max-w-[--radix-popover-trigger-width] p-0">
           <Calendar
             mode="single"

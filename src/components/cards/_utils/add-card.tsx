@@ -191,9 +191,20 @@ export function AddCardCommandPanel({
     });
   };
 
-  useHotkeys("esc", (e) => {
-    onBackButtonClick();
-  });
+  useHotkeys(
+    "esc",
+    (e) => {
+      onBackButtonClick();
+    },
+    {
+      enabled: () => {
+        const popoverElement = document.querySelector(
+          "[data-radix-popper-content-wrapper]"
+        );
+        return popoverElement === null;
+      },
+    }
+  );
 
   return (
     <>

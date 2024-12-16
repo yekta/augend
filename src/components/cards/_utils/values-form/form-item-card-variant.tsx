@@ -49,6 +49,8 @@ export default function CardVariantFormItem<T extends string>({
                 rounded-lg px-3 md:px-4 py-1.25 md:py-2 border 
                 peer-data-[state=checked]:border-foreground/50
                 not-touch:peer-data-[state=checked]:border-foreground/50
+                focus-visible:bg-border
+                peer-focus-visible:bg-border
                 not-touch:hover:bg-border
                 active:bg-border
                 flex items-center justify-center text-center font-semibold text-sm md:text-base"
