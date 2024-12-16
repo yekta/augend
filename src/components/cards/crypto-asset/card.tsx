@@ -1,7 +1,6 @@
 "use client";
 
-import CardInnerWrapper from "@/components/cards/_utils/card-inner-wrapper";
-import CardOuterWrapper, {
+import {
   TCardOuterWrapperDivProps,
   TCardOuterWrapperLinkProps,
   TCardOuterWrapperProps,
@@ -11,7 +10,6 @@ import CryptoIcon from "@/components/icons/crypto-icon";
 import { useCmcCryptoInfos } from "@/components/providers/cmc/cmc-crypto-infos-provider";
 import { useCurrencyPreference } from "@/components/providers/currency-preference-provider";
 import { useForexRates } from "@/components/providers/forex-rates-provider";
-import Indicator from "@/components/ui/indicator";
 import { getCmcUrl } from "@/lib/get-cmc-url";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { ArrowDownIcon, ArrowRightIcon, ArrowUpIcon } from "lucide-react";
