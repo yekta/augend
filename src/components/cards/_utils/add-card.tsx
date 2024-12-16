@@ -218,10 +218,10 @@ export function AddCardCommandPanel({
             <Button
               onClick={onBackButtonClick}
               variant="outline"
-              className="border-none text-muted-foreground font-semibold pl-2.5 pr-3.5 py-1.5 text-left gap-1.5"
+              className="max-w-full border-none text-muted-foreground font-semibold px-3.5 py-2 text-left gap-1.5"
             >
-              <ArrowLeftIcon className="size-4 -my-1" />
-              Back
+              <ArrowLeftIcon className="size-4 -my-1 -ml-1" />
+              <p className="shrink min-w-0">Back</p>
             </Button>
           </div>
           <div className="w-full bg-border h-px" />
