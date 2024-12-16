@@ -245,7 +245,7 @@ export default function CryptoAssetValueForm({
                         className="size-full"
                       />
                     ) : (
-                      <HourglassIcon className="size-full text-muted-foreground opacity-70" />
+                      <HourglassIcon className="size-full text-muted-foreground opacity-75" />
                     )}
                   </div>
                 </div>
