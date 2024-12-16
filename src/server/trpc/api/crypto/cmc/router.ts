@@ -63,7 +63,15 @@ export const cmcRouter = createTRPCRouter({
           }
         }
         editedResult[key] = {
-          ...firstResult.data[key],
+          id: firstResult.data[key].id,
+          name: firstResult.data[key].name,
+          symbol: firstResult.data[key].symbol,
+          slug: firstResult.data[key].slug,
+          circulating_supply: firstResult.data[key].circulating_supply,
+          cmc_rank: firstResult.data[key].cmc_rank,
+          max_supply: firstResult.data[key].max_supply,
+          platform: firstResult.data[key].platform,
+          total_supply: firstResult.data[key].total_supply,
           quote: quoteObj,
         };
       }
