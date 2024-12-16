@@ -1,22 +1,9 @@
 import { env } from "@/lib/env";
 import { createCacheKeyForTRPCRoute } from "@/server/redis/cache-utils";
+import { cacheTimes, TCacheTime } from "@/server/trpc/setup/trpc";
 import { Redis } from "ioredis";
 
 const redis = new Redis(env.REDIS_URL + "?family=0");
-
-const cacheTimes = {
-  "seconds-short": 8,
-  "seconds-medium": 24,
-  "seconds-long": 48,
-  "minutes-short": 60 * 3,
-  "minutes-medium": 60 * 10,
-  "minutes-long": 60 * 45,
-  "hours-short": 60 * 60 * 2,
-  "hours-medium": 60 * 60 * 6,
-  "hours-long": 60 * 60 * 12,
-};
-
-export type TCacheTime = keyof typeof cacheTimes;
 
 export async function setCache(
   key: string,

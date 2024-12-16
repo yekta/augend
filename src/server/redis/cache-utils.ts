@@ -1,4 +1,4 @@
-import { TCacheTime } from "@/server/redis/redis";
+import { TCacheTime } from "@/server/trpc/setup/trpc";
 
 function compare<T>(a: T, b: T): number {
   if (typeof a === "number" && typeof b === "number") {

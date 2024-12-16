@@ -8,7 +8,7 @@
  */
 import { auth } from "@/server/auth/auth";
 import { createCacheKeyForTRPCRoute } from "@/server/redis/cache-utils";
-import { getCache, setCache, TCacheTime } from "@/server/redis/redis";
+import { getCache, setCache } from "@/server/redis/redis";
 import { initTRPC } from "@trpc/server";
 import { Session } from "next-auth";
 import superjson from "superjson";
@@ -155,6 +155,20 @@ const cacheMiddleware = (cacheTime: TCacheTime) =>
  * are logged in.
  */
 export const publicProcedure = t.procedure.use(timingMiddleware);
+
+export const cacheTimes = {
+  "seconds-short": 8,
+  "seconds-medium": 24,
+  "seconds-long": 48,
+  "minutes-short": 60 * 3,
+  "minutes-medium": 60 * 10,
+  "minutes-long": 60 * 45,
+  "hours-short": 60 * 60 * 2,
+  "hours-medium": 60 * 60 * 6,
+  "hours-long": 60 * 60 * 12,
+};
+export type TCacheTime = keyof typeof cacheTimes;
+
 export const cachedPublicProcedure = (
   cacheTime: TCacheTime = "seconds-medium"
 ) => publicProcedure.use(cacheMiddleware(cacheTime));
