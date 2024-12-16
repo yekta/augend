@@ -76,11 +76,11 @@ export default function CryptoOrderBookValueForm({
     onFormSubmit({
       values: [
         {
-          cardTypeInputId: "order_book_exchange",
+          cardTypeInputId: "crypto_order_book_exchange",
           value: data.exchange,
         },
         {
-          cardTypeInputId: "order_book_pair",
+          cardTypeInputId: "crypto_order_book_pair",
           value: data.pair,
         },
       ],

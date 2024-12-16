@@ -28,7 +28,7 @@ export default function CardValueFormParser({
   const sharedProps = { onFormSubmit, isPendingForm };
   if (cardTypeId === "crypto_price_chart")
     return <CryptoPriceChartValueForm {...sharedProps} />;
-  if (cardTypeId === "order_book")
+  if (cardTypeId === "crypto_order_book")
     return <CryptoOrderBookValueForm {...sharedProps} />;
   if (cardTypeId === "gas_tracker")
     return <GasTrackerValueForm {...sharedProps} />;

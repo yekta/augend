@@ -16,7 +16,7 @@ import { cleanAndSortArray } from "@/server/redis/cache-utils";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
 import { ReactNode, useMemo } from "react";
 
-const componentRequiresNewRow = ["order_book", "crypto_price_chart"];
+const componentRequiresNewRow = ["crypto_order_book", "crypto_price_chart"];
 
 export default function DashboardPage({}: {}) {
   const {

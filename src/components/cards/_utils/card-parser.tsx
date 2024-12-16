@@ -219,14 +219,14 @@ export function CardParser({
     );
   }
 
-  if (cardObject.cardType.id === "order_book") {
+  if (cardObject.cardType.id === "crypto_order_book") {
     const values = cardObject.values;
     if (!values) return null;
     const exchange = values.find(
-      (v) => v.cardTypeInputId === "order_book_exchange"
+      (v) => v.cardTypeInputId === "crypto_order_book_exchange"
     )?.value;
     const pair = values.find(
-      (v) => v.cardTypeInputId === "order_book_pair"
+      (v) => v.cardTypeInputId === "crypto_order_book_pair"
     )?.value;
     if (!exchange || !pair) return null;
     const config: TOrderBookConfig = {
