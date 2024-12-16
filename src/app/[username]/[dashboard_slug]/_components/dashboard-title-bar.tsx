@@ -25,7 +25,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { mainDashboardSlug } from "@/lib/constants";
 import { useAsyncRouterPush } from "@/lib/hooks/use-async-router-push";
-import { RenameDashboardSchemaUI } from "@/server/trpc/api/ui/types-client";
+import { RenameDashboardSchemaUI } from "@/server/trpc/api/ui/types";
 import { api } from "@/server/trpc/setup/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {

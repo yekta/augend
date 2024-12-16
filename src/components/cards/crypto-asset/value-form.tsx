@@ -3,7 +3,7 @@ import CardValueFormItemCombobox from "@/components/cards/_utils/values-form/for
 import CardValueDateTimePickerFormItem from "@/components/cards/_utils/values-form/form-item-date-time-picker";
 import CardValuesFormWrapper from "@/components/cards/_utils/values-form/form-wrapper";
 import CardValuesFormSubmitButton from "@/components/cards/_utils/values-form/submit-button";
-import { TValueFormProps } from "@/components/cards/_utils/values-form/types";
+import { TInferValueFormProps } from "@/components/cards/_utils/values-form/types";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import {
   Form,
@@ -29,7 +29,7 @@ type TCardVariant = z.infer<typeof VariantEnum>;
 export default function CryptoAssetValueForm({
   onFormSubmit,
   isPendingForm,
-}: TValueFormProps) {
+}: TInferValueFormProps<"crypto_asset">) {
   const {
     data: idMaps,
     isPending: isPendingIdMaps,
@@ -111,26 +111,23 @@ export default function CryptoAssetValueForm({
       });
       return;
     }
+
     onFormSubmit({
       variant: data.variant,
-      values: [
-        {
-          cardTypeInputId: "crypto_asset_coin_id",
+      values: {
+        crypto_asset_coin_id: {
           value: coinId,
         },
-        {
-          cardTypeInputId: "crypto_asset_bought_at_timestamp",
+        crypto_asset_bought_at_timestamp: {
           value: data.boughtAtDate.getTime().toString(),
         },
-        {
-          cardTypeInputId: "crypto_asset_buy_price_usd",
-          value: data.buyPriceUsd,
-        },
-        {
-          cardTypeInputId: "crypto_asset_buy_amount",
+        crypto_asset_buy_amount: {
           value: data.buyAmount,
         },
-      ],
+        crypto_asset_buy_price_usd: {
+          value: data.buyPriceUsd,
+        },
+      },
     });
   };
 

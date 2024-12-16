@@ -3,6 +3,7 @@ import CardInnerWrapper from "@/components/cards/_utils/card-inner-wrapper";
 import CardOuterWrapper from "@/components/cards/_utils/card-outer-wrapper";
 import { cardTypes } from "@/components/cards/_utils/helpers";
 import CardValueFormParser from "@/components/cards/_utils/values-form/form-parser";
+import { TInferOnFormSubmitProps } from "@/components/cards/_utils/values-form/types";
 import ErrorLine from "@/components/error-line";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,7 +24,7 @@ import {
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
 import { AppRouterOutputs, AppRouterQueryResult } from "@/server/trpc/api/root";
-import { TCardValueForAddCards } from "@/server/trpc/api/ui/types";
+import { TCardTypeId, TInferCardValues } from "@/server/trpc/api/ui/types";
 import { api } from "@/server/trpc/setup/react";
 import { ArrowDownCircleIcon, ArrowLeftIcon, PlusIcon } from "lucide-react";
 import { Dispatch, SetStateAction, useRef, useState } from "react";
@@ -39,11 +40,6 @@ type AddCardButtonProps = {
 };
 
 type TSelectedCardType = AppRouterOutputs["ui"]["getCardTypes"][number];
-
-export type TOnFormSubmitProps = {
-  values: TCardValueForAddCards[];
-  variant?: string;
-};
 
 export function AddCardButton({
   dashboardSlug,
@@ -84,6 +80,7 @@ export function AddCardButton({
     mutate: createCardMutation,
     isPending: isPendingCreateCard,
     error: errorCreateCard,
+    reset: resetCreateCard,
   } = api.ui.createCard.useMutation({
     onSuccess: async (c) => {
       await invalidateCards();
@@ -92,19 +89,22 @@ export function AddCardButton({
     },
   });
 
-  const onSubmit = ({ values, variant }: TOnFormSubmitProps) => {
-    const _values = values.map((value) => ({
-      ...value,
-      xOrder: value.xOrder ?? 0,
-    }));
+  function onSubmit<T extends TCardTypeId>({
+    values,
+    variant,
+  }: TInferOnFormSubmitProps<T>) {
+    if (!selectedCardType) return;
+
+    const cardTypeId = selectedCardType.cardType.id as T;
+    // @ts-ignore
     createCardMutation({
-      cardTypeId: selectedCardType?.cardType.id ?? "",
-      values: _values,
+      cardTypeId,
+      values,
       dashboardSlug,
-      xOrderPreference: xOrderPreference,
+      xOrderPreference,
       variant,
     });
-  };
+  }
 
   return (
     <>
@@ -145,6 +145,7 @@ export function AddCardButton({
             selectedCardType={selectedCardType}
             setSelectedCardType={setSelectedCardType}
             isPendingForm={isPendingCreateCard}
+            resetCreateCard={resetCreateCard}
             errorForm={errorCreateCard}
             onSubmit={onSubmit}
             getCardTypesQuery={getCardTypesQuery}
@@ -163,9 +164,10 @@ type AddCardCommandPanelProps = {
   inputs?: AppRouterOutputs["ui"]["getCardTypes"][number]["inputs"];
   isPendingForm: boolean;
   errorForm: { message: string } | null;
+  resetCreateCard: () => void;
   selectedCardType: TSelectedCardType | null;
   setSelectedCardType: Dispatch<SetStateAction<TSelectedCardType | null>>;
-  onSubmit: (props: TOnFormSubmitProps) => void;
+  onSubmit: <T extends TCardTypeId>(props: TInferOnFormSubmitProps<T>) => void;
   className?: string;
 };
 
@@ -175,6 +177,7 @@ export function AddCardCommandPanel({
   isPendingForm,
   errorForm,
   selectedCardType,
+  resetCreateCard,
   setSelectedCardType,
   onSubmit,
   className,
@@ -185,6 +188,7 @@ export function AddCardCommandPanel({
   const { data, isPending, isLoadingError } = getCardTypesQuery;
 
   const onBackButtonClick = () => {
+    resetCreateCard();
     setSelectedCardType(null);
     setTimeout(() => {
       inputRef?.current?.focus();

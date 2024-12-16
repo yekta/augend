@@ -1,14 +1,15 @@
-import CardValuesFormSubmitButton from "@/components/cards/_utils/values-form/submit-button";
 import CardValuesFormWrapper from "@/components/cards/_utils/values-form/form-wrapper";
-import { TValueFormProps } from "@/components/cards/_utils/values-form/types";
+import CardValuesFormSubmitButton from "@/components/cards/_utils/values-form/submit-button";
+import { TInferValueFormProps } from "@/components/cards/_utils/values-form/types";
+import { TCardTypeId } from "@/server/trpc/api/ui/types";
 
-export function ValueFormWithNoValue({
+export function ValueFormWithNoValue<T extends TCardTypeId>({
   onFormSubmit,
   isPendingForm,
-}: TValueFormProps) {
+}: TInferValueFormProps<T>) {
   const onFormSubmitLocal = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    onFormSubmit({ values: [] });
+    onFormSubmit({ values: {} as any });
   };
 
   return (

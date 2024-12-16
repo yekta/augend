@@ -1,5 +1,5 @@
 import { defaultCurrencyPreference } from "@/lib/constants";
-import { db } from "@/server/db/db";
+import { db, TDbTransaction } from "@/server/db/db";
 import { TCurrencyWithSelectedFields } from "@/server/db/repo/types";
 import {
   cardsTable,
@@ -168,14 +168,18 @@ export async function createCard({
   dashboardId,
   xOrder,
   variant,
+  id = crypto.randomUUID(),
+  tx,
 }: {
   cardTypeId: string;
   dashboardId: string;
   xOrder: number;
   variant?: string;
+  id?: string;
+  tx?: TDbTransaction;
 }) {
-  const id = crypto.randomUUID();
-  await db.insert(cardsTable).values({
+  const client = tx ? tx : db;
+  await client.insert(cardsTable).values({
     id,
     cardTypeId,
     dashboardId,

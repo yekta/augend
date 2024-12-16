@@ -1,8 +1,10 @@
 import "server-only";
 
-import { drizzle } from "drizzle-orm/node-postgres";
+import { drizzle, NodePgQueryResultHKT } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 import { env } from "@/lib/env";
+import { PgTransaction } from "drizzle-orm/pg-core";
+import { ExtractTablesWithRelations } from "drizzle-orm";
 
 const databaseUrlRaw = env.DATABASE_URL;
 if (!databaseUrlRaw) {
@@ -15,3 +17,9 @@ const pool = new Pool({
   idleTimeoutMillis: 30_000,
 });
 export const db = drizzle({ client: pool });
+
+export type TDbTransaction = PgTransaction<
+  NodePgQueryResultHKT,
+  Record<string, never>,
+  ExtractTablesWithRelations<Record<string, never>>
+>;

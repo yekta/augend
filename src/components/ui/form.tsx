@@ -83,7 +83,7 @@ const FormItem = React.forwardRef<
       <div
         ref={ref}
         className={cn(
-          "w-full min-w-0 flex flex-col gap-2 group/form-item",
+          "w-full min-w-0 flex flex-col gap-2.5 group/form-item",
           className
         )}
         {...props}

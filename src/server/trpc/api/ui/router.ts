@@ -1,6 +1,11 @@
 import { z } from "zod";
 
 import { mainDashboardSlug } from "@/lib/constants";
+import { getCardTypes } from "@/server/db/repo/card-types";
+import {
+  createCardValues,
+  TInsertCardValue,
+} from "@/server/db/repo/card-values";
 import {
   createCard,
   deleteCards,
@@ -8,8 +13,6 @@ import {
   getMaximumCardXOrder,
   reorderCards,
 } from "@/server/db/repo/cards";
-import { getCardTypes } from "@/server/db/repo/card-types";
-import { createCardValues } from "@/server/db/repo/card-values";
 import { getCurrencies } from "@/server/db/repo/currencies";
 import {
   createDashboard,
@@ -30,16 +33,18 @@ import {
   isUsernameAvailable,
 } from "@/server/db/repo/users";
 import { cleanAndSortArray } from "@/server/redis/cache-utils";
-import { CardValueForAddCardsSchema } from "@/server/trpc/api/ui/types";
 import {
   ChangeCurrencyPreferenceSchemaUI,
   ChangeUsernameSchemaUI,
+  CreateCardInputSchema,
   CreateDashboardSchemaUI,
   RenameDashboardSchemaUI,
-} from "@/server/trpc/api/ui/types-client";
+} from "@/server/trpc/api/ui/types";
 import { createTRPCRouter, publicProcedure } from "@/server/trpc/setup/trpc";
 import { TRPCError } from "@trpc/server";
 import { Session } from "next-auth";
+import { db } from "@/server/db/db";
+import { cardsTable } from "@/server/db/schema";
 
 function getIsOwner({
   session,
@@ -179,16 +184,7 @@ export const uiRouter = createTRPCRouter({
       return res;
     }),
   createCard: publicProcedure
-    .input(
-      z.object({
-        cardTypeId: z.string(),
-        dashboardSlug: z.string(),
-        xOrder: z.number().optional(),
-        xOrderPreference: z.enum(["first", "last"]).optional(),
-        values: z.array(CardValueForAddCardsSchema),
-        variant: z.string().optional(),
-      })
-    )
+    .input(CreateCardInputSchema)
     .mutation(async function ({
       input: {
         cardTypeId,
@@ -238,26 +234,38 @@ export const uiRouter = createTRPCRouter({
         });
       }
 
-      // Create card
-      const cardId = await createCard({
-        cardTypeId,
-        dashboardId: dashboard.data.dashboard.id,
-        xOrder: xOrderSelected,
-        variant,
+      const newCardId = crypto.randomUUID();
+
+      await db.transaction(async (tx) => {
+        await createCard({
+          tx,
+          id: newCardId,
+          cardTypeId,
+          dashboardId: dashboard.data.dashboard.id,
+          xOrder: xOrderSelected,
+          variant,
+        });
+        const vals = Object.values(values);
+        if (vals.length > 0) {
+          let cardValues: TInsertCardValue[] = [];
+
+          for (const [key, v] of Object.entries(values)) {
+            cardValues.push({
+              cardTypeInputId: key,
+              cardId: newCardId,
+              value: v.value,
+              xOrder: v.xOrder,
+            });
+          }
+          await createCardValues({
+            tx,
+            cardValues,
+          });
+        }
       });
 
-      if (values.length > 0) {
-        // Create card values
-        await createCardValues({
-          values: values.map((v) => ({
-            ...v,
-            cardId,
-          })),
-        });
-      }
-
       return {
-        cardId,
+        cardId: newCardId,
         cardTypeId,
       };
     }),

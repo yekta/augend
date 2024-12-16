@@ -1,7 +1,7 @@
 import CardValueFormItemCombobox from "@/components/cards/_utils/values-form/form-item-combobox";
 import CardValuesFormSubmitButton from "@/components/cards/_utils/values-form/submit-button";
 import CardValuesFormWrapper from "@/components/cards/_utils/values-form/form-wrapper";
-import { TValueFormProps } from "@/components/cards/_utils/values-form/types";
+import { TInferValueFormProps } from "@/components/cards/_utils/values-form/types";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import { Form, FormField } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
@@ -23,7 +23,7 @@ const FormSchema = z.object({
 export default function CryptoOrderBookValueForm({
   onFormSubmit,
   isPendingForm,
-}: TValueFormProps) {
+}: TInferValueFormProps<"crypto_order_book">) {
   const exchanges = Object.values(ExchangeSchema.Enum);
   const defaultExchange = exchanges[0];
 
@@ -74,16 +74,14 @@ export default function CryptoOrderBookValueForm({
     }
 
     onFormSubmit({
-      values: [
-        {
-          cardTypeInputId: "crypto_order_book_exchange",
+      values: {
+        crypto_order_book_exchange: {
           value: data.exchange,
         },
-        {
-          cardTypeInputId: "crypto_order_book_pair",
+        crypto_order_book_pair: {
           value: data.pair,
         },
-      ],
+      },
     });
   };
 

@@ -1,7 +1,7 @@
 import CardValueFormItemCombobox from "@/components/cards/_utils/values-form/form-item-combobox";
 import CardValuesFormSubmitButton from "@/components/cards/_utils/values-form/submit-button";
 import CardValuesFormWrapper from "@/components/cards/_utils/values-form/form-wrapper";
-import { TValueFormProps } from "@/components/cards/_utils/values-form/types";
+import { TInferValueFormProps } from "@/components/cards/_utils/values-form/types";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import { Form, FormField } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
@@ -22,7 +22,7 @@ const FormSchema = z.object({
 export default function GasTrackerValueForm({
   onFormSubmit,
   isPendingForm,
-}: TValueFormProps) {
+}: TInferValueFormProps<"gas_tracker">) {
   const networks = Object.values(EthereumNetworkSchema.Enum).filter(
     (v) => ethereumNetworks[v].gasTracker !== null
   );
@@ -41,12 +41,11 @@ export default function GasTrackerValueForm({
 
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
     onFormSubmit({
-      values: [
-        {
-          cardTypeInputId: "gas_tracker_network",
+      values: {
+        gas_tracker_network: {
           value: data.network,
         },
-      ],
+      },
     });
   };
 

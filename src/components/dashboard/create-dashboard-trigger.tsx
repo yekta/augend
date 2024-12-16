@@ -17,7 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { CreateDashboardSchemaUI } from "@/server/trpc/api/ui/types-client";
+import { CreateDashboardSchemaUI } from "@/server/trpc/api/ui/types";
 import { api } from "@/server/trpc/setup/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderIcon } from "lucide-react";

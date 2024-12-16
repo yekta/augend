@@ -1,7 +1,7 @@
 import CardValueFormItemCombobox from "@/components/cards/_utils/values-form/form-item-combobox";
 import CardValuesFormSubmitButton from "@/components/cards/_utils/values-form/submit-button";
 import CardValuesFormWrapper from "@/components/cards/_utils/values-form/form-wrapper";
-import { TValueFormProps } from "@/components/cards/_utils/values-form/types";
+import { TInferValueFormProps } from "@/components/cards/_utils/values-form/types";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import ForexIcon from "@/components/icons/forex-icon";
 import { Form, FormField } from "@/components/ui/form";
@@ -20,7 +20,7 @@ const FormSchema = z.object({
 export default function CurrencyValueForm({
   onFormSubmit,
   isPendingForm,
-}: TValueFormProps) {
+}: TInferValueFormProps<"currency">) {
   const {
     data: currencies,
     isPending: isPending,
@@ -77,16 +77,14 @@ export default function CurrencyValueForm({
     }
 
     onFormSubmit({
-      values: [
-        {
-          cardTypeInputId: "currency_currency_id_base",
+      values: {
+        currency_currency_id_base: {
           value: baseId,
         },
-        {
-          cardTypeInputId: "currency_currency_id_quote",
+        currency_currency_id_quote: {
           value: quoteId,
         },
-      ],
+      },
     });
   };
 

@@ -1,7 +1,7 @@
 import CardValueFormItemCombobox from "@/components/cards/_utils/values-form/form-item-combobox";
 import CardValuesFormSubmitButton from "@/components/cards/_utils/values-form/submit-button";
 import CardValuesFormWrapper from "@/components/cards/_utils/values-form/form-wrapper";
-import { TValueFormProps } from "@/components/cards/_utils/values-form/types";
+import { TInferValueFormProps } from "@/components/cards/_utils/values-form/types";
 import ErrorLine from "@/components/error-line";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import ForexIcon from "@/components/icons/forex-icon";
@@ -35,7 +35,7 @@ const getValue = (c: { name: string; ticker: string }) =>
 export default function CalculatorValueForm({
   onFormSubmit,
   isPendingForm,
-}: TValueFormProps) {
+}: TInferValueFormProps<"calculator">) {
   const {
     data: currencies,
     isPending: isPending,
@@ -91,9 +91,10 @@ export default function CalculatorValueForm({
 
     onFormSubmit({
       values: parsedData.currencies.map((id, index) => ({
-        cardTypeInputId: "calculator_currency_id",
-        value: id,
-        xOrder: index,
+        calculator_currency_id: {
+          value: id,
+          xOrder: index,
+        },
       })),
     });
   };

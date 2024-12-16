@@ -1,7 +1,7 @@
 import CardValueFormItemCombobox from "@/components/cards/_utils/values-form/form-item-combobox";
 import CardValuesFormSubmitButton from "@/components/cards/_utils/values-form/submit-button";
 import CardValuesFormWrapper from "@/components/cards/_utils/values-form/form-wrapper";
-import { TValueFormProps } from "@/components/cards/_utils/values-form/types";
+import { TInferValueFormProps } from "@/components/cards/_utils/values-form/types";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import { Form, FormField } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
@@ -23,7 +23,7 @@ const FormSchema = z.object({
 export default function CryptoPriceChartValueForm({
   onFormSubmit,
   isPendingForm,
-}: TValueFormProps) {
+}: TInferValueFormProps<"crypto_price_chart">) {
   const exchanges = Object.values(ExchangeSchema.Enum);
   const defaultExchange = exchanges[0];
 
@@ -74,16 +74,14 @@ export default function CryptoPriceChartValueForm({
     }
 
     onFormSubmit({
-      values: [
-        {
-          cardTypeInputId: "crypto_price_chart_exchange",
+      values: {
+        crypto_price_chart_exchange: {
           value: data.exchange,
         },
-        {
-          cardTypeInputId: "crypto_price_chart_pair",
+        crypto_price_chart_pair: {
           value: data.pair,
         },
-      ],
+      },
     });
   };
 

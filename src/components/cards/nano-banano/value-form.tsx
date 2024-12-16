@@ -1,6 +1,6 @@
 import CardValuesFormSubmitButton from "@/components/cards/_utils/values-form/submit-button";
 import CardValuesFormWrapper from "@/components/cards/_utils/values-form/form-wrapper";
-import { TValueFormProps } from "@/components/cards/_utils/values-form/types";
+import { TInferValueFormProps } from "@/components/cards/_utils/values-form/types";
 import {
   Form,
   FormControl,
@@ -22,7 +22,9 @@ export default function NanoBananoValueForm({
   onFormSubmit,
   isPendingForm,
   network,
-}: TValueFormProps & { network: "nano" | "banano" }) {
+}: TInferValueFormProps<"nano_balance" | "banano_balance"> & {
+  network: "nano" | "banano";
+}) {
   const characterCount = network === "nano" ? 65 : 64;
   const prefix = network === "nano" ? "nano_" : "ban_";
   const FormSchema = useMemo(() => {
@@ -75,16 +77,24 @@ export default function NanoBananoValueForm({
 
   const onFormSubmitLocal = (data: z.infer<typeof FormSchema>) => {
     onFormSubmit({
-      values: [
-        {
-          cardTypeInputId: `${network}_balance_address`,
-          value: data.address,
-        },
-        {
-          cardTypeInputId: `${network}_balance_is_owner`,
-          value: `${data.is_owner}`,
-        },
-      ],
+      values:
+        network === "banano"
+          ? {
+              banano_balance_address: {
+                value: data.address,
+              },
+              banano_balance_is_owner: {
+                value: `${data.is_owner}`,
+              },
+            }
+          : {
+              nano_balance_address: {
+                value: data.address,
+              },
+              nano_balance_is_owner: {
+                value: `${data.is_owner}`,
+              },
+            },
     });
   };
 

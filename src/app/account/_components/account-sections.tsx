@@ -29,7 +29,7 @@ import { AppRouterOutputs } from "@/server/trpc/api/root";
 import {
   ChangeCurrencyPreferenceSchemaUI,
   ChangeUsernameSchemaUI,
-} from "@/server/trpc/api/ui/types-client";
+} from "@/server/trpc/api/ui/types";
 import { api } from "@/server/trpc/setup/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderIcon, PencilIcon } from "lucide-react";

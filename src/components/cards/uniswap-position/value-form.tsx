@@ -1,7 +1,7 @@
 import CardValueComboboxItem from "@/components/cards/_utils/values-form/form-item-combobox";
 import CardValuesFormSubmitButton from "@/components/cards/_utils/values-form/submit-button";
 import CardValuesFormWrapper from "@/components/cards/_utils/values-form/form-wrapper";
-import { TValueFormProps } from "@/components/cards/_utils/values-form/types";
+import { TInferValueFormProps } from "@/components/cards/_utils/values-form/types";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import {
   Form,
@@ -42,7 +42,7 @@ const FormSchema = z.object({
 export default function UniswapPositionValueForm({
   onFormSubmit,
   isPendingForm,
-}: TValueFormProps) {
+}: TInferValueFormProps<"uniswap_position">) {
   const networks = Object.values(EthereumNetworkSchema.Enum);
   const defaultNetwork = networks[0];
 
@@ -61,20 +61,17 @@ export default function UniswapPositionValueForm({
 
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
     onFormSubmit({
-      values: [
-        {
-          cardTypeInputId: "uniswap_position_network",
+      values: {
+        uniswap_position_network: {
           value: data.network,
         },
-        {
-          cardTypeInputId: "uniswap_position_position_id",
+        uniswap_position_position_id: {
           value: `${data.positionId}`,
         },
-        {
-          cardTypeInputId: "uniswap_position_is_owner",
+        uniswap_position_is_owner: {
           value: `${data.is_owner}`,
         },
-      ],
+      },
     });
   };
 

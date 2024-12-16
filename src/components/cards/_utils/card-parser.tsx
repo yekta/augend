@@ -15,7 +15,7 @@ import CryptoPriceMiniCard from "@/components/cards/crypto-price/card-mini";
 import NanoBananoCard from "@/components/cards/nano-banano/card";
 import OrderBookCard, {
   TOrderBookConfig,
-} from "@/components/cards/order-book/card";
+} from "@/components/cards/crypto-order-book/card";
 import UniswapPoolsTableCard from "@/components/cards/uniswap-pools-table/card";
 import UniswapPositionCard from "@/components/cards/uniswap-position/card";
 import WBanSummaryCard from "@/components/cards/wban-summary/card";
