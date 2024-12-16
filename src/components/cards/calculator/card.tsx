@@ -160,6 +160,7 @@ export default function CalculatorCard({
             className="w-full relative group/input"
           >
             <Input
+              inputMode="decimal"
               autoComplete="off"
               disabled={isLoadingError}
               ref={(e) => {

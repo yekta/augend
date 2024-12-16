@@ -3,19 +3,19 @@ import { TCardOuterWrapperProps } from "@/components/cards/_utils/card-outer-wra
 import { cardTypes } from "@/components/cards/_utils/helpers";
 import BananoTotalCard from "@/components/cards/banano-total/card";
 import CalculatorCard from "@/components/cards/calculator/card";
-import CryptoPriceChartCard, {
-  TOhlcvChartConfig,
-} from "@/components/cards/crypto-price-chart/card";
-import CryptoTableCard from "@/components/cards/crypto-table/card";
-import CryptoPriceCard from "@/components/cards/crypto-price/card";
-import CurrencyCard from "@/components/cards/currency/card";
-import FearGreedIndexCard from "@/components/cards/fear-greed-index/card";
-import GasTrackerCard from "@/components/cards/gas-tracker/card";
-import CryptoPriceMiniCard from "@/components/cards/crypto-price/card-mini";
-import NanoBananoCard from "@/components/cards/nano-banano/card";
+import CryptoAssetCard from "@/components/cards/crypto-asset/card";
 import OrderBookCard, {
   TOrderBookConfig,
 } from "@/components/cards/crypto-order-book/card";
+import CryptoPriceChartCard, {
+  TOhlcvChartConfig,
+} from "@/components/cards/crypto-price-chart/card";
+import CryptoPriceCard from "@/components/cards/crypto-price/card";
+import CryptoTableCard from "@/components/cards/crypto-table/card";
+import CurrencyCard from "@/components/cards/currency/card";
+import FearGreedIndexCard from "@/components/cards/fear-greed-index/card";
+import GasTrackerCard from "@/components/cards/gas-tracker/card";
+import NanoBananoCard from "@/components/cards/nano-banano/card";
 import UniswapPoolsTableCard from "@/components/cards/uniswap-pools-table/card";
 import UniswapPositionCard from "@/components/cards/uniswap-position/card";
 import WBanSummaryCard from "@/components/cards/wban-summary/card";
@@ -24,8 +24,6 @@ import { TCurrencyWithSelectedFields } from "@/server/db/repo/types";
 import { TEthereumNetwork } from "@/server/trpc/api/crypto/ethereum/constants";
 import { TExchange } from "@/server/trpc/api/crypto/exchange/types";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
-import CryptoAssetMiniCard from "@/components/cards/crypto-asset/card-mini";
-import CryptoAssetCard from "@/components/cards/crypto-asset/card";
 
 export function CardParser({
   cardObject,
@@ -44,23 +42,12 @@ export function CardParser({
     )?.value;
     if (!coinId) return null;
 
-    if (cardObject.card.variant === "mini") {
-      return (
-        <CardErrorBoundary className={cn(cardTypes.sm.className, className)}>
-          <CryptoPriceMiniCard
-            className={cn(cardTypes.sm.className, className)}
-            coinId={Number(coinId)}
-            {...rest}
-          />
-        </CardErrorBoundary>
-      );
-    }
-
     return (
       <CardErrorBoundary className={cn(cardTypes.sm.className, className)}>
         <CryptoPriceCard
           className={cn(cardTypes.sm.className, className)}
           coinId={Number(coinId)}
+          variant={cardObject.card.variant}
           {...rest}
         />
       </CardErrorBoundary>
@@ -88,21 +75,6 @@ export function CardParser({
     )?.value;
     if (buyAmount === undefined) return null;
 
-    if (cardObject.card.variant === "mini") {
-      return (
-        <CardErrorBoundary className={cn(cardTypes.sm2.className, className)}>
-          <CryptoAssetMiniCard
-            className={cn(cardTypes.sm2.className, className)}
-            coinId={Number(coinId)}
-            boughtAtTimestamp={Number(boughtAtTimestamp)}
-            buyPriceUsd={Number(buyPriceUsd)}
-            buyAmount={Number(buyAmount)}
-            {...rest}
-          />
-        </CardErrorBoundary>
-      );
-    }
-
     return (
       <CardErrorBoundary className={cn(cardTypes.sm.className, className)}>
         <CryptoAssetCard
@@ -111,6 +83,7 @@ export function CardParser({
           boughtAtTimestamp={Number(boughtAtTimestamp)}
           buyPriceUsd={Number(buyPriceUsd)}
           buyAmount={Number(buyAmount)}
+          variant={cardObject.card.variant}
           {...rest}
         />
       </CardErrorBoundary>

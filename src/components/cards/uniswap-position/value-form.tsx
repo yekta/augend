@@ -111,6 +111,7 @@ export default function UniswapPositionValueForm({
               </FormHeader>
               <FormControl>
                 <Input
+                  inputMode="numeric"
                   autoComplete="off"
                   type="number"
                   className="w-full"

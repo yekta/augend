@@ -1,7 +1,6 @@
 import CurrentDashboardProvider from "@/app/[username]/[dashboard_slug]/_components/current-dashboard-provider";
 import DndCardsProvider from "@/app/[username]/[dashboard_slug]/_components/dnd-cards-provider";
 import { cardTypes } from "@/components/cards/_utils/helpers";
-import CryptoPriceMiniCard from "@/components/cards/crypto-price/card-mini";
 import CryptoPriceChartCard, {
   TOhlcvChartConfig,
 } from "@/components/cards/crypto-price-chart/card";
@@ -139,7 +138,8 @@ export default async function Home() {
               }}
             />
             {miniCryptoIds.map((id, index) => (
-              <CryptoPriceMiniCard
+              <CryptoPriceCard
+                variant="mini"
                 noHref
                 key={id}
                 coinId={id}

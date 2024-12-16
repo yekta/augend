@@ -200,8 +200,8 @@ export default function CryptoAssetValueForm({
               <FormControl>
                 <div className="w-full relative">
                   <Input
+                    inputMode="decimal"
                     autoComplete="off"
-                    type="number"
                     className="w-full pl-10"
                     placeholder="1000"
                     {...field}
@@ -228,8 +228,8 @@ export default function CryptoAssetValueForm({
               <FormControl>
                 <div className="w-full relative">
                   <Input
+                    inputMode="decimal"
                     autoComplete="off"
-                    type="number"
                     className="w-full pl-9.5"
                     placeholder="100"
                     {...field}
