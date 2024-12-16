@@ -1,5 +1,6 @@
-import CardValueDateTimePickerFormItem from "@/components/cards/_utils/values-form/form-item-date-time-picker";
+import CardVariantFormItem from "@/components/cards/_utils/values-form/form-item-card-variant";
 import CardValueFormItemCombobox from "@/components/cards/_utils/values-form/form-item-combobox";
+import CardValueDateTimePickerFormItem from "@/components/cards/_utils/values-form/form-item-date-time-picker";
 import CardValuesFormWrapper from "@/components/cards/_utils/values-form/form-wrapper";
 import CardValuesFormSubmitButton from "@/components/cards/_utils/values-form/submit-button";
 import { TValueFormProps } from "@/components/cards/_utils/values-form/types";
@@ -7,7 +8,6 @@ import CryptoIcon from "@/components/icons/crypto-icon";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormHeader,
   FormItem,
@@ -18,11 +18,10 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { api } from "@/server/trpc/setup/react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { HourglassIcon } from "lucide-react";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import CardVariantFormItem from "@/components/cards/_utils/values-form/form-item-card-variant";
-import { HourglassIcon } from "lucide-react";
 
 const VariantEnum = z.enum(["default", "mini"]);
 type TCardVariant = z.infer<typeof VariantEnum>;
