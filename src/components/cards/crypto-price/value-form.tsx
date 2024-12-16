@@ -125,7 +125,6 @@ export default function CryptoPriceValueForm({
           render={({ field }) => (
             <CardValueFormItemCombobox
               inputTitle="Crypto"
-              inputDescription="The cryptocurrency to track."
               value={field.value}
               iconValue={iconValue}
               onSelect={(v) => {

@@ -26,7 +26,6 @@ export default function CardVariantFormItem<T extends string>({
     <FormItem>
       <FormHeader>
         <FormLabel>Card Size</FormLabel>
-        <FormDescription>Select a card size.</FormDescription>
       </FormHeader>
       <FormControl>
         <RadioGroup
@@ -63,8 +62,8 @@ export default function CardVariantFormItem<T extends string>({
                   </p>
                   <div className="size-10 -mr-0.5 flex items-center justify-center">
                     <div
-                      className="w-10 h-7 group-data-[variant=mini]/variant:w-8 
-                      group-data-[variant=mini]/variant:h-4
+                      className="w-10 h-7 group-data-[variant=mini]/variant:w-10
+                      group-data-[variant=mini]/variant:h-4 animate-perspective-shift transform-gpu origin-center
                       shrink-0 bg-muted-foreground/25 rounded items-center justify-center flex flex-col"
                     >
                       <div className="w-full px-2 gap-0.75 h-full flex flex-col items-center justify-center group-data-[variant=mini]/variant:hidden">
@@ -73,7 +72,7 @@ export default function CardVariantFormItem<T extends string>({
                         <div className="w-1/2 h-[3px] bg-muted-foreground rounded-sm" />
                       </div>
                       <div className="w-full px-1 gap-0.75 h-full flex-col items-center justify-center hidden group-data-[variant=mini]/variant:flex">
-                        <div className="w-full flex gap-2.5 items-center justify-between">
+                        <div className="w-full flex gap-3 items-center justify-between">
                           <div className="flex-1 h-[2px] bg-muted-foreground rounded-sm" />
                           <div className="flex-1 h-[2px] bg-muted-foreground rounded-sm" />
                         </div>

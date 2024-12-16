@@ -36,8 +36,10 @@ export default function CardValueDateTimePickerFormItem({
     <FormItem>
       {(inputTitle || inputDescription) && (
         <FormHeader>
-          <FormLabel>{inputTitle}</FormLabel>
-          <FormDescription>{inputDescription}</FormDescription>
+          {inputTitle && <FormLabel>{inputTitle}</FormLabel>}
+          {inputDescription && (
+            <FormDescription>{inputDescription}</FormDescription>
+          )}
         </FormHeader>
       )}
       <Popover>

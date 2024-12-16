@@ -20,7 +20,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
 type TItem = {
   value: string;
@@ -71,6 +71,9 @@ export default function CardValueFormItemCombobox<T>({
   disabled,
   Icon,
 }: TValueComboboxProps) {
+  const listRef = useRef<HTMLDivElement>(null);
+  const scrollId = useRef<NodeJS.Timeout | undefined>();
+
   const [open, setOpen] = useState(false);
 
   const isHardError = !isPending && isLoadingError;
@@ -131,8 +134,17 @@ export default function CardValueFormItemCombobox<T>({
             data-pending={isPending ? true : undefined}
             className="max-h-[18rem] group/command"
           >
-            <CommandInput placeholder={inputPlaceholder} />
-            <CommandList>
+            <CommandInput
+              onValueChange={() => {
+                clearTimeout(scrollId.current);
+                scrollId.current = setTimeout(() => {
+                  const div = listRef.current;
+                  div?.scrollTo({ top: 0 });
+                });
+              }}
+              placeholder={inputPlaceholder}
+            />
+            <CommandList ref={listRef}>
               {!isLoadingError && (
                 <CommandEmpty>{noValueFoundLabel}</CommandEmpty>
               )}

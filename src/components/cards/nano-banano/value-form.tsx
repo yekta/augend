@@ -99,7 +99,7 @@ export default function NanoBananoValueForm({
               <FormHeader>
                 <FormLabel>Address</FormLabel>
                 <FormDescription>
-                  Address of the account. Starts with{" "}
+                  Starts with{" "}
                   <span className="font-semibold bg-muted-foreground/15 rounded px-1">
                     {prefix}
                   </span>

@@ -95,7 +95,7 @@ export default function CryptoAssetValueForm({
   });
 
   const coinValue = form.watch("coinValue");
-  const iconValue = useMemo(() => {
+  const tickerValue = useMemo(() => {
     return shapedIdMaps?.find(
       (i) => getValue(i) === form.getValues("coinValue")
     )?.symbol;
@@ -154,9 +154,8 @@ export default function CryptoAssetValueForm({
           render={({ field }) => (
             <CardValueFormItemCombobox
               inputTitle="Crypto"
-              inputDescription="Which crypto do you hold?"
               value={field.value}
-              iconValue={iconValue}
+              iconValue={tickerValue}
               onSelect={(v) => {
                 form.clearErrors("coinValue");
                 form.setValue("coinValue", v);
@@ -183,7 +182,6 @@ export default function CryptoAssetValueForm({
           render={({ field }) => (
             <CardValueDateTimePickerFormItem
               inputTitle="Date & Time"
-              inputDescription="When did you buy?"
               value={field.value}
               onSelect={(v) => {
                 form.clearErrors("boughtAtDate");
@@ -201,9 +199,6 @@ export default function CryptoAssetValueForm({
             <FormItem>
               <FormHeader>
                 <FormLabel>Buy Price (USD)</FormLabel>
-                <FormDescription>
-                  How much did you pay per coin?
-                </FormDescription>
               </FormHeader>
               <FormControl>
                 <div className="w-full relative">
@@ -229,8 +224,9 @@ export default function CryptoAssetValueForm({
           render={({ field }) => (
             <FormItem>
               <FormHeader>
-                <FormLabel>Amount Bought</FormLabel>
-                <FormDescription>How many coins did you buy?</FormDescription>
+                <FormLabel>
+                  Amount Bought{tickerValue ? ` (${tickerValue})` : ""}
+                </FormLabel>
               </FormHeader>
               <FormControl>
                 <div className="w-full relative">
@@ -242,9 +238,9 @@ export default function CryptoAssetValueForm({
                     {...field}
                   />
                   <div className="size-5 absolute left-3 font-bold top-1/2 -translate-y-1/2 flex items-center justify-center">
-                    {iconValue && (
+                    {tickerValue && (
                       <CryptoIcon
-                        cryptoName={iconValue}
+                        cryptoName={tickerValue}
                         className="size-full"
                       />
                     )}

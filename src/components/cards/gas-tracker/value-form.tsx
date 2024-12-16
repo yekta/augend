@@ -59,7 +59,6 @@ export default function GasTrackerValueForm({
           render={({ field }) => (
             <CardValueFormItemCombobox
               inputTitle="Network"
-              inputDescription="The network to track gas prices on."
               value={field.value}
               onSelect={(value) =>
                 form.setValue("network", value as TEthereumNetwork)

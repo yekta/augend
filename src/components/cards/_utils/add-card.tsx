@@ -26,7 +26,7 @@ import { AppRouterOutputs, AppRouterQueryResult } from "@/server/trpc/api/root";
 import { TCardValueForAddCards } from "@/server/trpc/api/ui/types";
 import { api } from "@/server/trpc/setup/react";
 import { ArrowDownCircleIcon, ArrowLeftIcon, PlusIcon } from "lucide-react";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useRef, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 
 type AddCardButtonProps = {
@@ -165,6 +165,8 @@ export function AddCardCommandPanel({
   onSubmit,
   className,
 }: AddCardCommandPanelProps) {
+  const listRef = useRef<HTMLDivElement>(null);
+  const scrollId = useRef<NodeJS.Timeout | undefined>();
   const { data, isPending, isLoadingError } = getCardTypesQuery;
 
   useHotkeys(
@@ -222,7 +224,16 @@ export function AddCardCommandPanel({
             className
           )}
         >
-          <CommandInput placeholder="Search for a card..." />
+          <CommandInput
+            onValueChange={() => {
+              clearTimeout(scrollId.current);
+              scrollId.current = setTimeout(() => {
+                const div = listRef.current;
+                div?.scrollTo({ top: 0 });
+              });
+            }}
+            placeholder="Search for a card..."
+          />
           {!isLoadingError && (
             <CommandEmpty className="text-muted-foreground w-full text-center text-sm py-6">
               No cards found.
@@ -234,7 +245,7 @@ export function AddCardCommandPanel({
             </p>
           )}
           {!isLoadingError && (
-            <CommandList>
+            <CommandList ref={listRef}>
               {!isLoadingError && (
                 <CommandGroup data-pending={isPending ? true : undefined}>
                   {(

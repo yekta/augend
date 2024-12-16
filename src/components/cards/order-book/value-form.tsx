@@ -109,7 +109,6 @@ export default function CryptoOrderBookValueForm({
           render={({ field }) => (
             <CardValueFormItemCombobox
               inputTitle="Exchange"
-              inputDescription="The cryptocurrency exchange for the pair."
               value={field.value}
               onSelect={(value) => {
                 form.clearErrors("exchange");
@@ -136,7 +135,6 @@ export default function CryptoOrderBookValueForm({
           render={({ field }) => (
             <CardValueFormItemCombobox
               inputTitle="Pair"
-              inputDescription="The pair to get the order book for."
               value={field.value}
               onSelect={(value) => {
                 form.clearErrors("pair");

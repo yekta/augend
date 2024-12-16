@@ -87,7 +87,6 @@ export default function UniswapPositionValueForm({
           render={({ field }) => (
             <CardValueComboboxItem
               inputTitle="Network"
-              inputDescription="The network of the Uniswap position."
               value={field.value}
               onSelect={(value) =>
                 form.setValue("network", value as TEthereumNetwork)
@@ -112,7 +111,6 @@ export default function UniswapPositionValueForm({
             <FormItem>
               <FormHeader>
                 <FormLabel>Position ID</FormLabel>
-                <FormDescription>ID of the Uniswap position.</FormDescription>
               </FormHeader>
               <FormControl>
                 <Input
