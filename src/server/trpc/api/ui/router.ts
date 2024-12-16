@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { mainDashboardSlug } from "@/lib/constants";
+import { db } from "@/server/db/db";
 import { getCardTypes } from "@/server/db/repo/card-types";
 import {
   createCardValues,
@@ -43,8 +44,6 @@ import {
 import { createTRPCRouter, publicProcedure } from "@/server/trpc/setup/trpc";
 import { TRPCError } from "@trpc/server";
 import { Session } from "next-auth";
-import { db } from "@/server/db/db";
-import { cardsTable } from "@/server/db/schema";
 
 function getIsOwner({
   session,

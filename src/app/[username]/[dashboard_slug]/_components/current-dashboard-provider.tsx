@@ -14,6 +14,7 @@ type TCurrentDashboardContext = {
   hasCards?: boolean;
   invalidateCards: () => Promise<void>;
   cancelCardsQuery: () => Promise<void>;
+  removeCardIdsOptimistic: (ids: string[]) => void;
   dataDashboard?: AppRouterOutputs["ui"]["getCards"]["dashboard"];
   isPendingDashboard: boolean;
   isLoadingErrorDashboard: boolean;
@@ -22,6 +23,7 @@ type TCurrentDashboardContext = {
   dashboardTitle?: string;
   invalidateDashboards: () => Promise<void>;
   errorMessageDashboard?: string;
+  setDataCards: (data: AppRouterOutputs["ui"]["getCards"]) => void;
 };
 
 const CurrentDashboardContext = createContext<TCurrentDashboardContext | null>(
@@ -73,6 +75,32 @@ export const CurrentDashboardProvider: FC<Props> = ({
   const invalidateDashboard = async () => {
     await Promise.all([invalidateDashboards(), invalidateCards()]);
   };
+  const removeCardIdsOptimistic = (ids: string[]) => {
+    utils.ui.getCards.setData(
+      {
+        username,
+        dashboardSlug,
+      },
+      (data) => {
+        if (data === undefined) return data;
+        cancelCardsQuery();
+        let newData = { ...data };
+        newData.cards = data.cards.filter(
+          (cardObject) => !ids.includes(cardObject.card.id)
+        );
+        return newData;
+      }
+    );
+  };
+  const setDataCards = (data: typeof dataCards) => {
+    utils.ui.getCards.setData(
+      {
+        username,
+        dashboardSlug,
+      },
+      data
+    );
+  };
   const cancelDashboardsQuery = () => cancelCardsQuery();
 
   return (
@@ -93,6 +121,8 @@ export const CurrentDashboardProvider: FC<Props> = ({
         cancelDashboardsQuery,
         errorMessageDashboard: errorDashboard?.message,
         invalidateDashboards,
+        removeCardIdsOptimistic,
+        setDataCards,
         hasCards:
           dataCards === null
             ? false

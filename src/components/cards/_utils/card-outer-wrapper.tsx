@@ -29,6 +29,7 @@ import { LoaderIcon, MinusIcon } from "lucide-react";
 import Link from "next/link";
 import { ComponentProps, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { toast } from "sonner";
 
 type TSharedProps = {
   cardId?: string;
@@ -75,7 +76,8 @@ export default function CardOuterWrapper({
     className
   );
 
-  const { invalidateCards } = useCurrentDashboard();
+  const { invalidateCards, removeCardIdsOptimistic, dataCards, setDataCards } =
+    useCurrentDashboard();
 
   const { isEnabled: isEditModeCardsEnabled } = useEditModeCards();
 
@@ -90,8 +92,24 @@ export default function CardOuterWrapper({
     isPending: isPendingDeleteCard,
     error: errorDeleteCard,
   } = api.ui.deleteCards.useMutation({
-    onSuccess: async () => {
-      await invalidateCards();
+    onMutate: async ({ ids }) => {
+      const oldData = dataCards ? { ...dataCards } : undefined;
+      removeCardIdsOptimistic(ids);
+      return {
+        dataCards: oldData,
+      };
+    },
+    onSettled: async () => {
+      invalidateCards();
+    },
+    onError: (err, _, context) => {
+      toast.error("Card deletion failed.", {
+        description: "Please try again.",
+        duration: 5000,
+      });
+      if (context?.dataCards) {
+        setDataCards(context.dataCards);
+      }
     },
   });
 

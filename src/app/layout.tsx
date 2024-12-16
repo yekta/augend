@@ -11,6 +11,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import NextTopLoader from "nextjs-toploader";
 import "./globals.css";
+import { Toaster } from "@/components/ui/sonner";
 
 const sans = localFont({
   src: "./fonts/DMSansVF.woff2",
@@ -74,6 +75,7 @@ export default async function RootLayout({
             {children}
             <Footer />
           </div>
+          <Toaster position="top-right" />
         </Providers>
       </body>
     </html>

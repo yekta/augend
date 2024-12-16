@@ -1,6 +1,6 @@
 "use client";
 
-import { Session } from "next-auth";
+import { signOutAction } from "@/components/auth/actions";
 import Blockies from "@/components/blockies/blockies";
 import {
   DropdownMenu,
@@ -10,13 +10,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { signOutAction } from "@/components/auth/actions";
-import { useActionState, useState } from "react";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { LoaderIcon, LogOutIcon, UserIcon } from "lucide-react";
-import { useDisconnect } from "wagmi";
+import { Session } from "next-auth";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { useActionState, useState } from "react";
+import { useDisconnect } from "wagmi";
 
 type Props = {
   session: Session;
