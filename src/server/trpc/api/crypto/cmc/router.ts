@@ -40,9 +40,9 @@ export const cmcRouter = createTRPCRouter({
         currencyTickers: cleanedConvert,
         afterTimestamp: Date.now() - freshDuration,
       });
-      const logKey = `getCryptoInfos:${cleanedIds.join(
+      const logKey = `getCryptoInfos:${cleanedConvert.join(
         ","
-      )}:${cleanedConvert.join(",")}`;
+      )}:${cleanedIds.join(",")}`;
       if (result) {
         console.log(
           `[POSTGRES_CACHE][HIT]: ${logKey} | ${Math.round(
