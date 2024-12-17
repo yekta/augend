@@ -92,13 +92,15 @@ export const cmcRouter = createTRPCRouter({
       }
 
       //// Write to Postgres cache ////
-      const startWrite = performance.now();
-      await insertCmcCryptoInfosAndQuotes({ cmcData: data });
-      console.log(
-        `[POSTGRES_CACHE][SET]: ${logKey} | ${Math.floor(
-          performance.now() - startWrite
-        )}ms`
-      );
+      after(async () => {
+        const startWrite = performance.now();
+        await insertCmcCryptoInfosAndQuotes({ cmcData: data });
+        console.log(
+          `[POSTGRES_CACHE][SET]: ${logKey} | ${Math.floor(
+            performance.now() - startWrite
+          )}ms`
+        );
+      });
       ////////////////////////////////
 
       const shapedResult = shapeCryptoInfosRawResult(data, cleanedIds);

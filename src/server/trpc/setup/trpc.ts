@@ -11,6 +11,7 @@ import { createCacheKeyForTRPCRoute } from "@/server/redis/cache-utils";
 import { getCache, setCache } from "@/server/redis/redis";
 import { initTRPC } from "@trpc/server";
 import { Session } from "next-auth";
+import { after } from "next/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
 
@@ -139,9 +140,10 @@ const cacheMiddleware = (cacheTime: TCacheTime) =>
       );
     }
 
-    // @ts-ignore
     if (result.ok && !cachedResult) {
-      await setCache(cacheKey, result.data, cacheTime);
+      after(async () => {
+        await setCache(cacheKey, result.data, cacheTime);
+      });
     }
 
     return result;

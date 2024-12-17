@@ -18,6 +18,7 @@ import {
   createTRPCRouter,
 } from "@/server/trpc/setup/trpc";
 import { TRPCError } from "@trpc/server";
+import { after } from "next/server";
 import { z } from "zod";
 
 const baseGasLimitGwei = 21_000;
@@ -127,13 +128,15 @@ export async function getEthPrice({
   }
 
   //// Write to Postgres cache ////
-  const startWrite = performance.now();
-  await insertCmcCryptoInfosAndQuotes({ cmcData: data });
-  console.log(
-    `[POSTGRES_CACHE][SET]: ${logKey} | ${Math.floor(
-      performance.now() - startWrite
-    )}ms`
-  );
+  after(async () => {
+    const startWrite = performance.now();
+    await insertCmcCryptoInfosAndQuotes({ cmcData: data });
+    console.log(
+      `[POSTGRES_CACHE][SET]: ${logKey} | ${Math.floor(
+        performance.now() - startWrite
+      )}ms`
+    );
+  });
   ////////////////////////////////
 
   return data[cmcId].quote[convert].price;
