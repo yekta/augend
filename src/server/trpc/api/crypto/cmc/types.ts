@@ -1,5 +1,5 @@
 export type TCmcGetCryptosResultRaw = {
-  data: {
+  data?: {
     [key: string]: {
       id: number;
       name: string;

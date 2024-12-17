@@ -3,10 +3,12 @@ import {
   TCmcGetCryptosResultRaw,
 } from "@/server/trpc/api/crypto/cmc/types";
 
-export function shapeGetCryptoInfosRawResult(result: TCmcGetCryptosResultRaw) {
+export function shapeGetCryptoInfosRawResult(
+  data: NonNullable<TCmcGetCryptosResultRaw["data"]>
+) {
   let shapedResult: TCmcGetCryptosResult = {};
-  for (const coinId in result.data) {
-    const coin = result.data[coinId];
+  for (const coinId in data) {
+    const coin = data[coinId];
     shapedResult[coinId] = {
       id: Number(coinId),
       name: coin.name,

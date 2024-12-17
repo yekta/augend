@@ -77,26 +77,41 @@ export const cmcRouter = createTRPCRouter({
         }
       });
 
-      let editedResult: TCmcGetCryptosResultRaw = { data: {} };
-      const firstResult = results[0];
-      for (const key in firstResult.data) {
-        const quoteObj: TCmcGetCryptosResultRaw["data"][number]["quote"] = {};
+      let editedData: NonNullable<TCmcGetCryptosResultRaw["data"]> = {};
+      const firstResultData = results[0].data;
+      if (!firstResultData) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "No data in CMC response: getCryptoInfos",
+        });
+      }
+      for (const key in firstResultData) {
+        const quoteObj: NonNullable<
+          TCmcGetCryptosResultRaw["data"]
+        >[number]["quote"] = {};
         // Check other results for quotes
         for (const result of results) {
-          const quote = result.data[key].quote;
+          const data = result.data;
+          if (!data) {
+            throw new TRPCError({
+              code: "INTERNAL_SERVER_ERROR",
+              message: "No data in CMC response: getCryptoInfos",
+            });
+          }
+          const quote = data[key].quote;
           for (const currencyTicker in quote) {
             quoteObj[currencyTicker] = quote[currencyTicker];
           }
         }
-        editedResult.data[key] = {
-          ...firstResult.data[key],
+        editedData[key] = {
+          ...firstResultData[key],
           quote: quoteObj,
         };
       }
 
       //// Write to Postgres cache ////
       const startWrite = performance.now();
-      await insertCmcCryptoInfosAndQuotes({ cmcResult: editedResult });
+      await insertCmcCryptoInfosAndQuotes({ cmcData: editedData });
       console.log(
         `[POSTGRES_CACHE][SET]: ${logKey} | ${Math.floor(
           performance.now() - startWrite
@@ -104,7 +119,7 @@ export const cmcRouter = createTRPCRouter({
       );
       ////////////////////////////////
 
-      const shapedResult = shapeGetCryptoInfosRawResult(editedResult);
+      const shapedResult = shapeGetCryptoInfosRawResult(editedData);
       return shapedResult;
     }),
   getGlobalMetrics: cachedPublicProcedure("minutes-short")

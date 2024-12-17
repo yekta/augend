@@ -105,10 +105,18 @@ export async function getEthPrice({
     });
   }
   const ethUsdResJson: TCmcGetCryptosResultRaw = await ethUsdRes.json();
+  const data = ethUsdResJson.data;
+  if (!data) {
+    console.log(ethUsdResJson);
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "No data in CMC response: getEthPrice",
+    });
+  }
 
   //// Write to Postgres cache ////
   const startWrite = performance.now();
-  await insertCmcCryptoInfosAndQuotes({ cmcResult: ethUsdResJson });
+  await insertCmcCryptoInfosAndQuotes({ cmcData: data });
   console.log(
     `[POSTGRES_CACHE][SET]: ${logKey} | ${Math.floor(
       performance.now() - startWrite
@@ -116,5 +124,5 @@ export async function getEthPrice({
   );
   ////////////////////////////////
 
-  return ethUsdResJson.data[cmcId].quote[convert].price;
+  return data[cmcId].quote[convert].price;
 }

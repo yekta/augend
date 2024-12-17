@@ -12,15 +12,15 @@ import {
 import { and, eq, gt, inArray, sql } from "drizzle-orm";
 
 export async function insertCmcCryptoInfosAndQuotes({
-  cmcResult,
+  cmcData,
 }: {
-  cmcResult: TCmcGetCryptosResultRaw;
+  cmcData: NonNullable<TCmcGetCryptosResultRaw["data"]>;
 }) {
   let infos: TInsertCmcCryptoInfo[] = [];
   let quotes: TInsertCmcCryptoInfoQuote[] = [];
 
-  for (const key in cmcResult.data) {
-    const cryptoInfo = cmcResult.data[key];
+  for (const key in cmcData) {
+    const cryptoInfo = cmcData[key];
     const infoId = crypto.randomUUID();
     infos.push({
       id: infoId,
@@ -56,10 +56,10 @@ export async function insertCmcCryptoInfosAndQuotes({
     }
   }
 
-  await Promise.all([
-    db.insert(cmcCryptoInfosTable).values(infos),
-    db.insert(cmcCryptoInfoQuotesTable).values(quotes),
-  ]);
+  await db.transaction(async (tx) => {
+    await tx.insert(cmcCryptoInfosTable).values(infos);
+    await tx.insert(cmcCryptoInfoQuotesTable).values(quotes);
+  });
   return true;
 }
 
