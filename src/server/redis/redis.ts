@@ -1,6 +1,6 @@
 import { env } from "@/lib/env";
 import { createCacheKeyForTRPCRoute } from "@/server/redis/cache-utils";
-import { cacheTimes, TCacheTime } from "@/server/trpc/setup/trpc";
+import { cacheTimesSec, TCacheTime } from "@/server/trpc/setup/trpc";
 import { Redis } from "ioredis";
 
 const redis = new Redis(env.REDIS_URL + "?family=0");
@@ -12,7 +12,7 @@ export async function setCache(
 ) {
   const start = performance.now();
   try {
-    await redis.set(key, JSON.stringify(value), "EX", cacheTimes[cacheTime]);
+    await redis.set(key, JSON.stringify(value), "EX", cacheTimesSec[cacheTime]);
     const duration = Math.round(performance.now() - start);
 
     console.log(`[CACHE][SET]: "${key}" | ${duration}ms`);

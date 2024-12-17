@@ -156,7 +156,7 @@ const cacheMiddleware = (cacheTime: TCacheTime) =>
  */
 export const publicProcedure = t.procedure.use(timingMiddleware);
 
-export const cacheTimes = {
+export const cacheTimesSec = {
   "seconds-short": 8,
   "seconds-medium": 24,
   "seconds-long": 48,
@@ -167,7 +167,10 @@ export const cacheTimes = {
   "hours-medium": 60 * 60 * 6,
   "hours-long": 60 * 60 * 12,
 };
-export type TCacheTime = keyof typeof cacheTimes;
+export const cacheTimesMs = Object.fromEntries(
+  Object.entries(cacheTimesSec).map(([key, value]) => [key, value * 1000])
+) as Record<TCacheTime, number>;
+export type TCacheTime = keyof typeof cacheTimesSec;
 
 export const cachedPublicProcedure = (
   cacheTime: TCacheTime = "seconds-medium"

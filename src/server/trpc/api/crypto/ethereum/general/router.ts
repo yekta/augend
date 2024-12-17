@@ -6,13 +6,13 @@ import { cmcApiUrl } from "@/server/trpc/api/crypto/cmc/constants";
 import { cmcFetchOptions } from "@/server/trpc/api/crypto/cmc/secrets";
 import { TCmcGetCryptosResultRaw } from "@/server/trpc/api/crypto/cmc/types";
 import {
-  EthereumNetworkSchema,
   ethereumNetworks,
+  EthereumNetworkSchema,
 } from "@/server/trpc/api/crypto/ethereum/constants";
 import { ethereumProviders } from "@/server/trpc/api/crypto/ethereum/secrets";
 import {
   cachedPublicProcedure,
-  cacheTimes,
+  cacheTimesMs,
   createTRPCRouter,
 } from "@/server/trpc/setup/trpc";
 import { TRPCError } from "@trpc/server";
@@ -85,7 +85,7 @@ export async function getEthPrice({
   const result = await getCmcLatestCryptoInfos({
     coinIds: [cmcId],
     currencyTickers: [convert],
-    afterTimestamp: Date.now() - cacheTimes["minutes-short"],
+    afterTimestamp: Date.now() - cacheTimesMs["minutes-short"],
   });
   const duration = Math.round(performance.now() - startRead);
   if (result) {
