@@ -44,24 +44,27 @@ export async function getCache<T>(key: string) {
   return null;
 }
 
-export async function cachedPromise<T>({
-  path,
-  params,
-  promise,
-  cacheTime = "seconds-medium",
-}: {
-  path: string;
-  params: any;
-  promise: Promise<T>;
-  cacheTime: TCacheTime;
-}) {
-  const key = createCacheKeyForTRPCRoute(path, params, cacheTime);
-  const cache = await getCache<T>(key);
-  if (cache) {
-    return cache;
+export function cachedFunction<T>(
+  func: () => Promise<T>,
+  {
+    path,
+    params,
+    cacheTime = "seconds-medium",
+  }: {
+    path: string;
+    params: any;
+    cacheTime: TCacheTime;
   }
+) {
+  return async () => {
+    const key = createCacheKeyForTRPCRoute(path, params, cacheTime);
+    const cache = await getCache<T>(key);
+    if (cache) {
+      return cache;
+    }
 
-  const result = await promise;
-  await setCache(key, result, cacheTime);
-  return result;
+    const result = await func();
+    await setCache(key, result, cacheTime);
+    return result;
+  };
 }

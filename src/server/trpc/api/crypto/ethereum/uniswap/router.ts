@@ -1,7 +1,11 @@
 import { z } from "zod";
 
-import { cachedPromise } from "@/server/redis/redis";
-import { EthereumAddressSchema } from "@/server/trpc/api/crypto/ethereum/constants";
+import { cachedFunction } from "@/server/redis/redis";
+import {
+  EthereumAddressSchema,
+  ethereumNetworks,
+  EthereumNetworkSchema,
+} from "@/server/trpc/api/crypto/ethereum/constants";
 import {
   getUniswapPositionManager,
   uniswapOkuApiUrl,
@@ -20,10 +24,6 @@ import {
 } from "@/server/trpc/setup/trpc";
 import type { PositionPriceRange, SearchFilterOpts } from "@gfxlabs/oku";
 import { TRPCError } from "@trpc/server";
-import {
-  ethereumNetworks,
-  EthereumNetworkSchema,
-} from "@/server/trpc/api/crypto/ethereum/constants";
 
 export const uniswapRouter = createTRPCRouter({
   getPools: cachedPublicProcedure("seconds-medium")
@@ -164,22 +164,25 @@ export const uniswapRouter = createTRPCRouter({
           },
         ],
       };
-      const nftUriPromise: Promise<any> = positionManager.tokenURI(id);
-      const positionPromise = fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body),
-      });
-      const [nftUriRaw, positionRes] = await Promise.all([
-        cachedPromise({
+
+      const getNftUriCached = cachedFunction(
+        async () => positionManager.tokenURI(id) as string,
+        {
           path: "uniswap.getPosition:nftUri",
           params: { network, id },
-          promise: nftUriPromise,
           cacheTime: "hours-short",
+        }
+      );
+
+      const [nftUriRaw, positionRes] = await Promise.all([
+        getNftUriCached(),
+        fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
         }),
-        positionPromise,
       ]);
 
       if (!positionRes.ok) {
