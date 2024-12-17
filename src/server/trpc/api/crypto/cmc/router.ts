@@ -40,19 +40,19 @@ export const cmcRouter = createTRPCRouter({
         currencyTickers: cleanedConvert,
         afterTimestamp: Date.now() - freshDuration,
       });
-      const key = `getCryptoInfos:${cleanedIds.join(",")}:${cleanedConvert.join(
+      const logKey = `getCryptoInfos:${cleanedIds.join(
         ","
-      )}`;
+      )}:${cleanedConvert.join(",")}`;
       if (result) {
         console.log(
-          `[POSTGRES_CACHE][HIT]: ${key} | ${Math.round(
+          `[POSTGRES_CACHE][HIT]: ${logKey} | ${Math.round(
             performance.now() - startRead
           )}ms`
         );
         return result;
       } else {
         console.log(
-          `[POSTGRES_CACHE][MISS]: ${key} | ${Math.round(
+          `[POSTGRES_CACHE][MISS]: ${logKey} | ${Math.round(
             performance.now() - startRead
           )}ms`
         );
@@ -126,7 +126,7 @@ export const cmcRouter = createTRPCRouter({
       const startWrite = performance.now();
       await insertCmcCryptoInfosAndQuotes({ cmcResult: editedResult });
       console.log(
-        `[POSTGRES_CACHE][WRITE]: ${key} | ${Math.floor(
+        `[POSTGRES_CACHE][WRITE]: ${logKey} | ${Math.floor(
           performance.now() - startWrite
         )}ms`
       );
