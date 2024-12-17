@@ -126,7 +126,7 @@ export const cmcRouter = createTRPCRouter({
       const startWrite = performance.now();
       await insertCmcCryptoInfosAndQuotes({ cmcResult: editedResult });
       console.log(
-        `[POSTGRES_CACHE][WRITE]: ${logKey} | ${Math.floor(
+        `[POSTGRES_CACHE][SET]: ${logKey} | ${Math.floor(
           performance.now() - startWrite
         )}ms`
       );
