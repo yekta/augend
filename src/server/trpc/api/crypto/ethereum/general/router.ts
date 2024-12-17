@@ -1,7 +1,10 @@
-import { cachedPromise } from "@/server/redis/redis";
+import {
+  getCmcLatestCryptoInfos,
+  insertCmcCryptoInfosAndQuotes,
+} from "@/server/db/repo/cmc";
 import { cmcApiUrl } from "@/server/trpc/api/crypto/cmc/constants";
 import { cmcFetchOptions } from "@/server/trpc/api/crypto/cmc/secrets";
-import { TCmcGetCryptosRawResult } from "@/server/trpc/api/crypto/cmc/types";
+import { TCmcGetCryptosResultRaw } from "@/server/trpc/api/crypto/cmc/types";
 import {
   EthereumNetworkSchema,
   ethereumNetworks,
@@ -46,12 +49,7 @@ export const ethereumGeneralRouter = createTRPCRouter({
       const [gasPriceWei, block, ethUsd] = await Promise.all([
         ethereumProviders[network].core.getGasPrice(),
         ethereumProviders[network].core.getBlockNumber(),
-        cachedPromise({
-          path: "ethereum.getGasInfo:getEthPrice",
-          params: { cmcId, convert },
-          promise: getEthPrice({ cmcId, convert }),
-          cacheTime: "seconds-long",
-        }),
+        getEthPrice({ cmcId, convert }),
       ]);
 
       const gasPriceGwei = gasPriceWei.toNumber() / gweiToWei;
@@ -73,13 +71,31 @@ export const ethereumGeneralRouter = createTRPCRouter({
     }),
 });
 
-async function getEthPrice({
+export async function getEthPrice({
   cmcId,
   convert,
 }: {
   cmcId: number;
   convert: string;
 }) {
+  //// Read from Postgres cache ////
+  const logKey = `getEthPrice:${convert}:${cmcId}`;
+  const freshTime = 1000 * 60 * 2;
+  const startRead = performance.now();
+  const result = await getCmcLatestCryptoInfos({
+    coinIds: [cmcId],
+    currencyTickers: [convert],
+    afterTimestamp: Date.now() - freshTime,
+  });
+  const duration = Math.round(performance.now() - startRead);
+  if (result) {
+    console.log(`[POSTGRES_CACHE][HIT]: ${logKey} | ${duration}ms`);
+    return result[cmcId].quote[convert].price;
+  } else {
+    console.log(`[POSTGRES_CACHE][MISS]: ${logKey} | ${duration}ms`);
+  }
+  //////////////////////////////////
+
   const ethUsdUrl = `${cmcApiUrl}/v2/cryptocurrency/quotes/latest?id=${cmcId}&convert=${convert}`;
   const ethUsdRes = await fetch(ethUsdUrl, cmcFetchOptions);
   if (!ethUsdRes.ok) {
@@ -88,6 +104,17 @@ async function getEthPrice({
       message: `Failed to fetch ETH price: ${ethUsdRes.statusText}`,
     });
   }
-  const ethUsdResJson: TCmcGetCryptosRawResult = await ethUsdRes.json();
+  const ethUsdResJson: TCmcGetCryptosResultRaw = await ethUsdRes.json();
+
+  //// Write to Postgres cache ////
+  const startWrite = performance.now();
+  await insertCmcCryptoInfosAndQuotes({ cmcResult: ethUsdResJson });
+  console.log(
+    `[POSTGRES_CACHE][SET]: ${logKey} | ${Math.floor(
+      performance.now() - startWrite
+    )}ms`
+  );
+  ////////////////////////////////
+
   return ethUsdResJson.data[cmcId].quote[convert].price;
 }

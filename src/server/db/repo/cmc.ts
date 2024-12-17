@@ -5,19 +5,22 @@ import {
   TInsertCmcCryptoInfo,
   TInsertCmcCryptoInfoQuote,
 } from "@/server/db/schema";
-import { TCmcGetCryptosResult } from "@/server/trpc/api/crypto/cmc/types";
+import {
+  TCmcGetCryptosResult,
+  TCmcGetCryptosResultRaw,
+} from "@/server/trpc/api/crypto/cmc/types";
 import { and, eq, gt, inArray, sql } from "drizzle-orm";
 
 export async function insertCmcCryptoInfosAndQuotes({
   cmcResult,
 }: {
-  cmcResult: TCmcGetCryptosResult;
+  cmcResult: TCmcGetCryptosResultRaw;
 }) {
   let infos: TInsertCmcCryptoInfo[] = [];
   let quotes: TInsertCmcCryptoInfoQuote[] = [];
 
-  for (const key in cmcResult) {
-    const cryptoInfo = cmcResult[key];
+  for (const key in cmcResult.data) {
+    const cryptoInfo = cmcResult.data[key];
     const infoId = crypto.randomUUID();
     infos.push({
       id: infoId,
@@ -60,7 +63,7 @@ export async function insertCmcCryptoInfosAndQuotes({
   return true;
 }
 
-export async function getLatestCryptoInfos({
+export async function getCmcLatestCryptoInfos({
   coinIds,
   currencyTickers,
   afterTimestamp,

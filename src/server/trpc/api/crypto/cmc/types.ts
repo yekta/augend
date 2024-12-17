@@ -1,4 +1,4 @@
-export type TCmcGetCryptosRawResult = {
+export type TCmcGetCryptosResultRaw = {
   data: {
     [key: string]: {
       id: number;

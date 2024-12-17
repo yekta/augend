@@ -1,15 +1,16 @@
 import { z } from "zod";
 
 import {
-  getLatestCryptoInfos,
+  getCmcLatestCryptoInfos,
   insertCmcCryptoInfosAndQuotes,
 } from "@/server/db/repo/cmc";
 import { cleanAndSortArray } from "@/server/redis/cache-utils";
 import { cmcApiUrl } from "@/server/trpc/api/crypto/cmc/constants";
+import { shapeGetCryptoInfosRawResult } from "@/server/trpc/api/crypto/cmc/helpers";
 import { cmcFetchOptions } from "@/server/trpc/api/crypto/cmc/secrets";
 import {
-  TCmcGetCryptosRawResult,
   TCmcGetCryptosResult,
+  TCmcGetCryptosResultRaw,
 } from "@/server/trpc/api/crypto/cmc/types";
 import {
   cachedPublicProcedure,
@@ -32,10 +33,10 @@ export const cmcRouter = createTRPCRouter({
 
       type TReturn = TCmcGetCryptosResult;
 
-      //// Read from postgres cache ////
-      const freshDuration = 1000 * 30;
+      //// Read from Postgres cache ////
+      const freshDuration = 1000 * 45;
       let startRead = performance.now();
-      const result: TReturn | null = await getLatestCryptoInfos({
+      const result: TReturn | null = await getCmcLatestCryptoInfos({
         coinIds: cleanedIds,
         currencyTickers: cleanedConvert,
         afterTimestamp: Date.now() - freshDuration,
@@ -43,19 +44,13 @@ export const cmcRouter = createTRPCRouter({
       const logKey = `getCryptoInfos:${cleanedConvert.join(
         ","
       )}:${cleanedIds.join(",")}`;
+
+      const duration = Math.round(performance.now() - startRead);
       if (result) {
-        console.log(
-          `[POSTGRES_CACHE][HIT]: ${logKey} | ${Math.round(
-            performance.now() - startRead
-          )}ms`
-        );
+        console.log(`[POSTGRES_CACHE][HIT]: ${logKey} | ${duration}ms`);
         return result;
       } else {
-        console.log(
-          `[POSTGRES_CACHE][MISS]: ${logKey} | ${Math.round(
-            performance.now() - startRead
-          )}ms`
-        );
+        console.log(`[POSTGRES_CACHE][MISS]: ${logKey} | ${duration}ms`);
       }
       //////////////////////////////////
 
@@ -68,7 +63,7 @@ export const cmcRouter = createTRPCRouter({
         urls.map((url) => fetch(url, cmcFetchOptions))
       );
 
-      const results: TCmcGetCryptosRawResult[] = await Promise.all(
+      const results: TCmcGetCryptosResultRaw[] = await Promise.all(
         responses.map((r) => r.json())
       );
 
@@ -82,42 +77,19 @@ export const cmcRouter = createTRPCRouter({
         }
       });
 
-      let editedResult: TReturn = {};
+      let editedResult: TCmcGetCryptosResultRaw = { data: {} };
       const firstResult = results[0];
       for (const key in firstResult.data) {
-        const quoteObj: TCmcGetCryptosResult[number]["quote"] = {};
+        const quoteObj: TCmcGetCryptosResultRaw["data"][number]["quote"] = {};
+        // Check other results for quotes
         for (const result of results) {
           const quote = result.data[key].quote;
-          for (const currency in quote) {
-            const item = quote[currency];
-            quoteObj[currency] = {
-              price: item.price,
-              volume_24h: item.volume_24h,
-              volume_change_24h: item.volume_change_24h,
-              percent_change_1h: item.percent_change_1h,
-              percent_change_24h: item.percent_change_24h,
-              percent_change_7d: item.percent_change_7d,
-              percent_change_30d: item.percent_change_30d,
-              percent_change_60d: item.percent_change_60d,
-              percent_change_90d: item.percent_change_90d,
-              market_cap: item.market_cap,
-              market_cap_dominance: item.market_cap_dominance,
-              fully_diluted_market_cap: item.fully_diluted_market_cap,
-              last_updated: item.last_updated,
-            };
+          for (const currencyTicker in quote) {
+            quoteObj[currencyTicker] = quote[currencyTicker];
           }
         }
-        const item = firstResult.data[key];
-        editedResult[key] = {
-          id: item.id,
-          name: item.name,
-          symbol: item.symbol,
-          slug: item.slug,
-          circulating_supply: item.circulating_supply,
-          cmc_rank: item.cmc_rank,
-          max_supply: item.max_supply,
-          total_supply: item.total_supply,
-          last_updated: item.last_updated,
+        editedResult.data[key] = {
+          ...firstResult.data[key],
           quote: quoteObj,
         };
       }
@@ -132,7 +104,8 @@ export const cmcRouter = createTRPCRouter({
       );
       ////////////////////////////////
 
-      return editedResult;
+      const shapedResult = shapeGetCryptoInfosRawResult(editedResult);
+      return shapedResult;
     }),
   getGlobalMetrics: cachedPublicProcedure("minutes-short")
     .input(
