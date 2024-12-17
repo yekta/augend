@@ -89,34 +89,35 @@ export const cmcRouter = createTRPCRouter({
         for (const result of results) {
           const quote = result.data[key].quote;
           for (const currency in quote) {
+            const item = quoteObj[currency];
             quoteObj[currency] = {
-              price: quote[currency].price,
-              volume_24h: quote[currency].volume_24h,
-              volume_change_24h: quote[currency].volume_change_24h,
-              percent_change_1h: quote[currency].percent_change_1h,
-              percent_change_24h: quote[currency].percent_change_24h,
-              percent_change_7d: quote[currency].percent_change_7d,
-              percent_change_30d: quote[currency].percent_change_30d,
-              percent_change_60d: quote[currency].percent_change_60d,
-              percent_change_90d: quote[currency].percent_change_90d,
-              market_cap: quote[currency].market_cap,
-              market_cap_dominance: quote[currency].market_cap_dominance,
-              fully_diluted_market_cap:
-                quote[currency].fully_diluted_market_cap,
-              last_updated: quote[currency].last_updated,
+              price: item.price,
+              volume_24h: item.volume_24h,
+              volume_change_24h: item.volume_change_24h,
+              percent_change_1h: item.percent_change_1h,
+              percent_change_24h: item.percent_change_24h,
+              percent_change_7d: item.percent_change_7d,
+              percent_change_30d: item.percent_change_30d,
+              percent_change_60d: item.percent_change_60d,
+              percent_change_90d: item.percent_change_90d,
+              market_cap: item.market_cap,
+              market_cap_dominance: item.market_cap_dominance,
+              fully_diluted_market_cap: item.fully_diluted_market_cap,
+              last_updated: item.last_updated,
             };
           }
         }
+        const item = firstResult.data[key];
         editedResult[key] = {
-          id: firstResult.data[key].id,
-          name: firstResult.data[key].name,
-          symbol: firstResult.data[key].symbol,
-          slug: firstResult.data[key].slug,
-          circulating_supply: firstResult.data[key].circulating_supply,
-          cmc_rank: firstResult.data[key].cmc_rank,
-          max_supply: firstResult.data[key].max_supply,
-          total_supply: firstResult.data[key].total_supply,
-          last_updated: firstResult.data[key].last_updated,
+          id: item.id,
+          name: item.name,
+          symbol: item.symbol,
+          slug: item.slug,
+          circulating_supply: item.circulating_supply,
+          cmc_rank: item.cmc_rank,
+          max_supply: item.max_supply,
+          total_supply: item.total_supply,
+          last_updated: item.last_updated,
           quote: quoteObj,
         };
       }
