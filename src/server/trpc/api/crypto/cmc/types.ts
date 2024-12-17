@@ -1,4 +1,4 @@
-export type TCmcGetCryptosResult = {
+export type TCmcGetCryptosRawResult = {
   data: {
     [key: string]: {
       id: number;
@@ -35,13 +35,13 @@ export type TCmcGetCryptosResult = {
   };
 };
 
-export type TCmcGetCryptosResultEdited = {
+export type TCmcGetCryptosResult = {
   [key: string]: {
     id: number;
     name: string;
     symbol: string;
     slug: string;
-    max_supply: number;
+    max_supply: number | null;
     circulating_supply: number;
     total_supply: number;
     cmc_rank: number;

@@ -1,28 +1,29 @@
 import { z } from "zod";
 
-import { cmcApiUrl } from "@/server/trpc/api/crypto/cmc/constants";
-import { cmcFetchOptions } from "@/server/trpc/api/crypto/cmc/secrets";
 import {
-  TCmcGetCryptosResult,
-  TCmcGetCryptosResultEdited,
-} from "@/server/trpc/api/crypto/cmc/types";
-import {
-  cachedPublicProcedure,
-  createTRPCRouter,
-} from "@/server/trpc/setup/trpc";
-import { TRPCError } from "@trpc/server";
-import { cleanAndSortArray } from "@/server/redis/cache-utils";
-import {
-  insertCmcCryptoInfoQuotes,
-  insertCmcCryptoInfos,
+  getLatestCryptoInfos,
+  insertCmcCryptoInfosAndQuotes,
 } from "@/server/db/repo/cmc";
 import {
   TInsertCmcCryptoInfo,
   TInsertCmcCryptoInfoQuote,
 } from "@/server/db/schema";
+import { cleanAndSortArray } from "@/server/redis/cache-utils";
+import { cmcApiUrl } from "@/server/trpc/api/crypto/cmc/constants";
+import { cmcFetchOptions } from "@/server/trpc/api/crypto/cmc/secrets";
+import {
+  TCmcGetCryptosRawResult,
+  TCmcGetCryptosResult,
+} from "@/server/trpc/api/crypto/cmc/types";
+import {
+  cachedPublicProcedure,
+  createTRPCRouter,
+  publicProcedure,
+} from "@/server/trpc/setup/trpc";
+import { TRPCError } from "@trpc/server";
 
 export const cmcRouter = createTRPCRouter({
-  getCryptoInfos: cachedPublicProcedure()
+  getCryptoInfos: publicProcedure
     .input(
       z.object({
         ids: z.array(z.number()),
@@ -30,9 +31,31 @@ export const cmcRouter = createTRPCRouter({
       })
     )
     .query(async ({ input: { ids, convert }, ctx }) => {
-      type TReturn = TCmcGetCryptosResultEdited;
-      if (ctx.cachedResult) {
-        return ctx.cachedResult as TReturn;
+      type TReturn = TCmcGetCryptosResult;
+
+      const freshTime = 1000 * 60 * 1;
+
+      let startRead = performance.now();
+      const result: TReturn | null = await getLatestCryptoInfos({
+        coinIds: ids,
+        currencyTickers: convert,
+        strict: true,
+        afterTimestamp: startRead - freshTime,
+      });
+      const key = `getCryptoInfos:${ids.join(",")}:${convert.join(",")}`;
+      if (result) {
+        console.log(
+          `[POSTGRES_CACHE][HIT]: ${key} | ${Math.round(
+            performance.now() - startRead
+          )}ms`
+        );
+        return result;
+      } else {
+        console.log(
+          `[POSTGRES_CACHE][MISS]: ${key} | ${Math.round(
+            performance.now() - startRead
+          )}ms`
+        );
       }
 
       const idsStr = cleanAndSortArray(ids).join(",");
@@ -46,7 +69,7 @@ export const cmcRouter = createTRPCRouter({
         urls.map((url) => fetch(url, cmcFetchOptions))
       );
 
-      const results: TCmcGetCryptosResult[] = await Promise.all(
+      const results: TCmcGetCryptosRawResult[] = await Promise.all(
         responses.map((r) => r.json())
       );
 
@@ -63,7 +86,7 @@ export const cmcRouter = createTRPCRouter({
       let editedResult: TReturn = {};
       const firstResult = results[0];
       for (const key in firstResult.data) {
-        const quoteObj: TCmcGetCryptosResultEdited[number]["quote"] = {};
+        const quoteObj: TCmcGetCryptosResult[number]["quote"] = {};
         for (const result of results) {
           const quote = result.data[key].quote;
           for (const currency in quote) {
@@ -99,52 +122,11 @@ export const cmcRouter = createTRPCRouter({
         };
       }
 
-      const start = performance.now();
-      let infos: TInsertCmcCryptoInfo[] = [];
-      let quotes: TInsertCmcCryptoInfoQuote[] = [];
-      for (const key in editedResult) {
-        const cryptoInfo = editedResult[key];
-        const infoId = crypto.randomUUID();
-        infos.push({
-          id: infoId,
-          coinId: cryptoInfo.id,
-          name: cryptoInfo.name,
-          symbol: cryptoInfo.symbol,
-          slug: cryptoInfo.slug,
-          circulatingSupply: cryptoInfo.circulating_supply,
-          cmcRank: cryptoInfo.cmc_rank,
-          maxSupply: cryptoInfo.max_supply,
-          totalSupply: cryptoInfo.total_supply,
-          lastUpdated: new Date(cryptoInfo.last_updated),
-        });
-        for (const currency in cryptoInfo.quote) {
-          const quote = cryptoInfo.quote[currency];
-          quotes.push({
-            infoId,
-            currencyTicker: currency,
-            price: quote.price,
-            volume24h: quote.volume_24h,
-            volumeChange24h: quote.volume_change_24h,
-            percentChange1h: quote.percent_change_1h,
-            percentChange24h: quote.percent_change_24h,
-            percentChange7d: quote.percent_change_7d,
-            percentChange30d: quote.percent_change_30d,
-            percentChange60d: quote.percent_change_60d,
-            percentChange90d: quote.percent_change_90d,
-            marketCap: quote.market_cap,
-            marketCapDominance: quote.market_cap_dominance,
-            fullyDilutedMarketCap: quote.fully_diluted_market_cap,
-            lastUpdated: new Date(quote.last_updated),
-          });
-        }
-      }
-      await Promise.all([
-        insertCmcCryptoInfos({ infos }),
-        insertCmcCryptoInfoQuotes({ quotes }),
-      ]);
+      const startWrite = performance.now();
+      await insertCmcCryptoInfosAndQuotes({ cmcResult: editedResult });
       console.log(
-        `[POSTGRES_CACHE]: getCryptoInfos | ${Math.floor(
-          performance.now() - start
+        `[POSTGRES_CACHE][WRITE]: ${key} | ${Math.floor(
+          performance.now() - startWrite
         )}ms`
       );
 
