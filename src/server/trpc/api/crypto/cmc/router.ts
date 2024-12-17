@@ -22,8 +22,8 @@ export const cmcRouter = createTRPCRouter({
   getCryptoInfos: publicProcedure
     .input(
       z.object({
-        ids: z.array(z.number()),
-        convert: z.array(z.string()).optional().default(["USD"]),
+        ids: z.array(z.number()).max(100),
+        convert: z.array(z.string()).max(3).optional().default(["USD"]),
       })
     )
     .query(async ({ input: { ids, convert }, ctx }) => {
@@ -89,7 +89,7 @@ export const cmcRouter = createTRPCRouter({
         for (const result of results) {
           const quote = result.data[key].quote;
           for (const currency in quote) {
-            const item = quoteObj[currency];
+            const item = quote[currency];
             quoteObj[currency] = {
               price: item.price,
               volume_24h: item.volume_24h,
