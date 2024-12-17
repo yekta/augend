@@ -14,6 +14,7 @@ import {
 } from "@/server/trpc/api/crypto/cmc/types";
 import {
   cachedPublicProcedure,
+  cacheTimes,
   createTRPCRouter,
   publicProcedure,
 } from "@/server/trpc/setup/trpc";
@@ -34,12 +35,11 @@ export const cmcRouter = createTRPCRouter({
       type TReturn = TCmcGetCryptosResult;
 
       //// Read from Postgres cache ////
-      const freshDuration = 1000 * 45;
       let startRead = performance.now();
       const result: TReturn | null = await getCmcLatestCryptoInfos({
         coinIds: cleanedIds,
         currencyTickers: cleanedConvert,
-        afterTimestamp: Date.now() - freshDuration,
+        afterTimestamp: Date.now() - cacheTimes["seconds-long"],
       });
       const logKey = `getCryptoInfos:${cleanedConvert.join(
         ","

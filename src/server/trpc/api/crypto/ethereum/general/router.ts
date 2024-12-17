@@ -12,6 +12,7 @@ import {
 import { ethereumProviders } from "@/server/trpc/api/crypto/ethereum/secrets";
 import {
   cachedPublicProcedure,
+  cacheTimes,
   createTRPCRouter,
 } from "@/server/trpc/setup/trpc";
 import { TRPCError } from "@trpc/server";
@@ -80,12 +81,11 @@ export async function getEthPrice({
 }) {
   //// Read from Postgres cache ////
   const logKey = `getEthPrice:${convert}:${cmcId}`;
-  const freshTime = 1000 * 60 * 2;
   const startRead = performance.now();
   const result = await getCmcLatestCryptoInfos({
     coinIds: [cmcId],
     currencyTickers: [convert],
-    afterTimestamp: Date.now() - freshTime,
+    afterTimestamp: Date.now() - cacheTimes["minutes-short"],
   });
   const duration = Math.round(performance.now() - startRead);
   if (result) {
