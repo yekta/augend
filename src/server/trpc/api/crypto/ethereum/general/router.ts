@@ -1,7 +1,9 @@
 import {
+  getCmcCryptoIds,
   getCmcLatestCryptoInfos,
   insertCmcCryptoInfosAndQuotes,
 } from "@/server/db/repo/cmc";
+import { cleanAndSortArray } from "@/server/redis/cache-utils";
 import { cmcApiUrl } from "@/server/trpc/api/crypto/cmc/constants";
 import { cmcFetchOptions } from "@/server/trpc/api/crypto/cmc/secrets";
 import { TCmcGetCryptosResultRaw } from "@/server/trpc/api/crypto/cmc/types";
@@ -96,18 +98,28 @@ export async function getEthPrice({
   }
   //////////////////////////////////
 
-  const ethUsdUrl = `${cmcApiUrl}/v2/cryptocurrency/quotes/latest?id=${cmcId}&convert=${convert}`;
-  const ethUsdRes = await fetch(ethUsdUrl, cmcFetchOptions);
-  if (!ethUsdRes.ok) {
+  // This uses the same credit amount up to 100 currencies so pad it to 100
+  const newIds = await getCmcCryptoIds({
+    limit: 99,
+    exclude: [cmcId],
+  });
+  const paddedIds = cleanAndSortArray([cmcId, ...newIds.map((n) => n.id)]);
+
+  const idsStr = paddedIds.join(",");
+  const url = `${cmcApiUrl}/v2/cryptocurrency/quotes/latest?id=${idsStr}&convert=${convert}`;
+  const response = await fetch(url, cmcFetchOptions);
+
+  if (!response.ok) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
-      message: `Failed to fetch ETH price: ${ethUsdRes.statusText}`,
+      message: `Failed to fetch ETH price: ${response.statusText}`,
     });
   }
-  const ethUsdResJson: TCmcGetCryptosResultRaw = await ethUsdRes.json();
-  const data = ethUsdResJson.data;
+
+  const resJson: TCmcGetCryptosResultRaw = await response.json();
+  const data = resJson.data;
   if (!data) {
-    console.log(ethUsdResJson);
+    console.log("No data in CMC crypto info result:", resJson);
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
       message: "No data in CMC response: getEthPrice",

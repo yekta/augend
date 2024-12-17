@@ -2,13 +2,14 @@ import { z } from "zod";
 
 import {
   getCmcCryptoDefinitions,
+  getCmcCryptoIds,
   getCmcLatestCryptoInfos,
   insertCmcCryptoInfosAndQuotes,
 } from "@/server/db/repo/cmc";
 import { cleanAndSortArray } from "@/server/redis/cache-utils";
 import { cmcApiUrl } from "@/server/trpc/api/crypto/cmc/constants";
 import {
-  shapeGetCryptoInfosRawResult,
+  shapeCryptoInfosRawResult,
   updateCryptoDefinitionsCache,
 } from "@/server/trpc/api/crypto/cmc/helpers";
 import { cmcFetchOptions } from "@/server/trpc/api/crypto/cmc/secrets";
@@ -61,64 +62,38 @@ export const cmcRouter = createTRPCRouter({
       }
       //////////////////////////////////
 
-      const idsStr = cleanedIds.join(",");
-      const urls = cleanedConvert.map(
-        (c) =>
-          `${cmcApiUrl}/v2/cryptocurrency/quotes/latest?id=${idsStr}&convert=${c}`
-      );
-      const responses = await Promise.all(
-        urls.map((url) => fetch(url, cmcFetchOptions))
-      );
+      let paddedIds = [...cleanedIds];
+      // This uses the same credit amount up to 100 currencies so pad it to 100
+      if (cleanedIds.length < 100) {
+        const diff = 100 - cleanedIds.length;
+        const newIds = await getCmcCryptoIds({
+          limit: diff,
+          exclude: cleanedIds,
+        });
+        paddedIds = cleanAndSortArray([
+          ...cleanedIds,
+          ...newIds.map((n) => n.id),
+        ]);
+      }
 
-      const results: TCmcGetCryptosResultRaw[] = await Promise.all(
-        responses.map((r) => r.json())
-      );
+      const idsStr = paddedIds.join(",");
+      const convertStr = cleanedConvert.join(",");
+      const url = `${cmcApiUrl}/v2/cryptocurrency/quotes/latest?id=${idsStr}&convert=${convertStr}`;
+      const response = await fetch(url, cmcFetchOptions);
 
-      results.forEach((r) => {
-        if (!r.data) {
-          console.log(r);
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Failed to fetch CMC crypto infos",
-          });
-        }
-      });
-
-      let editedData: NonNullable<TCmcGetCryptosResultRaw["data"]> = {};
-      const firstResultData = results[0].data;
-      if (!firstResultData) {
+      const resJson: TCmcGetCryptosResultRaw = await response.json();
+      const data = resJson.data;
+      if (!data) {
+        console.log("No data in getCryptoInfo:", resJson);
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: "No data in CMC response: getCryptoInfos",
+          message: "No data in CMC response.",
         });
-      }
-      for (const key in firstResultData) {
-        const quoteObj: NonNullable<
-          TCmcGetCryptosResultRaw["data"]
-        >[number]["quote"] = {};
-        // Check other results for quotes
-        for (const result of results) {
-          const data = result.data;
-          if (!data) {
-            throw new TRPCError({
-              code: "INTERNAL_SERVER_ERROR",
-              message: "No data in CMC response: getCryptoInfos",
-            });
-          }
-          const quote = data[key].quote;
-          for (const currencyTicker in quote) {
-            quoteObj[currencyTicker] = quote[currencyTicker];
-          }
-        }
-        editedData[key] = {
-          ...firstResultData[key],
-          quote: quoteObj,
-        };
       }
 
       //// Write to Postgres cache ////
       const startWrite = performance.now();
-      await insertCmcCryptoInfosAndQuotes({ cmcData: editedData });
+      await insertCmcCryptoInfosAndQuotes({ cmcData: data });
       console.log(
         `[POSTGRES_CACHE][SET]: ${logKey} | ${Math.floor(
           performance.now() - startWrite
@@ -126,7 +101,7 @@ export const cmcRouter = createTRPCRouter({
       );
       ////////////////////////////////
 
-      const shapedResult = shapeGetCryptoInfosRawResult(editedData);
+      const shapedResult = shapeCryptoInfosRawResult(data, cleanedIds);
       return shapedResult;
     }),
   getGlobalMetrics: cachedPublicProcedure("minutes-short")

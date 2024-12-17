@@ -11,7 +11,7 @@ import {
   TCmcGetCryptosResult,
   TCmcGetCryptosResultRaw,
 } from "@/server/trpc/api/crypto/cmc/types";
-import { and, asc, eq, gt, inArray, lt, lte, sql } from "drizzle-orm";
+import { and, asc, eq, gt, inArray, lt, lte, not, sql } from "drizzle-orm";
 
 export async function insertCmcCryptoInfosAndQuotes({
   cmcData,
@@ -240,4 +240,22 @@ export async function getCmcCryptoDefinitions({
     },
     timestamp: first.length > 0 ? first[0].updatedAt.getTime() : null,
   };
+}
+
+export async function getCmcCryptoIds({
+  limit,
+  exclude,
+}: {
+  limit: number;
+  exclude: number[];
+}) {
+  const result = await db
+    .select({
+      id: cmcCryptoDefinitionsTable.id,
+    })
+    .from(cmcCryptoDefinitionsTable)
+    .orderBy(asc(cmcCryptoDefinitionsTable.rank))
+    .limit(limit)
+    .where(not(inArray(cmcCryptoDefinitionsTable.id, exclude)));
+  return result;
 }

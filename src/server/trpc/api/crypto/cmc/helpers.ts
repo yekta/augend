@@ -9,11 +9,15 @@ import {
 } from "@/server/trpc/api/crypto/cmc/types";
 import { TRPCError } from "@trpc/server";
 
-export function shapeGetCryptoInfosRawResult(
-  data: NonNullable<TCmcGetCryptosResultRaw["data"]>
+export function shapeCryptoInfosRawResult(
+  data: NonNullable<TCmcGetCryptosResultRaw["data"]>,
+  selectIds: number[]
 ) {
   let shapedResult: TCmcGetCryptosResult = {};
   for (const coinId in data) {
+    if (!selectIds.includes(Number(coinId))) {
+      continue;
+    }
     const coin = data[coinId];
     shapedResult[coinId] = {
       id: Number(coinId),
