@@ -1,12 +1,12 @@
 import { cachedPromise } from "@/server/redis/redis";
 import { cmcApiUrl } from "@/server/trpc/api/crypto/cmc/constants";
 import { cmcFetchOptions } from "@/server/trpc/api/crypto/cmc/secrets";
-import { TCmcGetCryptosResult } from "@/server/trpc/api/crypto/cmc/types";
-import { ethereumProviders } from "@/server/trpc/api/crypto/ethereum/secrets";
+import { TCmcGetCryptosRawResult } from "@/server/trpc/api/crypto/cmc/types";
 import {
   EthereumNetworkSchema,
   ethereumNetworks,
 } from "@/server/trpc/api/crypto/ethereum/constants";
+import { ethereumProviders } from "@/server/trpc/api/crypto/ethereum/secrets";
 import {
   cachedPublicProcedure,
   createTRPCRouter,
@@ -88,6 +88,6 @@ async function getEthPrice({
       message: `Failed to fetch ETH price: ${ethUsdRes.statusText}`,
     });
   }
-  const ethUsdResJson: TCmcGetCryptosResult = await ethUsdRes.json();
+  const ethUsdResJson: TCmcGetCryptosRawResult = await ethUsdRes.json();
   return ethUsdResJson.data[cmcId].quote[convert].price;
 }
