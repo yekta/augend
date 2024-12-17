@@ -64,20 +64,16 @@ export async function getLatestCryptoInfos({
   coinIds,
   currencyTickers,
   afterTimestamp,
-  strict = false,
 }: {
   coinIds: number[];
   currencyTickers: string[];
-  afterTimestamp?: number;
-  strict?: boolean;
+  afterTimestamp: number;
 }) {
-  const infoConditions = [inArray(cmcCryptoInfosTable.coinId, coinIds)];
-
-  if (afterTimestamp !== undefined) {
-    // Convert the timestamp (ms since epoch) to a Date object
-    const afterDate = new Date(afterTimestamp);
-    infoConditions.push(gt(cmcCryptoInfosTable.lastUpdated, afterDate));
-  }
+  const afterDate = new Date(afterTimestamp);
+  const infoConditions = [
+    inArray(cmcCryptoInfosTable.coinId, coinIds),
+    gt(cmcCryptoInfosTable.lastUpdated, afterDate),
+  ];
 
   const latestSubquery = db
     .select({
@@ -164,10 +160,6 @@ export async function getLatestCryptoInfos({
       ...restQuote,
       last_updated: restQuote.last_updated.toISOString(),
     };
-  }
-
-  if (!strict) {
-    return shapedResult;
   }
 
   if (

@@ -31,18 +31,22 @@ export const cmcRouter = createTRPCRouter({
       })
     )
     .query(async ({ input: { ids, convert }, ctx }) => {
+      const cleanedIds = cleanAndSortArray(ids);
+      const cleanedConvert = cleanAndSortArray(convert);
+
       type TReturn = TCmcGetCryptosResult;
 
-      const freshTime = 1000 * 60 * 1;
-
+      //// Read from postgres cache ////
+      const freshDuration = 1000 * 30 * 1;
       let startRead = performance.now();
       const result: TReturn | null = await getLatestCryptoInfos({
-        coinIds: ids,
-        currencyTickers: convert,
-        strict: true,
-        afterTimestamp: startRead - freshTime,
+        coinIds: cleanedIds,
+        currencyTickers: cleanedConvert,
+        afterTimestamp: startRead - freshDuration,
       });
-      const key = `getCryptoInfos:${ids.join(",")}:${convert.join(",")}`;
+      const key = `getCryptoInfos:${cleanedIds.join(",")}:${cleanedConvert.join(
+        ","
+      )}`;
       if (result) {
         console.log(
           `[POSTGRES_CACHE][HIT]: ${key} | ${Math.round(
@@ -57,11 +61,10 @@ export const cmcRouter = createTRPCRouter({
           )}ms`
         );
       }
+      //////////////////////////////////
 
-      const idsStr = cleanAndSortArray(ids).join(",");
-
-      const convertArray = cleanAndSortArray(convert);
-      const urls = convertArray.map(
+      const idsStr = cleanedIds.join(",");
+      const urls = cleanedConvert.map(
         (c) =>
           `${cmcApiUrl}/v2/cryptocurrency/quotes/latest?id=${idsStr}&convert=${c}`
       );
@@ -122,6 +125,7 @@ export const cmcRouter = createTRPCRouter({
         };
       }
 
+      //// Write to Postgres cache ////
       const startWrite = performance.now();
       await insertCmcCryptoInfosAndQuotes({ cmcResult: editedResult });
       console.log(
@@ -129,6 +133,7 @@ export const cmcRouter = createTRPCRouter({
           performance.now() - startWrite
         )}ms`
       );
+      ////////////////////////////////
 
       return editedResult;
     }),
