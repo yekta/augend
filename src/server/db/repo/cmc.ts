@@ -72,7 +72,7 @@ export async function getLatestCryptoInfos({
   const afterDate = new Date(afterTimestamp);
   const infoConditions = [
     inArray(cmcCryptoInfosTable.coinId, coinIds),
-    gt(cmcCryptoInfosTable.lastUpdated, afterDate),
+    gt(cmcCryptoInfosTable.createdAt, afterDate),
   ];
 
   const latestSubquery = db
