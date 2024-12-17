@@ -148,6 +148,13 @@
       "when": 1734387241216,
       "tag": "0020_overrated_falcon",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1734434127176,
+      "tag": "0021_clean_old_cmc_crypto_infos",
+      "breakpoints": true
     }
   ]
 }
