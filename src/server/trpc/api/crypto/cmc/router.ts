@@ -1,12 +1,16 @@
 import { z } from "zod";
 
 import {
+  getCmcCryptoDefinitions,
   getCmcLatestCryptoInfos,
   insertCmcCryptoInfosAndQuotes,
 } from "@/server/db/repo/cmc";
 import { cleanAndSortArray } from "@/server/redis/cache-utils";
 import { cmcApiUrl } from "@/server/trpc/api/crypto/cmc/constants";
-import { shapeGetCryptoInfosRawResult } from "@/server/trpc/api/crypto/cmc/helpers";
+import {
+  shapeGetCryptoInfosRawResult,
+  updateCryptoDefinitionsCache,
+} from "@/server/trpc/api/crypto/cmc/helpers";
 import { cmcFetchOptions } from "@/server/trpc/api/crypto/cmc/secrets";
 import {
   TCmcGetCryptosResult,
@@ -19,6 +23,9 @@ import {
   publicProcedure,
 } from "@/server/trpc/setup/trpc";
 import { TRPCError } from "@trpc/server";
+import { after } from "next/server";
+
+const cryptoDefinitionsMax = 1500;
 
 export const cmcRouter = createTRPCRouter({
   getCryptoInfos: publicProcedure
@@ -180,7 +187,7 @@ export const cmcRouter = createTRPCRouter({
 
       return result;
     }),
-  getCoinList: cachedPublicProcedure("minutes-short")
+  getRankedCryptoList: cachedPublicProcedure("minutes-short")
     .input(
       z.object({
         convert: z.string().optional().default("USD"),
@@ -219,68 +226,51 @@ export const cmcRouter = createTRPCRouter({
 
       return result;
     }),
-  getCoinIdMaps: cachedPublicProcedure("hours-medium")
+  getCryptoDefinitions: publicProcedure
     .input(
       z.object({
         limit: z
           .number()
           .int()
-          .max(1500)
-          .min(1500)
+          .max(cryptoDefinitionsMax)
           .positive()
           .optional()
-          .default(1500),
-        sortBy: z.enum(["cmc_rank", "id"]).optional().default("cmc_rank"),
+          .default(cryptoDefinitionsMax),
+        offset: z.number().int().positive().optional(),
       })
     )
-    .query(async ({ input: { limit, sortBy }, ctx }) => {
-      type TReturn = {
-        id: number;
-        name: string;
-        rank: number;
-        symbol: string;
-      }[];
+    .query(async ({ input: { limit, offset } }) => {
+      const queryStart = Date.now();
+      if (!offset) {
+        offset = queryStart;
+      }
+      const logKey = `getCryptoDefinitions:${limit}:${offset}`;
 
-      if (ctx.cachedResult) {
-        return ctx.cachedResult as TReturn;
+      const start = performance.now();
+      const {
+        result: cryptoDefinitionsResult,
+        timestamp: cryptoDefinitionsTimestamp,
+      } = await getCmcCryptoDefinitions({
+        limit: limit,
+        offset,
+      });
+      const duration = Math.round(performance.now() - start);
+      if (
+        cryptoDefinitionsTimestamp !== null &&
+        cryptoDefinitionsTimestamp >= queryStart - cacheTimesMs["hours-short"]
+      ) {
+        console.log(`[POSTGRES_CACHE][HIT]: ${logKey} | ${duration}ms`);
+        return cryptoDefinitionsResult;
       }
 
-      const url = `${cmcApiUrl}/v1/cryptocurrency/map?sort=${sortBy}&limit=${limit}`;
-      const res = await fetch(url, cmcFetchOptions);
-
-      if (!res.ok) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: `${res.status}: Failed to fetch CMC ID maps`,
-        });
-      }
-
-      const resJson: TCmcCoinIdMapsResult = await res.json();
-
-      if (!resJson.data) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: `No data in CMC ID maps`,
-        });
-      }
-
-      const unfilteredResult: TReturn = resJson.data.map((d) => ({
-        id: d.id,
-        name: d.name,
-        rank: d.rank,
-        symbol: d.symbol,
-      }));
-
-      // Filter results with the same name using a Map
-      const map = new Map<string, TReturn[0]>();
-      for (const item of unfilteredResult) {
-        if (!map.has(item.name)) {
-          map.set(item.name, item);
-        }
-      }
-      const result: TReturn = Array.from(map.values());
-
-      return result;
+      // There is no cache fresh result, update it but immediately return the stale result.
+      // First time this function ever runs in the history of the app, it'll return an empty result.
+      console.log(`[POSTGRES_CACHE][MISS]: ${logKey} | ${duration}ms`);
+      console.log(new Date().toISOString());
+      after(async () => {
+        updateCryptoDefinitionsCache();
+      });
+      return cryptoDefinitionsResult;
     }),
 });
 
@@ -334,15 +324,5 @@ type TCmcCoinListResult = {
         last_updated: string;
       };
     };
-  }[];
-};
-
-type TCmcCoinIdMapsResult = {
-  data: {
-    id: number;
-    name: string;
-    rank: number;
-    symbol: string;
-    is_active: number;
   }[];
 };

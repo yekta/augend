@@ -1,7 +1,9 @@
 import { db } from "@/server/db/db";
 import {
+  cmcCryptoDefinitionsTable,
   cmcCryptoInfoQuotesTable,
   cmcCryptoInfosTable,
+  TInsertCmcCryptoDefinition,
   TInsertCmcCryptoInfo,
   TInsertCmcCryptoInfoQuote,
 } from "@/server/db/schema";
@@ -9,7 +11,7 @@ import {
   TCmcGetCryptosResult,
   TCmcGetCryptosResultRaw,
 } from "@/server/trpc/api/crypto/cmc/types";
-import { and, eq, gt, inArray, sql } from "drizzle-orm";
+import { and, asc, eq, gt, inArray, lt, lte, sql } from "drizzle-orm";
 
 export async function insertCmcCryptoInfosAndQuotes({
   cmcData,
@@ -173,4 +175,69 @@ export async function getCmcLatestCryptoInfos({
   }
 
   return null;
+}
+
+export async function upsertCmcCryptoDefinitions({
+  values,
+}: {
+  values: TInsertCmcCryptoDefinition[];
+}) {
+  const res = await db
+    .insert(cmcCryptoDefinitionsTable)
+    .values(values)
+    .onConflictDoUpdate({
+      target: cmcCryptoDefinitionsTable.id,
+      set: {
+        name: sql.raw(`excluded.${cmcCryptoDefinitionsTable.name.name}`),
+        rank: sql.raw(`excluded.${cmcCryptoDefinitionsTable.rank.name}`),
+        updatedAt: sql.raw(
+          `excluded.${cmcCryptoDefinitionsTable.updatedAt.name}`
+        ),
+        deletedAt: sql.raw(
+          `excluded.${cmcCryptoDefinitionsTable.deletedAt.name}`
+        ),
+        symbol: sql.raw(`excluded.${cmcCryptoDefinitionsTable.symbol.name}`),
+      },
+    })
+    .returning();
+  return res;
+}
+
+export async function getCmcCryptoDefinitions({
+  limit,
+  offset,
+}: {
+  limit: number;
+  offset: number;
+}) {
+  const date = new Date(offset);
+  const [rows, first] = await Promise.all([
+    db
+      .select({
+        id: cmcCryptoDefinitionsTable.id,
+        name: cmcCryptoDefinitionsTable.name,
+        rank: cmcCryptoDefinitionsTable.rank,
+        symbol: cmcCryptoDefinitionsTable.symbol,
+        createdAt: cmcCryptoDefinitionsTable.createdAt,
+      })
+      .from(cmcCryptoDefinitionsTable)
+      .orderBy(asc(cmcCryptoDefinitionsTable.rank))
+      .limit(limit)
+      .where(lte(cmcCryptoDefinitionsTable.createdAt, date)),
+    db
+      .select({
+        updatedAt: cmcCryptoDefinitionsTable.updatedAt,
+      })
+      .from(cmcCryptoDefinitionsTable)
+      .orderBy(asc(cmcCryptoDefinitionsTable.id))
+      .limit(1),
+  ]);
+
+  return {
+    result: {
+      data: rows,
+      next: rows.length === limit ? rows[limit - 1].createdAt.getTime() : null,
+    },
+    timestamp: first.length > 0 ? first[0].updatedAt.getTime() : null,
+  };
 }

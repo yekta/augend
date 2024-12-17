@@ -65,3 +65,13 @@ export type TCmcGetCryptosResult = {
     };
   };
 };
+
+export type TCmcCoinIdMapsResult = {
+  data: {
+    id: number;
+    name: string;
+    rank: number;
+    symbol: string;
+    is_active: number;
+  }[];
+};

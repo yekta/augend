@@ -1,7 +1,13 @@
+import { upsertCmcCryptoDefinitions } from "@/server/db/repo/cmc";
+import { TInsertCmcCryptoDefinition } from "@/server/db/schema";
+import { cmcApiUrl } from "@/server/trpc/api/crypto/cmc/constants";
+import { cmcFetchOptions } from "@/server/trpc/api/crypto/cmc/secrets";
 import {
+  TCmcCoinIdMapsResult,
   TCmcGetCryptosResult,
   TCmcGetCryptosResultRaw,
 } from "@/server/trpc/api/crypto/cmc/types";
+import { TRPCError } from "@trpc/server";
 
 export function shapeGetCryptoInfosRawResult(
   data: NonNullable<TCmcGetCryptosResultRaw["data"]>
@@ -41,4 +47,47 @@ export function shapeGetCryptoInfosRawResult(
     }
   }
   return shapedResult;
+}
+
+export async function updateCryptoDefinitionsCache() {
+  const limit = 5000;
+  const sortBy = "cmc_rank";
+  const url = `${cmcApiUrl}/v1/cryptocurrency/map?sort=${sortBy}&limit=${limit}`;
+  const res = await fetch(url, cmcFetchOptions);
+
+  if (!res.ok) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: `${res.status}: Failed to fetch CMC ID maps`,
+    });
+  }
+
+  const resJson: TCmcCoinIdMapsResult = await res.json();
+
+  if (!resJson.data) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: `No data in CMC ID maps`,
+    });
+  }
+
+  const unfilteredResult: TInsertCmcCryptoDefinition[] = resJson.data.map(
+    (d) => ({
+      id: d.id,
+      name: d.name,
+      rank: d.rank,
+      symbol: d.symbol,
+    })
+  );
+
+  // Filter results with the same name using a Map
+  const map = new Map<string, TInsertCmcCryptoDefinition>();
+  for (const item of unfilteredResult) {
+    if (!map.has(item.name)) {
+      map.set(item.name, item);
+    }
+  }
+  const result = Array.from(map.values());
+
+  await upsertCmcCryptoDefinitions({ values: result });
 }

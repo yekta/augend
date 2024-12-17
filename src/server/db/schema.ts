@@ -412,3 +412,36 @@ export const InsertCmcCryptoInfoQuotesSchema = createInsertSchema(
 export type TInsertCmcCryptoInfoQuote = z.infer<
   typeof InsertCmcCryptoInfoQuotesSchema
 >;
+
+export const cmcCryptoDefinitionsTable = cacheSchema.table(
+  "cmc_crypto_definitions",
+  {
+    id: integer("id").primaryKey(),
+    name: text("name").notNull(),
+    symbol: text("symbol").notNull(),
+    rank: integer("rank").notNull(),
+    ...timestamps,
+  },
+  (table) => ({
+    nameIdx: index("cmc_crypto_definitions_name_idx").on(table.name),
+    symbolIdx: index("cmc_crypto_definitions_symbol_idx").on(table.symbol),
+    rankIdx: index("cmc_crypto_definitions_rank_idx").on(table.rank),
+    rank: index("cmc_crypto_definitions_cmc_rank_idx").on(table.rank),
+    createdAtIdx: index("cmc_crypto_definitions_created_at_idx").on(
+      table.createdAt
+    ),
+    updatedAtIdx: index("cmc_crypto_definitions_updated_at_idx").on(
+      table.updatedAt
+    ),
+    deletedAtIdx: index("cmc_crypto_definitions_deleted_at_idx").on(
+      table.deletedAt
+    ),
+  })
+);
+
+export const InsertCmcCryptoDefinitionSchema = createInsertSchema(
+  cmcCryptoDefinitionsTable
+);
+export type TInsertCmcCryptoDefinition = z.infer<
+  typeof InsertCmcCryptoDefinitionSchema
+>;

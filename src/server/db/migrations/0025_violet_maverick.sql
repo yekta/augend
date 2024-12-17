@@ -1,0 +1,1 @@
+ALTER TABLE "cache"."cmc_crypto_definitions" ALTER COLUMN "rank" SET DATA TYPE text;

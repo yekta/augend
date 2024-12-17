@@ -155,6 +155,41 @@
       "when": 1734434127176,
       "tag": "0021_clean_old_cmc_crypto_infos",
       "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1734446236338,
+      "tag": "0022_powerful_kronos",
+      "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1734447471952,
+      "tag": "0023_condemned_adam_warlock",
+      "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1734449546723,
+      "tag": "0024_green_elektra",
+      "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1734451280124,
+      "tag": "0025_violet_maverick",
+      "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1734451296431,
+      "tag": "0026_swift_mysterio",
+      "breakpoints": true
     }
   ]
 }

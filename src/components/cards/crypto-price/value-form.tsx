@@ -20,26 +20,27 @@ export default function CryptoPriceValueForm({
   isPendingForm,
 }: TInferValueFormProps<"crypto_price">) {
   const {
-    data: idMaps,
-    isPending: isPendingIdMaps,
-    isLoadingError: isLoadingErrorIdMaps,
-  } = api.crypto.cmc.getCoinIdMaps.useQuery({});
+    data: dataCryptoDefinitions,
+    isPending: isPendingCryptoDefinitions,
+    isLoadingError: isLoadingErrorCryptoDefinitions,
+  } = api.crypto.cmc.getCryptoDefinitions.useQuery({});
 
-  const shapedIdMaps = useMemo(() => {
-    return idMaps?.map((p) => ({ ...p, id: p.id.toString() }));
-  }, [idMaps]);
+  const cryptoDefinitions = dataCryptoDefinitions?.data;
+  const shapedCryptoDefinitions = useMemo(() => {
+    return cryptoDefinitions?.map((p) => ({ ...p, id: p.id.toString() }));
+  }, [cryptoDefinitions]);
 
   const getValue = (c: { name: string; symbol: string }) =>
     `${c.name} (${c.symbol})`;
 
   const items = useMemo(() => {
     return (
-      shapedIdMaps?.map((p) => ({
+      shapedCryptoDefinitions?.map((p) => ({
         value: getValue(p),
         iconValue: p.symbol,
       })) ?? undefined
     );
-  }, [shapedIdMaps]);
+  }, [shapedCryptoDefinitions]);
 
   const FormSchema = useMemo(() => {
     return z.object({
@@ -54,10 +55,14 @@ export default function CryptoPriceValueForm({
         )
         .refine(
           (value) => {
-            if (!shapedIdMaps?.map((i) => getValue(i)).includes(value)) {
+            if (
+              !shapedCryptoDefinitions?.map((i) => getValue(i)).includes(value)
+            ) {
               return false;
             }
-            let coinId = shapedIdMaps?.find((i) => getValue(i) === value)?.id;
+            let coinId = shapedCryptoDefinitions?.find(
+              (i) => getValue(i) === value
+            )?.id;
             if (coinId === undefined) return false;
 
             return true;
@@ -67,7 +72,7 @@ export default function CryptoPriceValueForm({
           }
         ),
     });
-  }, [shapedIdMaps]);
+  }, [shapedCryptoDefinitions]);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -79,13 +84,13 @@ export default function CryptoPriceValueForm({
 
   const coinValue = form.watch("coinValue");
   const iconValue = useMemo(() => {
-    return shapedIdMaps?.find(
+    return shapedCryptoDefinitions?.find(
       (i) => getValue(i) === form.getValues("coinValue")
     )?.symbol;
-  }, [coinValue, shapedIdMaps]);
+  }, [coinValue, shapedCryptoDefinitions]);
 
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
-    const coinId = shapedIdMaps?.find(
+    const coinId = shapedCryptoDefinitions?.find(
       (i) => getValue(i) === data.coinValue
     )?.id;
     if (coinId === undefined) {
@@ -136,8 +141,8 @@ export default function CryptoPriceValueForm({
                 </div>
               )}
               disabled={isPendingForm}
-              isPending={isPendingIdMaps}
-              isLoadingError={isLoadingErrorIdMaps}
+              isPending={isPendingCryptoDefinitions}
+              isLoadingError={isLoadingErrorCryptoDefinitions}
               isLoadingErrorMessage="Failed to load crypto list :("
               items={items}
               placeholder="Select crypto..."
