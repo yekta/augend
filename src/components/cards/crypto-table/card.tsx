@@ -69,8 +69,10 @@ export default function CryptoTableCard({
     );
 
   const dataOrFallback: TData[] = useMemo(() => {
-    if (!data) return dataFallback;
-    return data.coin_list.map((item) => ({
+    const list = data?.crypto_list;
+    if (!list) return dataFallback;
+
+    return list.map((item) => ({
       id: item.id,
       rank: item.cmc_rank,
       name: item.name,

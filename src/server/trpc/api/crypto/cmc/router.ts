@@ -111,7 +111,9 @@ export const cmcRouter = createTRPCRouter({
       })
     )
     .query(async ({ input: { convert }, ctx }) => {
-      type TReturn = TCmcGlobalMetricsResult["data"]["quote"]["USD"] & {
+      type TReturn = NonNullable<
+        TCmcGlobalMetricsResult["data"]
+      >["quote"]["USD"] & {
         fear_greed_index: TCmcFearGreedIndexResult["data"];
         eth_dominance: number;
         btc_dominance: number;
@@ -145,7 +147,7 @@ export const cmcRouter = createTRPCRouter({
         });
       }
 
-      const [fearGreedIndexData, metricsData]: [
+      const [fearGreedIndexJson, metricsJson]: [
         TCmcFearGreedIndexResult,
         TCmcGlobalMetricsResult
       ] = await Promise.all([
@@ -153,11 +155,31 @@ export const cmcRouter = createTRPCRouter({
         metricsResponse.json(),
       ]);
 
+      const fearGreedIndexData = fearGreedIndexJson.data;
+      const metricsData = metricsJson.data;
+      if (!fearGreedIndexData) {
+        console.log(
+          "No data in CMC Fear and Greed Index response:",
+          fearGreedIndexJson
+        );
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "No data in CMC Fear & Greed Index response.",
+        });
+      }
+      if (!metricsData) {
+        console.log("No data in CMC Global Metrics response:", metricsJson);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "No data in CMC Global Metrics response.",
+        });
+      }
+
       const result: TReturn = {
-        fear_greed_index: fearGreedIndexData.data,
-        btc_dominance: metricsData.data.btc_dominance,
-        eth_dominance: metricsData.data.eth_dominance,
-        ...metricsData.data.quote[convert],
+        fear_greed_index: fearGreedIndexData,
+        btc_dominance: metricsData.btc_dominance,
+        eth_dominance: metricsData.eth_dominance,
+        ...metricsData.quote[convert],
       };
 
       return result;
@@ -171,7 +193,7 @@ export const cmcRouter = createTRPCRouter({
     )
     .query(async ({ input: { convert, page }, ctx }) => {
       type TReturn = {
-        coin_list: TCmcCoinListResult["data"];
+        crypto_list: TCmcCoinListResult["data"];
       };
 
       if (ctx.cachedResult) {
@@ -180,23 +202,32 @@ export const cmcRouter = createTRPCRouter({
 
       const limit = 100;
       const start = ((page || 1) - 1) * limit + 1;
-      const coinListUrl = `${cmcApiUrl}/v1/cryptocurrency/listings/latest?convert=${convert}&limit=100&start=${start}`;
-      const coinListPromise = fetch(coinListUrl, cmcFetchOptions);
-      const [coinListResponse] = await Promise.all([coinListPromise]);
+      const cryptoListUrl = `${cmcApiUrl}/v1/cryptocurrency/listings/latest?convert=${convert}&limit=100&start=${start}`;
+      const cryptoListPromise = fetch(cryptoListUrl, cmcFetchOptions);
+      const [cryptoListResponse] = await Promise.all([cryptoListPromise]);
 
-      const [coinListJson]: [TCmcCoinListResult] = await Promise.all([
-        coinListResponse.json(),
+      const [cryptoListJson]: [TCmcCoinListResult] = await Promise.all([
+        cryptoListResponse.json(),
       ]);
 
-      if (!coinListResponse.ok) {
+      if (!cryptoListResponse.ok) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: `${coinListResponse.status}: Failed to fetch CMC coin list`,
+          message: `${cryptoListResponse.status}: Failed to fetch CMC coin list`,
+        });
+      }
+
+      const data = cryptoListJson.data;
+      if (!data) {
+        console.log("No data in CMC coin list response:", cryptoListJson);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "No data in CMC coin list response.",
         });
       }
 
       const result: TReturn = {
-        coin_list: coinListJson.data,
+        crypto_list: cryptoListJson.data,
       };
 
       return result;
@@ -250,7 +281,7 @@ export const cmcRouter = createTRPCRouter({
 });
 
 type TCmcFearGreedIndexResult = {
-  data: {
+  data?: {
     value: number;
     value_classification: string;
     timestamp: string;
@@ -258,7 +289,7 @@ type TCmcFearGreedIndexResult = {
 };
 
 type TCmcGlobalMetricsResult = {
-  data: {
+  data?: {
     btc_dominance: number;
     eth_dominance: number;
     quote: {
@@ -274,7 +305,7 @@ type TCmcGlobalMetricsResult = {
 };
 
 type TCmcCoinListResult = {
-  data: {
+  data?: {
     id: number;
     name: string;
     symbol: string;
