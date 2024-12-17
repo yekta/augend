@@ -114,7 +114,7 @@ export const cmcRouter = createTRPCRouter({
       type TReturn = NonNullable<
         TCmcGlobalMetricsResult["data"]
       >["quote"]["USD"] & {
-        fear_greed_index: TCmcFearGreedIndexResult["data"];
+        fear_greed_index: NonNullable<TCmcFearGreedIndexResult["data"]>;
         eth_dominance: number;
         btc_dominance: number;
       };
@@ -193,7 +193,7 @@ export const cmcRouter = createTRPCRouter({
     )
     .query(async ({ input: { convert, page }, ctx }) => {
       type TReturn = {
-        crypto_list: TCmcCoinListResult["data"];
+        crypto_list: NonNullable<TCmcCoinListResult["data"]>;
       };
 
       if (ctx.cachedResult) {
@@ -227,7 +227,7 @@ export const cmcRouter = createTRPCRouter({
       }
 
       const result: TReturn = {
-        crypto_list: cryptoListJson.data,
+        crypto_list: data,
       };
 
       return result;
