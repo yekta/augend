@@ -4,10 +4,6 @@ import {
   getLatestCryptoInfos,
   insertCmcCryptoInfosAndQuotes,
 } from "@/server/db/repo/cmc";
-import {
-  TInsertCmcCryptoInfo,
-  TInsertCmcCryptoInfoQuote,
-} from "@/server/db/schema";
 import { cleanAndSortArray } from "@/server/redis/cache-utils";
 import { cmcApiUrl } from "@/server/trpc/api/crypto/cmc/constants";
 import { cmcFetchOptions } from "@/server/trpc/api/crypto/cmc/secrets";
@@ -37,12 +33,12 @@ export const cmcRouter = createTRPCRouter({
       type TReturn = TCmcGetCryptosResult;
 
       //// Read from postgres cache ////
-      const freshDuration = 1000 * 30 * 1;
+      const freshDuration = 1000 * 30;
       let startRead = performance.now();
       const result: TReturn | null = await getLatestCryptoInfos({
         coinIds: cleanedIds,
         currencyTickers: cleanedConvert,
-        afterTimestamp: startRead - freshDuration,
+        afterTimestamp: Date.now() - freshDuration,
       });
       const key = `getCryptoInfos:${cleanedIds.join(",")}:${cleanedConvert.join(
         ","
