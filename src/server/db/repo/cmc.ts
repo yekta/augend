@@ -1,17 +1,17 @@
 import { db } from "@/server/db/db";
 import {
   cmcCryptoDefinitionsTable,
-  cmcCryptoInfoQuotesTable,
   cmcCryptoInfosTable,
+  cmcCryptoQuotesTable,
   TInsertCmcCryptoDefinition,
   TInsertCmcCryptoInfo,
-  TInsertCmcCryptoInfoQuote,
+  TInsertCmcCryptoQuote,
 } from "@/server/db/schema";
 import {
   TCmcGetCryptosResult,
   TCmcGetCryptosResultRaw,
 } from "@/server/trpc/api/crypto/cmc/types";
-import { and, asc, eq, gt, inArray, lt, lte, not, sql } from "drizzle-orm";
+import { and, asc, eq, gt, inArray, lte, not, sql } from "drizzle-orm";
 
 export async function insertCmcCryptoInfosAndQuotes({
   cmcData,
@@ -19,7 +19,7 @@ export async function insertCmcCryptoInfosAndQuotes({
   cmcData: NonNullable<TCmcGetCryptosResultRaw["data"]>;
 }) {
   let infos: TInsertCmcCryptoInfo[] = [];
-  let quotes: TInsertCmcCryptoInfoQuote[] = [];
+  let quotes: TInsertCmcCryptoQuote[] = [];
 
   for (const key in cmcData) {
     const cryptoInfo = cmcData[key];
@@ -60,7 +60,7 @@ export async function insertCmcCryptoInfosAndQuotes({
 
   await db.transaction(async (tx) => {
     await tx.insert(cmcCryptoInfosTable).values(infos);
-    await tx.insert(cmcCryptoInfoQuotesTable).values(quotes);
+    await tx.insert(cmcCryptoQuotesTable).values(quotes);
   });
   return true;
 }
@@ -107,21 +107,20 @@ export async function getCmcLatestCryptoInfos({
         last_updated: cmcCryptoInfosTable.lastUpdated,
       },
       quote: {
-        currency_ticker: cmcCryptoInfoQuotesTable.currencyTicker,
-        price: cmcCryptoInfoQuotesTable.price,
-        volume_24h: cmcCryptoInfoQuotesTable.volume24h,
-        volume_change_24h: cmcCryptoInfoQuotesTable.volumeChange24h,
-        percent_change_1h: cmcCryptoInfoQuotesTable.percentChange1h,
-        percent_change_24h: cmcCryptoInfoQuotesTable.percentChange24h,
-        percent_change_7d: cmcCryptoInfoQuotesTable.percentChange7d,
-        percent_change_30d: cmcCryptoInfoQuotesTable.percentChange30d,
-        percent_change_60d: cmcCryptoInfoQuotesTable.percentChange60d,
-        percent_change_90d: cmcCryptoInfoQuotesTable.percentChange90d,
-        market_cap: cmcCryptoInfoQuotesTable.marketCap,
-        market_cap_dominance: cmcCryptoInfoQuotesTable.marketCapDominance,
-        fully_diluted_market_cap:
-          cmcCryptoInfoQuotesTable.fullyDilutedMarketCap,
-        last_updated: cmcCryptoInfoQuotesTable.lastUpdated,
+        currency_ticker: cmcCryptoQuotesTable.currencyTicker,
+        price: cmcCryptoQuotesTable.price,
+        volume_24h: cmcCryptoQuotesTable.volume24h,
+        volume_change_24h: cmcCryptoQuotesTable.volumeChange24h,
+        percent_change_1h: cmcCryptoQuotesTable.percentChange1h,
+        percent_change_24h: cmcCryptoQuotesTable.percentChange24h,
+        percent_change_7d: cmcCryptoQuotesTable.percentChange7d,
+        percent_change_30d: cmcCryptoQuotesTable.percentChange30d,
+        percent_change_60d: cmcCryptoQuotesTable.percentChange60d,
+        percent_change_90d: cmcCryptoQuotesTable.percentChange90d,
+        market_cap: cmcCryptoQuotesTable.marketCap,
+        market_cap_dominance: cmcCryptoQuotesTable.marketCapDominance,
+        fully_diluted_market_cap: cmcCryptoQuotesTable.fullyDilutedMarketCap,
+        last_updated: cmcCryptoQuotesTable.lastUpdated,
       },
     })
     .from(cmcCryptoInfosTable)
@@ -133,10 +132,10 @@ export async function getCmcLatestCryptoInfos({
       )
     )
     .innerJoin(
-      cmcCryptoInfoQuotesTable,
-      eq(cmcCryptoInfosTable.id, cmcCryptoInfoQuotesTable.infoId)
+      cmcCryptoQuotesTable,
+      eq(cmcCryptoInfosTable.id, cmcCryptoQuotesTable.infoId)
     )
-    .where(inArray(cmcCryptoInfoQuotesTable.currencyTicker, currencyTickers));
+    .where(inArray(cmcCryptoQuotesTable.currencyTicker, currencyTickers));
 
   const requiredPairs = new Set(
     coinIds.flatMap((cid) => currencyTickers.map((ct) => `${cid}_${ct}`))

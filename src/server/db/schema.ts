@@ -2,6 +2,7 @@ import { sql } from "drizzle-orm";
 import {
   boolean,
   check,
+  doublePrecision,
   index,
   integer,
   pgEnum,
@@ -13,11 +14,10 @@ import {
   unique,
   uuid,
   varchar,
-  doublePrecision,
 } from "drizzle-orm/pg-core";
+import { createInsertSchema } from "drizzle-zod";
 import type { AdapterAccountType } from "next-auth/adapters";
 import { z } from "zod";
-import { createInsertSchema } from "drizzle-zod";
 
 const shortText = { length: 20 };
 const mediumText = { length: 32 };
@@ -355,8 +355,12 @@ export const cmcCryptoInfosTable = cacheSchema.table(
   })
 );
 
-export const cmcCryptoInfoQuotesTable = cacheSchema.table(
-  "cmc_crypto_info_quotes",
+export const InsertCmcCryptoInfosSchema =
+  createInsertSchema(cmcCryptoInfosTable);
+export type TInsertCmcCryptoInfo = z.infer<typeof InsertCmcCryptoInfosSchema>;
+
+export const cmcCryptoQuotesTable = cacheSchema.table(
+  "cmc_crypto_quotes",
   {
     id: uuid("id")
       .primaryKey()
@@ -383,35 +387,22 @@ export const cmcCryptoInfoQuotesTable = cacheSchema.table(
     ...timestamps,
   },
   (table) => ({
-    infoIdIdx: index("cmc_crypto_info_quotes_info_id_idx").on(table.infoId),
-    currencyTickerIdx: index("cmc_crypto_info_quotes_currency_ticker_idx").on(
+    infoIdIdx: index("cmc_crypto_quotes_info_id_idx").on(table.infoId),
+    currencyTickerIdx: index("cmc_crypto_quotes_currency_ticker_idx").on(
       table.currencyTicker
     ),
-    lastUpdatedIdx: index("cmc_crypto_info_quotes_last_updated_idx").on(
+    lastUpdatedIdx: index("cmc_crypto_quotes_last_updated_idx").on(
       table.lastUpdated
     ),
-    createdAtIdx: index("cmc_crypto_info_quotes_created_at_idx").on(
-      table.createdAt
-    ),
-    updatedAtIdx: index("cmc_crypto_info_quotes_updated_at_idx").on(
-      table.updatedAt
-    ),
-    deletedAtIdx: index("cmc_crypto_info_quotes_deleted_at_idx").on(
-      table.deletedAt
-    ),
+    createdAtIdx: index("cmc_crypto_quotes_created_at_idx").on(table.createdAt),
+    updatedAtIdx: index("cmc_crypto_quotes_updated_at_idx").on(table.updatedAt),
+    deletedAtIdx: index("cmc_crypto_quotes_deleted_at_idx").on(table.deletedAt),
   })
 );
 
-export const InsertCmcCryptoInfosSchema =
-  createInsertSchema(cmcCryptoInfosTable);
-export type TInsertCmcCryptoInfo = z.infer<typeof InsertCmcCryptoInfosSchema>;
-
-export const InsertCmcCryptoInfoQuotesSchema = createInsertSchema(
-  cmcCryptoInfoQuotesTable
-);
-export type TInsertCmcCryptoInfoQuote = z.infer<
-  typeof InsertCmcCryptoInfoQuotesSchema
->;
+export const InsertCmcCryptoQuotesSchema =
+  createInsertSchema(cmcCryptoQuotesTable);
+export type TInsertCmcCryptoQuote = z.infer<typeof InsertCmcCryptoQuotesSchema>;
 
 export const cmcCryptoDefinitionsTable = cacheSchema.table(
   "cmc_crypto_definitions",
