@@ -116,7 +116,8 @@ export default function WBanSummaryCard({
               <Link
                 target="_blank"
                 href={getExplorerUrl(network.coldWallet)}
-                className="flex-1 flex items-center justify-start gap-1.5 md:gap-2 px-2 md:px-5 not-touch:hover:bg-background-hover active:bg-background-hover 
+                className="flex-1 flex items-center justify-start gap-1.5 md:gap-2 px-2 md:px-5 not-touch:hover:bg-background-hover active:bg-background-hover
+                not-touch:hover:border-x-border active:border-x-border 
                 border border-transparent focus-visible:border-foreground/50 py-4 min-w-0"
               >
                 <IconWithPlaceholder
@@ -150,7 +151,8 @@ export default function WBanSummaryCard({
               <Link
                 target="_blank"
                 href={getExplorerUrl(network.hotWallet)}
-                className="flex-1 flex items-center justify-start gap-1.5 md:gap-2 px-2 md:px-5 not-touch:hover:bg-background-hover active:bg-background-hover py-4 min-w-0
+                className="flex-1 flex items-center justify-start gap-1.5 md:gap-2 px-2 md:px-5 not-touch:hover:bg-background-hover active:bg-background-hover
+                not-touch:hover:border-x-border active:border-x-border py-4 min-w-0
                 border border-transparent focus-visible:border-foreground/50"
               >
                 <IconWithPlaceholder
