@@ -104,7 +104,7 @@ const FormLabel = React.forwardRef<
       ref={ref}
       className={cn(
         error && "text-destructive",
-        "w-full px-1 font-semibold",
+        "max-w-full px-1 font-semibold",
         className
       )}
       htmlFor={formItemId}
@@ -192,7 +192,7 @@ const FormHeader = React.forwardRef<
     <div
       ref={ref}
       className={cn(
-        "shrink min-w-0 overflow-hidden flex flex-col gap-0.5",
+        "shrink min-w-0 overflow-hidden flex flex-col items-start gap-0.5",
         className
       )}
     >
