@@ -34,8 +34,9 @@ export const UserFullProvider: FC<Props> = ({ children }) => {
     data: dataCurrencies,
     isPending: isPendingCurrencies,
     isLoadingError: isLoadingErrorCurrencies,
-  } = api.ui.getCurrencies.useQuery({ forexOnly: true });
-  const invalidateCurrencies = () => utils.ui.getCurrencies.invalidate();
+  } = api.ui.getCurrencies.useQuery({ category: "all" });
+  const invalidateCurrencies = () =>
+    utils.ui.getCurrencies.invalidate({ category: "all" });
 
   return (
     <UserFullContext.Provider

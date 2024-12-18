@@ -332,13 +332,11 @@ function CurrenciesButton({
 
   const primaryCurrencyItems = useMemo(() => {
     if (!dataCurrencies) return [];
-    return dataCurrencies
-      .filter((c) => !c.isCrypto)
-      .map((c) => ({
-        value: getValue(c),
-        label: getValue(c),
-        iconValue: c.ticker,
-      }));
+    return dataCurrencies.map((c) => ({
+      value: getValue(c),
+      label: getValue(c),
+      iconValue: c.ticker,
+    }));
   }, [dataCurrencies]);
 
   const secondaryCurrencyItems = useMemo(() => {

@@ -22,7 +22,7 @@ export default async function Page({}: Props) {
 
   await Promise.all([
     apiServer.ui.getUserFull.prefetch(),
-    apiServer.ui.getCurrencies.prefetch({ forexOnly: true }),
+    apiServer.ui.getCurrencies.prefetch({ category: "all" }),
   ]);
 
   return (

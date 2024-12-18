@@ -40,7 +40,7 @@ export default function CalculatorValueForm({
     data: currencies,
     isPending: isPending,
     isLoadingError: isLoadingError,
-  } = api.ui.getCurrencies.useQuery({});
+  } = api.ui.getCurrencies.useQuery({ category: "all" });
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),

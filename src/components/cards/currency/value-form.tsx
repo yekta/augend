@@ -25,7 +25,7 @@ export default function CurrencyValueForm({
     data: currencies,
     isPending: isPending,
     isLoadingError: isLoadingError,
-  } = api.ui.getCurrencies.useQuery({});
+  } = api.ui.getCurrencies.useQuery({ category: "all" });
 
   const getValue = (c: { name: string; ticker: string }) =>
     `${c.name} (${c.ticker})`;

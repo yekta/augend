@@ -25,6 +25,7 @@ import {
 import { TRPCError } from "@trpc/server";
 import { after } from "next/server";
 import { getForexRatesRatesCached } from "@/server/trpc/api/forex/router";
+import { getCurrencies } from "@/server/db/repo/currencies";
 
 const cryptoDefinitionsMax = 1500;
 
@@ -228,8 +229,25 @@ export async function getCmcCryptoInfosData({
 }) {
   type TReturn = TCmcGetCryptosResult;
 
-  const cleanedIds = cleanAndSortArray(ids);
+  const cryptosFromDb = await getCurrencies({ category: "crypto" });
+  const cryptoCoinIdsFromDb = cryptosFromDb
+    .map((c) => c.coinId)
+    .filter((c) => c !== null);
+  const cryptoTickersFromDb = cryptosFromDb.map((c) => c.ticker);
+  const convertForexOnly = convert.filter(
+    (c) => !cryptoTickersFromDb.includes(c)
+  );
+  const convertCryptoOnly = convert.filter((c) =>
+    cryptoTickersFromDb.includes(c)
+  );
+
+  const cleanedIds = cleanAndSortArray([...ids, ...cryptoCoinIdsFromDb]);
   const cleanedConvert = cleanAndSortArray(convert);
+  const cleanedConvertForexOnly = cleanAndSortArray(convertForexOnly);
+  const cleanedConvertCryptoOnly = cleanAndSortArray(convertCryptoOnly);
+  const cleanedConvertCoinIds = cleanedConvertCryptoOnly
+    .map((convert) => cryptosFromDb.find((c) => c.ticker === convert)?.coinId)
+    .filter((c) => c !== undefined && c !== null);
 
   //// Read from Postgres cache ////
   let startRead = performance.now();
@@ -292,7 +310,7 @@ export async function getCmcCryptoInfosData({
     const coinData = data[coinId];
     const quote = coinData.quote;
     const quoteUsd = quote.USD;
-    cleanedConvert.forEach((ticker) => {
+    cleanedConvertForexOnly.forEach((ticker) => {
       const price = forexRates.USD[ticker];
       if (!price) {
         console.log(`No rate in Forex rates for: ${ticker}`, forexRates);
@@ -307,6 +325,24 @@ export async function getCmcCryptoInfosData({
         market_cap: quoteUsd.market_cap / price.buy,
         fully_diluted_market_cap: quoteUsd.fully_diluted_market_cap / price.buy,
         volume_24h: quoteUsd.volume_24h / price.buy,
+      };
+    });
+    cleanedConvertCoinIds.forEach((id) => {
+      const price = data[id].quote.USD.price;
+      const ticker = cryptosFromDb.find((c) => c.coinId === id)?.ticker;
+      if (!ticker) {
+        console.log(`No ticker for coinId: ${id}`);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: `No ticker for coinId: ${id}`,
+        });
+      }
+      quote[ticker] = {
+        ...quoteUsd,
+        price: quoteUsd.price / price,
+        market_cap: quoteUsd.market_cap / price,
+        fully_diluted_market_cap: quoteUsd.fully_diluted_market_cap / price,
+        volume_24h: quoteUsd.volume_24h / price,
       };
     });
     coinData.quote = quote;

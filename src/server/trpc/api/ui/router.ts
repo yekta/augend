@@ -154,6 +154,7 @@ export const uiRouter = createTRPCRouter({
       const currencyIdsForFetchFinal = cleanAndSortArray(currencyIdsForFetch);
       const currencies = await getCurrencies({
         ids: currencyIdsForFetchFinal,
+        category: "all",
       });
 
       return {
@@ -166,13 +167,13 @@ export const uiRouter = createTRPCRouter({
     .input(
       z.object({
         ids: z.array(z.string()).optional(),
-        forexOnly: z.boolean().optional().default(false),
+        category: z.enum(["all", "forex", "crypto"]),
       })
     )
-    .query(async function ({ input: { ids, forexOnly } }) {
+    .query(async function ({ input: { ids, category } }) {
       const res = await getCurrencies({
         ids: ids ? cleanAndSortArray(ids) : undefined,
-        forexOnly,
+        category,
       });
       return res;
     }),
@@ -517,19 +518,13 @@ export const uiRouter = createTRPCRouter({
         });
       }
       const currencies = await getCurrencies({
+        category: "all",
         ids: [primaryCurrencyId, secondaryCurrencyId, tertiaryCurrencyId],
       });
 
       if (currencies.length !== 3) {
         throw new TRPCError({
           message: "One of the currency IDs is wrong.",
-          code: "BAD_REQUEST",
-        });
-      }
-
-      if (currencies.some((c) => c.isCrypto)) {
-        throw new TRPCError({
-          message: "All currencies must be fiat currencies.",
           code: "BAD_REQUEST",
         });
       }
