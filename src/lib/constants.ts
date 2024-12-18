@@ -64,26 +64,31 @@ export const sc: Record<
   {
     name: string;
     href: string;
+    siteHref: string;
     slug: TScOption;
   }
 > = {
   discord: {
     name: "Discord",
+    siteHref: "/discord",
     href: "https://discord.gg/vD45Ef2eWU",
     slug: "discord",
   },
   x: {
     name: "X (Twitter)",
+    siteHref: "/x",
     href: "https://x.com/augendapp",
     slug: "x",
   },
   email: {
     name: "Email",
+    siteHref: "mailto:augendapp@gmail.com",
     href: "mailto:augendapp@gmail.com",
     slug: "email",
   },
   github: {
     name: "GitHub",
+    siteHref: "/github",
     href: "https://github.com/augendapp",
     slug: "github",
   },

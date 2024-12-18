@@ -24,15 +24,15 @@ function ScPage({ platform }: Props) {
     <Redirector platform={platform}>
       <div className="w-full flex-1 flex flex-col items-center justify-center">
         <div className="w-full flex flex-col max-w-7xl px-5 md:px-10 gap-2 pt-4 pb-[calc(8vh+2rem)] items-center justify-center text-muted-foreground">
-          <LoaderIcon className="size-10 animate-spin" />
-          <h1 className="w-full flex flex-col gap-1 text-base font-medium text-center leading-tight">
+          <LoaderIcon className="size-8 animate-spin" />
+          <h1 className="w-full flex flex-col gap-1 text-sm md:text-base font-medium text-center leading-tight">
             <span>Redirecting to</span>
             <span className="shrink min-w-0 inline-flex items-center justify-center text-foreground gap-2">
               <ScIcon
                 slug={platform}
-                className="size-8 md:size-10 shrink-0 -my-2"
+                className="size-7 md:size-9 shrink-0 -my-2"
               />
-              <span className="font-bold shrink min-w-0 text-3xl md:text-4xl text-left">
+              <span className="font-bold shrink min-w-0 text-2xl md:text-3xl text-left">
                 {data.name}
               </span>
             </span>

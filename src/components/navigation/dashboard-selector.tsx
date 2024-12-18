@@ -157,7 +157,7 @@ export default function DashboardSelector({}: Props) {
                         </DropdownMenuItem>
                       </CreateDashboardTrigger>
                     </DropdownMenuGroup>
-                    <DropdownMenuSeparator className="py-0 my-0 shrink-0" />
+                    <DropdownMenuSeparator />
                   </>
                 )}
                 <ScrollArea>
@@ -179,7 +179,7 @@ export default function DashboardSelector({}: Props) {
                       </Link>
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
-                  <DropdownMenuSeparator className="py-0 my-0 shrink-0" />
+                  <DropdownMenuSeparator />
                   <DropdownMenuGroup>
                     {data.dashboards.map((d) => (
                       <DropdownMenuItem

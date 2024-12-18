@@ -2,6 +2,7 @@
 
 import { signOutAction } from "@/components/auth/actions";
 import Blockies from "@/components/blockies/blockies";
+import ScIcon from "@/components/icons/sc-icon";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { sc } from "@/lib/constants";
 import { LoaderIcon, LogOutIcon, UserIcon } from "lucide-react";
 import { Session } from "next-auth";
 import Link from "next/link";
@@ -129,6 +131,61 @@ export default function UserAvatar({ session }: Props) {
                     <p className="shrink min-w-0 leading-tight">Sign Out</p>
                   </button>
                 </form>
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup className="flex flex-row items-center justify-between">
+              <DropdownMenuItem asChild className="p-1.5 flex-1 min-w-0">
+                <Link
+                  href={sc.discord.siteHref}
+                  target="_blank"
+                  className="flex-1 flex justify-center items-center gap-2.5 text-left leading-tight cursor-pointer"
+                  type="submit"
+                >
+                  <ScIcon slug={sc.discord.slug} className="size-5 shrink-0" />
+                  <p className="flex-1 min-w-0 truncate text-xs sr-only">
+                    {sc.discord.name}
+                  </p>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild className="p-1.5 flex-1 min-w-0">
+                <Link
+                  href={sc.x.siteHref}
+                  target="_blank"
+                  className="flex-1 flex justify-center items-center gap-2.5 text-left leading-tight cursor-pointer"
+                  type="submit"
+                >
+                  <ScIcon slug={sc.x.slug} className="size-5 shrink-0" />
+                  <p className="flex-1 min-w-0 truncate text-xs sr-only">
+                    {sc.x.name}
+                  </p>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild className="p-1.5 flex-1 min-w-0">
+                <Link
+                  href={sc.email.siteHref}
+                  target="_blank"
+                  className="flex-1 flex justify-center items-center gap-2.5 text-left leading-tight cursor-pointer"
+                  type="submit"
+                >
+                  <ScIcon slug={sc.email.slug} className="size-5 shrink-0" />
+                  <p className="flex-1 min-w-0 truncate text-xs sr-only">
+                    {sc.email.name}
+                  </p>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild className="p-1.5 flex-1 min-w-0">
+                <Link
+                  href={sc.github.siteHref}
+                  target="_blank"
+                  className="flex-1 flex justify-center items-center gap-2.5 text-left leading-tight cursor-pointer"
+                  type="submit"
+                >
+                  <ScIcon slug={sc.github.slug} className="size-5 shrink-0" />
+                  <p className="flex-1 min-w-0 truncate text-xs sr-only">
+                    {sc.github.name}
+                  </p>
+                </Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>
           </ScrollArea>
