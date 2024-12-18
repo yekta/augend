@@ -3,6 +3,7 @@
 import { signOutAction } from "@/components/auth/actions";
 import Blockies from "@/components/blockies/blockies";
 import ScIcon from "@/components/icons/sc-icon";
+import ThemeButton from "@/components/theme-button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -117,6 +118,7 @@ export default function UserAvatar({ session }: Props) {
                   <p className="shrink min-w-0 leading-tight">Account</p>
                 </Link>
               </DropdownMenuItem>
+              <ThemeButton type="dropdown-menu-item" />
               <DropdownMenuItem asChild className="p-0">
                 <form
                   onSubmit={onSubmitSignOut}
@@ -135,7 +137,10 @@ export default function UserAvatar({ session }: Props) {
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup className="flex flex-row items-center justify-between">
-              <DropdownMenuItem asChild className="p-1.5 flex-1 min-w-0">
+              <DropdownMenuItem
+                asChild
+                className="px-1.5 py-1.75 flex-1 min-w-0"
+              >
                 <Link
                   href={sc.discord.siteHref}
                   target="_blank"
@@ -148,7 +153,10 @@ export default function UserAvatar({ session }: Props) {
                   </p>
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem asChild className="p-1.5 flex-1 min-w-0">
+              <DropdownMenuItem
+                asChild
+                className="px-1.5 py-1.75 flex-1 min-w-0"
+              >
                 <Link
                   href={sc.x.siteHref}
                   target="_blank"
@@ -161,7 +169,10 @@ export default function UserAvatar({ session }: Props) {
                   </p>
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem asChild className="p-1.5 flex-1 min-w-0">
+              <DropdownMenuItem
+                asChild
+                className="px-1.5 py-1.75 flex-1 min-w-0"
+              >
                 <Link
                   href={sc.email.siteHref}
                   target="_blank"
@@ -174,7 +185,10 @@ export default function UserAvatar({ session }: Props) {
                   </p>
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem asChild className="p-1.5 flex-1 min-w-0">
+              <DropdownMenuItem
+                asChild
+                className="px-1.5 py-1.75 flex-1 min-w-0"
+              >
                 <Link
                   href={sc.github.siteHref}
                   target="_blank"

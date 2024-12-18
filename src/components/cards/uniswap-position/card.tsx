@@ -512,22 +512,22 @@ export default function UniswapPositionCard({
         </div>
         <Button
           disabled={!data}
-          className="absolute top-1.5 right-1.5 size-8 p-0 group-data-[loading-error]/card:text-destructive"
+          className="absolute top-1.5 rounded-lg right-1.5 p-0 group-data-[loading-error]/card:text-destructive"
           variant="outline"
           onClick={() => setIsSwapsOpen((prev) => !prev)}
         >
           <div
             data-open={isSwapsOpen === true || undefined}
-            className="size-full flex items-center justify-center p-1.5 transition data-[open]:rotate-90"
+            className="flex items-center justify-center p-1.5 transition data-[open]:rotate-90"
           >
             {isPending ? (
-              <div className="size-full rounded animate-skeleton bg-foreground" />
+              <div className="size-5 rounded animate-skeleton bg-foreground" />
             ) : data && isSwapsOpen ? (
-              <XIcon className="size-full" />
+              <XIcon className="size-5" />
             ) : data && !isSwapsOpen ? (
-              <TableIcon className="size-full" />
+              <TableIcon className="size-5" />
             ) : (
-              <TriangleAlertIcon className="size-full" />
+              <TriangleAlertIcon className="size-5" />
             )}
           </div>
         </Button>

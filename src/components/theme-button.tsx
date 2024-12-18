@@ -2,11 +2,16 @@
 
 import { availableThemes, TTheme } from "@/components/providers/themes";
 import { Button } from "@/components/ui/button";
+import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { MonitorSmartphoneIcon, MoonIcon, SunIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
-export default function ThemeButton() {
+export default function ThemeButton({
+  type = "default",
+}: {
+  type?: "default" | "dropdown-menu-item";
+}) {
   const { theme, setTheme } = useTheme();
   const toggleTheme = () => {
     const newThemeIndex =
@@ -19,6 +24,8 @@ export default function ThemeButton() {
     setMounted(true);
   }, []);
 
+  const themeText =
+    theme === "system" ? "System" : theme === "light" ? "Light" : "Dark";
   const Icon =
     theme === "system" || !mounted
       ? MonitorSmartphoneIcon
@@ -26,10 +33,31 @@ export default function ThemeButton() {
       ? SunIcon
       : MoonIcon;
 
+  if (type === "dropdown-menu-item") {
+    return (
+      <DropdownMenuItem
+        onClick={(e) => {
+          e.preventDefault();
+          toggleTheme();
+        }}
+        className="w-full flex items-center justify-start gap-2.5 text-left leading-tight cursor-pointer"
+      >
+        <Icon
+          suppressHydrationWarning
+          className="size-5 shrink-0 -ml-0.5 -my-1"
+        />
+        <p suppressHydrationWarning className="shrink min-w-0 leading-tight">
+          Theme <span className="text-muted-more-foreground">•</span>{" "}
+          {themeText}
+        </p>
+      </DropdownMenuItem>
+    );
+  }
+
   return (
     <Button
       aria-label="Toggle Theme"
-      className="p-1.5 rounded-full"
+      className="p-1.5 rounded-lg"
       variant="outline"
       onClick={toggleTheme}
     >

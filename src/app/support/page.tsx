@@ -29,7 +29,7 @@ export default function Page({}: Props) {
               variant={platform.slug}
               className="w-full px-12"
               key={platform.slug}
-              href={platform.href}
+              href={platform.siteHref}
               target="_blank"
             >
               <ScIcon

@@ -1,5 +1,7 @@
+import ScIcon from "@/components/icons/sc-icon";
 import ThemeButton from "@/components/theme-button";
-import { siteTitle } from "@/lib/constants";
+import { LinkButton } from "@/components/ui/button";
+import { sc, siteTitle } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 
@@ -13,7 +15,11 @@ export default function Footer({ className }: { className?: string }) {
     >
       <div className="w-full max-w-7xl px-2 md:px-6">
         <div className="w-full overflow-hidden flex items-center justify-between py-3 md:py-2 gap-2 px-3 md:px-2 ring-1 ring-border rounded-t-xl">
-          <div className="size-8.5 shrink-0 hidden md:flex" />
+          <div className="items-center justify-end gap-1.5 hidden md:flex">
+            <div className="size-8.5 shrink-0" />
+            <div className="size-8.5 shrink-0" />
+            <div className="size-8.5 shrink-0" />
+          </div>
           <div className="shrink min-w-0 font-medium flex flex-col md:flex-row text-sm text-muted-foreground">
             <p className="px-1 shrink min-w-0 text-sm text-left md:text-center">
               {siteTitle} © {new Date().getFullYear()}
@@ -43,7 +49,27 @@ export default function Footer({ className }: { className?: string }) {
               </Link>
             </div>
           </div>
-          <ThemeButton />
+          <div className="flex items-center justify-end gap-1.5">
+            <LinkButton
+              aria-label={sc.discord.name}
+              href={sc.discord.siteHref}
+              className="p-1.5 rounded-lg"
+              variant="outline"
+              target="_blank"
+            >
+              <ScIcon slug={sc.discord.slug} className="size-5 shrink-0" />
+            </LinkButton>
+            <LinkButton
+              aria-label={sc.github.name}
+              href={sc.github.siteHref}
+              className="p-1.5 rounded-lg"
+              variant="outline"
+              target="_blank"
+            >
+              <ScIcon slug={sc.github.slug} className="size-5 shrink-0" />
+            </LinkButton>
+            <ThemeButton />
+          </div>
         </div>
       </div>
     </div>

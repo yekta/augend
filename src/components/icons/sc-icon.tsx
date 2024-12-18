@@ -6,7 +6,7 @@ import { ComponentProps } from "react";
 export default function ScIcon({
   slug,
   className,
-}: ComponentProps<"svg"> & { slug?: TScOption }) {
+}: ComponentProps<"svg"> & { slug: TScOption }) {
   const defaultClassName = "size-6";
   if (slug === "discord") {
     return (
