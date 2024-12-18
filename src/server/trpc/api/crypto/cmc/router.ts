@@ -242,12 +242,20 @@ export async function getCmcCryptoInfosData({
   );
 
   const cleanedIds = cleanAndSortArray([...ids, ...cryptoCoinIdsFromDb]);
+
   const cleanedConvert = cleanAndSortArray(convert);
   const cleanedConvertForexOnly = cleanAndSortArray(convertForexOnly);
-  const cleanedConvertCryptoOnly = cleanAndSortArray(convertCryptoOnly);
-  const cleanedConvertCoinIds = cleanedConvertCryptoOnly
-    .map((convert) => cryptosFromDb.find((c) => c.ticker === convert)?.coinId)
-    .filter((c) => c !== undefined && c !== null);
+  const cleanedConvertCoinObjects = cleanAndSortArray(convertCryptoOnly)
+    .map((convert) => {
+      const obj = cryptosFromDb.find((c) => c.ticker === convert);
+      return obj?.coinId && obj?.ticker
+        ? {
+            coinId: obj?.coinId,
+            ticker: obj?.ticker,
+          }
+        : null;
+    })
+    .filter((c) => c !== null);
 
   //// Read from Postgres cache ////
   let startRead = performance.now();
@@ -327,16 +335,9 @@ export async function getCmcCryptoInfosData({
         volume_24h: quoteUsd.volume_24h / price.buy,
       };
     });
-    cleanedConvertCoinIds.forEach((id) => {
-      const price = data[id].quote.USD.price;
-      const ticker = cryptosFromDb.find((c) => c.coinId === id)?.ticker;
-      if (!ticker) {
-        console.log(`No ticker for coinId: ${id}`);
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: `No ticker for coinId: ${id}`,
-        });
-      }
+    cleanedConvertCoinObjects.forEach((obj) => {
+      const { coinId, ticker } = obj;
+      const price = data[coinId].quote.USD.price;
       quote[ticker] = {
         ...quoteUsd,
         price: quoteUsd.price / price,
