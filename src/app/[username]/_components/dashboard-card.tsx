@@ -40,7 +40,7 @@ type TSize = {
 const defaultCardSize: TSize = { width: 100, height: 50 };
 
 export const dashboardCardSizeClassName =
-  "col-span-12 sm:col-span-6 lg:col-span-4 xl:col-span-3";
+  "col-span-12 sm:col-span-6 lg:col-span-4 xl:col-span-3 h-32 flex flex-col p-1 group/card relative focus:outline-none";
 
 export default function DashboardCard({
   title,
@@ -62,7 +62,7 @@ export default function DashboardCard({
   const [cardSize, setCardSize] = useState<TSize>(defaultCardSize);
   const { instanceId } = useDndDashboards();
 
-  const wrapperClassName = `${dashboardCardSizeClassName} h-36 flex flex-col p-1 group/card relative`;
+  const wrapperClassName = `${dashboardCardSizeClassName}`;
 
   useEffect(() => {
     if (!isEditEnabled || !ref.current) return;
@@ -118,7 +118,7 @@ export default function DashboardCard({
     () => () =>
       (
         <div
-          className="border rounded-xl flex gap-4 flex-1 flex-col items-start justify-between px-5 pt-4 pb-4.5 overflow-hidden
+          className="border rounded-xl flex gap-2 flex-1 flex-col items-start justify-between pl-5 pr-4.5 pt-4 pb-4.5 overflow-hidden
           not-touch:group-data-[has-href]/card:group-hover/card:bg-background-hover group-data-[has-href]/card:group-active/card:bg-background-hover
           group-data-[dnd-active]/card:overflow-visible group-data-[dnd-over]/card:bg-background group-data-[dnd-over]/card:transition
           group-data-[dnd-active]/card:not-touch:group-hover/card:bg-background-hover
@@ -126,15 +126,21 @@ export default function DashboardCard({
           group-focus-visible/card:ring-1 group-focus-visible/card:ring-foreground/50 
           group-focus-visible/card:ring-offset-2 group-focus-visible/card:ring-offset-background"
         >
-          <div className="w-full flex items-center justify-between gap-4">
+          <div
+            style={{
+              maskImage:
+                "linear-gradient(to top, transparent, transparent 0rem, black 1rem)",
+            }}
+            className="w-full flex items-start justify-between gap-4 flex-1 overflow-hidden relative"
+          >
             <h2
-              className="max-w-full shrink min-w-0 truncate font-bold text-lg leading-none
+              className="max-w-full shrink min-w-0 font-bold text-lg leading-tight
               group-data-[pending]/card:text-transparent group-data-[pending]/card:bg-foreground group-data-[pending]/card:rounded-md group-data-[pending]/card:animate-skeleton"
             >
               {title}
             </h2>
             {!isPending && isOwner && (
-              <div className="size-4.5 -my-1 shrink-0 text-muted-foreground -mr-0.5">
+              <div className="size-4.5 -my-1 mt-0.25 shrink-0 text-muted-foreground">
                 {isPublic ? (
                   <EyeIcon className="size-full text-warning" />
                 ) : (

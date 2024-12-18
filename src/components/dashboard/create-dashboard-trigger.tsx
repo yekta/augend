@@ -63,6 +63,7 @@ export default function CreateDashboardTrigger({
     onSuccess: async (d) => {
       await afterSuccess?.(d);
       onOpenChange(false);
+      form.reset();
       onDashboardCreated?.(d);
     },
   });

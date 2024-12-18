@@ -26,12 +26,7 @@ export const CreateDashboardButton = ({
       afterSuccess={() => invalidate()}
     >
       {variant === "card" ? (
-        <button
-          className={cn(
-            dashboardCardSizeClassName,
-            "h-36 p-1 group/card relative flex flex-col focus:outline-none"
-          )}
-        >
+        <button className={cn(dashboardCardSizeClassName)}>
           <div
             className="w-full border flex-1 rounded-xl flex items-center justify-center text-muted-foreground px-8 font-medium py-3 gap-1 
             not-touch:group-hover/card:bg-background-hover group-active/card:bg-background-hover 
