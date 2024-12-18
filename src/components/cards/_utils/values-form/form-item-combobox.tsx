@@ -8,6 +8,7 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import {
+  FormControl,
   FormDescription,
   FormHeader,
   FormItem,
@@ -95,39 +96,41 @@ export default function CardValueFormItemCombobox<T>({
       )}
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button
-            disabled={disabled}
-            variant="outline"
-            focusVariant="input-like"
-            role="combobox"
-            aria-expanded={open}
-            data-pending={isPending ? true : undefined}
-            data-loading-error={isHardError ? true : undefined}
-            data-showing-placeholder={!value ? true : undefined}
-            data-has-icon={Icon ? true : undefined}
-            fadeOnDisabled={false}
-            className={
-              "w-full min-w-0 overflow-hidden font-semibold justify-between group/button"
-            }
-          >
-            <div className="flex-shrink min-w-0 overflow-hidden flex items-center gap-2 group-data-[has-icon]/button:-ml-1">
-              {!isPending && !isLoadingError && Icon && value && (
-                <Icon
-                  value={iconValue ?? value}
-                  className="shrink-0 size-5 -my-1 flex items-center justify-center"
-                />
-              )}
-              <p className="min-w-0 group-data-[showing-placeholder]/button:text-muted-foreground truncate shrink whitespace-nowrap">
-                <WithHighlightedParentheses
-                  text={value ? value : placeholder}
-                />
-              </p>
-            </div>
-            <ChevronsUpDownIcon
-              strokeWidth={1.5}
-              className="text-muted-more-foreground size-5 -my-1 -mr-2"
-            />
-          </Button>
+          <FormControl>
+            <Button
+              disabled={disabled}
+              variant="outline"
+              focusVariant="input-like"
+              role="combobox"
+              aria-expanded={open}
+              data-pending={isPending ? true : undefined}
+              data-loading-error={isHardError ? true : undefined}
+              data-showing-placeholder={!value ? true : undefined}
+              data-has-icon={Icon ? true : undefined}
+              fadeOnDisabled={false}
+              className={
+                "w-full min-w-0 overflow-hidden font-semibold justify-between group/button"
+              }
+            >
+              <div className="flex-shrink min-w-0 overflow-hidden flex items-center gap-2 group-data-[has-icon]/button:-ml-1">
+                {!isPending && !isLoadingError && Icon && value && (
+                  <Icon
+                    value={iconValue ?? value}
+                    className="shrink-0 size-5 -my-1 flex items-center justify-center"
+                  />
+                )}
+                <p className="min-w-0 group-data-[showing-placeholder]/button:text-muted-foreground truncate shrink whitespace-nowrap">
+                  <WithHighlightedParentheses
+                    text={value ? value : placeholder}
+                  />
+                </p>
+              </div>
+              <ChevronsUpDownIcon
+                strokeWidth={1.5}
+                className="text-muted-more-foreground size-5 -my-1 -mr-2"
+              />
+            </Button>
+          </FormControl>
         </PopoverTrigger>
         <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
           <Command

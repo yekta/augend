@@ -202,8 +202,8 @@ export default function CryptoAssetValueForm({
               <FormHeader>
                 <FormLabel>Buy Price (USD)</FormLabel>
               </FormHeader>
-              <FormControl>
-                <div className="w-full relative">
+              <div className="w-full relative">
+                <FormControl>
                   <Input
                     inputMode="decimal"
                     autoComplete="off"
@@ -211,11 +211,11 @@ export default function CryptoAssetValueForm({
                     placeholder="1000"
                     {...field}
                   />
-                  <div className="size-5 text-lg absolute left-3 font-bold top-1/2 -translate-y-1/2 flex items-center justify-center">
-                    $
-                  </div>
+                </FormControl>
+                <div className="size-5 text-lg absolute left-3 font-bold top-1/2 -translate-y-1/2 flex items-center justify-center">
+                  $
                 </div>
-              </FormControl>
+              </div>
               <FormMessage />
             </FormItem>
           )}
@@ -230,8 +230,8 @@ export default function CryptoAssetValueForm({
                   Amount Bought{tickerValue ? ` (${tickerValue})` : ""}
                 </FormLabel>
               </FormHeader>
-              <FormControl>
-                <div className="w-full relative">
+              <div className="w-full relative">
+                <FormControl>
                   <Input
                     inputMode="decimal"
                     autoComplete="off"
@@ -239,18 +239,18 @@ export default function CryptoAssetValueForm({
                     placeholder="100"
                     {...field}
                   />
-                  <div className="size-5 absolute left-3 font-bold top-1/2 -translate-y-1/2 flex items-center justify-center">
-                    {tickerValue ? (
-                      <CryptoIcon
-                        cryptoName={tickerValue}
-                        className="size-full"
-                      />
-                    ) : (
-                      <HourglassIcon className="size-full text-muted-foreground opacity-75" />
-                    )}
-                  </div>
+                </FormControl>
+                <div className="size-5 absolute left-3 font-bold top-1/2 -translate-y-1/2 flex items-center justify-center">
+                  {tickerValue ? (
+                    <CryptoIcon
+                      cryptoName={tickerValue}
+                      className="size-full"
+                    />
+                  ) : (
+                    <HourglassIcon className="size-full text-muted-foreground opacity-75" />
+                  )}
                 </div>
-              </FormControl>
+              </div>
               <FormMessage />
             </FormItem>
           )}
