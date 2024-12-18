@@ -39,6 +39,9 @@ type TSize = {
 };
 const defaultCardSize: TSize = { width: 100, height: 50 };
 
+export const dashboardCardSizeClassName =
+  "col-span-12 sm:col-span-6 lg:col-span-4 xl:col-span-3";
+
 export default function DashboardCard({
   title,
   dashboardSlug,
@@ -59,8 +62,7 @@ export default function DashboardCard({
   const [cardSize, setCardSize] = useState<TSize>(defaultCardSize);
   const { instanceId } = useDndDashboards();
 
-  const wrapperClassName =
-    "col-span-12 md:col-span-6 lg:col-span-4 xl:col-span-3 h-36 flex flex-col p-1 group/card relative";
+  const wrapperClassName = `${dashboardCardSizeClassName} h-36 flex flex-col p-1 group/card relative`;
 
   useEffect(() => {
     if (!isEditEnabled || !ref.current) return;

@@ -1,5 +1,6 @@
 "use client";
 
+import { dashboardCardSizeClassName } from "@/app/[username]/_components/dashboard-card";
 import { useDashboards } from "@/app/[username]/_components/dashboards-provider";
 import CreateDashboardTrigger from "@/components/dashboard/create-dashboard-trigger";
 import { Button } from "@/components/ui/button";
@@ -25,7 +26,12 @@ export const CreateDashboardButton = ({
       afterSuccess={() => invalidate()}
     >
       {variant === "card" ? (
-        <button className="col-span-12 md:col-span-6 lg:col-span-4 xl:col-span-3 h-36 p-1 group/card relative flex flex-col focus:outline-none">
+        <button
+          className={cn(
+            dashboardCardSizeClassName,
+            "h-36 p-1 group/card relative flex flex-col focus:outline-none"
+          )}
+        >
           <div
             className="w-full border flex-1 rounded-xl flex items-center justify-center text-muted-foreground px-8 font-medium py-3 gap-1 
             not-touch:group-hover/card:bg-background-hover group-active/card:bg-background-hover 
@@ -33,7 +39,7 @@ export const CreateDashboardButton = ({
             group-focus-visible/card:ring-offset-2 group-focus-visible/card:ring-offset-background"
           >
             <PlusIcon className="size-5 shrink-0 -ml-1" />
-            <p className="min-w-0 truncate">Create dashboard</p>
+            <p className="min-w-0 shrink text-left">Create dashboard</p>
           </div>
         </button>
       ) : (
