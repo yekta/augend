@@ -1,13 +1,4 @@
-import {
-  getCmcCryptoIds,
-  getCmcLatestCryptoInfos,
-  insertCmcCryptoInfosAndQuotes,
-} from "@/server/db/repo/cmc";
-import { cleanAndSortArray } from "@/server/redis/cache-utils";
-import { cmcApiUrl } from "@/server/trpc/api/crypto/cmc/constants";
 import { getCmcCryptoInfosData } from "@/server/trpc/api/crypto/cmc/router";
-import { cmcFetchOptions } from "@/server/trpc/api/crypto/cmc/secrets";
-import { TCmcGetCryptosResultRaw } from "@/server/trpc/api/crypto/cmc/types";
 import {
   ethereumNetworks,
   EthereumNetworkSchema,
@@ -15,11 +6,8 @@ import {
 import { ethereumProviders } from "@/server/trpc/api/crypto/ethereum/secrets";
 import {
   cachedPublicProcedure,
-  cacheTimesMs,
   createTRPCRouter,
 } from "@/server/trpc/setup/trpc";
-import { TRPCError } from "@trpc/server";
-import { after } from "next/server";
 import { z } from "zod";
 
 const baseGasLimitGwei = 21_000;

@@ -6,7 +6,7 @@ import {
   getCmcLatestCryptoInfos,
   insertCmcCryptoInfosAndQuotes,
 } from "@/server/db/repo/cmc";
-import { cleanAndSortArray } from "@/server/redis/cache-utils";
+import { cacheTimesMs, cleanAndSortArray } from "@/server/redis/cache-utils";
 import { cmcApiUrl } from "@/server/trpc/api/crypto/cmc/constants";
 import {
   shapeCryptoInfosRawResult,
@@ -19,7 +19,6 @@ import {
 } from "@/server/trpc/api/crypto/cmc/types";
 import {
   cachedPublicProcedure,
-  cacheTimesMs,
   createTRPCRouter,
   publicProcedure,
 } from "@/server/trpc/setup/trpc";

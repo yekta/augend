@@ -1,6 +1,9 @@
 import { env } from "@/lib/env";
-import { createCacheKeyForTRPCRoute } from "@/server/redis/cache-utils";
-import { cacheTimesSec, TCacheTime } from "@/server/trpc/setup/trpc";
+import {
+  cacheTimesSec,
+  createCacheKeyForTRPCRoute,
+  TCacheTime,
+} from "@/server/redis/cache-utils";
 import { Redis } from "ioredis";
 
 const redis = new Redis(env.REDIS_URL + "?family=0");

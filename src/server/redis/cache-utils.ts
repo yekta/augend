@@ -1,4 +1,18 @@
-import { TCacheTime } from "@/server/trpc/setup/trpc";
+export const cacheTimesSec = {
+  "seconds-short": 8,
+  "seconds-medium": 24,
+  "seconds-long": 48,
+  "minutes-short": 60 * 3,
+  "minutes-medium": 60 * 10,
+  "minutes-long": 60 * 45,
+  "hours-short": 60 * 60 * 2,
+  "hours-medium": 60 * 60 * 6,
+  "hours-long": 60 * 60 * 12,
+};
+export const cacheTimesMs = Object.fromEntries(
+  Object.entries(cacheTimesSec).map(([key, value]) => [key, value * 1000])
+) as Record<TCacheTime, number>;
+export type TCacheTime = keyof typeof cacheTimesSec;
 
 function compare<T>(a: T, b: T): number {
   if (typeof a === "number" && typeof b === "number") {
@@ -46,5 +60,5 @@ export function createCacheKeyForTRPCRoute(
   }
 
   const normalizedInput = normalizeValue(rawInput);
-  return `${path}:${JSON.stringify(normalizedInput)}:${cacheTime}`;
+  return `${path}:${cacheTime}:${JSON.stringify(normalizedInput)}`;
 }
