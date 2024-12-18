@@ -21,17 +21,24 @@ export default function ThemeButton({
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    if (typeof window !== "undefined") setMounted(true);
   }, []);
 
-  const themeText =
-    theme === "system" ? "System" : theme === "light" ? "Light" : "Dark";
-  const Icon =
-    theme === "system" || !mounted
-      ? MonitorSmartphoneIcon
-      : theme === "light"
-      ? SunIcon
-      : MoonIcon;
+  const themeText = !mounted
+    ? "Dark"
+    : theme === "system"
+    ? "System"
+    : theme === "light"
+    ? "Light"
+    : "Dark";
+
+  const Icon = !mounted
+    ? MoonIcon
+    : theme === "system"
+    ? MonitorSmartphoneIcon
+    : theme === "light"
+    ? SunIcon
+    : MoonIcon;
 
   if (type === "dropdown-menu-item") {
     return (
