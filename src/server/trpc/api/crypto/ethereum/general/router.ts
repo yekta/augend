@@ -5,6 +5,7 @@ import {
 } from "@/server/db/repo/cmc";
 import { cleanAndSortArray } from "@/server/redis/cache-utils";
 import { cmcApiUrl } from "@/server/trpc/api/crypto/cmc/constants";
+import { getCmcCryptoInfosData } from "@/server/trpc/api/crypto/cmc/router";
 import { cmcFetchOptions } from "@/server/trpc/api/crypto/cmc/secrets";
 import { TCmcGetCryptosResultRaw } from "@/server/trpc/api/crypto/cmc/types";
 import {
@@ -82,62 +83,10 @@ export async function getEthPrice({
   cmcId: number;
   convert: string;
 }) {
-  //// Read from Postgres cache ////
-  const logKey = `getEthPrice:${convert}:${cmcId}`;
-  const startRead = performance.now();
-  const result = await getCmcLatestCryptoInfos({
-    coinIds: [cmcId],
-    currencyTickers: [convert],
-    afterTimestamp: Date.now() - cacheTimesMs["minutes-short"],
+  const data = await getCmcCryptoInfosData({
+    ids: [cmcId],
+    convert: [convert],
   });
-  const duration = Math.round(performance.now() - startRead);
-  if (result) {
-    console.log(`[POSTGRES_CACHE][HIT]: ${logKey} | ${duration}ms`);
-    return result[cmcId].quote[convert].price;
-  } else {
-    console.log(`[POSTGRES_CACHE][MISS]: ${logKey} | ${duration}ms`);
-  }
-  //////////////////////////////////
-
-  // This uses the same credit amount up to 100 currencies so pad it to 100
-  const newIds = await getCmcCryptoIds({
-    limit: 99,
-    exclude: [cmcId],
-  });
-  const paddedIds = cleanAndSortArray([cmcId, ...newIds.map((n) => n.id)]);
-
-  const idsStr = paddedIds.join(",");
-  const url = `${cmcApiUrl}/v2/cryptocurrency/quotes/latest?id=${idsStr}&convert=${convert}`;
-  const response = await fetch(url, cmcFetchOptions);
-
-  if (!response.ok) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: `Failed to fetch ETH price: ${response.statusText}`,
-    });
-  }
-
-  const resJson: TCmcGetCryptosResultRaw = await response.json();
-  const data = resJson.data;
-  if (!data) {
-    console.log("No data in CMC crypto info result:", resJson);
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "No data in CMC response: getEthPrice",
-    });
-  }
-
-  //// Write to Postgres cache ////
-  after(async () => {
-    const startWrite = performance.now();
-    await insertCmcCryptoInfosAndQuotes({ cmcData: data });
-    console.log(
-      `[POSTGRES_CACHE][SET]: ${logKey} | ${Math.floor(
-        performance.now() - startWrite
-      )}ms`
-    );
-  });
-  ////////////////////////////////
 
   return data[cmcId].quote[convert].price;
 }

@@ -25,6 +25,7 @@ import {
 } from "@/server/trpc/setup/trpc";
 import { TRPCError } from "@trpc/server";
 import { after } from "next/server";
+import { getForexRatesRatesCached } from "@/server/trpc/api/forex/router";
 
 const cryptoDefinitionsMax = 1500;
 
@@ -33,78 +34,15 @@ export const cmcRouter = createTRPCRouter({
     .input(
       z.object({
         ids: z.array(z.number()).max(100),
-        convert: z.array(z.string()).max(3).optional().default(["USD"]),
+        convert: z.array(z.string()).max(5).optional().default(["USD"]),
       })
     )
     .query(async ({ input: { ids, convert }, ctx }) => {
-      const cleanedIds = cleanAndSortArray(ids);
-      const cleanedConvert = cleanAndSortArray(convert);
-
-      type TReturn = TCmcGetCryptosResult;
-
-      //// Read from Postgres cache ////
-      let startRead = performance.now();
-      const result: TReturn | null = await getCmcLatestCryptoInfos({
-        coinIds: cleanedIds,
-        currencyTickers: cleanedConvert,
-        afterTimestamp: Date.now() - cacheTimesMs["seconds-long"],
+      const data = await getCmcCryptoInfosData({
+        ids,
+        convert,
       });
-      const logKey = `getCryptoInfos:${cleanedConvert.join(
-        ","
-      )}:${cleanedIds.join(",")}`;
-
-      const duration = Math.round(performance.now() - startRead);
-      if (result) {
-        console.log(`[POSTGRES_CACHE][HIT]: ${logKey} | ${duration}ms`);
-        return result;
-      } else {
-        console.log(`[POSTGRES_CACHE][MISS]: ${logKey} | ${duration}ms`);
-      }
-      //////////////////////////////////
-
-      let paddedIds = [...cleanedIds];
-      // This uses the same credit amount up to 100 currencies so pad it to 100
-      if (cleanedIds.length < 100) {
-        const diff = 100 - cleanedIds.length;
-        const newIds = await getCmcCryptoIds({
-          limit: diff,
-          exclude: cleanedIds,
-        });
-        paddedIds = cleanAndSortArray([
-          ...cleanedIds,
-          ...newIds.map((n) => n.id),
-        ]);
-      }
-
-      const idsStr = paddedIds.join(",");
-      const convertStr = cleanedConvert.join(",");
-      const url = `${cmcApiUrl}/v2/cryptocurrency/quotes/latest?id=${idsStr}&convert=${convertStr}`;
-      const response = await fetch(url, cmcFetchOptions);
-
-      const resJson: TCmcGetCryptosResultRaw = await response.json();
-      const data = resJson.data;
-      if (!data) {
-        console.log("No data in getCryptoInfo:", resJson);
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "No data in CMC response.",
-        });
-      }
-
-      //// Write to Postgres cache ////
-      after(async () => {
-        const startWrite = performance.now();
-        await insertCmcCryptoInfosAndQuotes({ cmcData: data });
-        console.log(
-          `[POSTGRES_CACHE][SET]: ${logKey} | ${Math.floor(
-            performance.now() - startWrite
-          )}ms`
-        );
-      });
-      ////////////////////////////////
-
-      const shapedResult = shapeCryptoInfosRawResult(data, cleanedIds);
-      return shapedResult;
+      return data;
     }),
   getGlobalMetrics: cachedPublicProcedure("minutes-short")
     .input(
@@ -281,6 +219,116 @@ export const cmcRouter = createTRPCRouter({
       return cryptoDefinitionsResult;
     }),
 });
+
+export async function getCmcCryptoInfosData({
+  ids,
+  convert,
+}: {
+  ids: number[];
+  convert: string[];
+}) {
+  type TReturn = TCmcGetCryptosResult;
+
+  const cleanedIds = cleanAndSortArray(ids);
+  const cleanedConvert = cleanAndSortArray(convert);
+
+  //// Read from Postgres cache ////
+  let startRead = performance.now();
+  const result: TReturn | null = await getCmcLatestCryptoInfos({
+    coinIds: cleanedIds,
+    currencyTickers: cleanedConvert,
+    afterTimestamp: Date.now() - cacheTimesMs["seconds-long"],
+  });
+  const logKey = `getCryptoInfos:${cleanedConvert.join(",")}:${cleanedIds.join(
+    ","
+  )}`;
+
+  const duration = Math.round(performance.now() - startRead);
+  if (result) {
+    console.log(`[POSTGRES_CACHE][HIT]: ${logKey} | ${duration}ms`);
+    return result;
+  } else {
+    console.log(`[POSTGRES_CACHE][MISS]: ${logKey} | ${duration}ms`);
+  }
+  //////////////////////////////////
+
+  let paddedIds = [...cleanedIds];
+  // This uses the same credit amount up to 100 currencies so pad it to 100
+  if (cleanedIds.length < 100) {
+    const diff = 100 - cleanedIds.length;
+    const newIds = await getCmcCryptoIds({
+      limit: diff,
+      exclude: cleanedIds,
+    });
+    paddedIds = cleanAndSortArray([...cleanedIds, ...newIds.map((n) => n.id)]);
+  }
+
+  const idsStr = paddedIds.join(",");
+  // Only get USD from CMC, will manually convert to other rates with the forex API
+  const url = `${cmcApiUrl}/v2/cryptocurrency/quotes/latest?id=${idsStr}&convert=USD`;
+  const [response, forexRates] = await Promise.all([
+    fetch(url, cmcFetchOptions),
+    getForexRatesRatesCached(),
+  ]);
+
+  const resJson: TCmcGetCryptosResultRaw = await response.json();
+  let data = resJson.data;
+  if (!data) {
+    console.log("No data in getCryptoInfo:", resJson);
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "No data in CMC response.",
+    });
+  }
+  if (!forexRates.USD) {
+    console.log("No USD in Forex rates:", forexRates);
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "No USD in Forex rates response.",
+    });
+  }
+
+  // Manually fill in the other currency rates
+  for (const coinId in data) {
+    const coinData = data[coinId];
+    const quote = coinData.quote;
+    const quoteUsd = quote.USD;
+    cleanedConvert.forEach((ticker) => {
+      const price = forexRates.USD[ticker];
+      if (!price) {
+        console.log(`No rate in Forex rates for: ${ticker}`, forexRates);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: `No rate in Forex rates response: ${ticker}`,
+        });
+      }
+      quote[ticker] = {
+        ...quoteUsd,
+        price: quoteUsd.price / price.buy,
+        market_cap: quoteUsd.market_cap / price.buy,
+        fully_diluted_market_cap: quoteUsd.fully_diluted_market_cap / price.buy,
+        volume_24h: quoteUsd.volume_24h / price.buy,
+      };
+    });
+    coinData.quote = quote;
+    data[coinId] = coinData;
+  }
+
+  //// Write to Postgres cache ////
+  after(async () => {
+    const startWrite = performance.now();
+    await insertCmcCryptoInfosAndQuotes({ cmcData: data });
+    console.log(
+      `[POSTGRES_CACHE][SET]: ${logKey} | ${Math.floor(
+        performance.now() - startWrite
+      )}ms`
+    );
+  });
+  ////////////////////////////////
+
+  const shapedResult = shapeCryptoInfosRawResult(data, cleanedIds);
+  return shapedResult;
+}
 
 type TCmcFearGreedIndexResult = {
   data?: {

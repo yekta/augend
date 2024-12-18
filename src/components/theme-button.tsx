@@ -54,8 +54,7 @@ export default function ThemeButton({
           className="size-5 shrink-0 -ml-0.5 -my-1"
         />
         <p suppressHydrationWarning className="shrink min-w-0 leading-tight">
-          Theme <span className="text-muted-more-foreground">•</span>{" "}
-          {themeText}
+          Theme: {themeText}
         </p>
       </DropdownMenuItem>
     );
