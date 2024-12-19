@@ -91,7 +91,12 @@ const SelectContent = React.forwardRef<
       onPointerDownOutside,
       onPointerDown,
       onCloseAutoFocus,
-      collisionPadding = 16,
+      collisionPadding = {
+        top: 16,
+        bottom: 16,
+        left: 8,
+        right: 8,
+      },
       position = "popper",
       ...props
     },
@@ -148,6 +153,9 @@ const SelectContent = React.forwardRef<
             className
           )}
           position={position}
+          style={{
+            maxHeight: "min(20rem,var(--radix-popper-available-height))",
+          }}
           {...props}
         >
           <SelectScrollUpButton />

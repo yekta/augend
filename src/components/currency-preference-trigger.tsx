@@ -299,6 +299,7 @@ export default function CurrencyPreferenceTrigger({
               )}
             />
             <Button
+              className="w-full"
               state={isPendingChangeCurrencyPreference ? "loading" : "default"}
               type="submit"
             >

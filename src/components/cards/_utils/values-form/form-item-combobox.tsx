@@ -20,8 +20,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useWindowSize } from "@uidotdev/usehooks";
 import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 type TItem = {
   value: string;
@@ -72,6 +73,12 @@ export default function CardValueFormItemCombobox<T>({
   disabled,
   Icon,
 }: TValueComboboxProps) {
+  const { width: windowWidth, height: windowHeight } = useWindowSize();
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const [buttonDistances, setButtonDistances] = useState<{
+    top: number;
+    bottom: number;
+  } | null>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const scrollId = useRef<NodeJS.Timeout | undefined>();
 
@@ -83,6 +90,18 @@ export default function CardValueFormItemCombobox<T>({
     if (isPending || !items) return itemsPlaceholder;
     return items;
   }, [items, isPending, isHardError]);
+
+  useEffect(() => {
+    if (!windowHeight) return;
+    if (!buttonRef.current) return;
+    const rect = buttonRef.current.getBoundingClientRect();
+    setButtonDistances({
+      top: rect.top,
+      bottom: windowHeight - rect.bottom,
+    });
+  }, [windowWidth, windowHeight]);
+
+  console.log(buttonDistances);
 
   return (
     <FormItem>
@@ -98,6 +117,7 @@ export default function CardValueFormItemCombobox<T>({
         <PopoverTrigger asChild>
           <FormControl>
             <Button
+              ref={buttonRef}
               disabled={disabled}
               variant="outline"
               focusVariant="input-like"
@@ -109,21 +129,23 @@ export default function CardValueFormItemCombobox<T>({
               data-has-icon={Icon ? true : undefined}
               fadeOnDisabled={false}
               className={
-                "w-full min-w-0 overflow-hidden font-semibold justify-between group/button"
+                "w-full min-w-0 flex items-center overflow-hidden font-semibold justify-between group/button"
               }
             >
-              <div className="flex-shrink min-w-0 overflow-hidden flex items-center gap-2 group-data-[has-icon]/button:-ml-1">
-                {!isPending && !isLoadingError && Icon && value && (
-                  <Icon
-                    value={iconValue ?? value}
-                    className="shrink-0 size-5 -my-1 flex items-center justify-center"
-                  />
-                )}
-                <p className="min-w-0 group-data-[showing-placeholder]/button:text-muted-foreground truncate shrink whitespace-nowrap">
-                  <WithHighlightedParentheses
-                    text={value ? value : placeholder}
-                  />
-                </p>
+              <div className="shrink min-w-0 overflow-hidden">
+                <div className="shrink min-w-0 overflow-hidden flex items-center gap-2 group-data-[has-icon]/button:-ml-1">
+                  {!isPending && !isLoadingError && Icon && value && (
+                    <Icon
+                      value={iconValue ?? value}
+                      className="shrink-0 size-5 -my-1 flex items-center justify-center"
+                    />
+                  )}
+                  <p className="min-w-0 group-data-[showing-placeholder]/button:text-muted-foreground truncate shrink whitespace-nowrap">
+                    <WithHighlightedParentheses
+                      text={value ? value : placeholder}
+                    />
+                  </p>
+                </div>
               </div>
               <ChevronsUpDownIcon
                 strokeWidth={1.5}
@@ -136,7 +158,10 @@ export default function CardValueFormItemCombobox<T>({
           <Command
             shouldFilter={isPending || isLoadingError ? false : true}
             data-pending={isPending ? true : undefined}
-            className="max-h-[18rem] group/command"
+            style={{
+              maxHeight: "min(20rem,var(--radix-popper-available-height)",
+            }}
+            className="group/command"
           >
             <CommandInput
               onValueChange={() => {

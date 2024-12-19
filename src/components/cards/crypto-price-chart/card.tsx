@@ -324,7 +324,7 @@ function SelectCustom({
       </SelectTrigger>
       <SelectContent
         className={cn(
-          "font-semibold w-[var(--radix-select-trigger-width)] max-h-[min(calc((100vh-2rem)*0.5),20rem)]",
+          "font-semibold w-[var(--radix-select-trigger-width)]",
           contentClassName
         )}
       >

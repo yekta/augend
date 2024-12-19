@@ -21,7 +21,7 @@ const DialogOverlay = React.forwardRef<
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
-      "fixed px-2 pt-12 pb-[calc((100vh-3rem)*0.08+2rem)] md:pb-[calc((100vh-3rem)*0.1+3rem)] overflow-auto grid place-items-center inset-0 z-50 duration-200 data-[state=open]:duration-200 data-[state=closed]:duration-200 bg-barrier/[var(--opacity-barrier)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+      "fixed flex w-full justify-center px-2 pt-12 pb-[calc((100vh-3rem)*0.08+2rem)] md:pb-[calc((100vh-3rem)*0.1+3rem)] overflow-auto inset-0 z-50 duration-200 data-[state=open]:duration-200 data-[state=closed]:duration-200 bg-barrier/[var(--opacity-barrier)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
       className
     )}
     {...props}
@@ -110,7 +110,7 @@ const DialogContent = React.forwardRef<
             onCloseAutoFocus={handleCloseAutoFocus}
             ref={ref}
             className={cn(
-              "outline-none focus:outline-none",
+              "my-auto outline-none focus:outline-none",
               dialogContentVariants({ variant }),
               className
             )}
@@ -118,7 +118,7 @@ const DialogContent = React.forwardRef<
           >
             <div
               className={cn(
-                "w-full flex flex-col max-w-[calc(100vw-1rem)] gap-4",
+                "w-full flex flex-col gap-4",
                 classNameInnerWrapper
               )}
             >
@@ -145,7 +145,7 @@ const DialogHeader = ({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn("flex flex-col gap-1", className)} {...props} />
+  <div className={cn("w-full flex flex-col gap-1", className)} {...props} />
 );
 DialogHeader.displayName = "DialogHeader";
 
