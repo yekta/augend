@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { sc } from "@/lib/constants";
-import { BanknoteIcon, LoaderIcon, LogOutIcon, UserIcon } from "lucide-react";
+import { CoinsIcon, LoaderIcon, LogOutIcon, UserIcon } from "lucide-react";
 import { Session } from "next-auth";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -128,6 +128,7 @@ export default function UserAvatar({ session }: Props) {
               <CurrencyPreferenceTrigger
                 open={currencyPreferenceOpen}
                 onOpenChange={setCurrencyPreferenceOpen}
+                afterSuccess={async () => setOpen(false)}
               >
                 <DropdownMenuItem
                   onSelect={(e) => e.preventDefault()}
@@ -138,8 +139,8 @@ export default function UserAvatar({ session }: Props) {
                   fadeOnDisabled={false}
                   className="w-full flex items-center justify-start gap-2.5 text-left leading-tight cursor-pointer group/currency"
                 >
-                  <BanknoteIcon className="size-5 shrink-0 -ml-0.5 -my-1" />
-                  <div className="shrink min-w-0 flex flex-col gap-0.25">
+                  <CoinsIcon className="size-5 shrink-0 -ml-0.5 -my-1" />
+                  <div className="shrink min-w-0 flex flex-col gap-0.25 -mt-0.25">
                     <p className="text-xs text-muted-foreground font-normal leading-tight">
                       Currency Preference
                     </p>

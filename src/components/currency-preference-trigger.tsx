@@ -31,10 +31,12 @@ const CurrencyFormSchema = z.object({
 export default function CurrencyPreferenceTrigger({
   open,
   onOpenChange,
+  afterSuccess,
   children,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  afterSuccess?: () => Promise<void>;
   children: React.ReactNode;
 }) {
   const asyncRouterRefresh = useAsyncRouterRefresh();
@@ -105,6 +107,7 @@ export default function CurrencyPreferenceTrigger({
   } = api.ui.changeCurrencyPreference.useMutation({
     onSuccess: async (d) => {
       await Promise.all([asyncRouterRefresh(), invalidateUser()]);
+      await afterSuccess?.();
       resetProcess();
     },
   });
