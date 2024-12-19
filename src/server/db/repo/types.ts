@@ -11,4 +11,5 @@ export type TCurrencyWithSelectedFields = Pick<
   | "maxDecimalsPreferred"
   | "name"
   | "symbol"
+  | "symbolCustomFont"
 >;

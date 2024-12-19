@@ -1,6 +1,7 @@
+import CardVariantFormItem from "@/components/cards/_utils/values-form/form-item-card-variant";
 import CardValueFormItemCombobox from "@/components/cards/_utils/values-form/form-item-combobox";
-import CardValuesFormSubmitButton from "@/components/cards/_utils/values-form/submit-button";
 import CardValuesFormWrapper from "@/components/cards/_utils/values-form/form-wrapper";
+import CardValuesFormSubmitButton from "@/components/cards/_utils/values-form/submit-button";
 import { TInferValueFormProps } from "@/components/cards/_utils/values-form/types";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import { Form, FormField } from "@/components/ui/form";
@@ -10,7 +11,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import CardVariantFormItem from "@/components/cards/_utils/values-form/form-item-card-variant";
 
 const VariantEnum = z.enum(["default", "mini"]);
 type TCardVariant = z.infer<typeof VariantEnum>;

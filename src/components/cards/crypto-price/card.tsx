@@ -7,6 +7,7 @@ import CardOuterWrapper, {
   TCardOuterWrapperProps,
 } from "@/components/cards/_utils/card-outer-wrapper";
 import ThreeLineCard from "@/components/cards/_utils/three-line-card";
+import { CurrencySymbol } from "@/components/CurrencySymbol";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import { useCmcCryptoInfos } from "@/components/providers/cmc/cmc-crypto-infos-provider";
 import { useCurrencyPreference } from "@/components/providers/currency-preference-provider";
@@ -59,6 +60,19 @@ export default function CryptoPriceCard({
       ? { ...restAsLink, href: rest.href || getCmcUrl(data.slug) }
       : restAsDiv;
 
+  const Middle = useMemo(() => {
+    if (!data) return undefined;
+    return (
+      <>
+        <CurrencySymbol
+          symbol={convertCurrency.symbol}
+          symbolCustomFont={convertCurrency.symbolCustomFont}
+        />
+        {formatter(data.quote[convertCurrency.ticker].price)}
+      </>
+    );
+  }, [data]);
+
   const Top = useMemo(() => {
     if (!data) return "Error";
 
@@ -97,7 +111,10 @@ export default function CryptoPriceCard({
     return (
       <div className="w-full flex items-center justify-center gap-1.25">
         <p className="shrink min-w-0 truncate">
-          {convertCurrency.symbol}
+          <CurrencySymbol
+            symbol={convertCurrency.symbol}
+            symbolCustomFont={convertCurrency.symbolCustomFont}
+          />
           {formatNumberTBMK(data.quote[convertCurrency.ticker].market_cap, 3)}
         </p>
         <p className="text-muted-foreground">•</p>
@@ -179,27 +196,42 @@ export default function CryptoPriceCard({
                 group-data-[pending]/card:rounded-sm group-data-[pending]/card:text-transparent group-data-[pending]/card:bg-foreground group-data-[pending]/card:animate-skeleton
                 group-data-[loading-error]/card:text-destructive"
               >
-                {isPending
-                  ? "Loading"
-                  : data !== undefined
-                  ? `${convertCurrency.symbol}${formatNumberTBMK(
-                      data.quote[convertCurrency.ticker].price
-                    )}`
-                  : "Error"}
+                {isPending ? (
+                  "Loading"
+                ) : data !== undefined ? (
+                  <>
+                    <CurrencySymbol
+                      symbol={convertCurrency.symbol}
+                      symbolCustomFont={convertCurrency.symbolCustomFont}
+                    />
+                    {formatNumberTBMK(data.quote[convertCurrency.ticker].price)}
+                  </>
+                ) : (
+                  "Error"
+                )}
               </p>
               <p
                 className="shrink text-sm md:text-base font-semibold truncate leading-none md:leading-none
                 group-data-[pending]/card:rounded-sm group-data-[pending]/card:text-transparent group-data-[pending]/card:bg-foreground group-data-[pending]/card:animate-skeleton
                 group-data-[loading-error]/card:text-destructive"
               >
-                {isPending
-                  ? "Loading"
-                  : data?.quote[convertCurrency.ticker].market_cap !== undefined
-                  ? `${convertCurrency.symbol}${formatNumberTBMK(
+                {isPending ? (
+                  "Loading"
+                ) : data?.quote[convertCurrency.ticker].market_cap !==
+                  undefined ? (
+                  <>
+                    <CurrencySymbol
+                      symbol={convertCurrency.symbol}
+                      symbolCustomFont={convertCurrency.symbolCustomFont}
+                    />
+                    {formatNumberTBMK(
                       data?.quote[convertCurrency.ticker].market_cap,
                       3
-                    )}`
-                  : "Error"}
+                    )}
+                  </>
+                ) : (
+                  "Error"
+                )}
               </p>
             </div>
           </div>
@@ -219,13 +251,7 @@ export default function CryptoPriceCard({
     <ThreeLineCard
       className={className}
       top={Top}
-      middle={
-        data
-          ? `${convertCurrency.symbol}${formatter(
-              data.quote[convertCurrency.ticker].price
-            )}`
-          : undefined
-      }
+      middle={Middle}
       bottom={Bottom}
       isPending={isPending}
       isRefetching={isRefetching}

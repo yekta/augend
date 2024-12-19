@@ -8,6 +8,7 @@ import { useNanoBananoBalances } from "@/components/providers/nano-banano-balanc
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
 import { isNano } from "@/server/trpc/api/crypto/nano-banano/helpers";
+import { CurrencySymbol } from "@/components/CurrencySymbol";
 
 export const bananoCmcId = 4704;
 
@@ -80,19 +81,37 @@ export default function BananoTotalCard({
       : undefined;
 
   const top =
-    secondaryTotal !== undefined
-      ? `${secondaryCurrency.symbol}${formatNumberTBMK(secondaryTotal)}`
-      : undefined;
+    secondaryTotal !== undefined ? (
+      <>
+        <CurrencySymbol
+          symbol={secondaryCurrency.symbol}
+          symbolCustomFont={secondaryCurrency.symbolCustomFont}
+        />
+        {formatNumberTBMK(secondaryTotal)}
+      </>
+    ) : undefined;
 
   const middle =
-    primaryTotal !== undefined
-      ? `${primaryCurrency.symbol}${formatNumberTBMK(primaryTotal)}`
-      : undefined;
+    primaryTotal !== undefined ? (
+      <>
+        <CurrencySymbol
+          symbol={primaryCurrency.symbol}
+          symbolCustomFont={primaryCurrency.symbolCustomFont}
+        />
+        {formatNumberTBMK(primaryTotal)}
+      </>
+    ) : undefined;
 
   const bottom =
-    tertiaryTotal !== undefined
-      ? `${tertiaryCurrency.symbol}${formatNumberTBMK(tertiaryTotal)}`
-      : undefined;
+    tertiaryTotal !== undefined ? (
+      <>
+        <CurrencySymbol
+          symbol={tertiaryCurrency.symbol}
+          symbolCustomFont={tertiaryCurrency.symbolCustomFont}
+        />
+        {formatNumberTBMK(tertiaryTotal)}
+      </>
+    ) : undefined;
 
   return (
     <ThreeLineCard

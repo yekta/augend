@@ -20,10 +20,11 @@ import {
   DropletIcon,
   SendIcon,
 } from "lucide-react";
-import { ElementType, useMemo } from "react";
+import { ElementType, ReactNode, useMemo } from "react";
 import CardInnerWrapper from "@/components/cards/_utils/card-inner-wrapper";
 import { useCurrencyPreference } from "@/components/providers/currency-preference-provider";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
+import { CurrencySymbol } from "@/components/CurrencySymbol";
 
 export default function GasTrackerCard({
   network,
@@ -74,6 +75,16 @@ export default function GasTrackerCard({
     [network]
   );
 
+  const ConvertSymbol = useMemo(
+    () => (
+      <CurrencySymbol
+        symbol={convertCurrency.symbol}
+        symbolCustomFont={convertCurrency.symbolCustomFont}
+      />
+    ),
+    [convertCurrency]
+  );
+
   return (
     <CardOuterWrapper
       className={className}
@@ -103,11 +114,10 @@ export default function GasTrackerCard({
           />
           <IconAndText
             text={conditionalValue(
-              `${convertCurrency.symbol}${formatNumberTBMK(
-                data?.sendUsd || 1,
-                3,
-                true
-              )}`,
+              <>
+                {ConvertSymbol}
+                {formatNumberTBMK(data?.sendUsd || 1, 3, true)}
+              </>,
               true
             )}
             Icon={SendIcon}
@@ -116,22 +126,24 @@ export default function GasTrackerCard({
         <div className="flex flex-wrap shrink min-w-0 overflow-hidden items-center justify-center">
           <IconAndText
             text={conditionalValue(
-              `${convertCurrency.symbol}${formatNumberTBMK(
-                data?.swapUsd || 1,
-                3,
-                true
-              )}`,
+              <>
+                {ConvertSymbol}
+                {formatNumberTBMK(data?.swapUsd || 1, 3, true)}
+              </>,
               true
             )}
             Icon={ArrowRightLeftIcon}
           />
           <IconAndText
             text={conditionalValue(
-              `${convertCurrency.symbol}${formatNumberTBMK(
-                data?.uniswapV3PositionCreationUsd || 1,
-                3,
-                true
-              )}`,
+              <>
+                {ConvertSymbol}
+                {formatNumberTBMK(
+                  data?.uniswapV3PositionCreationUsd || 1,
+                  3,
+                  true
+                )}
+              </>,
               true
             )}
             Icon={DropletIcon}
@@ -154,7 +166,7 @@ function IconAndText({
   className,
 }: {
   Icon: ElementType;
-  text: string;
+  text: ReactNode;
   className?: string;
 }) {
   return (

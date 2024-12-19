@@ -4,6 +4,7 @@ import CardInnerWrapper from "@/components/cards/_utils/card-inner-wrapper";
 import CardOuterWrapper, {
   TCardOuterWrapperProps,
 } from "@/components/cards/_utils/card-outer-wrapper";
+import { CurrencySymbol } from "@/components/CurrencySymbol";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import ForexIcon from "@/components/icons/forex-icon";
 import { useCmcCryptoInfos } from "@/components/providers/cmc/cmc-crypto-infos-provider";
@@ -174,15 +175,10 @@ export default function CalculatorCard({
               className="pl-8.5 py-2.25 h-auto font-semibold rounded-lg group-data-[pending]/input:pr-10"
             />
             <div className="absolute left-2 size-5.5 flex items-center justify-center top-1/2 text-lg leading-none transform -translate-y-1/2 font-bold">
-              {c.isCrypto ? (
-                <CryptoIcon cryptoName={c.ticker} className="size-5" />
-              ) : (
-                <ForexIcon
-                  symbol={c.symbol}
-                  ticker={c.ticker}
-                  className="size-full"
-                />
-              )}
+              <CurrencySymbol
+                symbol={c.symbol}
+                symbolCustomFont={c.symbolCustomFont}
+              />
             </div>
             {isPending && (
               <div className="absolute top-1/2 right-3 -translate-y-1/2 size-4">

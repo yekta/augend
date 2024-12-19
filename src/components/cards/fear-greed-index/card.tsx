@@ -6,6 +6,7 @@ import CardOuterWrapper, {
   TCardOuterWrapperLinkProps,
   TCardOuterWrapperProps,
 } from "@/components/cards/_utils/card-outer-wrapper";
+import { CurrencySymbol } from "@/components/CurrencySymbol";
 import { useCmcGlobalMetrics } from "@/components/providers/cmc/cmc-global-metrics-provider";
 import { useCurrencyPreference } from "@/components/providers/currency-preference-provider";
 import Indicator from "@/components/ui/indicator";
@@ -79,14 +80,19 @@ export default function FearGreedIndexCard({
           {/* Market cap */}
           <div className="w-full flex items-center justify-center gap-1 text-sm">
             <p className="shrink min-w-0 truncate text-center leading-none group-data-[pending]/card:font-normal group-data-[pending]/card:bg-foreground group-data-[loading-error]/card:text-destructive group-data-[pending]/card:text-transparent group-data-[pending]/card:rounded-sm group-data-[pending]/card:animate-skeleton">
-              {isPending
-                ? "Loading"
-                : data
-                ? `${convertCurrency.symbol}${formatNumberTBMK(
-                    data.total_market_cap,
-                    3
-                  )}`
-                : "Error"}
+              {isPending ? (
+                "Loading"
+              ) : data ? (
+                <>
+                  <CurrencySymbol
+                    symbol={convertCurrency.symbol}
+                    symbolCustomFont={convertCurrency.symbolCustomFont}
+                  />
+                  {formatNumberTBMK(data.total_market_cap, 3)}
+                </>
+              ) : (
+                "Error"
+              )}
             </p>
             <div className="shrink min-w-0 overflow-hidden text-center leading-none group-data-[pending]/card:bg-foreground group-data-[loading-error]/card:text-destructive group-data-[pending]/card:text-transparent group-data-[pending]/card:rounded-sm group-data-[pending]/card:animate-skeleton">
               <div

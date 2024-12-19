@@ -41,6 +41,7 @@ export function getCurrencyFields(
     ticker: curr.ticker,
     name: curr.name,
     symbol: curr.symbol,
+    symbolCustomFont: curr.symbolCustomFont,
     coinId: curr.coinId,
     isCrypto: curr.isCrypto,
     maxDecimalsPreferred: curr.maxDecimalsPreferred,

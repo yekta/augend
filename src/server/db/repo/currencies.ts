@@ -14,6 +14,7 @@ export async function getCurrencies({
       id: currenciesTable.id,
       name: currenciesTable.name,
       symbol: currenciesTable.symbol,
+      symbolCustomFont: currenciesTable.symbolCustomFont,
       ticker: currenciesTable.ticker,
       isCrypto: currenciesTable.isCrypto,
       coinId: currenciesTable.coinId,

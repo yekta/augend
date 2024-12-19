@@ -3,6 +3,7 @@
 import { useUserFull } from "@/app/[username]/[dashboard_slug]/_components/user-full-provider";
 import Blockies from "@/components/blockies/blockies";
 import CardValueFormItemCombobox from "@/components/cards/_utils/values-form/form-item-combobox";
+import { CurrencySymbol } from "@/components/CurrencySymbol";
 import ErrorLine from "@/components/error-line";
 import ForexIcon from "@/components/icons/forex-icon";
 import { Button } from "@/components/ui/button";
@@ -452,11 +453,12 @@ function CurrenciesButton({
     if (idx === -1) return null;
     const currency = dataCurrencies[idx];
     return (
-      <ForexIcon
-        ticker={currency.ticker}
-        symbol={currency.symbol}
-        className={className}
-      />
+      <div className={className}>
+        <CurrencySymbol
+          symbol={currency.symbol}
+          symbolCustomFont={currency.symbolCustomFont}
+        />
+      </div>
     );
   };
 
@@ -631,8 +633,13 @@ function CurrencySpan({
   return currency ? (
     <span className="font-bold">
       {currency.ticker}{" "}
-      <span className="text-muted-foreground font-normal">
-        ({currency.symbol})
+      <span className="font-normal text-muted-foreground">
+        (
+        <CurrencySymbol
+          symbol={currency.symbol}
+          symbolCustomFont={currency.symbolCustomFont}
+        />
+        )
       </span>
     </span>
   ) : isPending ? (

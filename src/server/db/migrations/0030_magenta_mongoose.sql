@@ -1,0 +1,1 @@
+ALTER TABLE "currencies" ADD COLUMN "symbol_custom_font" text;

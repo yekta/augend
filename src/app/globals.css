@@ -24,6 +24,10 @@ button:focus {
   font-family: var(--font-sans);
 }
 
+.font-currency {
+  font-family: var(--font-currency);
+}
+
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;

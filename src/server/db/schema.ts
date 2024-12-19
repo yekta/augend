@@ -45,6 +45,7 @@ export const currenciesTable = pgTable(
     name: text("name").notNull(),
     ticker: text("ticker").notNull(),
     symbol: text("symbol").notNull(),
+    symbolCustomFont: text("symbol_custom_font"),
     isCrypto: boolean("is_crypto").notNull().default(false),
     coinId: integer("coin_id"),
     xOrder: integer("x_order").notNull().default(0),

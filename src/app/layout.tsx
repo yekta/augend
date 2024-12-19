@@ -24,6 +24,11 @@ const mono = localFont({
   variable: "--font-mono",
   weight: "100 900",
 });
+const currency = localFont({
+  src: "./fonts/Currency.woff2",
+  variable: "--font-currency",
+  weight: "400",
+});
 
 export const metadata: Metadata = {
   title: `${siteTitle} | ${siteTagline}`,
@@ -60,7 +65,7 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${sans.variable} ${mono.variable} bg-background text-foreground antialiased break-words`}
+        className={`${sans.variable} ${mono.variable} ${currency.variable} bg-background text-foreground antialiased break-words`}
       >
         <Providers>
           <NextTopLoader
