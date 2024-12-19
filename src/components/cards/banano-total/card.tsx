@@ -8,7 +8,7 @@ import { useNanoBananoBalances } from "@/components/providers/nano-banano-balanc
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
 import { isNano } from "@/server/trpc/api/crypto/nano-banano/helpers";
-import { CurrencySymbol } from "@/components/CurrencySymbol";
+import { CurrencySymbol } from "@/components/currency-symbol";
 
 export const bananoCmcId = 4704;
 

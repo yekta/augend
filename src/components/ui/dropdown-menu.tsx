@@ -151,12 +151,14 @@ const DropdownMenuItem = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Item> & {
     inset?: boolean;
+    fadeOnDisabled?: boolean;
   }
->(({ className, inset, ...props }, ref) => (
+>(({ className, fadeOnDisabled = true, inset, ...props }, ref) => (
   <DropdownMenuPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex cursor-default select-none items-center gap-2 rounded-sm px-2.5 py-2.25 outline-none active:bg-accent focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&>svg]:shrink-0",
+      "relative flex cursor-default select-none items-center gap-2 rounded-sm px-2.5 py-2.25 outline-none active:bg-accent focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none [&>svg]:shrink-0",
+      fadeOnDisabled && "data-[disabled]:opacity-50",
       inset && "pl-8",
       className
     )}

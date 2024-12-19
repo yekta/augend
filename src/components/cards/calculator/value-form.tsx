@@ -2,7 +2,7 @@ import CardValueFormItemCombobox from "@/components/cards/_utils/values-form/for
 import CardValuesFormWrapper from "@/components/cards/_utils/values-form/form-wrapper";
 import CardValuesFormSubmitButton from "@/components/cards/_utils/values-form/submit-button";
 import { TInferValueFormProps } from "@/components/cards/_utils/values-form/types";
-import { CurrencySymbol } from "@/components/CurrencySymbol";
+import { CurrencySymbol } from "@/components/currency-symbol";
 import ErrorLine from "@/components/error-line";
 import { Button } from "@/components/ui/button";
 import { Form, FormField } from "@/components/ui/form";

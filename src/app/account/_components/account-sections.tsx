@@ -3,7 +3,8 @@
 import { useUserFull } from "@/app/[username]/[dashboard_slug]/_components/user-full-provider";
 import Blockies from "@/components/blockies/blockies";
 import CardValueFormItemCombobox from "@/components/cards/_utils/values-form/form-item-combobox";
-import { CurrencySymbol } from "@/components/CurrencySymbol";
+import CurrencyPreferenceTrigger from "@/components/currency-preference-trigger";
+import { CurrencySymbol } from "@/components/currency-symbol";
 import ErrorLine from "@/components/error-line";
 import ForexIcon from "@/components/icons/forex-icon";
 import { Button } from "@/components/ui/button";
@@ -106,10 +107,7 @@ export default function AccountSections({}: Props) {
         <div className="max-w-full flex items-center justify-start gap-1.5">
           <CurrenciesButton
             dataUser={dataUser}
-            dataCurrencies={dataCurrencies}
             isPendingUser={isPendingUser}
-            isPendingCurrencies={isPendingCurrencies}
-            isLoadingErrorCurrencies={isLoadingErrorCurrencies}
             open={isCurrencyPreferenceDialogOpen}
             onOpenChange={setIsCurrencyPreferenceDialogOpen}
           />
@@ -202,12 +200,13 @@ function UsernameButton({
       <DialogTrigger disabled={isPendingUser} asChild>
         <Button
           variant="ghost"
+          fadeOnDisabled={false}
           className="flex text-left items-center rounded py-0.5 pl-1 pr-1.5 justify-start max-w-full gap-1.5"
         >
           {isPendingUser || !user ? (
             <div
-              className="size-5 -my-1 rounded-full group-data-[pending]:animate-skeleton group-data-[pending]:bg-muted-foreground
-              group-data-[loading-error]:bg-destructive"
+              className="size-5 -my-1 rounded-full group-data-[pending]/account:animate-skeleton group-data-[pending]/account:bg-foreground
+              group-data-[loading-error]/account:bg-destructive"
             />
           ) : (
             <Blockies
@@ -218,14 +217,18 @@ function UsernameButton({
             />
           )}
           <div className="shrink min-w-0 flex items-center justify-start gap-2">
-            <p className="font-bold text-lg leading-tight shrink min-w-0">
+            <p
+              className="font-bold text-lg leading-tight shrink min-w-0
+              group-data-[pending]/account:bg-foreground group-data-[pending]/account:text-transparent group-data-[pending]/account:animate-skeleton
+              group-data-[pending]/account:rounded"
+            >
               {user?.username
                 ? user.username
                 : isPendingUser
                 ? "Loading"
                 : "Error"}
             </p>
-            <PencilIcon className="size-3.5 -my-1 shrink-0" />
+            {user && <PencilIcon className="size-3.5 -my-1 shrink-0" />}
           </div>
         </Button>
       </DialogTrigger>
@@ -289,334 +292,55 @@ function UsernameButton({
   );
 }
 
-const CurrencyFormSchema = z.object({
-  primaryCurrencyValue: z.string(),
-  secondaryCurrencyValue: z.string(),
-  tertiaryCurrencyValue: z.string(),
-});
-
 function CurrenciesButton({
   dataUser,
   isPendingUser,
-  dataCurrencies,
-  isPendingCurrencies,
-  isLoadingErrorCurrencies,
   open,
   onOpenChange,
 }: {
   dataUser: AppRouterOutputs["ui"]["getUserFull"] | undefined;
   isPendingUser: boolean;
-  dataCurrencies: AppRouterOutputs["ui"]["getCurrencies"] | undefined;
-  isPendingCurrencies: boolean;
-  isLoadingErrorCurrencies: boolean;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
-  const asyncRouterRefresh = useAsyncRouterRefresh();
-
-  const getValue = (c: { name: string; ticker: string }) =>
-    `${c.name} (${c.ticker})`;
-
-  const form = useForm<z.infer<typeof CurrencyFormSchema>>({
-    resolver: zodResolver(CurrencyFormSchema),
-    defaultValues: {
-      primaryCurrencyValue: dataUser ? getValue(dataUser.primaryCurrency) : "",
-      secondaryCurrencyValue: dataUser
-        ? getValue(dataUser.secondaryCurrency)
-        : "",
-      tertiaryCurrencyValue: dataUser
-        ? getValue(dataUser.tertiaryCurrency)
-        : "",
-    },
-  });
-  const primaryCurrencyValue = form.watch("primaryCurrencyValue");
-  const secondaryCurrencyValue = form.watch("secondaryCurrencyValue");
-
-  const primaryCurrencyItems = useMemo(() => {
-    if (!dataCurrencies) return [];
-    return dataCurrencies.map((c) => ({
-      value: getValue(c),
-      label: getValue(c),
-      iconValue: c.ticker,
-    }));
-  }, [dataCurrencies]);
-
-  const secondaryCurrencyItems = useMemo(() => {
-    if (!primaryCurrencyItems) return [];
-    return primaryCurrencyItems.filter((c) => c.value !== primaryCurrencyValue);
-  }, [primaryCurrencyItems, primaryCurrencyValue]);
-
-  const tertiaryCurrencyItems = useMemo(() => {
-    if (!primaryCurrencyItems) return [];
-    return primaryCurrencyItems.filter(
-      (c) =>
-        c.value !== primaryCurrencyValue && c.value !== secondaryCurrencyValue
-    );
-  }, [secondaryCurrencyItems, secondaryCurrencyValue]);
-
-  const clearErrors = () => {
-    resetChangeCurrencyPreference();
-  };
-
-  const resetProcess = () => {
-    onOpenChange(false);
-    clearErrors();
-  };
-
-  const {
-    mutate: changeCurrencyPreference,
-    isPending: isPendingChangeCurrencyPreference,
-    error: errorChangeCurrencyPreference,
-    reset: resetChangeCurrencyPreference,
-  } = api.ui.changeCurrencyPreference.useMutation({
-    onSuccess: async (d) => {
-      await asyncRouterRefresh();
-      resetProcess();
-    },
-  });
-
-  const onSubmit = (data: z.infer<typeof CurrencyFormSchema>) => {
-    const primaryId = dataCurrencies?.find(
-      (c) => getValue(c) === data.primaryCurrencyValue
-    )?.id;
-    if (!primaryId) {
-      form.setError("primaryCurrencyValue", {
-        message: "Invalid primary currency.",
-      });
-      return;
-    }
-
-    const secondaryId = dataCurrencies?.find(
-      (c) => getValue(c) === data.secondaryCurrencyValue
-    )?.id;
-    if (!secondaryId) {
-      form.setError("secondaryCurrencyValue", {
-        message: "Invalid secondary currency.",
-      });
-      return;
-    }
-
-    const tertiaryId = dataCurrencies?.find(
-      (c) => getValue(c) === data.tertiaryCurrencyValue
-    )?.id;
-    if (!tertiaryId) {
-      form.setError("tertiaryCurrencyValue", {
-        message: "Invalid tertiary currency.",
-      });
-      return;
-    }
-
-    if (primaryId === secondaryId) {
-      form.setError("secondaryCurrencyValue", {
-        message: "Currencies must be unique.",
-      });
-      return;
-    }
-    if (primaryId === tertiaryId) {
-      form.setError("tertiaryCurrencyValue", {
-        message: "Currencies must be unique.",
-      });
-      return;
-    }
-    if (secondaryId === tertiaryId) {
-      form.setError("tertiaryCurrencyValue", {
-        message: "Currencies must be unique.",
-      });
-      return;
-    }
-
-    const { data: newCurrencies, success } =
-      ChangeCurrencyPreferenceSchemaUI.safeParse({
-        primaryCurrencyId: primaryId,
-        secondaryCurrencyId: secondaryId,
-        tertiaryCurrencyId: tertiaryId,
-      });
-
-    if (!newCurrencies) {
-      form.setError("primaryCurrencyValue", {
-        message: "Invalid currencies.",
-      });
-      return;
-    }
-
-    changeCurrencyPreference(newCurrencies);
-  };
-
-  const Icon = useMemo(
-    () =>
-      ({ value, className }: { value: string | null; className?: string }) => {
-        if (!dataCurrencies) return null;
-        const idx = dataCurrencies.findIndex((c) => c.ticker === value);
-        if (idx === -1) return null;
-        const currency = dataCurrencies[idx];
-        return (
-          <div className={cn(className, "block text-center h-auto")}>
-            <CurrencySymbol
-              symbol={currency.symbol}
-              symbolCustomFont={currency.symbolCustomFont}
-            />
-          </div>
-        );
-      },
-    [dataCurrencies]
-  );
-
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogTrigger disabled={isPendingUser} asChild>
-        <Button
-          variant="ghost"
-          className="flex text-left items-center rounded pl-1 pr-1.5 py-0.5 justify-start max-w-full gap-2"
-        >
-          <p
-            className="font-bold leading-tight text-lg group-data-[loading-error]/account:text-destructive 
+    <CurrencyPreferenceTrigger open={open} onOpenChange={onOpenChange}>
+      <Button
+        variant="ghost"
+        fadeOnDisabled={false}
+        className="flex text-left items-center rounded pl-1 pr-1.5 py-0.5 justify-start max-w-full gap-2"
+      >
+        <p
+          className="font-bold leading-tight text-lg group-data-[loading-error]/account:text-destructive 
             group-data-[pending]/account:bg-foreground group-data-[pending]/account:text-transparent group-data-[pending]/account:animate-skeleton
             group-data-[pending]/account:rounded shrink min-w-0"
-          >
-            <CurrencySpan
-              currency={dataUser?.primaryCurrency}
-              isPending={isPendingUser}
-            />
-            {dataUser && (
-              <span className="text-muted-more-foreground font-normal">
-                {" • "}
-              </span>
-            )}
-            <CurrencySpan
-              currency={dataUser?.secondaryCurrency}
-              isPending={isPendingUser}
-            />
-            {dataUser && (
-              <span className="text-muted-more-foreground font-normal">
-                {" • "}
-              </span>
-            )}
-            <CurrencySpan
-              currency={dataUser?.tertiaryCurrency}
-              isPending={isPendingUser}
-            />
-          </p>
-          <PencilIcon className="size-3.5 -my-1 shrink-0" />
-        </Button>
-      </DialogTrigger>
-      <DialogContent
-        classNameInnerWrapper="gap-4"
-        className="w-full max-w-[22rem]"
-      >
-        <DialogHeader>
-          <DialogTitle>Currency Preferences</DialogTitle>
-          <DialogDescription>
-            Set your primary, secondary, and tertiary currencies.
-          </DialogDescription>
-        </DialogHeader>
-        <Form {...form}>
-          <form
-            className="w-full flex flex-col gap-4"
-            onSubmit={form.handleSubmit(onSubmit)}
-          >
-            <FormField
-              control={form.control}
-              name="primaryCurrencyValue"
-              render={({ field }) => (
-                <CardValueFormItemCombobox
-                  inputTitle="Primary"
-                  iconValue={
-                    dataCurrencies?.find((c) => getValue(c) === field.value)
-                      ?.ticker
-                  }
-                  Icon={Icon}
-                  value={field.value}
-                  onSelect={(value) => {
-                    form.setValue("primaryCurrencyValue", value);
-                  }}
-                  disabled={isPendingChangeCurrencyPreference}
-                  isPending={isPendingCurrencies}
-                  isLoadingError={isLoadingErrorCurrencies}
-                  isLoadingErrorMessage="Failed to load currencies :("
-                  items={primaryCurrencyItems}
-                  placeholder="Select currency..."
-                  inputPlaceholder="Search currencies..."
-                  noValueFoundLabel="No currency found..."
-                />
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="secondaryCurrencyValue"
-              render={({ field }) => (
-                <CardValueFormItemCombobox
-                  inputTitle="Secondary"
-                  iconValue={
-                    dataCurrencies
-                      ? dataCurrencies.find((c) => getValue(c) === field.value)
-                          ?.ticker
-                      : undefined
-                  }
-                  Icon={Icon}
-                  value={field.value}
-                  onSelect={(value) =>
-                    form.setValue("secondaryCurrencyValue", value)
-                  }
-                  disabled={isPendingChangeCurrencyPreference}
-                  isPending={isPendingCurrencies}
-                  isLoadingError={isLoadingErrorCurrencies}
-                  isLoadingErrorMessage="Failed to load currencies :("
-                  items={secondaryCurrencyItems}
-                  placeholder="Select currency..."
-                  inputPlaceholder="Search currencies..."
-                  noValueFoundLabel="No currency found..."
-                />
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="tertiaryCurrencyValue"
-              render={({ field }) => (
-                <CardValueFormItemCombobox
-                  inputTitle="Tertiary"
-                  iconValue={
-                    dataCurrencies?.find((c) => getValue(c) === field.value)
-                      ?.ticker
-                  }
-                  Icon={Icon}
-                  value={field.value}
-                  onSelect={(value) =>
-                    form.setValue("tertiaryCurrencyValue", value)
-                  }
-                  disabled={isPendingChangeCurrencyPreference}
-                  isPending={isPendingCurrencies}
-                  isLoadingError={isLoadingErrorCurrencies}
-                  isLoadingErrorMessage="Failed to load currencies :("
-                  items={tertiaryCurrencyItems}
-                  placeholder="Select currency..."
-                  inputPlaceholder="Search currencies..."
-                  noValueFoundLabel="No currency found..."
-                />
-              )}
-            />
-            <Button
-              state={isPendingChangeCurrencyPreference ? "loading" : "default"}
-              type="submit"
-            >
-              {isPendingChangeCurrencyPreference && (
-                <>
-                  <p className="text-transparent select-none shrink min-w-0 truncate">
-                    Change Preference
-                  </p>
-                  <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                    <LoaderIcon className="size-full animate-spin" />
-                  </div>
-                </>
-              )}
-              {!isPendingChangeCurrencyPreference && "Change Preference"}
-            </Button>
-          </form>
-        </Form>
-        {errorChangeCurrencyPreference && (
-          <ErrorLine message={errorChangeCurrencyPreference.message} />
-        )}
-      </DialogContent>
-    </Dialog>
+        >
+          <CurrencySpan
+            currency={dataUser?.primaryCurrency}
+            isPending={isPendingUser}
+          />
+          {dataUser && (
+            <span className="text-muted-more-foreground font-normal">
+              {" • "}
+            </span>
+          )}
+          <CurrencySpan
+            currency={dataUser?.secondaryCurrency}
+            isPending={isPendingUser}
+          />
+          {dataUser && (
+            <span className="text-muted-more-foreground font-normal">
+              {" • "}
+            </span>
+          )}
+          <CurrencySpan
+            currency={dataUser?.tertiaryCurrency}
+            isPending={isPendingUser}
+          />
+        </p>
+        {dataUser && <PencilIcon className="size-3.5 -my-1 shrink-0" />}
+      </Button>
+    </CurrencyPreferenceTrigger>
   );
 }
 
@@ -631,15 +355,11 @@ function CurrencySpan({
 }) {
   return currency ? (
     <span className="font-bold">
-      {currency.ticker}{" "}
-      <span className="font-normal text-muted-foreground">
-        (
-        <CurrencySymbol
-          symbol={currency.symbol}
-          symbolCustomFont={currency.symbolCustomFont}
-        />
-        )
-      </span>
+      <CurrencySymbol
+        symbol={currency.symbol}
+        symbolCustomFont={currency.symbolCustomFont}
+      />{" "}
+      {currency.ticker}
     </span>
   ) : isPending ? (
     <span>Loading</span>

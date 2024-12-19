@@ -2,8 +2,9 @@ import UserFullProvider from "@/app/[username]/[dashboard_slug]/_components/user
 import AccountSections from "@/app/account/_components/account-sections";
 import AccountTitle from "@/app/account/_components/account-title";
 import { siteTitle } from "@/lib/constants";
+import { prefetchFullUserCached } from "@/lib/user";
 import { auth } from "@/server/auth/auth";
-import { apiServer, HydrateClient } from "@/server/trpc/setup/server";
+import { HydrateClient } from "@/server/trpc/setup/server";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 
@@ -20,10 +21,7 @@ export default async function Page({}: Props) {
     return redirect("/sign-in?callbackUrl=/account");
   }
 
-  await Promise.all([
-    apiServer.ui.getUserFull.prefetch(),
-    apiServer.ui.getCurrencies.prefetch({ category: "all" }),
-  ]);
+  await prefetchFullUserCached();
 
   return (
     <HydrateClient>

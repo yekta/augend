@@ -137,7 +137,8 @@ export function DashboardTitleBar({ username, dashboardSlug, isOwner }: Props) {
               >
                 <h1
                   className="font-bold text-xl md:text-2xl leading-none md:leading-none truncate shrink min-w-0
-                  group-data-[pending]/titlebar:text-transparent group-data-[pending]/titlebar:rounded-md group-data-[pending]/titlebar:bg-foreground group-data-[pending]/titlebar:animate-skeleton"
+                  group-data-[pending]/titlebar:text-transparent group-data-[pending]/titlebar:rounded-md group-data-[pending]/titlebar:bg-foreground group-data-[pending]/titlebar:animate-skeleton
+                  py-1 -my-1"
                 >
                   {isPendingDashboard
                     ? "Loading"

@@ -23,11 +23,13 @@ type Props = {
 
 export const UserFullProvider: FC<Props> = ({ children }) => {
   const utils = api.useUtils();
+
   const {
     data: dataUser,
     isPending: isPendingUser,
     isLoadingError: isLoadingErrorUser,
   } = api.ui.getUserFull.useQuery();
+
   const invalidateUser = () => utils.ui.getUserFull.invalidate();
 
   const {
@@ -35,6 +37,7 @@ export const UserFullProvider: FC<Props> = ({ children }) => {
     isPending: isPendingCurrencies,
     isLoadingError: isLoadingErrorCurrencies,
   } = api.ui.getCurrencies.useQuery({ category: "all" });
+
   const invalidateCurrencies = () =>
     utils.ui.getCurrencies.invalidate({ category: "all" });
 

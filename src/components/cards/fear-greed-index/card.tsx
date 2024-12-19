@@ -6,7 +6,7 @@ import CardOuterWrapper, {
   TCardOuterWrapperLinkProps,
   TCardOuterWrapperProps,
 } from "@/components/cards/_utils/card-outer-wrapper";
-import { CurrencySymbol } from "@/components/CurrencySymbol";
+import { CurrencySymbol } from "@/components/currency-symbol";
 import { useCmcGlobalMetrics } from "@/components/providers/cmc/cmc-global-metrics-provider";
 import { useCurrencyPreference } from "@/components/providers/currency-preference-provider";
 import Indicator from "@/components/ui/indicator";

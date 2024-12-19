@@ -2,7 +2,7 @@
 
 import { TCardOuterWrapperProps } from "@/components/cards/_utils/card-outer-wrapper";
 import ThreeLineCard from "@/components/cards/_utils/three-line-card";
-import { CurrencySymbol } from "@/components/CurrencySymbol";
+import { CurrencySymbol } from "@/components/currency-symbol";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import ForexIcon from "@/components/icons/forex-icon";
 import { useCmcCryptoInfos } from "@/components/providers/cmc/cmc-crypto-infos-provider";

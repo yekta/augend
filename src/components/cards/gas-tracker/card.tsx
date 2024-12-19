@@ -24,7 +24,7 @@ import { ElementType, ReactNode, useMemo } from "react";
 import CardInnerWrapper from "@/components/cards/_utils/card-inner-wrapper";
 import { useCurrencyPreference } from "@/components/providers/currency-preference-provider";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
-import { CurrencySymbol } from "@/components/CurrencySymbol";
+import { CurrencySymbol } from "@/components/currency-symbol";
 
 export default function GasTrackerCard({
   network,

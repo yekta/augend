@@ -1,7 +1,10 @@
 "use client";
 
+import { useUserFull } from "@/app/[username]/[dashboard_slug]/_components/user-full-provider";
 import { signOutAction } from "@/components/auth/actions";
 import Blockies from "@/components/blockies/blockies";
+import CurrencyPreferenceTrigger from "@/components/currency-preference-trigger";
+import { CurrencySymbol } from "@/components/currency-symbol";
 import ScIcon from "@/components/icons/sc-icon";
 import ThemeButton from "@/components/theme-button";
 import {
@@ -14,7 +17,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { sc } from "@/lib/constants";
-import { LoaderIcon, LogOutIcon, UserIcon } from "lucide-react";
+import { BanknoteIcon, LoaderIcon, LogOutIcon, UserIcon } from "lucide-react";
 import { Session } from "next-auth";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -53,6 +56,10 @@ export default function UserAvatar({ session }: Props) {
     window.localStorage.removeItem("wagmi.walletConnect.requestedChains");
     window.localStorage.removeItem("wagmi.injected.connected");
   };
+
+  const { dataUser, isPendingUser } = useUserFull();
+
+  const [currencyPreferenceOpen, setCurrencyPreferenceOpen] = useState(false);
 
   return (
     <div className="p-0.5 flex items-center justify-center">
@@ -118,6 +125,75 @@ export default function UserAvatar({ session }: Props) {
                   <p className="shrink min-w-0 leading-tight">Account</p>
                 </Link>
               </DropdownMenuItem>
+              <CurrencyPreferenceTrigger
+                open={currencyPreferenceOpen}
+                onOpenChange={setCurrencyPreferenceOpen}
+              >
+                <DropdownMenuItem
+                  onSelect={(e) => e.preventDefault()}
+                  data-pending={isPendingUser ? true : undefined}
+                  data-loading-error={
+                    !isPendingUser && !dataUser ? true : undefined
+                  }
+                  fadeOnDisabled={false}
+                  className="w-full flex items-center justify-start gap-2.5 text-left leading-tight cursor-pointer group/currency"
+                >
+                  <BanknoteIcon className="size-5 shrink-0 -ml-0.5 -my-1" />
+                  <div className="shrink min-w-0 flex flex-col gap-0.25">
+                    <p className="text-xs text-muted-foreground font-normal leading-tight">
+                      Currency Preference
+                    </p>
+                    <p
+                      suppressHydrationWarning
+                      className="shrink min-w-0 leading-tight 
+                      group-data-[pending]/currency:text-transparent group-data-[pending]/currency:bg-foreground group-data-[pending]/currency:rounded group-data-[pending]/currency:animate-skeleton
+                      group-data-[loading-error]/currency:text-destructive"
+                    >
+                      {isPendingUser ? (
+                        "Loading"
+                      ) : dataUser ? (
+                        <>
+                          <span>
+                            <CurrencySymbol
+                              symbol={dataUser.primaryCurrency.symbol}
+                              symbolCustomFont={
+                                dataUser.primaryCurrency.symbolCustomFont
+                              }
+                            />{" "}
+                            {dataUser.primaryCurrency.ticker}
+                          </span>
+                          <span className="text-muted-more-foreground font-normal">
+                            {" • "}
+                          </span>
+                          <span>
+                            <CurrencySymbol
+                              symbol={dataUser.secondaryCurrency.symbol}
+                              symbolCustomFont={
+                                dataUser.secondaryCurrency.symbolCustomFont
+                              }
+                            />{" "}
+                            {dataUser.secondaryCurrency.ticker}
+                          </span>
+                          <span className="text-muted-more-foreground font-normal">
+                            {" • "}
+                          </span>
+                          <span>
+                            <CurrencySymbol
+                              symbol={dataUser.tertiaryCurrency.symbol}
+                              symbolCustomFont={
+                                dataUser.tertiaryCurrency.symbolCustomFont
+                              }
+                            />{" "}
+                            {dataUser.tertiaryCurrency.ticker}
+                          </span>
+                        </>
+                      ) : (
+                        "Error"
+                      )}
+                    </p>
+                  </div>
+                </DropdownMenuItem>
+              </CurrencyPreferenceTrigger>
               <ThemeButton type="dropdown-menu-item" />
               <DropdownMenuItem asChild className="p-0">
                 <form

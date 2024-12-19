@@ -34,7 +34,7 @@ export function ProfileTitleBar({}: Props) {
           className="size-6 rounded-full -my-1 shrink-0"
           address={ethereumAddress || username || usernameParam}
         />
-        <span className="shrink min-w-0 truncate">
+        <span className="shrink min-w-0 py-1 -my-1 truncate">
           {username || usernameParam}
         </span>
       </h1>
