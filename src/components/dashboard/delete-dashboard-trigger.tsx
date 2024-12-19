@@ -68,7 +68,7 @@ export default function DeleteDashboardTrigger({
             <span className="bg-foreground/10 px-1 rounded font-bold text-foreground">
               {dashboardTitle}
             </span>{" "}
-            in the input below to confirm.
+            below to confirm.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={onSubmit} className="flex flex-col gap-4">

@@ -4,7 +4,7 @@ import { useUserFull } from "@/app/[username]/[dashboard_slug]/_components/user-
 import { signOutAction } from "@/components/auth/actions";
 import Blockies from "@/components/blockies/blockies";
 import CurrencyPreferenceTrigger from "@/components/currency-preference-trigger";
-import { CurrencySymbol } from "@/components/currency-symbol";
+import CoinIcon from "@/components/icons/coin-icon";
 import ScIcon from "@/components/icons/sc-icon";
 import ThemeButton from "@/components/theme-button";
 import {
@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { sc } from "@/lib/constants";
-import { CoinsIcon, LoaderIcon, LogOutIcon, UserIcon } from "lucide-react";
+import { LoaderIcon, LogOutIcon, UserIcon } from "lucide-react";
 import { Session } from "next-auth";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -139,13 +139,12 @@ export default function UserAvatar({ session }: Props) {
                   fadeOnDisabled={false}
                   className="w-full flex items-center justify-start gap-2.5 text-left leading-tight cursor-pointer group/currency"
                 >
-                  <CoinsIcon className="size-5 shrink-0 -ml-0.5 -my-1" />
+                  <CoinIcon className="size-5 shrink-0 -ml-0.5 -my-1" />
                   <div className="shrink min-w-0 flex flex-col gap-0.25 -mt-0.25">
-                    <p className="text-xs text-muted-foreground font-normal leading-tight">
+                    <p className="text-xs text-muted-foreground font-medium leading-tight">
                       Currency Preference
                     </p>
                     <p
-                      suppressHydrationWarning
                       className="shrink min-w-0 leading-tight 
                       group-data-[pending]/currency:text-transparent group-data-[pending]/currency:bg-foreground group-data-[pending]/currency:rounded group-data-[pending]/currency:animate-skeleton
                       group-data-[loading-error]/currency:text-destructive"
@@ -154,39 +153,15 @@ export default function UserAvatar({ session }: Props) {
                         "Loading"
                       ) : dataUser ? (
                         <>
-                          <span>
-                            <CurrencySymbol
-                              symbol={dataUser.primaryCurrency.symbol}
-                              symbolCustomFont={
-                                dataUser.primaryCurrency.symbolCustomFont
-                              }
-                            />{" "}
-                            {dataUser.primaryCurrency.ticker}
-                          </span>
+                          <span>{dataUser.primaryCurrency.ticker}</span>
                           <span className="text-muted-more-foreground font-normal">
                             {" • "}
                           </span>
-                          <span>
-                            <CurrencySymbol
-                              symbol={dataUser.secondaryCurrency.symbol}
-                              symbolCustomFont={
-                                dataUser.secondaryCurrency.symbolCustomFont
-                              }
-                            />{" "}
-                            {dataUser.secondaryCurrency.ticker}
-                          </span>
+                          <span>{dataUser.secondaryCurrency.ticker}</span>
                           <span className="text-muted-more-foreground font-normal">
                             {" • "}
                           </span>
-                          <span>
-                            <CurrencySymbol
-                              symbol={dataUser.tertiaryCurrency.symbol}
-                              symbolCustomFont={
-                                dataUser.tertiaryCurrency.symbolCustomFont
-                              }
-                            />{" "}
-                            {dataUser.tertiaryCurrency.ticker}
-                          </span>
+                          <span>{dataUser.tertiaryCurrency.ticker}</span>
                         </>
                       ) : (
                         "Error"

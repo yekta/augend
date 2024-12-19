@@ -54,7 +54,7 @@ export default function ThemeButton({
           className="size-5 shrink-0 -ml-0.5 -my-1"
         />
         <div className="shrink min-w-0 flex flex-col gap-0.25 -mt-0.25">
-          <p className="text-xs text-muted-foreground font-normal leading-tight">
+          <p className="text-xs text-muted-foreground font-medium leading-tight">
             Theme
           </p>
           <p suppressHydrationWarning className="shrink min-w-0 leading-tight">
