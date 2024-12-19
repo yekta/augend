@@ -26,6 +26,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { timeAgoIntl } from "@/lib/helpers";
 import { useAsyncRouterRefresh } from "@/lib/hooks/use-async-router-refresh";
+import { cn } from "@/lib/utils";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
 import {
   ChangeCurrencyPreferenceSchemaUI,
@@ -441,26 +442,24 @@ function CurrenciesButton({
     changeCurrencyPreference(newCurrencies);
   };
 
-  const Icon = ({
-    value,
-    className,
-  }: {
-    value: string | null;
-    className?: string;
-  }) => {
-    if (!dataCurrencies) return null;
-    const idx = dataCurrencies.findIndex((c) => c.ticker === value);
-    if (idx === -1) return null;
-    const currency = dataCurrencies[idx];
-    return (
-      <div className={className}>
-        <CurrencySymbol
-          symbol={currency.symbol}
-          symbolCustomFont={currency.symbolCustomFont}
-        />
-      </div>
-    );
-  };
+  const Icon = useMemo(
+    () =>
+      ({ value, className }: { value: string | null; className?: string }) => {
+        if (!dataCurrencies) return null;
+        const idx = dataCurrencies.findIndex((c) => c.ticker === value);
+        if (idx === -1) return null;
+        const currency = dataCurrencies[idx];
+        return (
+          <div className={cn(className, "block text-center h-auto")}>
+            <CurrencySymbol
+              symbol={currency.symbol}
+              symbolCustomFont={currency.symbolCustomFont}
+            />
+          </div>
+        );
+      },
+    [dataCurrencies]
+  );
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

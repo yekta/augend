@@ -4,6 +4,7 @@ import CardValuesFormSubmitButton from "@/components/cards/_utils/values-form/su
 import { TInferValueFormProps } from "@/components/cards/_utils/values-form/types";
 import { CurrencySymbol } from "@/components/CurrencySymbol";
 import { Form, FormField } from "@/components/ui/form";
+import { cn } from "@/lib/utils";
 import { api } from "@/server/trpc/setup/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMemo } from "react";
@@ -94,7 +95,7 @@ export default function CurrencyValueForm({
         if (idx === -1) return null;
         const currency = currencies[idx];
         return (
-          <div className={className}>
+          <div className={cn(className, "block h-auto text-center")}>
             <CurrencySymbol
               symbol={currency.symbol}
               symbolCustomFont={currency.symbolCustomFont}

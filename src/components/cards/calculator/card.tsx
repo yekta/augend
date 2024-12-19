@@ -174,7 +174,7 @@ export default function CalculatorCard({
               data-coin-id={c.coinId !== null ? c.coinId : undefined}
               className="pl-8.5 py-2.25 h-auto font-semibold rounded-lg group-data-[pending]/input:pr-10"
             />
-            <div className="absolute left-2 size-5.5 flex items-center justify-center top-1/2 text-lg leading-none transform -translate-y-1/2 font-bold">
+            <div className="absolute left-2 size-5.5 text-center h-auto top-1/2 text-lg leading-none transform -translate-y-1/2 font-bold">
               <CurrencySymbol
                 symbol={c.symbol}
                 symbolCustomFont={c.symbolCustomFont}

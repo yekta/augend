@@ -6,6 +6,7 @@ import { CurrencySymbol } from "@/components/CurrencySymbol";
 import ErrorLine from "@/components/error-line";
 import { Button } from "@/components/ui/button";
 import { Form, FormField } from "@/components/ui/form";
+import { cn } from "@/lib/utils";
 import { cleanArray } from "@/server/redis/cache-utils";
 import { api } from "@/server/trpc/setup/react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -105,7 +106,7 @@ export default function CalculatorValueForm({
         if (idx === -1) return null;
         const currency = currencies[idx];
         return (
-          <div className={className}>
+          <div className={cn(className, "block h-auto text-center")}>
             <CurrencySymbol
               symbol={currency.symbol}
               symbolCustomFont={currency.symbolCustomFont}
