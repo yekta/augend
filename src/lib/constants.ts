@@ -36,6 +36,7 @@ export const defaultCurrencyPreference: TCurrencyPreference = {
     maxDecimalsPreferred: 2,
     name: "United States Dollar",
     symbol: "$",
+    symbolCustomFont: null,
   },
   secondary: {
     id: "d11e7514-5c8e-423d-bc94-efa24bf0f423",
@@ -45,6 +46,7 @@ export const defaultCurrencyPreference: TCurrencyPreference = {
     maxDecimalsPreferred: 2,
     name: "Euro",
     symbol: "€",
+    symbolCustomFont: null,
   },
   tertiary: {
     id: "9710ede3-9d6e-4c3f-8c1f-3664263e4a8e",
@@ -54,6 +56,7 @@ export const defaultCurrencyPreference: TCurrencyPreference = {
     maxDecimalsPreferred: 2,
     name: "British Pound Sterling",
     symbol: "£",
+    symbolCustomFont: null,
   },
 };
 
