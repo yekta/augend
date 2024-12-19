@@ -132,8 +132,8 @@ export default function CardValueFormItemCombobox<T>({
                 "w-full min-w-0 flex items-center overflow-hidden font-semibold justify-between group/button"
               }
             >
-              <div className="shrink min-w-0 overflow-hidden">
-                <div className="shrink min-w-0 overflow-hidden flex items-center gap-2 group-data-[has-icon]/button:-ml-1">
+              <div className="shrink min-w-0">
+                <div className="shrink min-w-0 flex items-center gap-2 group-data-[has-icon]/button:-ml-1">
                   {!isPending && !isLoadingError && Icon && value && (
                     <Icon
                       value={iconValue ?? value}
