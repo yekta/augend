@@ -104,9 +104,16 @@ export function DashboardTitleBar({ username, dashboardSlug, isOwner }: Props) {
   }
 
   return (
-    <div className="col-span-12 items-center justify-between flex gap-1.5 px-1 pb-1 md:pb-2">
+    <div
+      data-pending={isPendingDashboard ? true : undefined}
+      data-loading-error={isLoadingErrorDashboard ? true : undefined}
+      className="col-span-12 items-center justify-between flex gap-1.5 px-1 pb-1 md:pb-2 group/titlebar"
+    >
       {!isEnabledEdit || !isOwner ? (
-        <h1 className="border border-transparent px-2 py-1.75 md:py-0.5 rounded-lg font-bold text-xl md:text-2xl leading-none truncate shrink">
+        <h1
+          className="border border-transparent px-2 py-1.75 md:py-0.5 rounded-lg font-bold text-xl md:text-2xl leading-none md:leading-none truncate shrink
+          group-data-[pending]/titlebar:text-transparent group-data-[pending]/titlebar:rounded-md group-data-[pending]/titlebar:bg-foreground group-data-[pending]/titlebar:animate-skeleton"
+        >
           {isPendingDashboard
             ? "Loading"
             : isLoadingErrorDashboard

@@ -15,6 +15,7 @@ import { LinkButton } from "@/components/ui/button";
 import { cleanAndSortArray } from "@/server/redis/cache-utils";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
 import { ReactNode, useMemo } from "react";
+import { cardTypes } from "@/components/cards/_utils/helpers";
 
 const componentRequiresNewRow = ["crypto_order_book", "crypto_price_chart"];
 
@@ -25,6 +26,7 @@ export default function DashboardPage({}: {}) {
     dataCards,
     dataDashboard,
     isLoadingErrorCards,
+    isPendingCards,
   } = useCurrentDashboard();
 
   const cards = dataCards?.cards;
@@ -142,7 +144,7 @@ export default function DashboardPage({}: {}) {
     [username, dashboardSlug]
   );
 
-  if (!dashboard || cards === null) {
+  if (!isPendingCards && (!dashboard || cards === null)) {
     return (
       <MainProviders>
         <div className="w-full flex-1 flex flex-col items-center justify-center p-5 pb-[calc(6vh+2rem)] text-center break-words">
@@ -185,8 +187,14 @@ export default function DashboardPage({}: {}) {
     return (
       <MainProviders>
         <CardsGrid initialIds={[]}>
-          {Array.from({ length: 50 }).map((_, index) => (
+          <DashboardTitleBar
+            isOwner={false}
+            username={username}
+            dashboardSlug={dashboardSlug}
+          />
+          {Array.from({ length: 24 }).map((_, index) => (
             <ThreeLineCard
+              className={cardTypes.sm.className}
               key={index}
               top="Loading"
               middle="Loading"
