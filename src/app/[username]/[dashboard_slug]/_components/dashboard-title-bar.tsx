@@ -133,9 +133,12 @@ export function DashboardTitleBar({ username, dashboardSlug, isOwner }: Props) {
             >
               <div
                 className="flex shrink min-w-0 rounded-lg items-center justify-start gap-2 
-                border not-touch:hover:bg-border active:bg-border px-2 py-1.75 md:py-0.5 overflow-hidden"
+                border not-touch:hover:bg-border active:bg-border px-2 py-1.75 md:py-1.25 overflow-hidden"
               >
-                <h1 className="font-bold text-xl md:text-2xl leading-none truncate shrink min-w-0">
+                <h1
+                  className="font-bold text-xl md:text-2xl leading-none md:leading-none truncate shrink min-w-0
+                  group-data-[pending]/titlebar:text-transparent group-data-[pending]/titlebar:rounded-md group-data-[pending]/titlebar:bg-foreground group-data-[pending]/titlebar:animate-skeleton"
+                >
                   {isPendingDashboard
                     ? "Loading"
                     : isLoadingErrorDashboard
