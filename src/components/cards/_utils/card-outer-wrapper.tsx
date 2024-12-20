@@ -30,6 +30,7 @@ import Link from "next/link";
 import { ComponentProps, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { toast } from "sonner";
+import { captureDeleteCards } from "@/lib/capture/main";
 
 type TSharedProps = {
   cardId?: string;
@@ -117,6 +118,7 @@ export default function CardOuterWrapper({
   const onDeleteClick = async ({ cardId }: { cardId: string }) => {
     if (!cardId) return;
     deleteCard({ ids: [cardId] });
+    captureDeleteCards({ ids: [cardId] });
   };
 
   useEffect(() => {

@@ -9,6 +9,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { captureDeleteDashboard } from "@/lib/capture/main";
 import { api } from "@/server/trpc/setup/react";
 import { LoaderIcon } from "lucide-react";
 import { FormEvent, useState } from "react";
@@ -37,6 +38,7 @@ export default function DeleteDashboardTrigger({
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     deleteDashboard({ slug: dashboardSlug });
+    captureDeleteDashboard({ slug: dashboardSlug });
   }
 
   const {

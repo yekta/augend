@@ -22,6 +22,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { captureCreateCard } from "@/lib/capture/main";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { cn } from "@/lib/utils";
 import { AppRouterOutputs, AppRouterQueryResult } from "@/server/trpc/api/root";
@@ -105,6 +106,7 @@ export function AddCardButton({
       xOrderPreference,
       variant,
     });
+    captureCreateCard({ dashboardSlug, cardTypeId, values, variant });
   }
 
   return (

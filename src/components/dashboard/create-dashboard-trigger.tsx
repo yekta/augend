@@ -17,6 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { captureCreateDashboard } from "@/lib/capture/main";
 import { CreateDashboardSchemaUI } from "@/server/trpc/api/ui/types";
 import { api } from "@/server/trpc/setup/react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -72,6 +73,7 @@ export default function CreateDashboardTrigger({
     createDashboard({
       title: values.title,
     });
+    captureCreateDashboard({ title: values.title });
   }
 
   return (
