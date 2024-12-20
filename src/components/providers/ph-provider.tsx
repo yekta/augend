@@ -2,6 +2,7 @@
 
 import { env } from "@/lib/env";
 import { AppRouterInputs } from "@/server/trpc/api/root";
+import { useSession } from "next-auth/react";
 import posthog, {
   CaptureOptions,
   CaptureResult,
@@ -9,6 +10,7 @@ import posthog, {
   Properties,
 } from "posthog-js";
 import { PostHogProvider } from "posthog-js/react";
+import { useEffect } from "react";
 
 if (
   typeof window !== "undefined" &&
@@ -22,6 +24,18 @@ if (
 }
 
 export function PhProvider({ children }: { children: React.ReactNode }) {
+  const session = useSession();
+  const user = session.data?.user;
+
+  useEffect(() => {
+    if (user) {
+      identify(user.id, {
+        email: user.email,
+        app_ethereum_address: user.ethereumAddress,
+      });
+    }
+  }, [session]);
+
   if (!env.NEXT_PUBLIC_POSTHOG_KEY || !env.NEXT_PUBLIC_POSTHOG_HOST) {
     return children;
   }
@@ -37,4 +51,13 @@ export function capture(
     return posthog.capture(event_name, properties, options);
   }
   return undefined;
+}
+
+export function identify(
+  distinctId: string,
+  properties?: Properties | undefined
+): void {
+  if (env.NEXT_PUBLIC_POSTHOG_KEY && env.NEXT_PUBLIC_POSTHOG_HOST) {
+    posthog.identify(distinctId, properties);
+  }
 }

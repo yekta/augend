@@ -13,17 +13,17 @@ export default async function Providers({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <ThemeProvider>
-      <PhProvider>
-        <TRPCReactProvider>
-          <SessionProvider>
+      <TRPCReactProvider>
+        <SessionProvider>
+          <PhProvider>
             <WagmiProvider>
               <IsTouchscreenProvider>
                 <DashboardsAutoProvider>{children}</DashboardsAutoProvider>
               </IsTouchscreenProvider>
             </WagmiProvider>
-          </SessionProvider>
-        </TRPCReactProvider>
-      </PhProvider>
+          </PhProvider>
+        </SessionProvider>
+      </TRPCReactProvider>
     </ThemeProvider>
   );
 }
