@@ -7,23 +7,26 @@ import { ThemeProvider } from "@/components/providers/theme-provider";
 import WagmiProvider from "@/components/providers/wagmi-provider";
 import { SessionProvider } from "next-auth/react";
 import { PhProvider } from "@/components/providers/ph-provider";
+import JotaiProvider from "@/components/providers/jotai-provider";
 
 export default async function Providers({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <ThemeProvider>
-      <TRPCReactProvider>
-        <SessionProvider>
-          <PhProvider>
-            <WagmiProvider>
-              <IsTouchscreenProvider>
-                <DashboardsAutoProvider>{children}</DashboardsAutoProvider>
-              </IsTouchscreenProvider>
-            </WagmiProvider>
-          </PhProvider>
-        </SessionProvider>
-      </TRPCReactProvider>
-    </ThemeProvider>
+    <JotaiProvider>
+      <ThemeProvider>
+        <TRPCReactProvider>
+          <SessionProvider>
+            <PhProvider>
+              <WagmiProvider>
+                <IsTouchscreenProvider>
+                  <DashboardsAutoProvider>{children}</DashboardsAutoProvider>
+                </IsTouchscreenProvider>
+              </WagmiProvider>
+            </PhProvider>
+          </SessionProvider>
+        </TRPCReactProvider>
+      </ThemeProvider>
+    </JotaiProvider>
   );
 }

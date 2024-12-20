@@ -11,29 +11,29 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground not-touch:hover:bg-primary/90 active:bg-primary/90",
+          "bg-primary text-primary-foreground not-touch:hover:bg-primary/85 active:bg-primary/85",
         destructive:
-          "bg-destructive text-destructive-foreground not-touch:hover:bg-destructive/90 active:bg-destructive/90",
+          "bg-destructive text-destructive-foreground not-touch:hover:bg-destructive/85 active:bg-destructive/85",
         success:
-          "bg-success text-success-foreground not-touch:hover:bg-success/90 active:bg-success/90",
+          "bg-success text-success-foreground not-touch:hover:bg-success/85 active:bg-success/85",
         outline:
           "border border-input bg-background not-touch:hover:bg-border active:bg-border not-touch:hover:text-foreground active:text-foreground",
         secondary:
-          "bg-secondary text-secondary-foreground not-touch:hover:bg-secondary/80 active:bg-secondary/80",
+          "bg-secondary text-secondary-foreground not-touch:hover:bg-secondary/85 active:bg-secondary/85",
         ghost:
           "not-touch:hover:bg-border not-touch:hover:text-foreground active:bg-border active:text-foreground",
         link: "text-primary underline-offset-4 not-touch:hover:underline active:underline",
         google:
-          "bg-google text-google-foreground not-touch:hover:bg-google/90 active:bg-google/90",
+          "bg-google text-google-foreground not-touch:hover:bg-google/85 active:bg-google/85",
         discord:
-          "bg-discord text-discord-foreground not-touch:hover:bg-discord/90 active:bg-discord/90",
+          "bg-discord text-discord-foreground not-touch:hover:bg-discord/85 active:bg-discord/85",
         github:
-          "bg-github text-github-foreground not-touch:hover:bg-github/90 active:bg-github/90",
+          "bg-github text-github-foreground not-touch:hover:bg-github/85 active:bg-github/85",
         ethereum:
-          "bg-ethereum text-ethereum-foreground not-touch:hover:bg-ethereum/90 active:bg-ethereum/90",
-        x: "bg-x text-x-foreground not-touch:hover:bg-x/90 active:bg-x/90",
+          "bg-ethereum text-ethereum-foreground not-touch:hover:bg-ethereum/85 active:bg-ethereum/85",
+        x: "bg-x text-x-foreground not-touch:hover:bg-x/85 active:bg-x/85",
         email:
-          "bg-email text-email-foreground not-touch:hover:bg-email/90 active:bg-email/90",
+          "bg-email text-email-foreground not-touch:hover:bg-email/85 active:bg-email/85",
       },
       size: {
         default: "px-4 py-2.75",

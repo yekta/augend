@@ -31,6 +31,8 @@ import { ComponentProps, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { toast } from "sonner";
 import { captureDeleteCards } from "@/lib/capture/main";
+import { useAtomValue } from "jotai";
+import { newCardIdAtom } from "@/components/cards/_utils/add-card";
 
 type TSharedProps = {
   cardId?: string;
@@ -88,6 +90,8 @@ export default function CardOuterWrapper({
   const [cardSize, setCardSize] = useState<TSize>(defaultCardSize);
   const { instanceId } = useDndCards();
 
+  const newCardId = useAtomValue(newCardIdAtom);
+
   const {
     mutate: deleteCard,
     isPending: isPendingDeleteCard,
@@ -119,6 +123,11 @@ export default function CardOuterWrapper({
     if (!cardId) return;
     deleteCard({ ids: [cardId] });
     captureDeleteCards({ ids: [cardId] });
+  };
+
+  const sharedProps = {
+    "data-card-id": cardId,
+    "data-card-new": newCardId === cardId ? true : undefined,
   };
 
   useEffect(() => {
@@ -177,6 +186,7 @@ export default function CardOuterWrapper({
         data-dnd-over={dndState === "over" ? true : undefined}
         data-dnd-dragging={dndState === "dragging" ? true : undefined}
         data-has-href={true}
+        {...sharedProps}
         {...restDiv}
         ref={ref}
       >
@@ -281,6 +291,7 @@ export default function CardOuterWrapper({
 
     return (
       <Link
+        {...sharedProps}
         data-has-href={href ? true : undefined}
         href={href}
         {...restLink}
@@ -295,7 +306,7 @@ export default function CardOuterWrapper({
   if ("onClick" in rest && rest.onClick) {
     const restButton = rest as TCardOuterWrapperButtonProps;
     return (
-      <button {...restButton} className={classNameAll}>
+      <button {...sharedProps} {...restButton} className={classNameAll}>
         {children}
       </button>
     );
@@ -303,7 +314,7 @@ export default function CardOuterWrapper({
 
   const restDiv = rest as TCardOuterWrapperDivProps;
   return (
-    <div {...restDiv} className={classNameAll}>
+    <div {...sharedProps} {...restDiv} className={classNameAll}>
       {children}
     </div>
   );

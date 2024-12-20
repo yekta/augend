@@ -21,9 +21,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useWindowSize } from "@uidotdev/usehooks";
 import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
 type TItem = {
   value: string;
@@ -74,12 +73,6 @@ export default function CardValueFormItemCombobox<T>({
   disabled,
   Icon,
 }: TValueComboboxProps) {
-  const { width: windowWidth, height: windowHeight } = useWindowSize();
-  const buttonRef = useRef<HTMLButtonElement>(null);
-  const [buttonDistances, setButtonDistances] = useState<{
-    top: number;
-    bottom: number;
-  } | null>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const scrollId = useRef<NodeJS.Timeout | undefined>();
 
@@ -91,18 +84,6 @@ export default function CardValueFormItemCombobox<T>({
     if (isPending || !items) return itemsPlaceholder;
     return items;
   }, [items, isPending, isHardError]);
-
-  useEffect(() => {
-    if (!windowHeight) return;
-    if (!buttonRef.current) return;
-    const rect = buttonRef.current.getBoundingClientRect();
-    setButtonDistances({
-      top: rect.top,
-      bottom: windowHeight - rect.bottom,
-    });
-  }, [windowWidth, windowHeight]);
-
-  console.log(buttonDistances);
 
   return (
     <FormItem>
@@ -118,7 +99,6 @@ export default function CardValueFormItemCombobox<T>({
         <PopoverTrigger asChild>
           <FormControl>
             <Button
-              ref={buttonRef}
               disabled={disabled}
               variant="outline"
               focusVariant="input-like"

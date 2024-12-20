@@ -28,6 +28,7 @@ import { cn } from "@/lib/utils";
 import { AppRouterOutputs, AppRouterQueryResult } from "@/server/trpc/api/root";
 import { TCardTypeId } from "@/server/trpc/api/ui/types";
 import { api } from "@/server/trpc/setup/react";
+import { atom, useSetAtom } from "jotai";
 import { ArrowDownCircleIcon, ArrowLeftIcon, PlusIcon } from "lucide-react";
 import { Dispatch, SetStateAction, useRef, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
@@ -43,6 +44,8 @@ type AddCardButtonProps = {
 
 type TSelectedCardType = AppRouterOutputs["ui"]["getCardTypes"][number];
 
+export const newCardIdAtom = atom<string | null>(null);
+
 export function AddCardButton({
   dashboardSlug,
   username,
@@ -54,6 +57,8 @@ export function AddCardButton({
   const [open, setOpen] = useState(false);
   const [selectedCardType, setSelectedCardType] =
     useState<TSelectedCardType | null>(null);
+
+  const setNewCardId = useSetAtom(newCardIdAtom);
 
   useHotkeys(
     "mod+k",
@@ -78,6 +83,8 @@ export function AddCardButton({
 
   const { invalidateCards } = useCurrentDashboard();
 
+  const newCardIdTimeout = useRef<NodeJS.Timeout | undefined>();
+
   const {
     mutate: createCardMutation,
     isPending: isPendingCreateCard,
@@ -88,6 +95,19 @@ export function AddCardButton({
       await invalidateCards();
       setOpen(false);
       setSelectedCardType(null);
+
+      setTimeout(() => {
+        setNewCardId(c.cardId);
+        clearTimeout(newCardIdTimeout.current);
+        newCardIdTimeout.current = setTimeout(() => {
+          setNewCardId(null);
+        }, 2500);
+
+        const selector = `[data-card-id="${c.cardId}"]`;
+        const element = document.querySelector(selector);
+        if (!element) return;
+        element.scrollIntoView({ behavior: "smooth", block: "center" });
+      });
     },
   });
 

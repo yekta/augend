@@ -1,12 +1,13 @@
 "use client";
 
-import { useCurrentDashboard } from "@/app/[username]/[dashboard_slug]/_components/current-dashboard-provider";
 import CardsGrid from "@/app/[username]/[dashboard_slug]/_components/cards-grid";
+import { useCurrentDashboard } from "@/app/[username]/[dashboard_slug]/_components/current-dashboard-provider";
 import { DashboardTitleBar } from "@/app/[username]/[dashboard_slug]/_components/dashboard-title-bar";
 import { useDndCards } from "@/app/[username]/[dashboard_slug]/_components/dnd-cards-provider";
 import EditModeCardsProvider from "@/app/[username]/[dashboard_slug]/_components/edit-mode-cards-provider";
 import { AddCardButton } from "@/components/cards/_utils/add-card";
 import { CardParser } from "@/components/cards/_utils/card-parser";
+import { cardTypes } from "@/components/cards/_utils/helpers";
 import { ProvidersForCardTypes } from "@/components/cards/_utils/providers-for-card-types";
 import ThreeLineCard from "@/components/cards/_utils/three-line-card";
 import { TCurrencyPreference } from "@/components/providers/currency-preference-provider";
@@ -15,7 +16,6 @@ import { LinkButton } from "@/components/ui/button";
 import { cleanAndSortArray } from "@/server/redis/cache-utils";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
 import { ReactNode, useMemo } from "react";
-import { cardTypes } from "@/components/cards/_utils/helpers";
 
 const componentRequiresNewRow = ["crypto_order_book", "crypto_price_chart"];
 
