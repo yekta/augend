@@ -8,15 +8,33 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { cva, VariantProps } from "class-variance-authority";
 
+const commandVariants = cva(
+  "flex h-full w-full flex-col overflow-hidden rounded-md focus:outline-none",
+  {
+    variants: {
+      variant: {
+        default: "bg-popover text-popover-foreground",
+        modal: "bg-background text-popover-foreground",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  }
+);
+
 const Command = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive>,
-  React.ComponentPropsWithoutRef<typeof CommandPrimitive>
->(({ className, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof CommandPrimitive> &
+    VariantProps<typeof commandVariants>
+>(({ className, variant, ...props }, ref) => (
   <CommandPrimitive
     ref={ref}
     className={cn(
-      "flex h-full w-full flex-col overflow-hidden rounded-md bg-popover text-popover-foreground focus:outline-none",
-      className
+      commandVariants({
+        variant,
+        className,
+      })
     )}
     {...props}
   />

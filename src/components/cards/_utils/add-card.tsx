@@ -249,6 +249,7 @@ export function AddCardCommandPanel({
       )}
       {selectedCardType === null && (
         <Command
+          variant="modal"
           shouldFilter={isPending || isLoadingError ? false : true}
           className={cn(
             "w-full rounded-xl border shadow-xl shadow-shadow/[var(--opacity-shadow)]",
