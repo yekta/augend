@@ -14,7 +14,7 @@ const commandVariants = cva(
     variants: {
       variant: {
         default: "bg-popover text-popover-foreground",
-        modal: "bg-background text-popover-foreground",
+        modal: "bg-background text-foreground",
       },
     },
     defaultVariants: {
