@@ -149,7 +149,7 @@ export function AddCardButton({
             errorForm={errorCreateCard}
             onSubmit={onSubmit}
             getCardTypesQuery={getCardTypesQuery}
-            className="h-96 max-h-[calc((100vh-3rem)*0.6)]"
+            className="h-100 max-h-[calc((100vh-3rem)*0.8)]"
           />
         </DialogContent>
       </Dialog>
