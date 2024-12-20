@@ -178,7 +178,7 @@ export default function CryptoPriceChartCard({
       data-placeholder-data={isPlaceholderData ? true : undefined}
       {...rest}
     >
-      <CardInnerWrapper className="px-5 pt-4.5 pb-3 gap-12 flex flex-col items-start">
+      <CardInnerWrapper className="px-5 pt-4.5 pb-3 gap-6 flex flex-col items-start">
         <Header
           config={config}
           priceInfo={priceInfo}
@@ -190,7 +190,7 @@ export default function CryptoPriceChartCard({
         <div className="w-full relative">
           <ChartContainer
             config={chartContainerConfig}
-            className="h-28 w-full relative
+            className="h-32 w-full relative
             group-data-[pending]/card:opacity-0 group-data-[loading-error]/card:opacity-0 group-data-[pending]/card:pointer-events-none
             group-data-[placeholder-data]/card:opacity-0 group-data-[placeholder-data]/card:pointer-events-none"
           >
@@ -200,7 +200,7 @@ export default function CryptoPriceChartCard({
               margin={{
                 left: 0,
                 right: 0,
-                top: 4,
+                top: 8,
               }}
               onMouseMove={(e) =>
                 onActivateIndexChanged?.(e.activeTooltipIndex)
