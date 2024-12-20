@@ -108,7 +108,7 @@ input[type="number"]::-webkit-outer-spin-button {
     --foreground: 250 50% 92%;
     --card: 250 25% 4%;
     --card-foreground: 250 50% 92%;
-    --popover: 250 25% 4%;
+    --popover: 250 20% 8%;
     --popover-foreground: 250 50% 92%;
     --primary: 250 50% 92%;
     --primary-foreground: 250 25% 4%;
