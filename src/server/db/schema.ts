@@ -96,6 +96,7 @@ export const usersTable = pgTable(
       .notNull()
       .default("9710ede3-9d6e-4c3f-8c1f-3664263e4a8e")
       .references(() => currenciesTable.id),
+    usernameUpdatedAt: timestamp("username_updated_at"),
     ...timestamps,
   },
   (table) => ({

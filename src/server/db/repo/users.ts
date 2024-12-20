@@ -202,7 +202,7 @@ export async function changeUsername({
 }) {
   const arr = await db
     .update(usersTable)
-    .set({ username: newUsername })
+    .set({ username: newUsername, usernameUpdatedAt: new Date() })
     .where(
       and(
         eq(usersTable.id, userId),
