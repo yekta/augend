@@ -83,6 +83,7 @@ export function AddCardButton({
 
   const { invalidateCards } = useCurrentDashboard();
 
+  const setNewCardIdTimeout = useRef<NodeJS.Timeout | undefined>();
   const newCardIdTimeout = useRef<NodeJS.Timeout | undefined>();
 
   const {
@@ -97,11 +98,14 @@ export function AddCardButton({
       setSelectedCardType(null);
 
       setTimeout(() => {
-        setNewCardId(c.cardId);
-        clearTimeout(newCardIdTimeout.current);
-        newCardIdTimeout.current = setTimeout(() => {
-          setNewCardId(null);
-        }, 2500);
+        clearTimeout(setNewCardIdTimeout.current);
+        setNewCardIdTimeout.current = setTimeout(() => {
+          setNewCardId(c.cardId);
+          clearTimeout(newCardIdTimeout.current);
+          newCardIdTimeout.current = setTimeout(() => {
+            setNewCardId(null);
+          }, 3000);
+        }, 500);
 
         const selector = `[data-card-id="${c.cardId}"]`;
         const element = document.querySelector(selector);
