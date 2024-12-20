@@ -30,7 +30,7 @@ export function PhProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (user) {
       identify(user.id, {
-        $email: user.email,
+        email: user.email,
         "App - Ethereum Address": user.ethereumAddress,
         "App - User ID": user.id,
         "App - Username": user.username,
