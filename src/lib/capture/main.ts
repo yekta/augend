@@ -50,3 +50,16 @@ export function captureDeleteDashboard({
     "App - Dashboard Slug": slug,
   });
 }
+
+export function captureChangeUsername({
+  oldUsername,
+  newUsername,
+}: {
+  oldUsername: string;
+  newUsername: string;
+}) {
+  capture("Change Username", {
+    "App - Old Username": oldUsername,
+    "App - New Username": newUsername,
+  });
+}

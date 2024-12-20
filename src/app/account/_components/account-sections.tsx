@@ -25,6 +25,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { captureChangeUsername } from "@/lib/capture/main";
 import { timeAgoIntl } from "@/lib/helpers";
 import { useAsyncRouterRefresh } from "@/lib/hooks/use-async-router-refresh";
 import { cn } from "@/lib/utils";
@@ -186,11 +187,19 @@ function UsernameButton({
   });
 
   function onSubmit(values: z.infer<typeof ChangeUsernameSchemaUI>) {
-    if (values.newUsername === user?.username) {
+    if (!user) return;
+
+    if (values.newUsername === user.username) {
       resetProcess();
       return;
     }
+
+    const oldUsername = user.username;
     changeUsername({
+      newUsername: values.newUsername,
+    });
+    captureChangeUsername({
+      oldUsername,
       newUsername: values.newUsername,
     });
   }
