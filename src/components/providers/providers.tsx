@@ -6,21 +6,24 @@ import { IsTouchscreenProvider } from "@/components/providers/is-touchscreen-pro
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import WagmiProvider from "@/components/providers/wagmi-provider";
 import { SessionProvider } from "next-auth/react";
+import { PhProvider } from "@/components/providers/ph-provider";
 
 export default async function Providers({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <ThemeProvider>
-      <TRPCReactProvider>
-        <SessionProvider>
-          <WagmiProvider>
-            <IsTouchscreenProvider>
-              <DashboardsAutoProvider>{children}</DashboardsAutoProvider>
-            </IsTouchscreenProvider>
-          </WagmiProvider>
-        </SessionProvider>
-      </TRPCReactProvider>
+      <PhProvider>
+        <TRPCReactProvider>
+          <SessionProvider>
+            <WagmiProvider>
+              <IsTouchscreenProvider>
+                <DashboardsAutoProvider>{children}</DashboardsAutoProvider>
+              </IsTouchscreenProvider>
+            </WagmiProvider>
+          </SessionProvider>
+        </TRPCReactProvider>
+      </PhProvider>
     </ThemeProvider>
   );
 }
