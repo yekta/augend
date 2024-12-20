@@ -33,6 +33,7 @@ export function PhProvider({ children }: { children: React.ReactNode }) {
         $email: user.email,
         "App - Ethereum Address": user.ethereumAddress,
         "App - User ID": user.id,
+        "App - Username": user.username,
         "App - Primary Currency ID": user.primaryCurrencyId,
         "App - Secondary Currency ID": user.secondaryCurrencyId,
         "App - Tertiary Currency ID": user.tertiaryCurrencyId,
