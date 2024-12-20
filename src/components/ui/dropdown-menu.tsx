@@ -9,7 +9,10 @@ import {
   DotFilledIcon,
 } from "@radix-ui/react-icons";
 
-const DropdownMenu = DropdownMenuPrimitive.Root;
+const DropdownMenu: React.FC<DropdownMenuPrimitive.DropdownMenuProps> = ({
+  modal = true,
+  ...rest
+}) => <DropdownMenuPrimitive.Root modal={modal} {...rest} />;
 
 const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
 

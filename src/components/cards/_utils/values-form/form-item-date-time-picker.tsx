@@ -42,7 +42,7 @@ export default function CardValueDateTimePickerFormItem({
           )}
         </FormHeader>
       )}
-      <Popover>
+      <Popover modal={true}>
         <PopoverTrigger asChild>
           <FormControl>
             <Button
