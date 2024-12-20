@@ -30,8 +30,9 @@ export function PhProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (user) {
       identify(user.id, {
-        email: user.email,
-        app_ethereum_address: user.ethereumAddress,
+        $email: user.email,
+        "App - Ethereum Address": user.ethereumAddress,
+        "App - User ID": user.id,
       });
     }
   }, [session]);
