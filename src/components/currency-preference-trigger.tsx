@@ -12,6 +12,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Form, FormField } from "@/components/ui/form";
+import { captureChangeCurrencyPreference } from "@/lib/capture/main";
 import { useAsyncRouterRefresh } from "@/lib/hooks/use-async-router-refresh";
 import { cn } from "@/lib/utils";
 import { ChangeCurrencyPreferenceSchemaUI } from "@/server/trpc/api/ui/types";
@@ -20,6 +21,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderIcon } from "lucide-react";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 const CurrencyFormSchema = z.object({
@@ -113,6 +115,14 @@ export default function CurrencyPreferenceTrigger({
   });
 
   const onSubmit = (data: z.infer<typeof CurrencyFormSchema>) => {
+    if (!dataUser) {
+      console.log("There is no user.");
+      toast.error("Can't find the user", {
+        description: "Please refresh the page and sign in again.",
+      });
+      return;
+    }
+
     const primaryId = dataCurrencies?.find(
       (c) => getValue(c) === data.primaryCurrencyValue
     )?.id;
@@ -176,7 +186,17 @@ export default function CurrencyPreferenceTrigger({
       return;
     }
 
+    const oldPreference = {
+      primaryCurrencyId: dataUser.primaryCurrency.id,
+      secondaryCurrencyId: dataUser.secondaryCurrency.id,
+      tertiaryCurrencyId: dataUser.tertiaryCurrency.id,
+    };
+
     changeCurrencyPreference(newCurrencies);
+    captureChangeCurrencyPreference({
+      newPreference: newCurrencies,
+      oldPreference,
+    });
   };
 
   const Icon = useMemo(

@@ -5,6 +5,8 @@ type TCreateCardInputs = AppRouterInputs["ui"]["createCard"];
 type TDeleteCardInputs = AppRouterInputs["ui"]["deleteCards"];
 type TCreateDashboardInputs = AppRouterInputs["ui"]["createDashboard"];
 type TDeleteDashboardInputs = AppRouterInputs["ui"]["deleteDashboard"];
+type TChangeCurrencyPreferenceInputs =
+  AppRouterInputs["ui"]["changeCurrencyPreference"];
 
 export function captureCreateCard({
   dashboardSlug,
@@ -61,5 +63,18 @@ export function captureChangeUsername({
   capture("Change Username", {
     "App - Old Username": oldUsername,
     "App - New Username": newUsername,
+  });
+}
+
+export function captureChangeCurrencyPreference({
+  oldPreference,
+  newPreference,
+}: {
+  oldPreference: TChangeCurrencyPreferenceInputs;
+  newPreference: TChangeCurrencyPreferenceInputs;
+}) {
+  capture("Change Currency Preference", {
+    "App - Old Currency Preference": oldPreference,
+    "App - New Currency Preference": newPreference,
   });
 }

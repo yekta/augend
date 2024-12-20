@@ -39,6 +39,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderIcon, PencilIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 type Props = {};
@@ -187,7 +188,13 @@ function UsernameButton({
   });
 
   function onSubmit(values: z.infer<typeof ChangeUsernameSchemaUI>) {
-    if (!user) return;
+    if (!user) {
+      console.log("There is no user.");
+      toast.error("Can't find the user", {
+        description: "Please refresh the page and sign in again.",
+      });
+      return;
+    }
 
     if (values.newUsername === user.username) {
       resetProcess();
@@ -195,6 +202,7 @@ function UsernameButton({
     }
 
     const oldUsername = user.username;
+
     changeUsername({
       newUsername: values.newUsername,
     });

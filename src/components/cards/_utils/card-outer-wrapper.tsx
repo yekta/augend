@@ -104,7 +104,7 @@ export default function CardOuterWrapper({
       invalidateCards();
     },
     onError: (err, _, context) => {
-      toast.error("Card deletion failed.", {
+      toast.error("Card deletion failed", {
         description: "Please try again.",
         duration: 5000,
         closeButton: false,
