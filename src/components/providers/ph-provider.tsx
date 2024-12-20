@@ -1,7 +1,6 @@
 "use client";
 
 import { env } from "@/lib/env";
-import { AppRouterInputs } from "@/server/trpc/api/root";
 import { useSession } from "next-auth/react";
 import posthog, {
   CaptureOptions,
