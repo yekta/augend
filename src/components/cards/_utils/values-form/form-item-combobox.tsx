@@ -172,55 +172,57 @@ export default function CardValueFormItemCombobox<T>({
               placeholder={inputPlaceholder}
             />
 
-            <CommandList ref={listRef}>
-              {!isLoadingError && (
-                <CommandEmpty>{noValueFoundLabel}</CommandEmpty>
-              )}
-              {!isPending && isLoadingError && (
-                <p className="w-full py-5 px-8 text-destructive text-sm text-center">
-                  {isLoadingErrorMessage}
-                </p>
-              )}
-              {!isLoadingError && (
-                <CommandGroup>
-                  {!isLoadingError &&
-                    itemsOrPlaceholder.map((item, index) => (
-                      <CommandItem
-                        disabled={isPending}
-                        data-item-selected={
-                          value === item.value ? true : undefined
-                        }
-                        className="w-full font-medium group/command-item px-3 py-2 gap-2"
-                        key={`${item.value}-${index}`}
-                        value={item.value}
-                        onSelect={(currentValue) => {
-                          onSelect(currentValue);
-                          setOpen(false);
-                        }}
-                      >
-                        {!isPending && !isLoadingError && Icon && (
-                          <Icon
-                            value={item.iconValue ?? item.value}
-                            className="shrink-0 size-5 -ml-1 -my-1 flex items-center justify-center"
-                          />
-                        )}
-                        <p
-                          className="shrink leading-tight min-w-0 truncate 
-                            group-data-[pending]/command:text-transparent group-data-[pending]/command:bg-foreground group-data-[pending]/command:rounded group-data-[pending]/command:animate-skeleton"
+            <ScrollArea viewportRef={listRef}>
+              <CommandList>
+                {!isLoadingError && (
+                  <CommandEmpty>{noValueFoundLabel}</CommandEmpty>
+                )}
+                {!isPending && isLoadingError && (
+                  <p className="w-full py-5 px-8 text-destructive text-sm text-center">
+                    {isLoadingErrorMessage}
+                  </p>
+                )}
+                {!isLoadingError && (
+                  <CommandGroup>
+                    {!isLoadingError &&
+                      itemsOrPlaceholder.map((item, index) => (
+                        <CommandItem
+                          disabled={isPending}
+                          data-item-selected={
+                            value === item.value ? true : undefined
+                          }
+                          className="w-full font-medium group/command-item px-3 py-2 gap-2"
+                          key={`${item.value}-${index}`}
+                          value={item.value}
+                          onSelect={(currentValue) => {
+                            onSelect(currentValue);
+                            setOpen(false);
+                          }}
                         >
-                          <WithHighlightedParentheses text={item.value} />
-                        </p>
-                        {!isPending && (
-                          <CheckIcon
-                            strokeWidth={2.5}
-                            className="ml-auto -mr-0.75 size-4 shrink-0 opacity-0 group-data-[item-selected]/command-item:opacity-100"
-                          />
-                        )}
-                      </CommandItem>
-                    ))}
-                </CommandGroup>
-              )}
-            </CommandList>
+                          {!isPending && !isLoadingError && Icon && (
+                            <Icon
+                              value={item.iconValue ?? item.value}
+                              className="shrink-0 size-5 -ml-1 -my-1 flex items-center justify-center"
+                            />
+                          )}
+                          <p
+                            className="shrink leading-tight min-w-0 truncate 
+                            group-data-[pending]/command:text-transparent group-data-[pending]/command:bg-foreground group-data-[pending]/command:rounded group-data-[pending]/command:animate-skeleton"
+                          >
+                            <WithHighlightedParentheses text={item.value} />
+                          </p>
+                          {!isPending && (
+                            <CheckIcon
+                              strokeWidth={2.5}
+                              className="ml-auto -mr-0.75 size-4 shrink-0 opacity-0 group-data-[item-selected]/command-item:opacity-100"
+                            />
+                          )}
+                        </CommandItem>
+                      ))}
+                  </CommandGroup>
+                )}
+              </CommandList>
+            </ScrollArea>
           </Command>
         </PopoverContent>
       </Popover>
