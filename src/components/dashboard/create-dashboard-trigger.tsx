@@ -77,10 +77,7 @@ export default function CreateDashboardTrigger({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent
-        classNameInnerWrapper="gap-4"
-        className="w-full max-w-[22rem]"
-      >
+      <DialogContent classNameInnerWrapper="gap-4" className="w-full max-w-sm">
         <DialogHeader>
           <DialogTitle>Create Dashboard</DialogTitle>
           <DialogDescription>Give a name to your dashboard.</DialogDescription>

@@ -20,6 +20,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { useWindowSize } from "@uidotdev/usehooks";
 import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -158,10 +159,7 @@ export default function CardValueFormItemCombobox<T>({
           <Command
             shouldFilter={isPending || isLoadingError ? false : true}
             data-pending={isPending ? true : undefined}
-            style={{
-              maxHeight: "min(20rem,var(--radix-popper-available-height)",
-            }}
-            className="group/command"
+            className="group/command max-h-[min(20rem,var(--radix-popper-available-height))]"
           >
             <CommandInput
               onValueChange={() => {
@@ -173,6 +171,7 @@ export default function CardValueFormItemCombobox<T>({
               }}
               placeholder={inputPlaceholder}
             />
+
             <CommandList ref={listRef}>
               {!isLoadingError && (
                 <CommandEmpty>{noValueFoundLabel}</CommandEmpty>
@@ -207,7 +206,7 @@ export default function CardValueFormItemCombobox<T>({
                         )}
                         <p
                           className="shrink leading-tight min-w-0 truncate 
-                          group-data-[pending]/command:text-transparent group-data-[pending]/command:bg-foreground group-data-[pending]/command:rounded group-data-[pending]/command:animate-skeleton"
+                            group-data-[pending]/command:text-transparent group-data-[pending]/command:bg-foreground group-data-[pending]/command:rounded group-data-[pending]/command:animate-skeleton"
                         >
                           <WithHighlightedParentheses text={item.value} />
                         </p>

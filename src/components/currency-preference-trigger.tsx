@@ -203,10 +203,7 @@ export default function CurrencyPreferenceTrigger({
       <DialogTrigger disabled={isPendingUser || !dataUser} asChild>
         {children}
       </DialogTrigger>
-      <DialogContent
-        classNameInnerWrapper="gap-4"
-        className="w-full max-w-[22rem]"
-      >
+      <DialogContent classNameInnerWrapper="gap-4" className="w-full max-w-sm">
         <DialogHeader>
           <DialogTitle>Currency Preferences</DialogTitle>
           <DialogDescription>

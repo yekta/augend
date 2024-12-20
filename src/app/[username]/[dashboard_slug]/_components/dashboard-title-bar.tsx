@@ -151,7 +151,7 @@ export function DashboardTitleBar({ username, dashboardSlug, isOwner }: Props) {
             </DialogTrigger>
             <DialogContent
               classNameInnerWrapper="gap-4"
-              className="w-full max-w-[22rem]"
+              className="w-full max-w-sm"
             >
               <DialogHeader>
                 <DialogTitle>Rename Dashboard</DialogTitle>

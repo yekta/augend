@@ -30,7 +30,7 @@ export default function SignInCard({
   return (
     <div
       className={cn(
-        "w-full max-w-[22rem] flex flex-col items-center gap-5 p-5 pt-4.5 justify-center border rounded-xl",
+        "w-full max-w-sm flex flex-col items-center gap-5 p-5 pt-4.5 justify-center border rounded-xl",
         className
       )}
       {...rest}
@@ -59,7 +59,7 @@ export function SignInButton({ callbackUrl, error }: SignInButtonProps) {
       <DialogTrigger asChild>
         <Button>Get Started</Button>
       </DialogTrigger>
-      <DialogContent className="w-full max-w-[22rem]">
+      <DialogContent className="w-full max-w-sm">
         <DialogHeader>
           <DialogTitle className="text-center px-6">{title}</DialogTitle>
           <DialogDescription className="text-center">

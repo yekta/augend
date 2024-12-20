@@ -232,10 +232,7 @@ function UsernameButton({
           </div>
         </Button>
       </DialogTrigger>
-      <DialogContent
-        classNameInnerWrapper="gap-4"
-        className="w-full max-w-[22rem]"
-      >
+      <DialogContent classNameInnerWrapper="gap-4" className="w-full max-w-sm">
         <DialogHeader>
           <DialogTitle>Change Username</DialogTitle>
           <DialogDescription>Set a new username.</DialogDescription>
