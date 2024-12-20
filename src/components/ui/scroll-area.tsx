@@ -41,9 +41,9 @@ const ScrollBar = React.forwardRef<
     className={cn(
       "flex touch-none select-none transition-colors group/scrollbar",
       orientation === "vertical" &&
-        "h-full w-4 border-l border-l-transparent p-px pl-2 not-touch:hover:pl-1.25 active:pl-1.25 transition-[padding]",
+        "h-full w-4 border-l border-l-transparent p-px pl-2.25 not-touch:hover:pl-1.5 active:pl-1.75 transition-[padding]",
       orientation === "horizontal" &&
-        "h-4 flex-col border-t border-t-transparent p-px pt-2 not-touch:hover:pt-1.25 active:pt-1.25 transition-all",
+        "h-4 flex-col border-t border-t-transparent p-px pt-2.25 not-touch:hover:pt-1.5 active:pt-1.75 transition-all",
       className
     )}
     {...props}
