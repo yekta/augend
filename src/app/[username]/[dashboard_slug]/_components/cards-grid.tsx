@@ -17,7 +17,7 @@ export default function CardsGrid({
         className="w-full group/wrapper flex flex-col flex-1 items-center"
       >
         <div
-          className="w-full grid grid-cols-12 max-w-7xl px-1 pb-16 md:pb-20 md:px-5 pt-1 md:pt-2
+          className="w-full flex-1 content-start grid grid-cols-12 max-w-7xl px-1 pb-12 md:pb-16 md:px-5 pt-1 md:pt-2
           group-data-[placeholder]/wrapper:pb-2 group-data-[placeholder]/wrapper:md:pb-3"
         >
           {children}
