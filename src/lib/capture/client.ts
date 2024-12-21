@@ -20,16 +20,16 @@ export function captureCreateCard({
   variant: TCreateCardInputs["variant"];
 }) {
   capture("Create Card", {
-    "App - Card Type ID": cardTypeId,
-    "App - Card Variant": variant,
-    "App - Dashboard Slug": dashboardSlug,
-    "App - Card Values": values,
+    "Card Type ID": cardTypeId,
+    "Card Variant": variant,
+    "Dashboard Slug": dashboardSlug,
+    "Card Values": values,
   });
 }
 
 export function captureDeleteCards({ ids }: { ids: TDeleteCardInputs["ids"] }) {
   capture("Delete Cards", {
-    "App - Card IDs": ids,
+    "Card IDs": ids,
   });
 }
 
@@ -39,7 +39,7 @@ export function captureCreateDashboard({
   title: TCreateDashboardInputs["title"];
 }) {
   capture("Create Dashboard", {
-    "App - Dashboard Title": title,
+    "Dashboard Title": title,
   });
 }
 
@@ -49,7 +49,7 @@ export function captureDeleteDashboard({
   slug: TDeleteDashboardInputs["slug"];
 }) {
   capture("Delete Dashboard", {
-    "App - Dashboard Slug": slug,
+    "Dashboard Slug": slug,
   });
 }
 
@@ -61,8 +61,8 @@ export function captureChangeUsername({
   newUsername: string;
 }) {
   capture("Change Username", {
-    "App - Old Username": oldUsername,
-    "App - New Username": newUsername,
+    "Old Username": oldUsername,
+    "New Username": newUsername,
   });
 }
 
@@ -74,7 +74,7 @@ export function captureChangeCurrencyPreference({
   newPreference: TChangeCurrencyPreferenceInputs;
 }) {
   capture("Change Currency Preference", {
-    "App - Old Currency Preference": oldPreference,
-    "App - New Currency Preference": newPreference,
+    "Old Currency Preference": oldPreference,
+    "New Currency Preference": newPreference,
   });
 }

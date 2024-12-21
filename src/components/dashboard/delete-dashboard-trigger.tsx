@@ -9,7 +9,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { captureDeleteDashboard } from "@/lib/capture/main";
+import { captureDeleteDashboard } from "@/lib/capture/client";
 import { api } from "@/server/trpc/setup/react";
 import { LoaderIcon } from "lucide-react";
 import { FormEvent, useState } from "react";

@@ -25,7 +25,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { captureChangeUsername } from "@/lib/capture/main";
+import { captureChangeUsername } from "@/lib/capture/client";
 import { timeAgoIntl } from "@/lib/helpers";
 import { useAsyncRouterRefresh } from "@/lib/hooks/use-async-router-refresh";
 import { cn } from "@/lib/utils";

@@ -23,6 +23,7 @@ export const env = createEnv({
     AUTH_GITHUB_ID: z.string().optional(),
     AUTH_GITHUB_SECRET: z.string().optional(),
     AUTH_URL: z.string().url(),
+    POSTHOG_API_KEY: z.string().optional(),
     BINANCE_API_KEY: z.string().optional(),
     BINANCE_API_SECRET: z.string().optional(),
     BANANO_API_KEY: z.string().optional(),
@@ -42,6 +43,7 @@ export const env = createEnv({
     NEXT_PUBLIC_REOWN_PROJECT_ID: z.string(),
     NEXT_PUBLIC_POSTHOG_KEY: z.string().optional(),
     NEXT_PUBLIC_POSTHOG_HOST: z.string().optional(),
+    NEXT_PUBLIC_POSTHOG_HOST_ASSETS: z.string().optional(),
   },
 
   /**
@@ -61,6 +63,8 @@ export const env = createEnv({
     NEXT_PUBLIC_REOWN_PROJECT_ID: process.env.NEXT_PUBLIC_REOWN_PROJECT_ID,
     NEXT_PUBLIC_POSTHOG_KEY: process.env.NEXT_PUBLIC_POSTHOG_KEY,
     NEXT_PUBLIC_POSTHOG_HOST: process.env.NEXT_PUBLIC_POSTHOG_HOST,
+    NEXT_PUBLIC_POSTHOG_HOST_ASSETS:
+      process.env.NEXT_PUBLIC_POSTHOG_HOST_ASSETS,
     AUTH_SECRET: process.env.AUTH_SECRET,
     AUTH_DRIZZLE_URL: process.env.AUTH_DRIZZLE_URL,
     AUTH_GOOGLE_ID: process.env.AUTH_GOOGLE_ID,
@@ -70,6 +74,7 @@ export const env = createEnv({
     AUTH_GITHUB_ID: process.env.AUTH_GITHUB_ID,
     AUTH_GITHUB_SECRET: process.env.AUTH_GITHUB_SECRET,
     AUTH_URL: process.env.AUTH_URL,
+    POSTHOG_API_KEY: process.env.POSTHOG_API_KEY,
     BINANCE_API_KEY: process.env.BINANCE_API_KEY,
     BINANCE_API_SECRET: process.env.BINANCE_API_SECRET,
     BANANO_API_KEY: process.env.BANANO_API_KEY,

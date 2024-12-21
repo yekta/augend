@@ -1,4 +1,5 @@
 import UserFullProvider from "@/app/[username]/[dashboard_slug]/_components/user-full-provider";
+import { SignInButton } from "@/components/auth/sign-in-card";
 import LogoMarkIcon from "@/components/icons/logo-mark-icon";
 import DashboardSelector from "@/components/navigation/dashboard-selector";
 import NavbarWrapper from "@/components/navigation/navbar-wrapper";
@@ -54,11 +55,9 @@ export default async function Navbar({ className }: Props) {
               <DashboardSelector />
             </div>
             {!session ? (
-              <div className="pr-1">
+              <div className="pr-0.5">
                 <NavigationMenuItem asChild>
-                  <LinkButton href="/sign-in" size="sm">
-                    Get Started
-                  </LinkButton>
+                  <SignInButton size="sm" />
                 </NavigationMenuItem>
               </div>
             ) : (

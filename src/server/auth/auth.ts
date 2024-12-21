@@ -126,6 +126,13 @@ const {
 } = NextAuth({
   providers: authProviders,
   adapter,
+  events: {
+    signIn: async (message) => {
+      const { user, isNewUser, account } = message;
+      const { id, email } = user;
+      if (!id) return;
+    },
+  },
   callbacks: {
     session: ({ session, user }) => {
       return {

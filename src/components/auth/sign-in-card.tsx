@@ -1,6 +1,6 @@
 import SignInWithEthereumButton from "@/components/auth/sign-in-with-ethereum-button";
 import SignInWithOAuthButton from "@/components/auth/sign-in-with-oauth-button";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { authProviderMap } from "@/server/auth/auth";
+import { VariantProps } from "class-variance-authority";
 import { ComponentProps } from "react";
 
 type SignInCardProps = ComponentProps<"div"> & {
@@ -30,7 +31,7 @@ export default function SignInCard({
   return (
     <div
       className={cn(
-        "w-full max-w-sm flex flex-col items-center gap-5 p-5 pt-4.5 justify-center border rounded-xl",
+        "w-full max-w-[22rem] flex flex-col items-center gap-5 p-5 pt-4.5 justify-center border rounded-xl",
         className
       )}
       {...rest}
@@ -51,15 +52,23 @@ export default function SignInCard({
 type SignInButtonProps = {
   error?: string;
   callbackUrl?: string;
-};
+  className?: string;
+} & VariantProps<typeof buttonVariants>;
 
-export function SignInButton({ callbackUrl, error }: SignInButtonProps) {
+export function SignInButton({
+  callbackUrl,
+  error,
+  className,
+  size,
+}: SignInButtonProps) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>Get Started</Button>
+        <Button size={size} className={cn(className)}>
+          Get Started
+        </Button>
       </DialogTrigger>
-      <DialogContent className="w-full max-w-sm">
+      <DialogContent className="w-full max-w-[22rem]">
         <DialogHeader>
           <DialogTitle className="text-center px-6">{title}</DialogTitle>
           <DialogDescription className="text-center">

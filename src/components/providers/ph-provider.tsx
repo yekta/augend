@@ -2,12 +2,7 @@
 
 import { env } from "@/lib/env";
 import { useSession } from "next-auth/react";
-import posthog, {
-  CaptureOptions,
-  CaptureResult,
-  EventName,
-  Properties,
-} from "posthog-js";
+import posthog, { PostHog } from "posthog-js";
 import { PostHogProvider } from "posthog-js/react";
 import { useEffect } from "react";
 
@@ -17,7 +12,8 @@ if (
   env.NEXT_PUBLIC_POSTHOG_HOST
 ) {
   posthog.init(env.NEXT_PUBLIC_POSTHOG_KEY, {
-    api_host: env.NEXT_PUBLIC_POSTHOG_HOST,
+    api_host: "/ingest",
+    ui_host: env.NEXT_PUBLIC_SITE_URL,
     person_profiles: "always",
   });
 }
@@ -30,12 +26,12 @@ export function PhProvider({ children }: { children: React.ReactNode }) {
     if (user) {
       identify(user.id, {
         email: user.email,
-        "App - Ethereum Address": user.ethereumAddress,
-        "App - User ID": user.id,
-        "App - Username": user.username,
-        "App - Primary Currency ID": user.primaryCurrencyId,
-        "App - Secondary Currency ID": user.secondaryCurrencyId,
-        "App - Tertiary Currency ID": user.tertiaryCurrencyId,
+        username: user.username,
+        ethereumAddress: user.ethereumAddress,
+        userId: user.id,
+        "Primary Currency ID": user.primaryCurrencyId,
+        "Secondary Currency ID": user.secondaryCurrencyId,
+        "Tertiary Currency ID": user.tertiaryCurrencyId,
       });
     }
   }, [session]);
@@ -46,22 +42,13 @@ export function PhProvider({ children }: { children: React.ReactNode }) {
   return <PostHogProvider client={posthog}>{children}</PostHogProvider>;
 }
 
-export function capture(
-  event_name: EventName,
-  properties?: Properties | null,
-  options?: CaptureOptions
-): CaptureResult | undefined {
-  if (env.NEXT_PUBLIC_POSTHOG_KEY && env.NEXT_PUBLIC_POSTHOG_HOST) {
-    return posthog.capture(event_name, properties, options);
-  }
-  return undefined;
-}
+export const capture: PostHog["capture"] = (...args) => {
+  if (!env.NEXT_PUBLIC_POSTHOG_KEY || !env.NEXT_PUBLIC_POSTHOG_HOST)
+    return undefined;
+  return posthog.capture(...args);
+};
 
-export function identify(
-  distinctId: string,
-  properties?: Properties | undefined
-): void {
-  if (env.NEXT_PUBLIC_POSTHOG_KEY && env.NEXT_PUBLIC_POSTHOG_HOST) {
-    posthog.identify(distinctId, properties);
-  }
-}
+export const identify: PostHog["identify"] = (...args) => {
+  if (!env.NEXT_PUBLIC_POSTHOG_KEY || !env.NEXT_PUBLIC_POSTHOG_HOST) return;
+  posthog.identify(...args);
+};

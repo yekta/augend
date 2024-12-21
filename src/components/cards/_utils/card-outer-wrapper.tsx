@@ -30,7 +30,7 @@ import Link from "next/link";
 import { ComponentProps, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { toast } from "sonner";
-import { captureDeleteCards } from "@/lib/capture/main";
+import { captureDeleteCards } from "@/lib/capture/client";
 import { useAtomValue } from "jotai";
 import { newCardIdsAtom } from "@/lib/stores/main";
 

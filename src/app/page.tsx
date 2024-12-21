@@ -1,5 +1,6 @@
 import CurrentDashboardProvider from "@/app/[username]/[dashboard_slug]/_components/current-dashboard-provider";
 import DndCardsProvider from "@/app/[username]/[dashboard_slug]/_components/dnd-cards-provider";
+import { SignInButton } from "@/components/auth/sign-in-card";
 import { cardTypes } from "@/components/cards/_utils/helpers";
 import CryptoPriceChartCard, {
   TOhlcvChartConfig,
@@ -93,9 +94,7 @@ export default async function Home() {
             Track crypto, NFTs, Uniswap positions, stocks, financial trends, and
             more with highly customizable dashboards.
           </p>
-          <LinkButton className="mt-5" href="/sign-in">
-            Get Started
-          </LinkButton>
+          <SignInButton className="mt-5" />
         </div>
         <div className="w-full grid grid-cols-12 mt-6 px-1 md:px-5">
           <Providers

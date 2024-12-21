@@ -12,7 +12,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Form, FormField } from "@/components/ui/form";
-import { captureChangeCurrencyPreference } from "@/lib/capture/main";
+import { captureChangeCurrencyPreference } from "@/lib/capture/client";
 import { useAsyncRouterRefresh } from "@/lib/hooks/use-async-router-refresh";
 import { cn } from "@/lib/utils";
 import { ChangeCurrencyPreferenceSchemaUI } from "@/server/trpc/api/ui/types";
