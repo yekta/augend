@@ -5,6 +5,7 @@ import { useDashboards } from "@/app/[username]/_components/dashboards-provider"
 import { useDndDashboards } from "@/app/[username]/_components/dnd-dashboards-provider";
 import EditButtonDashboards from "@/app/[username]/_components/edit-button-dashboards";
 import Blockies from "@/components/blockies/blockies";
+import { mainDashboardSlug } from "@/lib/constants";
 import { LoaderIcon, TriangleAlertIcon } from "lucide-react";
 
 type Props = {};
@@ -38,7 +39,7 @@ export function ProfileTitleBar({}: Props) {
           {username || usernameParam}
         </span>
       </h1>
-      {data?.isOwner ? (
+      {data && data.isOwner ? (
         <div className="flex items-center justify-start shrink-0 gap-1.5">
           <div className="size-7 flex items-center justify-center">
             {isPendingReorderDashboards && (
@@ -49,7 +50,9 @@ export function ProfileTitleBar({}: Props) {
             )}
           </div>
           <CreateDashboardButton />
-          <EditButtonDashboards />
+          {data.dashboards.some(
+            (d) => d.dashboard.slug !== mainDashboardSlug
+          ) && <EditButtonDashboards />}
         </div>
       ) : (
         <div className="size-9 -mr-2 shrink-0" />
