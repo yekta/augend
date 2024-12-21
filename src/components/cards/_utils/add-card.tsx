@@ -106,7 +106,7 @@ export function AddCardButton({
               const { [c.cardId]: _, ...rest } = prev;
               return rest;
             });
-          }, 3000);
+          }, 2500);
         }, 300);
 
         const selector = `[data-card-id="${c.cardId}"]`;
