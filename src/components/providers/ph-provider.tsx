@@ -42,13 +42,13 @@ export function PhProvider({ children }: { children: React.ReactNode }) {
   return <PostHogProvider client={posthog}>{children}</PostHogProvider>;
 }
 
-export const capture: PostHog["capture"] = (...args) => {
+export const capture: PostHog["capture"] = (...params) => {
   if (!env.NEXT_PUBLIC_POSTHOG_KEY || !env.NEXT_PUBLIC_POSTHOG_HOST)
     return undefined;
-  return posthog.capture(...args);
+  return posthog.capture(...params);
 };
 
-export const identify: PostHog["identify"] = (...args) => {
+export const identify: PostHog["identify"] = (...params) => {
   if (!env.NEXT_PUBLIC_POSTHOG_KEY || !env.NEXT_PUBLIC_POSTHOG_HOST) return;
-  posthog.identify(...args);
+  posthog.identify(...params);
 };

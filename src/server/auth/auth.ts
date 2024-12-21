@@ -21,6 +21,8 @@ import Google from "next-auth/providers/google";
 import { cookies } from "next/headers";
 import { cache } from "react";
 import { SiweMessage } from "siwe";
+import { after } from "next/server";
+import { captureSignUp } from "@/lib/capture/server";
 
 declare module "next-auth" {
   interface Session extends DefaultSession {
@@ -88,21 +90,18 @@ authProviders.push(
         }
 
         let user = await getUser({ ethereumAddress: siwe.address });
+        if (user) return user;
 
-        if (!user) {
-          const id = crypto.randomUUID();
-          user = await createUser({
-            userId: id,
-            name: siwe.address,
-            ethereumAddress: siwe.address,
-          });
-        }
+        const id = crypto.randomUUID();
+        user = await createUser({
+          userId: id,
+          name: siwe.address,
+          ethereumAddress: siwe.address,
+        });
 
-        if (!user) {
-          return null;
-        }
+        if (!user) return null;
 
-        return user;
+        return { ...user, isNewUser: true };
       } catch (e) {
         return null;
       }
@@ -131,6 +130,19 @@ const {
       const { user, isNewUser, account } = message;
       const { id, email } = user;
       if (!id) return;
+
+      // @ts-ignore
+      if (!isNewUser && !user.isNewUser) return;
+
+      captureSignUp({
+        userId: id,
+        email,
+        provider: account?.provider,
+        // @ts-ignore
+        username: user.username,
+        // @ts-ignore
+        ethereumAddress: user.ethereumAddress,
+      });
     },
   },
   callbacks: {
