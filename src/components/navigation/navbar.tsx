@@ -13,8 +13,7 @@ import { mainDashboardSlug } from "@/lib/constants";
 import { prefetchFullUserCached } from "@/lib/user";
 import { cn } from "@/lib/utils";
 import { auth } from "@/server/auth/auth";
-import { apiServer, HydrateClient } from "@/server/trpc/setup/server";
-import { cache } from "react";
+import { HydrateClient } from "@/server/trpc/setup/server";
 
 type Props = {
   className?: string;

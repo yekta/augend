@@ -5,6 +5,7 @@ import ProviderIcon from "@/components/icons/provider-icon";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { LoaderIcon } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { useActionState } from "react";
 
 type Props = {
@@ -20,8 +21,11 @@ export default function SignInWithOAuthButton({
   callbackUrl,
   className,
 }: Props) {
+  const pathname = usePathname();
+
   const [state, action, isPending] = useActionState(
-    () => oAuthSignInAction({ providerId, callbackUrl }),
+    () =>
+      oAuthSignInAction({ providerId, callbackUrl: callbackUrl || pathname }),
     null
   );
 

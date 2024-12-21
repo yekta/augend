@@ -1,6 +1,7 @@
 import crypto from "crypto";
 import "server-only";
 
+import { captureSignUp } from "@/lib/capture/server";
 import { env } from "@/lib/env";
 import { db } from "@/server/db/db";
 import { createUser, getUser } from "@/server/db/repo/users";
@@ -21,8 +22,6 @@ import Google from "next-auth/providers/google";
 import { cookies } from "next/headers";
 import { cache } from "react";
 import { SiweMessage } from "siwe";
-import { after } from "next/server";
-import { captureSignUp } from "@/lib/capture/server";
 
 declare module "next-auth" {
   interface Session extends DefaultSession {

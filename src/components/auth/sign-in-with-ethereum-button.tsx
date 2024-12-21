@@ -8,9 +8,10 @@ import { cn } from "@/lib/utils";
 import { api } from "@/server/trpc/setup/react";
 import { LoaderIcon } from "lucide-react";
 import { getCsrfToken, signIn } from "next-auth/react";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { SiweMessage } from "siwe";
-import { useAccount, useConnect, useDisconnect, useSignMessage } from "wagmi";
+import { useAccount, useConnect, useSignMessage } from "wagmi";
 import { mainnet } from "wagmi/chains";
 import { injected, walletConnect } from "wagmi/connectors";
 
@@ -29,6 +30,9 @@ export default function SignInWithEthereumButton({
   >("idle");
   const { signMessageAsync } = useSignMessage();
   const { address, isConnected, chainId } = useAccount();
+
+  const pathname = usePathname();
+
   const { connect } = useConnect({
     mutation: {
       onError: () => {
@@ -39,7 +43,6 @@ export default function SignInWithEthereumButton({
       },
     },
   });
-  const { disconnect } = useDisconnect();
   const utils = api.useUtils();
 
   useEffect(() => {
@@ -73,7 +76,7 @@ export default function SignInWithEthereumButton({
         message: JSON.stringify(message),
         redirect: false,
         signature,
-        callbackUrl,
+        callbackUrl: callbackUrl || pathname,
       });
       const user = await utils.ui.getUser.fetch();
       if (!user) throw new Error("User not found");
