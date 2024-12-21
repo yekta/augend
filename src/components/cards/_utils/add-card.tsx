@@ -32,6 +32,7 @@ import { atom, useSetAtom } from "jotai";
 import { ArrowDownCircleIcon, ArrowLeftIcon, PlusIcon } from "lucide-react";
 import { Dispatch, SetStateAction, useRef, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
+import { newCardIdsAtom } from "@/lib/stores/main";
 
 type AddCardButtonProps = {
   username: string;
@@ -43,8 +44,6 @@ type AddCardButtonProps = {
 };
 
 type TSelectedCardType = AppRouterOutputs["ui"]["getCardTypes"][number];
-
-export const newCardIdAtom = atom<string | null>(null);
 
 export function AddCardButton({
   dashboardSlug,
@@ -58,7 +57,7 @@ export function AddCardButton({
   const [selectedCardType, setSelectedCardType] =
     useState<TSelectedCardType | null>(null);
 
-  const setNewCardId = useSetAtom(newCardIdAtom);
+  const setNewCardIds = useSetAtom(newCardIdsAtom);
 
   useHotkeys(
     "mod+k",
@@ -100,12 +99,15 @@ export function AddCardButton({
       setTimeout(() => {
         clearTimeout(setNewCardIdTimeout.current);
         setNewCardIdTimeout.current = setTimeout(() => {
-          setNewCardId(c.cardId);
+          setNewCardIds((prev) => ({ ...prev, [c.cardId]: true }));
           clearTimeout(newCardIdTimeout.current);
           newCardIdTimeout.current = setTimeout(() => {
-            setNewCardId(null);
+            setNewCardIds((prev) => {
+              const { [c.cardId]: _, ...rest } = prev;
+              return rest;
+            });
           }, 3000);
-        }, 500);
+        }, 300);
 
         const selector = `[data-card-id="${c.cardId}"]`;
         const element = document.querySelector(selector);

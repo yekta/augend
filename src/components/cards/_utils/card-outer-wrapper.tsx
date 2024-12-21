@@ -32,7 +32,7 @@ import { createPortal } from "react-dom";
 import { toast } from "sonner";
 import { captureDeleteCards } from "@/lib/capture/main";
 import { useAtomValue } from "jotai";
-import { newCardIdAtom } from "@/components/cards/_utils/add-card";
+import { newCardIdsAtom } from "@/lib/stores/main";
 
 type TSharedProps = {
   cardId?: string;
@@ -90,7 +90,7 @@ export default function CardOuterWrapper({
   const [cardSize, setCardSize] = useState<TSize>(defaultCardSize);
   const { instanceId } = useDndCards();
 
-  const newCardId = useAtomValue(newCardIdAtom);
+  const newCardIds = useAtomValue(newCardIdsAtom);
 
   const {
     mutate: deleteCard,
@@ -127,7 +127,7 @@ export default function CardOuterWrapper({
 
   const sharedProps = {
     "data-card-id": cardId,
-    "data-card-new": newCardId === cardId ? true : undefined,
+    "data-card-new": cardId && newCardIds[cardId] ? true : undefined,
   };
 
   useEffect(() => {
