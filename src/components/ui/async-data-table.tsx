@@ -165,7 +165,7 @@ export default function AsyncDataTable<T>({
         <Table className="grid">
           <TableHeader
             className="grid bg-background group-data-[dnd-active]/card:group-hover/card:bg-background-hover 
-            group-data-[dnd-active]/card:group-active/card:bg-background-hover 
+            group-data-[dnd-dragging]/card:bg-background-hover 
             sticky top-0 z-10"
           >
             {table.getHeaderGroups().map((headerGroup) => (
@@ -182,7 +182,7 @@ export default function AsyncDataTable<T>({
                     className={cn(
                       "flex overflow-hidden",
                       header.column.getCanSort() &&
-                        "cursor-pointer not-touch:hover:bg-background-hover active:bg-background-hover group-data-[dnd-active]/card:group-hover/card:bg-background-hover group-data-[dnd-active]/card:group-active/card:bg-background-hover",
+                        "cursor-pointer not-touch:hover:bg-background-hover active:bg-background-hover group-data-[dnd-active]/card:group-hover/card:bg-background-hover group-data-[dnd-dragging]/card:bg-background-hover",
                       header.column.getIsPinned() && "bg-background",
                       // @ts-ignore
                       header.column.columnDef.meta?.className ||
@@ -232,7 +232,7 @@ export default function AsyncDataTable<T>({
                       className={cn(
                         "p-0 overflow-hidden",
                         cell.column.getIsPinned() &&
-                          "bg-background not-touch:group-data-[has-data]/table:group-hover/row:bg-background-hover group-data-[has-data]/table:group-active/row:bg-background-hover group-data-[dnd-active]/card:group-hover/card:bg-background-hover group-data-[dnd-active]/card:group-active/card:bg-background-hover",
+                          "bg-background not-touch:group-data-[has-data]/table:group-hover/row:bg-background-hover group-data-[has-data]/table:group-active/row:bg-background-hover group-data-[dnd-active]/card:group-hover/card:bg-background-hover group-data-[dnd-dragging]/card:bg-background-hover",
                         // @ts-ignore
                         cell.column.columnDef.meta?.className ||
                           "min-w-22 md:min-w-32"

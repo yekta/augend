@@ -119,7 +119,7 @@ export default function UniswapPoolsTableCard({
                 <div className="flex -ml-0.75 flex-col justify-center shrink-0">
                   <div
                     className="bg-background not-touch:group-data-[has-data]/table:group-hover/row:bg-background-hover group-data-[has-data]/table:group-active/row:bg-background-hover rounded-full p-0.5
-                    group-data-[dnd-active]/card:group-hover/card:bg-background-hover group-data-[dnd-active]/card:group-active/card:bg-background-hover
+                    group-data-[dnd-active]/card:group-hover/card:bg-background-hover group-data-[dnd-dragging]/card:bg-background-hover
                     group-data-[has-data]/table:group-focus-visible/link:bg-background-hover"
                   >
                     {isPending ? (
@@ -136,7 +136,7 @@ export default function UniswapPoolsTableCard({
                   </div>
                   <div
                     className="-mt-1.5 z-10 bg-background not-touch:group-data-[has-data]/table:group-hover/row:bg-background-hover group-data-[has-data]/table:group-active/row:bg-background-hover rounded-full p-0.5
-                    group-data-[dnd-active]/card:group-hover/card:bg-background-hover group-data-[dnd-active]/card:group-active/card:bg-background-hover
+                    group-data-[dnd-active]/card:group-hover/card:bg-background-hover group-data-[dnd-dragging]/card:bg-background-hover
                     group-data-[has-data]/table:group-focus-visible/link:bg-background-hover"
                   >
                     {isPending ? (
