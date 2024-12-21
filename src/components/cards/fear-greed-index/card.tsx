@@ -184,12 +184,14 @@ function Gauge({
                     width: `calc(100% + ${lineWidth}px)`,
                     height: lineWidth,
                   }}
-                  className="flex justify-start not-touch:group-data-[has-href]/card:group-hover/card:bg-background-hover group-data-[has-href]:group-active/card:bg-background-hover bg-background items-center z-20 absolute"
+                  className="flex justify-start not-touch:group-data-[has-href]/card:group-hover/card:bg-background-hover 
+                  group-data-[has-href]/card:group-active/card:bg-background-hover bg-background items-center z-20 absolute"
                 />
               );
             })}
           </div>
         </div>
+        {/* Circle */}
         <div className="w-full aspect-square left-0 top-0 absolute flex items-center justify-center">
           <div
             style={{
@@ -202,7 +204,10 @@ function Gauge({
             }}
             className="flex justify-start items-center z-20 absolute rounded-full transition-transform"
           >
-            <div className="bg-background ring-4 ring-background not-touch:group-data-[has-href]/card:group-hover/card:ring-background-hover group-data-[has-href]:group-active/card:ring-background-hover group-data-[has-href]:group-active/card:bg-background-hover not-touch:group-hover/card:bg-background-hover rounded-full">
+            <div
+              className="bg-background ring-4 ring-background not-touch:group-data-[has-href]/card:group-hover/card:ring-background-hover 
+              group-data-[has-href]/card:group-active/card:ring-background-hover group-data-[has-href]:group-active/card:bg-background-hover not-touch:group-hover/card:bg-background-hover rounded-full"
+            >
               <div
                 style={{
                   width: circleWidth,

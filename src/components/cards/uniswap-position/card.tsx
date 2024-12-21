@@ -512,7 +512,7 @@ export default function UniswapPositionCard({
         </div>
         <Button
           disabled={!data}
-          className="absolute top-1.5 rounded-lg right-1.5 p-0 group-data-[loading-error]/card:text-destructive"
+          className="absolute top-1.5 bg-transparent rounded-lg right-1.5 p-0 group-data-[loading-error]/card:text-destructive"
           variant="outline"
           onClick={() => setIsSwapsOpen((prev) => !prev)}
         >
