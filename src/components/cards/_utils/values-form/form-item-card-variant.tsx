@@ -20,8 +20,6 @@ export default function CardVariantFormItem<T extends string>({
   onChange,
   zodEnum,
 }: Props<T>) {
-  const enumValues = Object.values(zodEnum.Values) as T[];
-
   return (
     <FormItem>
       <FormHeader>
@@ -33,7 +31,7 @@ export default function CardVariantFormItem<T extends string>({
           defaultValue={value}
           className="w-full min-w-0 flex flex-row gap-2"
         >
-          {enumValues.map((enumValue) => (
+          {zodEnum.options.map((enumValue) => (
             <FormItem
               key={enumValue}
               className="flex gap-0 flex-1 min-w-0 overflow-hidden rounded-md flex-row justify-center items-center"

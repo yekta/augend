@@ -8,25 +8,28 @@ import WagmiProvider from "@/components/providers/wagmi-provider";
 import { SessionProvider } from "next-auth/react";
 import { PhProvider } from "@/components/providers/ph-provider";
 import JotaiProvider from "@/components/providers/jotai-provider";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 export default async function Providers({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <JotaiProvider>
-      <ThemeProvider>
-        <TRPCReactProvider>
-          <SessionProvider>
-            <PhProvider>
-              <WagmiProvider>
-                <IsTouchscreenProvider>
-                  <DashboardsAutoProvider>{children}</DashboardsAutoProvider>
-                </IsTouchscreenProvider>
-              </WagmiProvider>
-            </PhProvider>
-          </SessionProvider>
-        </TRPCReactProvider>
-      </ThemeProvider>
-    </JotaiProvider>
+    <NuqsAdapter>
+      <JotaiProvider>
+        <ThemeProvider>
+          <TRPCReactProvider>
+            <SessionProvider>
+              <PhProvider>
+                <WagmiProvider>
+                  <IsTouchscreenProvider>
+                    <DashboardsAutoProvider>{children}</DashboardsAutoProvider>
+                  </IsTouchscreenProvider>
+                </WagmiProvider>
+              </PhProvider>
+            </SessionProvider>
+          </TRPCReactProvider>
+        </ThemeProvider>
+      </JotaiProvider>
+    </NuqsAdapter>
   );
 }
