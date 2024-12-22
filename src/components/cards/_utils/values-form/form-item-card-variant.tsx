@@ -33,7 +33,7 @@ export default function CardVariantFormItem<T extends string>({
           {zodEnum.options.map((enumValue) => (
             <FormItem
               key={enumValue}
-              className="flex gap-0 flex-1 min-w-0 overflow-hidden rounded-md flex-row justify-center items-center"
+              className="flex gap-0 flex-1 min-w-0 overflow-hidden rounded-lg flex-row justify-center items-center relative"
             >
               <FormControl>
                 <RadioGroupItem
@@ -43,9 +43,9 @@ export default function CardVariantFormItem<T extends string>({
               </FormControl>
               <FormLabel
                 className="flex-1 h-full min-w-0 overflow-hidden cursor-pointer 
-                rounded-lg px-3 md:px-4 py-1.25 md:py-2 border 
-                peer-data-[state=checked]:border-foreground/50
-                not-touch:peer-data-[state=checked]:border-foreground/50
+                rounded-lg px-3 md:px-4 py-1.25 md:py-2 border
+                peer-data-[state=checked]:border-muted-foreground
+                not-touch:peer-data-[state=checked]:border-muted-foreground
                 focus-visible:bg-border
                 peer-focus-visible:bg-border
                 not-touch:hover:bg-border

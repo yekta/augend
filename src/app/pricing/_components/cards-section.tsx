@@ -49,9 +49,8 @@ export default function PlanCardsSection({}: Props) {
               />
               <label
                 htmlFor={value}
-                className="flex-1 w-32 peer-data-[state=checked]:shadow-sm dark:peer-data-[state=checked]:shadow-none 
-                peer-data-[state=checked]:shadow-shadow/[var(--opacity-shadow)] text-center min-w-0 truncate px-3 py-1.5 rounded-md font-semibold
-                peer-data-[state=checked]:bg-background cursor-pointer"
+                className="flex-1 w-36 text-center min-w-0 truncate px-3 py-1.75 rounded-md font-semibold
+                peer-data-[state=checked]:bg-background cursor-pointer peer-focus-visible:ring-1 peer-focus-visible:ring-foreground/50"
               >
                 {billingCycleObjects[value].title}
               </label>

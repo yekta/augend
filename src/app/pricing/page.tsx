@@ -69,7 +69,7 @@ const faqs: TFaq[] = [
         >
           Discord
         </Link>{" "}
-        to ask us anything. We are happy to help. You can also reach out via{" "}
+        community. You can also reach out via{" "}
         <Link
           className="underline not-touch:hover:text-foreground active:text-foreground"
           href={sc.x.siteHref}
