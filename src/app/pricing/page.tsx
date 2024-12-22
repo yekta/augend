@@ -166,24 +166,29 @@ export default function Page({}: Props) {
                 key={plan.title}
                 className="w-full max-w-sm border rounded-xl flex flex-col min-w-0"
               >
-                <div className="w-full flex flex-col gap-2 px-6 py-4">
+                <div className="w-full flex flex-col gap-2.5 px-6 pt-4.5 pb-5">
                   {/* Plan name */}
                   <h2 className="w-full leading-tight font-semibold text-xl">
                     {plan.title}
                   </h2>
                   {/* Price */}
-                  <p className="w-full leading-tight text-3xl font-bold">
-                    <span>${plan.price.monthly}</span>
-                    <span className="text-muted-foreground text-sm font-medium">
-                      /month
-                    </span>
-                  </p>
+                  <div className="w-full flex flex-col gap-1">
+                    <p className="w-full leading-tight text-3xl font-bold">
+                      <span>${plan.price.monthly}</span>
+                      <span className="text-muted-foreground text-base font-medium">
+                        /month
+                      </span>
+                    </p>
+                    <p className="text-base font-medium leading-tight">
+                      {plan.price.monthly !== 0 ? "Billed monthly" : "No bill"}
+                    </p>
+                  </div>
                 </div>
                 <div className="w-full flex px-5">
                   <Button className="w-full">Subscribe</Button>
                 </div>
                 {/* Features */}
-                <div className="w-full flex flex-col px-6 py-5 gap-3 flex-1">
+                <div className="w-full flex flex-col px-6 pt-5 pb-5.5 gap-3 flex-1">
                   {plan.features.map((feature, id) => (
                     <div className="w-full flex gap-2" key={id}>
                       <div className="size-4 shrink-0 mt-0.5">
@@ -203,11 +208,11 @@ export default function Page({}: Props) {
             );
           })}
         </div>
-        <div className="w-full flex flex-row flex-wrap self-start justify-center border-t py-5 mt-3">
+        <div className="w-full flex flex-row flex-wrap self-start justify-center border-t border-b pt-5 pb-5.5 mt-3">
           {faqs.map((faq) => (
             <div
               key={faq.question}
-              className="w-full md:w-1/3 flex flex-col min-w-0 px-4 py-3 gap-1"
+              className="w-full md:w-1/3 flex flex-col min-w-0 px-4 py-3 gap-1.5"
             >
               <h3 className="w-full font-semibold leading-tight">
                 {faq.question}
