@@ -122,6 +122,7 @@ const faqs: TFaq[] = [
         <Link
           className="underline not-touch:hover:text-foreground active:text-foreground"
           href={sc.discord.siteHref}
+          target="_blank"
         >
           Discord
         </Link>{" "}
@@ -129,13 +130,15 @@ const faqs: TFaq[] = [
         <Link
           className="underline not-touch:hover:text-foreground active:text-foreground"
           href={sc.x.siteHref}
+          target="_blank"
         >
           X/Twitter
         </Link>{" "}
         or{" "}
         <Link
           className="underline not-touch:hover:text-foreground active:text-foreground"
-          href={sc.email}
+          href={sc.email.siteHref}
+          target="_blank"
         >
           email
         </Link>
@@ -159,12 +162,12 @@ export default function Page({}: Props) {
           </p>
         </div>
         {/* Plan Cards */}
-        <div className="w-full flex flex-wrap flex-row items-stretch justify-center gap-3">
+        <div className="w-full flex flex-wrap flex-row items-stretch justify-center gap-4">
           {plans.map((plan) => {
             return (
               <div
                 key={plan.title}
-                className="w-full max-w-sm border rounded-xl flex flex-col min-w-0"
+                className="w-full max-w-md md:max-w-sm border rounded-xl flex flex-col min-w-0"
               >
                 <div className="w-full flex flex-col gap-2.5 px-6 pt-4.5 pb-5">
                   {/* Plan name */}
@@ -191,7 +194,7 @@ export default function Page({}: Props) {
                 <div className="w-full flex flex-col px-6 pt-5 pb-5.5 gap-3 flex-1">
                   {plan.features.map((feature, id) => (
                     <div className="w-full flex gap-2" key={id}>
-                      <div className="size-4 shrink-0 mt-0.5">
+                      <div className="size-4 shrink-0 mt-0.5 -ml-0.25">
                         {feature.noTick ? (
                           <MinusIcon className="size-full text-muted-foreground" />
                         ) : (
@@ -208,11 +211,11 @@ export default function Page({}: Props) {
             );
           })}
         </div>
-        <div className="w-full flex flex-row flex-wrap self-start justify-center border-t border-b pt-5 pb-5.5 mt-3">
+        <div className="w-full flex flex-row flex-wrap self-start justify-start border-t border-b pt-4 pb-5 mt-3">
           {faqs.map((faq) => (
             <div
               key={faq.question}
-              className="w-full md:w-1/3 flex flex-col min-w-0 px-4 py-3 gap-1.5"
+              className="w-full md:w-1/2 lg:w-1/3 flex flex-col min-w-0 px-4 py-4 gap-1.5"
             >
               <h3 className="w-full font-semibold leading-tight">
                 {faq.question}
