@@ -97,6 +97,7 @@ export default function DashboardSelector({}: Props) {
               size="sm"
               variant="outline"
               fadeOnDisabled={false}
+              forceMinSize={false}
               className="font-semibold shrink max-w-[13rem] min-w-0 text-left justify-between items-center gap-1.25 group/trigger px-2.5"
               data-pending={isDashboardNamePending ? true : undefined}
               data-loading-error={isHardError ? true : undefined}

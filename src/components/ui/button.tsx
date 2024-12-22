@@ -6,7 +6,7 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "relative text-center leading-tight inline-flex items-center select-none before:w-full before:h-full before:min-w-[44px] before:min-h-[44px] before:z-[-1] z-0 before:bg-transparent before:absolute touch-manipulation justify-center gap-2 rounded-lg font-bold focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-foreground/50 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 before:-translate-y-1/2 before:top-1/2 before:-translate-x-1/2 before:left-1/2",
+  "relative text-center leading-tight inline-flex items-center select-none z-0 touch-manipulation justify-center gap-2 rounded-lg font-bold focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-foreground/50 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
   {
     variants: {
       variant: {
@@ -49,6 +49,11 @@ const buttonVariants = cva(
         default: "",
         false: "disabled:opacity-100",
       },
+      forceMinSize: {
+        default:
+          "before:w-full before:h-full before:min-w-[44px] before:min-h-[44px] before:z-[-1] before:bg-transparent before:absolute before:-translate-y-1/2 before:top-1/2 before:-translate-x-1/2 before:left-1/2",
+        false: "",
+      },
       focusVariant: {
         default:
           "focus-visible:ring-offset-2 focus-visible:ring-offset-background",
@@ -61,6 +66,7 @@ const buttonVariants = cva(
       state: "default",
       fadeOnDisabled: "default",
       focusVariant: "default",
+      forceMinSize: "default",
     },
   }
 );
@@ -86,6 +92,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       disabled,
       fadeOnDisabled,
       focusVariant,
+      forceMinSize,
       state,
       asChild = false,
       ...props
@@ -103,6 +110,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             state,
             fadeOnDisabled,
             focusVariant,
+            forceMinSize,
           })
         )}
         ref={ref}
@@ -116,7 +124,16 @@ Button.displayName = "Button";
 
 const LinkButton = React.forwardRef<HTMLAnchorElement, LinkButtonProps>(
   (
-    { className, variant, size, state, fadeOnDisabled, focusVariant, ...props },
+    {
+      className,
+      variant,
+      size,
+      state,
+      fadeOnDisabled,
+      focusVariant,
+      forceMinSize,
+      ...props
+    },
     ref
   ) => {
     return (
@@ -129,6 +146,7 @@ const LinkButton = React.forwardRef<HTMLAnchorElement, LinkButtonProps>(
             state,
             fadeOnDisabled,
             focusVariant,
+            forceMinSize,
           })
         )}
         ref={ref}
