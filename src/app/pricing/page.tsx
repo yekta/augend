@@ -167,7 +167,7 @@ export default function Page({}: Props) {
             return (
               <div
                 key={plan.title}
-                className="w-full max-w-md md:max-w-sm border rounded-xl flex flex-col min-w-0"
+                className="w-full max-w-md md:max-w-[23rem] border rounded-xl flex flex-col min-w-0"
               >
                 <div className="w-full flex flex-col gap-2.5 px-6 pt-4.5 pb-5">
                   {/* Plan name */}
@@ -211,7 +211,7 @@ export default function Page({}: Props) {
             );
           })}
         </div>
-        <div className="w-full flex flex-row flex-wrap self-start justify-start border-t border-b pt-4 pb-5 mt-3">
+        <div className="w-full flex flex-row flex-wrap justify-start border-t border-b pt-4 pb-5 mt-3">
           {faqs.map((faq) => (
             <div
               key={faq.question}
