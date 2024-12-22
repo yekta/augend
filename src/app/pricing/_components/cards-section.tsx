@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { CheckIcon, MinusIcon } from "lucide-react";
-import { useQueryState } from "nuqs";
+import { parseAsStringEnum, useQueryState } from "nuqs";
 import { ReactNode } from "react";
 import { z } from "zod";
 
@@ -26,10 +26,11 @@ const billingCycleObjects: Record<
 type Props = {};
 
 export default function PlanCardsSection({}: Props) {
-  const [billingCycle, setBillingCycle] = useQueryState("billing_cycle", {
-    parse: BillingCycleEnum.parse,
-    defaultValue: billingCycleDefault,
-  });
+  const [billingCycle, setBillingCycle] = useQueryState(
+    "cycle",
+    parseAsStringEnum(BillingCycleEnum.options).withDefault(billingCycleDefault)
+  );
+
   return (
     <>
       <div className="w-full flex flex-col items-center mt-6">

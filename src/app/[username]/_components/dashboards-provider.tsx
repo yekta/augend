@@ -17,6 +17,7 @@ type TDashboardsContext = {
   isPendingUser: boolean;
   isLoadingErrorUser: boolean;
   notActive: boolean;
+  isOwner?: boolean;
 };
 
 const DashboardsContext = createContext<TDashboardsContext | null>(null);
@@ -75,6 +76,7 @@ export const DashboardsProvider: React.FC<Props> = ({ children }) => {
         ethereumAddress: userData?.ethereumAddress,
         cancelQuery,
         notActive: !isPendingUser && !isLoadingErrorUser && !userData,
+        isOwner: data?.isOwner,
       }}
     >
       {children}

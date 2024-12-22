@@ -4,8 +4,8 @@ import { CreateDashboardButton } from "@/app/[username]/_components/create-dashb
 import { useDashboards } from "@/app/[username]/_components/dashboards-provider";
 import { useDndDashboards } from "@/app/[username]/_components/dnd-dashboards-provider";
 import EditButtonDashboards from "@/app/[username]/_components/edit-button-dashboards";
+import { useEditModeDashboards } from "@/app/[username]/_components/edit-mode-dashboards-provider";
 import Blockies from "@/components/blockies/blockies";
-import { mainDashboardSlug } from "@/lib/constants";
 import { LoaderIcon, TriangleAlertIcon } from "lucide-react";
 
 type Props = {};
@@ -21,6 +21,8 @@ export function ProfileTitleBar({}: Props) {
   } = useDashboards();
   const { isPendingReorderDashboards, isErrorReorderDashboards } =
     useDndDashboards();
+
+  const { canEdit } = useEditModeDashboards();
 
   return (
     <div
@@ -50,9 +52,7 @@ export function ProfileTitleBar({}: Props) {
             )}
           </div>
           <CreateDashboardButton />
-          {data.dashboards.some(
-            (d) => d.dashboard.slug !== mainDashboardSlug
-          ) && <EditButtonDashboards />}
+          {canEdit && <EditButtonDashboards />}
         </div>
       ) : (
         <div className="size-9 -mr-2 shrink-0" />

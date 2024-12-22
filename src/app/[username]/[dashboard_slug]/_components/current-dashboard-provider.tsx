@@ -24,6 +24,7 @@ type TCurrentDashboardContext = {
   invalidateDashboards: () => Promise<void>;
   errorMessageDashboard?: string;
   setDataCards: (data: AppRouterOutputs["ui"]["getCards"]) => void;
+  isOwner?: boolean;
 };
 
 const CurrentDashboardContext = createContext<TCurrentDashboardContext | null>(
@@ -123,6 +124,7 @@ export const CurrentDashboardProvider: FC<Props> = ({
         invalidateDashboards,
         removeCardIdsOptimistic,
         setDataCards,
+        isOwner: dataDashboard?.isOwner,
         hasCards:
           dataCards === null
             ? false

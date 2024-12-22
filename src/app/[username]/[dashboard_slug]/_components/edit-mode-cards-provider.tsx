@@ -1,23 +1,19 @@
 "use client";
 
 import { useCurrentDashboard } from "@/app/[username]/[dashboard_slug]/_components/current-dashboard-provider";
-import {
-  createContext,
-  FC,
-  ReactNode,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { parseAsBoolean, useQueryState } from "nuqs";
+import { createContext, FC, ReactNode, useContext, useEffect } from "react";
 
 type TEditModeCardsContext = {
   isEnabled: boolean;
+  canEdit: boolean;
   enable: () => void;
   disable: () => void;
 };
 
 const EditModeCardsContext = createContext<TEditModeCardsContext>({
   isEnabled: false,
+  canEdit: false,
   enable: () => {},
   disable: () => {},
 });
@@ -25,19 +21,18 @@ const EditModeCardsContext = createContext<TEditModeCardsContext>({
 export const EditModeCardsProvider: FC<{
   children: ReactNode;
 }> = ({ children }) => {
-  const [isEnabled, setIsEnabled] = useState(false);
-  const { hasCards } = useCurrentDashboard();
-
-  useEffect(() => {
-    if (!hasCards) {
-      setIsEnabled(false);
-    }
-  }, [hasCards]);
+  const [isEnabled, setIsEnabled] = useQueryState(
+    "edit",
+    parseAsBoolean.withDefault(false)
+  );
+  const { isOwner } = useCurrentDashboard();
+  const canEdit = isOwner === true;
 
   return (
     <EditModeCardsContext.Provider
       value={{
-        isEnabled,
+        isEnabled: canEdit && isEnabled,
+        canEdit: canEdit,
         enable: () => setIsEnabled(true),
         disable: () => setIsEnabled(false),
       }}

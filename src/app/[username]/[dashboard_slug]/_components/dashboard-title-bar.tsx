@@ -68,7 +68,8 @@ export function DashboardTitleBar({ username, dashboardSlug, isOwner }: Props) {
     cancelDashboardsQuery,
     invalidateDashboards,
   } = useCurrentDashboard();
-  const { isEnabled: isEnabledEdit } = useEditModeCards();
+  const { isEnabled: isEnabledCardEdit, canEdit: canEditCards } =
+    useEditModeCards();
 
   const {
     mutate: renameDashboard,
@@ -109,7 +110,7 @@ export function DashboardTitleBar({ username, dashboardSlug, isOwner }: Props) {
       data-loading-error={isLoadingErrorDashboard ? true : undefined}
       className="col-span-12 items-center justify-between flex gap-1.5 px-1 pb-1 md:pb-2 group/titlebar"
     >
-      {!isEnabledEdit || !isOwner ? (
+      {!isEnabledCardEdit || !canEditCards ? (
         <h1
           className="border border-transparent px-2 py-1.75 md:py-0.5 rounded-lg font-bold text-xl md:text-2xl leading-none md:leading-none truncate shrink
           group-data-[pending]/titlebar:text-transparent group-data-[pending]/titlebar:rounded-md group-data-[pending]/titlebar:bg-foreground group-data-[pending]/titlebar:animate-skeleton"
@@ -254,7 +255,7 @@ export function DashboardTitleBar({ username, dashboardSlug, isOwner }: Props) {
             xOrderPreference="first"
             shortcutEnabled
           />
-          <EditButtonCards />
+          {canEditCards && <EditButtonCards />}
         </div>
       ) : (
         <div className="size-9 -mr-2 shrink-0" />
