@@ -51,7 +51,7 @@ export function ProfileTitleBar({}: Props) {
               <TriangleAlertIcon className="size-5 text-destructive" />
             )}
           </div>
-          <CreateDashboardButton />
+          <CreateDashboardButton modalId="create_dashboard_from_title_bar" />
           {canEdit && <EditButtonDashboards />}
         </div>
       ) : (

@@ -88,7 +88,12 @@ export default function ProfileDashboardCards({}: Props) {
               dashboardId={dashboardObject.dashboard.id}
             />
           ))}
-          {data?.isOwner && <CreateDashboardButton variant="card" />}
+          {data?.isOwner && (
+            <CreateDashboardButton
+              modalId="create_dashboard_from_grid"
+              variant="card"
+            />
+          )}
         </>
       )}
     </>

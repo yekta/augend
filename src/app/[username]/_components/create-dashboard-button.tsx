@@ -6,23 +6,34 @@ import CreateDashboardTrigger from "@/components/dashboard/create-dashboard-trig
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { PlusIcon } from "lucide-react";
-import { useState } from "react";
+import { useQueryState } from "nuqs";
 
 type Props = {
-  className?: string;
+  modalId: string;
   variant?: "icon" | "card";
+  className?: string;
 };
 
 export const CreateDashboardButton = ({
+  modalId,
   variant = "icon",
   className,
 }: Props) => {
-  const [open, setOpen] = useState(false);
   const { invalidate } = useDashboards();
+  const [currentModalId, setCurrentModalId] = useQueryState("modal");
+  const open = currentModalId === modalId;
+  const onOpenChange = (open: boolean) => {
+    if (open) {
+      setCurrentModalId(modalId);
+      return;
+    }
+    setCurrentModalId(null);
+  };
+
   return (
     <CreateDashboardTrigger
       open={open}
-      onOpenChange={setOpen}
+      onOpenChange={onOpenChange}
       afterSuccess={() => invalidate()}
     >
       {variant === "card" ? (
