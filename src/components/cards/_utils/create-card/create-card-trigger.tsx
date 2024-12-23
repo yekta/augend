@@ -1,7 +1,4 @@
 import { useCurrentDashboard } from "@/app/[username]/[dashboard_slug]/_components/current-dashboard-provider";
-import CardInnerWrapper from "@/components/cards/_utils/card-inner-wrapper";
-import CardOuterWrapper from "@/components/cards/_utils/card-outer-wrapper";
-import { cardTypes } from "@/components/cards/_utils/helpers";
 import CardValueFormParser from "@/components/cards/_utils/values-form/form-parser";
 import { TInferOnFormSubmitProps } from "@/components/cards/_utils/values-form/types";
 import ErrorLine from "@/components/error-line";
@@ -24,36 +21,40 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { captureCreateCard } from "@/lib/capture/client";
 import { formatNumberTBMK } from "@/lib/number-formatters";
+import { newCardIdsAtom } from "@/lib/stores/main";
 import { cn } from "@/lib/utils";
 import { AppRouterOutputs, AppRouterQueryResult } from "@/server/trpc/api/root";
 import { TCardTypeId } from "@/server/trpc/api/ui/types";
 import { api } from "@/server/trpc/setup/react";
-import { atom, useSetAtom } from "jotai";
-import { ArrowDownCircleIcon, ArrowLeftIcon, PlusIcon } from "lucide-react";
+import { useSetAtom } from "jotai";
+import { ArrowDownCircleIcon, ArrowLeftIcon } from "lucide-react";
+import { useQueryState } from "nuqs";
 import { Dispatch, SetStateAction, useRef, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
-import { newCardIdsAtom } from "@/lib/stores/main";
 
-type AddCardButtonProps = {
-  username: string;
+type Props = {
+  modalId: string;
   dashboardSlug: string;
-  className?: string;
-  variant?: "full" | "icon";
+  children: React.ReactNode;
   xOrderPreference?: "first" | "last";
   shortcutEnabled?: boolean;
 };
 
 type TSelectedCardType = AppRouterOutputs["ui"]["getCardTypes"][number];
 
-export function AddCardButton({
+export default function CreateCardTrigger({
+  modalId,
   dashboardSlug,
-  username,
-  className,
-  variant = "full",
+  children,
   xOrderPreference = "last",
   shortcutEnabled = false,
-}: AddCardButtonProps) {
-  const [open, setOpen] = useState(false);
+}: Props) {
+  const [currentModalId, setCurrentModalId] = useQueryState("modal");
+  const open = currentModalId === modalId;
+  const onOpenChange = (o: boolean) => {
+    setCurrentModalId(o ? modalId : null);
+  };
+
   const [selectedCardType, setSelectedCardType] =
     useState<TSelectedCardType | null>(null);
 
@@ -62,7 +63,7 @@ export function AddCardButton({
   useHotkeys(
     "mod+k",
     (e) => {
-      setOpen((o) => !o);
+      setCurrentModalId((id) => (id === modalId ? null : modalId));
     },
     {
       enabled: shortcutEnabled,
@@ -74,7 +75,7 @@ export function AddCardButton({
   const getCardTypesQuery = api.ui.getCardTypes.useQuery(
     {},
     {
-      enabled: open,
+      enabled: currentModalId === modalId,
     }
   );
 
@@ -93,7 +94,7 @@ export function AddCardButton({
   } = api.ui.createCard.useMutation({
     onSuccess: async (c) => {
       await invalidateCards();
-      setOpen(false);
+      setCurrentModalId(null);
       setSelectedCardType(null);
 
       setTimeout(() => {
@@ -136,57 +137,35 @@ export function AddCardButton({
   }
 
   return (
-    <>
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
-          {variant === "icon" ? (
-            <Button size="icon" variant="outline" className="size-9">
-              <div className="size-5.5 transition data-[editing]:rotate-90">
-                <PlusIcon className="size-full" />
-              </div>
-            </Button>
-          ) : (
-            <CardOuterWrapper
-              className={cn(cardTypes.md.className, "h-32", className)}
-            >
-              <CardInnerWrapper
-                className="flex-1 px-8 font-medium py-3 flex flex-row gap-1 items-center text-muted-foreground justify-center 
-                not-touch:group-hover/card:bg-background-hover group-active/card:bg-background-hover"
-              >
-                <PlusIcon className="size-5 shrink-0 text-muted-foreground -ml-1" />
-                <p className="min-w-0 shrink text-left">Add card</p>
-              </CardInnerWrapper>
-            </CardOuterWrapper>
-          )}
-        </DialogTrigger>
-        <DialogContent
-          variant="styleless"
-          className="max-w-md"
-          onEscapeKeyDown={
-            selectedCardType !== null ? (e) => e.preventDefault() : undefined
-          }
-        >
-          <DialogHeader>
-            <DialogTitle className="sr-only">Add a card</DialogTitle>
-          </DialogHeader>
-          <AddCardCommandPanel
-            inputs={inputs}
-            selectedCardType={selectedCardType}
-            setSelectedCardType={setSelectedCardType}
-            isPendingForm={isPendingCreateCard}
-            resetCreateCard={resetCreateCard}
-            errorForm={errorCreateCard}
-            onSubmit={onSubmit}
-            getCardTypesQuery={getCardTypesQuery}
-            className="h-100 max-h-[calc((100vh-3rem)*0.8)]"
-          />
-        </DialogContent>
-      </Dialog>
-    </>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogContent
+        variant="styleless"
+        className="max-w-md"
+        onEscapeKeyDown={
+          selectedCardType !== null ? (e) => e.preventDefault() : undefined
+        }
+      >
+        <DialogHeader>
+          <DialogTitle className="sr-only">Add a card</DialogTitle>
+        </DialogHeader>
+        <CreateCardCommandPanel
+          inputs={inputs}
+          selectedCardType={selectedCardType}
+          setSelectedCardType={setSelectedCardType}
+          isPendingForm={isPendingCreateCard}
+          resetCreateCard={resetCreateCard}
+          errorForm={errorCreateCard}
+          onSubmit={onSubmit}
+          getCardTypesQuery={getCardTypesQuery}
+          className="h-100 max-h-[calc((100vh-3rem)*0.8)]"
+        />
+      </DialogContent>
+    </Dialog>
   );
 }
 
-type AddCardCommandPanelProps = {
+type CreateCardCommandPanelProps = {
   getCardTypesQuery: AppRouterQueryResult<
     AppRouterOutputs["ui"]["getCardTypes"]
   >;
@@ -200,7 +179,7 @@ type AddCardCommandPanelProps = {
   className?: string;
 };
 
-export function AddCardCommandPanel({
+export function CreateCardCommandPanel({
   getCardTypesQuery,
   inputs,
   isPendingForm,
@@ -210,7 +189,7 @@ export function AddCardCommandPanel({
   setSelectedCardType,
   onSubmit,
   className,
-}: AddCardCommandPanelProps) {
+}: CreateCardCommandPanelProps) {
   const listRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const scrollId = useRef<NodeJS.Timeout | undefined>();
@@ -339,13 +318,13 @@ export function AddCardCommandPanel({
                         <div className="flex flex-col items-start min-w-0 shrink overflow-hidden gap-1">
                           <p
                             className="max-w-full text-sm font-bold group-data-[pending]/command:text-transparent group-data-[pending]/command:bg-foreground
-                          group-data-[pending]/command:rounded group-data-[pending]/command:animate-skeleton leading-tight"
+                            group-data-[pending]/command:rounded group-data-[pending]/command:animate-skeleton leading-tight"
                           >
                             {cardTypeObj.cardType.title}
                           </p>
                           <p
                             className="max-w-full text-xs text-muted-foreground group-data-[pending]/command:text-transparent group-data-[pending]/command:bg-muted-foreground
-                          group-data-[pending]/command:rounded group-data-[pending]/command:animate-skeleton leading-tight"
+                            group-data-[pending]/command:rounded group-data-[pending]/command:animate-skeleton leading-tight"
                           >
                             {cardTypeObj.cardType.description}
                           </p>
@@ -353,12 +332,12 @@ export function AddCardCommandPanel({
                         <div className="shrink-0 flex text-muted-foreground text-sm items-center justify-end text-right gap-1">
                           <ArrowDownCircleIcon
                             className="size-3 -my-1 group-data-[pending]/command:text-transparent group-data-[pending]/command:rounded-full
-                          group-data-[pending]/command:bg-muted-foreground group-data-[pending]/command:animate-skeleton"
+                            group-data-[pending]/command:bg-muted-foreground group-data-[pending]/command:animate-skeleton"
                           />
                           <p
                             className="leading-none font-medium 
-                          group-data-[pending]/command:text-transparent group-data-[pending]/command:bg-muted-foreground
-                          group-data-[pending]/command:rounded group-data-[pending]/command:animate-skeleton"
+                            group-data-[pending]/command:text-transparent group-data-[pending]/command:bg-muted-foreground
+                            group-data-[pending]/command:rounded group-data-[pending]/command:animate-skeleton"
                           >
                             {formatNumberTBMK(
                               cardTypeObj.cardType.alltimeCounter

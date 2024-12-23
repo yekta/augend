@@ -16,12 +16,12 @@ export default function CardInnerWrapper({
   return (
     <div
       className={cn(
-        classNameAll,
         "group-data-[dnd-active]/card:overflow-visible group-data-[dnd-over]/card:bg-background transition-shadow duration-500 group-data-[dnd-over]/card:transition",
         "group-data-[dnd-active]/card:not-touch:group-hover/card:bg-background-hover group-data-[dnd-dragging]/card:bg-background-hover",
         "[&_*]:group-data-[dnd-active]/card:select-none group-data-[dnd-over]/card:translate-x-1",
         "group-focus-visible/card:ring-1 group-focus-visible/card:ring-foreground/50 group-focus-visible/card:ring-offset-2 group-focus-visible/card:ring-offset-background",
-        "group-data-[card-new]/card:ring-4 ring-border"
+        "group-data-[card-new]/card:ring-4 ring-border",
+        classNameAll
       )}
       {...rest}
     >

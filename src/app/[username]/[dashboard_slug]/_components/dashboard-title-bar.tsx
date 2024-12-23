@@ -2,7 +2,7 @@ import { useCurrentDashboard } from "@/app/[username]/[dashboard_slug]/_componen
 import { useDndCards } from "@/app/[username]/[dashboard_slug]/_components/dnd-cards-provider";
 import EditButtonCards from "@/app/[username]/[dashboard_slug]/_components/edit-button-cards";
 import { useEditModeCards } from "@/app/[username]/[dashboard_slug]/_components/edit-mode-cards-provider";
-import { AddCardButton } from "@/components/cards/_utils/add-card";
+import CreateCardButton from "@/components/cards/_utils/create-card/create-card-button";
 import DeleteDashboardTrigger from "@/components/dashboard/delete-dashboard-trigger";
 import ErrorLine from "@/components/error-line";
 import { Button } from "@/components/ui/button";
@@ -34,21 +34,52 @@ import {
   TrashIcon,
   TriangleAlertIcon,
 } from "lucide-react";
-import { useState } from "react";
+import { useQueryState } from "nuqs";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 type Props = {
   isOwner: boolean;
-  username: string;
   dashboardSlug: string;
 };
 
-export function DashboardTitleBar({ username, dashboardSlug, isOwner }: Props) {
-  const [isDialogOpenRenameDashboard, setIsDialogOpenRenameDashboard] =
-    useState(false);
-  const [isDialogOpenDeleteDashboard, setIsDialogOpenDeleteDashboard] =
-    useState(false);
+const renameDashboardModalId = "rename_dashboard";
+const deleteDashboardModalId = "delete_dashboard";
+
+export function DashboardTitleBar({ dashboardSlug, isOwner }: Props) {
+  const [currentModalId, setCurrentModalId] = useQueryState("modal");
+  const { isEnabled } = useEditModeCards();
+
+  useEffect(() => {
+    if (isEnabled) return;
+    if (
+      currentModalId === renameDashboardModalId ||
+      currentModalId === deleteDashboardModalId ||
+      (currentModalId === deleteDashboardModalId &&
+        dashboardSlug === mainDashboardSlug)
+    ) {
+      setCurrentModalId(null);
+    }
+  }, [isEnabled]);
+
+  const isDialogOpenRenameDashboard = currentModalId === renameDashboardModalId;
+  const setIsDialogOpenRenameDashboard = (o: boolean) => {
+    if (o) {
+      setCurrentModalId(renameDashboardModalId);
+      return;
+    }
+    setCurrentModalId(null);
+  };
+
+  const isDialogOpenDeleteDashboard = currentModalId === deleteDashboardModalId;
+  const setIsDialogOpenDeleteDashboard = (o: boolean) => {
+    if (o) {
+      setCurrentModalId(deleteDashboardModalId);
+      return;
+    }
+    setCurrentModalId(null);
+  };
 
   const renameDashboardForm = useForm<z.infer<typeof RenameDashboardSchemaUI>>({
     resolver: zodResolver(RenameDashboardSchemaUI),
@@ -248,9 +279,9 @@ export function DashboardTitleBar({ username, dashboardSlug, isOwner }: Props) {
               <TriangleAlertIcon className="size-5 text-destructive" />
             )}
           </div>
-          <AddCardButton
+          <CreateCardButton
+            modalId="create_card_from_title_bar"
             variant="icon"
-            username={username}
             dashboardSlug={dashboardSlug}
             xOrderPreference="first"
             shortcutEnabled

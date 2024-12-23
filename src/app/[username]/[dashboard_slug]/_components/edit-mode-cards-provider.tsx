@@ -28,6 +28,12 @@ export const EditModeCardsProvider: FC<{
   const { isOwner } = useCurrentDashboard();
   const canEdit = isOwner === true;
 
+  useEffect(() => {
+    if (!canEdit) {
+      setIsEnabled(false);
+    }
+  }, [canEdit]);
+
   return (
     <EditModeCardsContext.Provider
       value={{

@@ -5,8 +5,8 @@ import { useCurrentDashboard } from "@/app/[username]/[dashboard_slug]/_componen
 import { DashboardTitleBar } from "@/app/[username]/[dashboard_slug]/_components/dashboard-title-bar";
 import { useDndCards } from "@/app/[username]/[dashboard_slug]/_components/dnd-cards-provider";
 import EditModeCardsProvider from "@/app/[username]/[dashboard_slug]/_components/edit-mode-cards-provider";
-import { AddCardButton } from "@/components/cards/_utils/add-card";
 import { CardParser } from "@/components/cards/_utils/card-parser";
+import CreateCardButton from "@/components/cards/_utils/create-card/create-card-button";
 import { cardTypes } from "@/components/cards/_utils/helpers";
 import { ProvidersForCardTypes } from "@/components/cards/_utils/providers-for-card-types";
 import ThreeLineCard from "@/components/cards/_utils/three-line-card";
@@ -187,11 +187,7 @@ export default function DashboardPage({}: {}) {
     return (
       <MainProviders>
         <CardsGrid initialIds={[]}>
-          <DashboardTitleBar
-            isOwner={false}
-            username={username}
-            dashboardSlug={dashboardSlug}
-          />
+          <DashboardTitleBar isOwner={false} dashboardSlug={dashboardSlug} />
           {Array.from({ length: 24 }).map((_, index) => (
             <ThreeLineCard
               className={cardTypes.sm.className}
@@ -216,10 +212,13 @@ export default function DashboardPage({}: {}) {
         <CardsGrid initialIds={cards.map((c) => c.card.id)}>
           <DashboardTitleBar
             isOwner={dashboard.isOwner}
-            username={username}
             dashboardSlug={dashboardSlug}
           />
-          <AddCardButton username={username} dashboardSlug={dashboardSlug} />
+          <CreateCardButton
+            modalId="create_card_from_grid"
+            variant="card"
+            dashboardSlug={dashboardSlug}
+          />
         </CardsGrid>
       </MainProviders>
     );
@@ -234,7 +233,6 @@ export default function DashboardPage({}: {}) {
         >
           <DashboardTitleBar
             isOwner={dashboard.isOwner}
-            username={username}
             dashboardSlug={dashboardSlug}
           />
         </CardsGrid>
@@ -255,12 +253,15 @@ export default function DashboardPage({}: {}) {
         <CardsGrid initialIds={cards.map((c) => c.card.id)}>
           <DashboardTitleBar
             isOwner={dashboard.isOwner}
-            username={username}
             dashboardSlug={dashboardSlug}
           />
           <Cards cards={cards} currencies={currencies} />
           {dashboard.isOwner && (
-            <AddCardButton username={username} dashboardSlug={dashboardSlug} />
+            <CreateCardButton
+              modalId="create_card_from_grid"
+              variant="card"
+              dashboardSlug={dashboardSlug}
+            />
           )}
         </CardsGrid>
       </ProvidersForCardTypes>

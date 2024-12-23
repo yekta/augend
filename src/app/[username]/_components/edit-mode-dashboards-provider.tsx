@@ -3,7 +3,7 @@
 import { useDashboards } from "@/app/[username]/_components/dashboards-provider";
 import { mainDashboardSlug } from "@/lib/constants";
 import { parseAsBoolean, useQueryState } from "nuqs";
-import { createContext, FC, ReactNode, useContext } from "react";
+import { createContext, FC, ReactNode, useContext, useEffect } from "react";
 
 type TEditModeDashboardsContext = {
   isEnabled: boolean;
@@ -31,6 +31,12 @@ export const EditModeDashboardsProvider: FC<{
     isOwner === true &&
     data !== undefined &&
     data.dashboards.some((d) => d.dashboard.slug !== mainDashboardSlug);
+
+  useEffect(() => {
+    if (!canEdit) {
+      setIsEnabled(false);
+    }
+  }, [canEdit]);
 
   return (
     <EditModeDashboardsContext.Provider
