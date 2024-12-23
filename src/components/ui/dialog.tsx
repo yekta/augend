@@ -3,8 +3,8 @@
 import * as React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { cn } from "@/lib/utils";
-import { Cross2Icon } from "@radix-ui/react-icons";
 import { cva, VariantProps } from "class-variance-authority";
+import { XIcon } from "lucide-react";
 
 const Dialog = DialogPrimitive.Root;
 
@@ -126,9 +126,9 @@ const DialogContent = React.forwardRef<
               {variant !== "styleless" && (
                 <DialogPrimitive.Close
                   className="absolute right-0 top-0 rounded-xl p-2.5 opacity-50 not-touch:hover:opacity-100 active:opacity-100 ring-1 ring-transparent 
-                focus-visible:outline-none focus-visible:ring-foreground disabled:pointer-events-none text-muted-foreground"
+                  focus-visible:outline-none focus-visible:ring-foreground disabled:pointer-events-none text-muted-foreground"
                 >
-                  <Cross2Icon className="h-5 w-5" />
+                  <XIcon className="h-5 w-5" />
                   <span className="sr-only">Close</span>
                 </DialogPrimitive.Close>
               )}

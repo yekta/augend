@@ -2,11 +2,9 @@
 
 import { useUserFull } from "@/app/[username]/[dashboard_slug]/_components/user-full-provider";
 import Blockies from "@/components/blockies/blockies";
-import CardValueFormItemCombobox from "@/components/cards/_utils/values-form/form-item-combobox";
 import CurrencyPreferenceTrigger from "@/components/currency-preference-trigger";
 import { CurrencySymbol } from "@/components/currency-symbol";
 import ErrorLine from "@/components/error-line";
-import ForexIcon from "@/components/icons/forex-icon";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -28,36 +26,36 @@ import { Input } from "@/components/ui/input";
 import { captureChangeUsername } from "@/lib/capture/client";
 import { timeAgoIntl } from "@/lib/helpers";
 import { useAsyncRouterRefresh } from "@/lib/hooks/use-async-router-refresh";
-import { cn } from "@/lib/utils";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
-import {
-  ChangeCurrencyPreferenceSchemaUI,
-  ChangeUsernameSchemaUI,
-} from "@/server/trpc/api/ui/types";
+import { ChangeUsernameSchemaUI } from "@/server/trpc/api/ui/types";
 import { api } from "@/server/trpc/setup/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderIcon, PencilIcon } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useQueryState } from "nuqs";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
 type Props = {};
 
+const usernameModalId = "username";
+const currencyPreferenceModalId = "currency";
+
 export default function AccountSections({}: Props) {
-  const {
-    dataUser,
-    isPendingUser,
-    isLoadingErrorUser,
-    dataCurrencies,
-    isPendingCurrencies,
-    isLoadingErrorCurrencies,
-    invalidateUser,
-  } = useUserFull();
+  const { dataUser, isPendingUser, isLoadingErrorUser } = useUserFull();
   const user = dataUser?.user;
-  const [isUsernameDialogOpen, setIsUsernameDialogOpen] = useState(false);
-  const [isCurrencyPreferenceDialogOpen, setIsCurrencyPreferenceDialogOpen] =
-    useState(false);
+  const [currentModal, setCurrentModal] = useQueryState("modal");
+
+  const isUsernameDialogOpen = currentModal === usernameModalId;
+  const setIsUsernameDialogOpen = (open: boolean) => {
+    setCurrentModal(open ? usernameModalId : null);
+  };
+
+  const isCurrencyPreferenceDialogOpen =
+    currentModal === currencyPreferenceModalId;
+  const setIsCurrencyPreferenceDialogOpen = (open: boolean) => {
+    setCurrentModal(open ? currencyPreferenceModalId : null);
+  };
 
   return (
     <div
