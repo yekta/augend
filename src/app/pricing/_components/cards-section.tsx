@@ -19,7 +19,14 @@ const billingCycleObjects: Record<
   monthly: { title: "Monthly", description: "Billed monthly" },
   yearly: {
     title: "Yearly",
-    description: "Billed yearly (20% off)",
+    description: (
+      <span>
+        <span className="pr-[0.6ch]">Billed yearly</span>
+        <span className="text-success bg-success/15 rounded px-1.25 font-medium">
+          20% off
+        </span>
+      </span>
+    ),
   },
 };
 
@@ -37,9 +44,9 @@ export default function PlanCardsSection({}: Props) {
         <RadioGroup
           defaultValue={billingCycle}
           onValueChange={(v) => setBillingCycle(v as TBillingCycle)}
-          className="w-full max-w-md md:w-auto md:max-w-full min-w-0 flex flex-row gap-0 bg-border rounded-lg p-0.75"
+          className="w-full max-w-md md:w-auto md:max-w-full min-w-0 flex flex-row gap-0 bg-border rounded-lg p-1"
         >
-          {BillingCycleEnum.options.map((value) => (
+          {BillingCycleEnum.options.map((value, index) => (
             <div key={value} className="flex-1 min-w-0 flex flex-row">
               <RadioGroupItem
                 id={value}
@@ -49,8 +56,18 @@ export default function PlanCardsSection({}: Props) {
               />
               <label
                 htmlFor={value}
+                data-index-first={index === 0 ? true : undefined}
+                data-index-last={
+                  index === BillingCycleEnum.options.length - 1
+                    ? true
+                    : undefined
+                }
                 className="flex-1 w-36 text-center min-w-0 truncate px-3 py-1.75 rounded-md font-semibold
-                peer-data-[state=checked]:bg-background cursor-pointer peer-focus-visible:ring-1 peer-focus-visible:ring-foreground/50"
+                peer-data-[state=checked]:bg-foreground peer-data-[state=checked]:text-background 
+                cursor-pointer peer-focus-visible:ring-1 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-border peer-focus-visible:ring-foreground/50
+                not-touch:hover:bg-foreground/10 active:bg-foreground/8 
+                not-touch:peer-data-[state=checked]:bg-foreground
+                active:peer-data-[state=checked]:bg-foreground"
               >
                 {billingCycleObjects[value].title}
               </label>
