@@ -39,7 +39,7 @@ import { z } from "zod";
 type Props = {};
 
 const usernameModalId = "username";
-const currencyPreferenceModalId = "currency";
+const currencyPreferenceModalId = "currencies";
 
 export default function AccountSections({}: Props) {
   const { dataUser, isPendingUser, isLoadingErrorUser } = useUserFull();

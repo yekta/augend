@@ -273,7 +273,7 @@ export function CreateCardCommandPanel({
                 div?.scrollTo({ top: 0 });
               });
             }}
-            placeholder="Search for a card..."
+            placeholder="Search cards..."
           />
           {!isLoadingError && (
             <CommandEmpty className="text-muted-foreground w-full text-center text-base py-6">
