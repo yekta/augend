@@ -32,10 +32,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function Page({ params }: Props) {
   const { dashboard_slug, username } = await params;
 
+  const start = performance.now();
   await apiServer.ui.getCards.prefetch({
     username,
     dashboardSlug: dashboard_slug,
   });
+  const duration = Math.round(performance.now() - start);
+  console.log(`[PREFETCH]: getCards | ${duration}ms`);
 
   return (
     <HydrateClient>

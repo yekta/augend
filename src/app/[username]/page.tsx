@@ -25,6 +25,7 @@ export default async function Page({ params }: Props) {
   const { username } = await params;
   const includeCardCounts = true;
 
+  const start = performance.now();
   await Promise.all([
     apiServer.ui.getOtherUser.prefetch({ username }),
     apiServer.ui.getDashboards.prefetch({
@@ -32,6 +33,8 @@ export default async function Page({ params }: Props) {
       includeCardCounts,
     }),
   ]);
+  const duration = Math.round(performance.now() - start);
+  console.log(`[PREFETCH]: getOtherUser + getDashboards | ${duration}ms`);
 
   return (
     <HydrateClient>
