@@ -158,7 +158,7 @@ export default function CreateCardTrigger({
           errorForm={errorCreateCard}
           onSubmit={onSubmit}
           getCardTypesQuery={getCardTypesQuery}
-          className="h-100 max-h-[calc((100vh-3rem)*0.8)]"
+          className="h-112 max-h-[calc((100svh-3rem)*0.75)]"
         />
       </DialogContent>
     </Dialog>
