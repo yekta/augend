@@ -10,12 +10,14 @@ import { z } from "zod";
 const BillingCycleEnum = z.enum(["yearly", "monthly"]);
 type TBillingCycle = z.infer<typeof BillingCycleEnum>;
 
-const billingCycleDefault: TBillingCycle = "yearly";
-
-const billingCycleObjects: Record<
+type TBillingCycleObject = Record<
   TBillingCycle,
   { title: string; description: string | ReactNode }
-> = {
+>;
+
+const billingCycleDefault: TBillingCycle = "yearly";
+
+const billingCycleObjects: TBillingCycleObject = {
   monthly: { title: "Monthly", description: "Billed monthly" },
   yearly: {
     title: "Yearly",
@@ -79,6 +81,7 @@ export default function PlanCardsSection({}: Props) {
         {plans.map((plan) => {
           return (
             <div
+              id={plan.id}
               key={plan.title}
               className="w-full max-w-md md:max-w-[23rem] border rounded-xl flex flex-col min-w-0"
             >
@@ -142,6 +145,7 @@ type TFeature = {
   noTick?: boolean;
 };
 type TPlan = {
+  id: string;
   title: string;
   stripePriceId?: string;
   features: TFeature[];
@@ -150,6 +154,7 @@ type TPlan = {
 
 const plans: TPlan[] = [
   {
+    id: "free",
     title: "Free",
     features: [
       {
@@ -175,6 +180,7 @@ const plans: TPlan[] = [
     ],
   },
   {
+    id: "starter",
     title: "Starter",
     stripePriceId: "price_1J2JZzLZQYF5tJjO6Wz9s5Z6",
     features: [
@@ -201,6 +207,7 @@ const plans: TPlan[] = [
     },
   },
   {
+    id: "pro",
     title: "Pro",
     stripePriceId: "price_1J2JZzLZQYF5tJjO6Wz9s5Z6",
     features: [
