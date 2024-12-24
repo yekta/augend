@@ -276,12 +276,12 @@ export function CreateCardCommandPanel({
             placeholder="Search for a card..."
           />
           {!isLoadingError && (
-            <CommandEmpty className="text-muted-foreground w-full text-center text-sm py-6">
+            <CommandEmpty className="text-muted-foreground w-full text-center text-base py-6">
               No cards found.
             </CommandEmpty>
           )}
           {!isPending && isLoadingError && (
-            <p className="w-full py-5 px-8 text-destructive text-sm text-center">
+            <p className="w-full py-5 px-8 text-destructive text-base text-center">
               Couldn't load cards :(
             </p>
           )}
@@ -303,7 +303,7 @@ export function CreateCardCommandPanel({
                       }))
                     ).map((cardTypeObj, i) => (
                       <CommandItem
-                        className="px-3 py-3 flex flex-row w-full items-center justify-between text-left gap-4"
+                        className="px-3 py-3 flex flex-row w-full items-center justify-between text-left gap-6"
                         key={`${cardTypeObj.cardType.id}-${i}`}
                         state={isPending ? "pending" : undefined}
                         onSelect={(e) => {
@@ -317,13 +317,13 @@ export function CreateCardCommandPanel({
                       >
                         <div className="flex flex-col items-start min-w-0 shrink overflow-hidden gap-1">
                           <p
-                            className="max-w-full text-sm font-bold group-data-[pending]/command:text-transparent group-data-[pending]/command:bg-foreground
+                            className="max-w-full text-base font-bold group-data-[pending]/command:text-transparent group-data-[pending]/command:bg-foreground
                             group-data-[pending]/command:rounded group-data-[pending]/command:animate-skeleton leading-tight"
                           >
                             {cardTypeObj.cardType.title}
                           </p>
                           <p
-                            className="max-w-full text-xs text-muted-foreground group-data-[pending]/command:text-transparent group-data-[pending]/command:bg-muted-foreground
+                            className="max-w-full text-sm text-muted-foreground group-data-[pending]/command:text-transparent group-data-[pending]/command:bg-muted-foreground
                             group-data-[pending]/command:rounded group-data-[pending]/command:animate-skeleton leading-tight"
                           >
                             {cardTypeObj.cardType.description}
@@ -335,7 +335,7 @@ export function CreateCardCommandPanel({
                             group-data-[pending]/command:bg-muted-foreground group-data-[pending]/command:animate-skeleton"
                           />
                           <p
-                            className="leading-none font-medium 
+                            className="leading-none font-semibold
                             group-data-[pending]/command:text-transparent group-data-[pending]/command:bg-muted-foreground
                             group-data-[pending]/command:rounded group-data-[pending]/command:animate-skeleton"
                           >
