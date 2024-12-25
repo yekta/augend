@@ -38,7 +38,9 @@ export default async function Page({ params }: Props) {
     dashboardSlug: dashboard_slug,
   });
   const duration = Math.round(performance.now() - start);
-  console.log(`[PREFETCH]: getCards | ${duration}ms`);
+  console.log(
+    `[PREFETCH]: getCards | username: ${username}, dashboardSlug: ${dashboard_slug} | ${duration}ms`
+  );
 
   return (
     <HydrateClient>

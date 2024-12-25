@@ -34,7 +34,9 @@ export default async function Page({ params }: Props) {
     }),
   ]);
   const duration = Math.round(performance.now() - start);
-  console.log(`[PREFETCH]: getOtherUser + getDashboards | ${duration}ms`);
+  console.log(
+    `[PREFETCH]: getOtherUser + getDashboards | username: ${username} | ${duration}ms`
+  );
 
   return (
     <HydrateClient>
