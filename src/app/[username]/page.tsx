@@ -35,7 +35,7 @@ export default async function Page({ params }: Props) {
   ]);
   const duration = Math.round(performance.now() - start);
   console.log(
-    `[PREFETCH]: getOtherUser + getDashboards | username: ${username} | ${duration}ms`
+    `[PREFETCH]: getOtherUser & getDashboards | ${username} | ${duration}ms`
   );
 
   return (

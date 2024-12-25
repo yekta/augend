@@ -39,7 +39,7 @@ export default async function Page({ params }: Props) {
   });
   const duration = Math.round(performance.now() - start);
   console.log(
-    `[PREFETCH]: getCards | username: ${username}, dashboardSlug: ${dashboard_slug} | ${duration}ms`
+    `[PREFETCH]: getCards | ${username}/${dashboard_slug} | ${duration}ms`
   );
 
   return (
