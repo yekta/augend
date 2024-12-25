@@ -120,6 +120,7 @@ export const uiRouter = createTRPCRouter({
         dashboardSlug,
       });
 
+      //Test push
       type Currency = NonNullable<
         (typeof result)[0]["cardValueCurrencies"][number]
       >;
