@@ -87,7 +87,6 @@ export async function getCards({
       dashboard: {
         id: dashboardsTable.id,
         title: dashboardsTable.title,
-        slug: dashboardsTable.slug,
       },
       value: {
         cardTypeInputId: cardValuesTable.cardTypeInputId,
