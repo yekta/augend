@@ -114,18 +114,11 @@ export const uiRouter = createTRPCRouter({
     }) {
       const isOwner = getIsOwner({ session, username });
 
-      const [result, dashboard] = await Promise.all([
-        getCards({
-          isOwner,
-          username,
-          dashboardSlug,
-        }),
-        getDashboard({
-          isOwner,
-          username,
-          dashboardSlug,
-        }),
-      ]);
+      const result = await getCards({
+        isOwner,
+        username,
+        dashboardSlug,
+      });
 
       let currencyIdsForFetch: string[] = [];
       result.forEach((cardObj, index) => {
@@ -160,7 +153,13 @@ export const uiRouter = createTRPCRouter({
       return {
         cards: result,
         currencies,
-        dashboard,
+        dashboard: result[0]
+          ? {
+              isOwner,
+              title: result[0].dashboard.title,
+              slug: result[0].dashboard.slug,
+            }
+          : null,
       };
     }),
   getCurrencies: publicProcedure
