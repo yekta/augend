@@ -49,6 +49,11 @@ export function getCurrencyFields(
 }
 
 const cardValueCurrencyAlias = alias(currenciesTable, "cardValueCurrency");
+const cardValuesThatRequireCurrencyFetch = [
+  "calculator_currency_id",
+  "currency_currency_id_base",
+  "currency_currency_id_quote",
+];
 
 export async function getCards({
   username,
@@ -147,11 +152,10 @@ export async function getCards({
       cardValueCurrencyAlias,
       and(
         // The cardTypeInputId must be one of the currency IDs
-        inArray(cardValuesTable.cardTypeInputId, [
-          "calculator_currency_id",
-          "currency_currency_id_base",
-          "currency_currency_id_quote",
-        ]),
+        inArray(
+          cardValuesTable.cardTypeInputId,
+          cardValuesThatRequireCurrencyFetch
+        ),
         // Compare text(column) to text(column):
         eq(sql`${cardValueCurrencyAlias.id}::text`, cardValuesTable.value)
       )
