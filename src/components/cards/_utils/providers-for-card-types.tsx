@@ -55,7 +55,7 @@ export function ProvidersForCardTypes({
 
   if (
     cryptoCurrencyIds.length > 0 ||
-    includesAny(["banano_total", "calculator"])
+    includesAny(["banano_total", "calculator", "currency"])
   ) {
     let allIds = cryptoCurrencyIds;
     if (cardTypeIds.includes("banano_total")) allIds.push(bananoCmcId);

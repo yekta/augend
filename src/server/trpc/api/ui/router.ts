@@ -123,11 +123,13 @@ export const uiRouter = createTRPCRouter({
       type Currency = NonNullable<
         (typeof result)[0]["cardValueCurrencies"][number]
       >;
-      let currencies = new Map<string, Currency>();
+      let currencyMap = new Map<string, Currency>();
       if (result.length > 0) {
-        for (const currency of result[0].cardValueCurrencies) {
-          if (!currency) continue;
-          currencies.set(currency.id, currency);
+        for (const card of result) {
+          for (const currency of card.cardValueCurrencies) {
+            if (!currency) continue;
+            currencyMap.set(currency.id, currency);
+          }
         }
       }
 
@@ -144,9 +146,11 @@ export const uiRouter = createTRPCRouter({
         })
         .filter((i) => i.card !== null && i.cardType !== null) as NonNullRow[];
 
+      const currencies = Array.from(currencyMap.values());
+
       return {
         cards,
-        currencies: Array.from(currencies.values()),
+        currencies,
         dashboard:
           result.length > 0 ? { ...result[0].dashboard, isOwner } : null,
       };
