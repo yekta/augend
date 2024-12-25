@@ -174,7 +174,7 @@ const plans: TPlan[] = [
         noTick: true,
       },
       {
-        text: "No access to members-only channels.",
+        text: "Access to public channels.",
         noTick: true,
       },
     ],
