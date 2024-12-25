@@ -48,6 +48,8 @@ export function getCurrencyFields(
   };
 }
 
+const cardValueCurrencyAlias = alias(currenciesTable, "cardValueCurrency");
+
 export async function getCards({
   username,
   dashboardSlug,
@@ -57,7 +59,8 @@ export async function getCards({
   dashboardSlug: string;
   isOwner?: boolean;
 }) {
-  let whereFilters = [
+  // 1) Build WHERE filters
+  const whereFilters = [
     eq(dashboardsTable.slug, dashboardSlug),
     inArray(
       dashboardsTable.userId,
@@ -69,10 +72,13 @@ export async function getCards({
     isNull(dashboardsTable.deletedAt),
     isNull(cardsTable.deletedAt),
   ];
+
   if (!isOwner) {
     whereFilters.push(eq(dashboardsTable.isPublic, true));
   }
-  const res = await db
+
+  // 2) Single query with a safe LEFT JOIN on currencies
+  const queryResult = await db
     .select({
       card: {
         id: cardsTable.id,
@@ -88,19 +94,36 @@ export async function getCards({
         id: dashboardsTable.id,
         title: dashboardsTable.title,
       },
+
+      // CardValue fields
       value: {
         cardTypeInputId: cardValuesTable.cardTypeInputId,
         value: cardValuesTable.value,
         xOrder: cardValuesTable.xOrder,
       },
+
+      // User’s default currency fields
       primaryCurrency: getCurrencyFields(primaryCurrencyAlias),
       secondaryCurrency: getCurrencyFields(secondaryCurrencyAlias),
       tertiaryCurrency: getCurrencyFields(tertiaryCurrencyAlias),
+
+      // Dynamic currency fields
+      cardValueCurrency: {
+        id: cardValueCurrencyAlias.id,
+        name: cardValueCurrencyAlias.name,
+        symbol: cardValueCurrencyAlias.symbol,
+        symbolCustomFont: cardValueCurrencyAlias.symbolCustomFont,
+        ticker: cardValueCurrencyAlias.ticker,
+        isCrypto: cardValueCurrencyAlias.isCrypto,
+        coinId: cardValueCurrencyAlias.coinId,
+        maxDecimalsPreferred: cardValueCurrencyAlias.maxDecimalsPreferred,
+      },
     })
     .from(cardsTable)
     .innerJoin(dashboardsTable, eq(cardsTable.dashboardId, dashboardsTable.id))
     .innerJoin(cardTypesTable, eq(cardsTable.cardTypeId, cardTypesTable.id))
     .innerJoin(usersTable, eq(dashboardsTable.userId, usersTable.id))
+    // The user's default currencies:
     .innerJoin(
       primaryCurrencyAlias,
       eq(usersTable.primaryCurrencyId, primaryCurrencyAlias.id)
@@ -113,10 +136,25 @@ export async function getCards({
       tertiaryCurrencyAlias,
       eq(usersTable.tertiaryCurrencyId, tertiaryCurrencyAlias.id)
     )
+    // Card values + card type inputs
     .leftJoin(cardValuesTable, eq(cardsTable.id, cardValuesTable.cardId))
     .leftJoin(
       cardTypeInputsTable,
       eq(cardValuesTable.cardTypeInputId, cardTypeInputsTable.id)
+    )
+    // 3) Conditionally join currencies by casting UUID -> text
+    .leftJoin(
+      cardValueCurrencyAlias,
+      and(
+        // The cardTypeInputId must be one of the currency IDs
+        inArray(cardValuesTable.cardTypeInputId, [
+          "calculator_currency_id",
+          "currency_currency_id_base",
+          "currency_currency_id_quote",
+        ]),
+        // Compare text(column) to text(column):
+        eq(sql`${cardValueCurrencyAlias.id}::text`, cardValuesTable.value)
+      )
     )
     .where(and(...whereFilters))
     .orderBy(
@@ -124,43 +162,73 @@ export async function getCards({
       desc(cardsTable.createdAt),
       desc(cardsTable.id)
     );
-  const editedRes = isOwner
-    ? res
-    : res.map((r) => ({
-        ...r,
-        primary_currency: defaultCurrencyPreference.primary,
-        secondary_currency: defaultCurrencyPreference.secondary,
-        tertiary_currency: defaultCurrencyPreference.tertiary,
+
+  // 4) If the user is not the owner, override currency fields
+  const editedQueryResult = isOwner
+    ? queryResult
+    : queryResult.map((row) => ({
+        ...row,
+        primaryCurrency: defaultCurrencyPreference.primary,
+        secondaryCurrency: defaultCurrencyPreference.secondary,
+        tertiaryCurrency: defaultCurrencyPreference.tertiary,
       }));
 
-  type TResItem = (typeof editedRes)[number];
+  // 5) Shape the final result
+  type TRow = (typeof editedQueryResult)[number];
 
-  let shapedRes: (Omit<TResItem, "value"> & {
-    values: NonNullable<TResItem["value"]>[] | null;
-  })[] = [];
+  const shapedRes: Array<{
+    card: TRow["card"];
+    cardType: TRow["cardType"];
+    user: TRow["user"];
+    dashboard: TRow["dashboard"];
+    values: NonNullable<TRow["value"]>[] | null;
+    primaryCurrency: TRow["primaryCurrency"];
+    secondaryCurrency: TRow["secondaryCurrency"];
+    tertiaryCurrency: TRow["tertiaryCurrency"];
+    cardValueCurrencies: Array<TRow["cardValueCurrency"]>;
+  }> = [];
 
-  for (const row of editedRes) {
-    const existingRowIndex = shapedRes.findIndex(
-      (r) => r.card.id === row.card.id
-    );
-    let existingRow =
-      existingRowIndex !== -1 ? shapedRes[existingRowIndex] : null;
-    if (!existingRow) {
-      const { value, ...rest } = row;
+  for (const row of editedQueryResult) {
+    const existingIndex = shapedRes.findIndex((s) => s.card.id === row.card.id);
+
+    if (existingIndex === -1) {
+      // No entry for this card yet
       shapedRes.push({
-        ...rest,
+        card: row.card,
+        cardType: row.cardType,
+        user: row.user,
+        dashboard: row.dashboard,
         values: row.value ? [row.value] : null,
+        primaryCurrency: row.primaryCurrency,
+        secondaryCurrency: row.secondaryCurrency,
+        tertiaryCurrency: row.tertiaryCurrency,
+        cardValueCurrencies: row.cardValueCurrency?.id
+          ? [row.cardValueCurrency]
+          : [],
       });
-      continue;
-    }
-    if (existingRow.values && row.value) {
-      existingRow.values.push(row.value);
-      existingRow.values = existingRow.values.sort(
-        (a, b) => a.xOrder - b.xOrder
-      );
-      shapedRes[existingRowIndex] = existingRow;
+    } else {
+      // We already have this card in shapedRes
+      const existing = shapedRes[existingIndex];
+
+      // Add the new "value" if present
+      if (row.value) {
+        if (!existing.values) {
+          existing.values = [];
+        }
+        existing.values.push(row.value);
+        // Keep them sorted if needed
+        existing.values.sort((a, b) => a.xOrder - b.xOrder);
+      }
+
+      // Add the new "cardValueCurrency" if present
+      if (row.cardValueCurrency?.id) {
+        existing.cardValueCurrencies.push(row.cardValueCurrency);
+      }
+
+      shapedRes[existingIndex] = existing;
     }
   }
+
   return shapedRes;
 }
 

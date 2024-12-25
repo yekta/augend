@@ -127,39 +127,23 @@ export const uiRouter = createTRPCRouter({
         }),
       ]);
 
-      let currencyIdsForFetch: string[] = [];
-      result.forEach((cardObj, index) => {
-        if (cardObj.cardType.id === "calculator") {
-          const values = cardObj.values;
-          if (!values) return;
-          values.forEach((v) => {
-            if (v.cardTypeInputId !== "calculator_currency_id") return;
-            currencyIdsForFetch.push(v.value);
-          });
+      type Currency = NonNullable<
+        (typeof result)[0]["cardValueCurrencies"][number]
+      >;
+      let currencies = new Map<string, Currency>();
+      if (result.length > 0) {
+        for (const currency of result[0].cardValueCurrencies) {
+          if (!currency) continue;
+          currencies.set(currency.id, currency);
         }
-        if (cardObj.cardType.id === "currency") {
-          const values = cardObj.values;
-          if (!values) return;
-          values.forEach((v) => {
-            if (
-              v.cardTypeInputId !== "currency_currency_id_base" &&
-              v.cardTypeInputId !== "currency_currency_id_quote"
-            )
-              return;
-            currencyIdsForFetch.push(v.value);
-          });
-        }
-      });
-
-      const currencyIdsForFetchFinal = cleanAndSortArray(currencyIdsForFetch);
-      const currencies = await getCurrencies({
-        ids: currencyIdsForFetchFinal,
-        category: "all",
-      });
+      }
 
       return {
-        cards: result,
-        currencies,
+        cards: result.map((i) => {
+          const { cardValueCurrencies, ...rest } = i;
+          return rest;
+        }),
+        currencies: Array.from(currencies.values()),
         dashboard,
       };
     }),
