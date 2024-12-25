@@ -10,7 +10,7 @@ import {
   NavigationMenuItem,
 } from "@/components/ui/navigation-menu";
 import { mainDashboardSlug } from "@/lib/constants";
-import { prefetchFullUserCached } from "@/lib/user";
+import { prefetchFullUserAndCurrenciesCached } from "@/lib/user";
 import { cn } from "@/lib/utils";
 import { auth } from "@/server/auth/auth";
 import { HydrateClient } from "@/server/trpc/setup/server";
@@ -23,7 +23,7 @@ export default async function Navbar({ className }: Props) {
   const session = await auth();
 
   if (session) {
-    await prefetchFullUserCached();
+    await prefetchFullUserAndCurrenciesCached();
   }
 
   return (

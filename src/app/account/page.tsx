@@ -2,7 +2,7 @@ import UserFullProvider from "@/app/[username]/[dashboard_slug]/_components/user
 import AccountSections from "@/app/account/_components/account-sections";
 import AccountTitle from "@/app/account/_components/account-title";
 import { siteTitle } from "@/lib/constants";
-import { prefetchFullUserCached } from "@/lib/user";
+import { prefetchFullUserAndCurrenciesCached } from "@/lib/user";
 import { auth } from "@/server/auth/auth";
 import { HydrateClient } from "@/server/trpc/setup/server";
 import { Metadata } from "next";
@@ -21,7 +21,7 @@ export default async function Page({}: Props) {
     return redirect("/sign-in?callbackUrl=/account");
   }
 
-  await prefetchFullUserCached();
+  await prefetchFullUserAndCurrenciesCached();
 
   return (
     <HydrateClient>
