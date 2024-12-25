@@ -114,18 +114,11 @@ export const uiRouter = createTRPCRouter({
     }) {
       const isOwner = getIsOwner({ session, username });
 
-      const [result, dashboard] = await Promise.all([
-        getCards({
-          isOwner,
-          username,
-          dashboardSlug,
-        }),
-        getDashboard({
-          isOwner,
-          username,
-          dashboardSlug,
-        }),
-      ]);
+      const result = await getCards({
+        isOwner,
+        username,
+        dashboardSlug,
+      });
 
       type Currency = NonNullable<
         (typeof result)[0]["cardValueCurrencies"][number]
@@ -138,13 +131,24 @@ export const uiRouter = createTRPCRouter({
         }
       }
 
-      return {
-        cards: result.map((i) => {
+      type Row = (typeof result)[0];
+      type NonNullRow = Row & {
+        card: NonNullable<Row["card"]>;
+        cardType: NonNullable<Row["cardType"]>;
+      };
+
+      const cards = result
+        .map((i) => {
           const { cardValueCurrencies, ...rest } = i;
           return rest;
-        }),
+        })
+        .filter((i) => i.card !== null && i.cardType !== null) as NonNullRow[];
+
+      return {
+        cards,
         currencies: Array.from(currencies.values()),
-        dashboard,
+        dashboard:
+          result.length > 0 ? { ...result[0].dashboard, isOwner } : null,
       };
     }),
   getCurrencies: publicProcedure

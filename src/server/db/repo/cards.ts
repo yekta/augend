@@ -18,6 +18,7 @@ import {
   exists,
   inArray,
   isNull,
+  or,
   sql,
   SQL,
 } from "drizzle-orm";
@@ -75,7 +76,7 @@ export async function getCards({
         .where(eq(usersTable.username, username))
     ),
     isNull(dashboardsTable.deletedAt),
-    isNull(cardsTable.deletedAt),
+    or(isNull(cardsTable.id), isNull(cardsTable.deletedAt)),
   ];
 
   if (!isOwner) {
@@ -98,6 +99,7 @@ export async function getCards({
       dashboard: {
         id: dashboardsTable.id,
         title: dashboardsTable.title,
+        slug: dashboardsTable.slug,
       },
 
       // CardValue fields
@@ -125,8 +127,8 @@ export async function getCards({
       },
     })
     .from(cardsTable)
-    .innerJoin(dashboardsTable, eq(cardsTable.dashboardId, dashboardsTable.id))
-    .innerJoin(cardTypesTable, eq(cardsTable.cardTypeId, cardTypesTable.id))
+    .rightJoin(dashboardsTable, eq(cardsTable.dashboardId, dashboardsTable.id))
+    .leftJoin(cardTypesTable, eq(cardsTable.cardTypeId, cardTypesTable.id))
     .innerJoin(usersTable, eq(dashboardsTable.userId, usersTable.id))
     // The user's default currencies:
     .innerJoin(
@@ -193,7 +195,24 @@ export async function getCards({
   }> = [];
 
   for (const row of editedQueryResult) {
-    const existingIndex = shapedRes.findIndex((s) => s.card.id === row.card.id);
+    const currentCard = row.card;
+    if (!currentCard) {
+      shapedRes.push({
+        card: null,
+        cardType: row.cardType,
+        user: row.user,
+        dashboard: row.dashboard,
+        values: null,
+        primaryCurrency: row.primaryCurrency,
+        secondaryCurrency: row.secondaryCurrency,
+        tertiaryCurrency: row.tertiaryCurrency,
+        cardValueCurrencies: [],
+      });
+      continue;
+    }
+    const existingIndex = shapedRes.findIndex(
+      (s) => s.card !== null && s.card.id === currentCard.id
+    );
 
     if (existingIndex === -1) {
       // No entry for this card yet

@@ -63,7 +63,7 @@ export const CurrentDashboardProvider: FC<Props> = ({
 
   const { invalidate: invalidateDashboards } = useDashboardsAuto();
 
-  const dashboardTitle = dataCards?.dashboard?.data.dashboard.title;
+  const dashboardTitle = dataCards?.dashboard?.title;
   const dataDashboard = dataCards?.dashboard;
   const isPendingDashboard = isPendingCards;
   const errorDashboard = errorCards;
