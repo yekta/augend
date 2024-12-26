@@ -50,6 +50,7 @@ const deleteDashboardModalId = "delete_dashboard";
 export function DashboardTitleBar({ dashboardSlug, isOwner }: Props) {
   const [currentModalId, setCurrentModalId] = useQueryState("modal");
   const { isEnabled } = useEditModeCards();
+  const utils = api.useUtils();
 
   useEffect(() => {
     if (isEnabled) return;
@@ -101,6 +102,8 @@ export function DashboardTitleBar({ dashboardSlug, isOwner }: Props) {
   } = useCurrentDashboard();
   const { isEnabled: isEnabledCardEdit, canEdit: canEditCards } =
     useEditModeCards();
+
+  const isPendingDeleteCards = utils.ui.deleteCards.isMutating() === 1;
 
   const {
     mutate: renameDashboard,
@@ -272,6 +275,9 @@ export function DashboardTitleBar({ dashboardSlug, isOwner }: Props) {
       {isOwner ? (
         <div className="flex items-center justify-start shrink-0 gap-1.5">
           <div className="size-7 flex items-center justify-center">
+            {isPendingDeleteCards && (
+              <LoaderIcon className="size-5 text-muted-more-foreground animate-spin" />
+            )}
             {isPendingReorderCards && (
               <LoaderIcon className="size-5 text-muted-more-foreground animate-spin" />
             )}
