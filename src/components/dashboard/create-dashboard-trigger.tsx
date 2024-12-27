@@ -1,4 +1,5 @@
 import ErrorLine from "@/components/error-line";
+import { useDashboardsAuto } from "@/components/providers/dashboards-auto-provider";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -32,7 +33,7 @@ type Props = {
     slug: string;
     title: string;
     dashboardId: string;
-  }) => void;
+  }) => Promise<void>;
   afterSuccess?: (props: {
     dashboardId: string;
     slug: string;
@@ -49,6 +50,7 @@ export default function CreateDashboardTrigger({
   afterSuccess,
   children,
 }: Props) {
+  const { invalidate } = useDashboardsAuto();
   const form = useForm<z.infer<typeof CreateDashboardSchemaUI>>({
     resolver: zodResolver(CreateDashboardSchemaUI),
     defaultValues: {
@@ -62,10 +64,10 @@ export default function CreateDashboardTrigger({
     error,
   } = api.ui.createDashboard.useMutation({
     onSuccess: async (d) => {
-      await afterSuccess?.(d);
+      await Promise.all([afterSuccess?.(d), invalidate()]);
       onOpenChange(false);
       form.reset();
-      onDashboardCreated?.(d);
+      await onDashboardCreated?.(d);
     },
   });
 

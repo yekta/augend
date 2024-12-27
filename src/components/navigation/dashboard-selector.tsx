@@ -2,7 +2,7 @@
 
 import CreateDashboardTrigger from "@/components/dashboard/create-dashboard-trigger";
 import { useDashboardsAuto } from "@/components/providers/dashboards-auto-provider";
-import { Button, LinkButton } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 
 import {
   DropdownMenu,
@@ -43,7 +43,7 @@ export default function DashboardSelector({}: Props) {
     slug: string;
   } | null>(null);
 
-  const onDashboardCreated = (dashboard: {
+  const onDashboardCreated = async (dashboard: {
     slug: string;
     title: string;
     dashboardId: string;
@@ -53,7 +53,7 @@ export default function DashboardSelector({}: Props) {
       title: dashboard.title,
       slug: dashboard.slug,
     });
-    invalidate();
+    await invalidate();
   };
 
   const [firstCheckAfterDataCompleted, setFirstCheckAfterDataCompleted] =

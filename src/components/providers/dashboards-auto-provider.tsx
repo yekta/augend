@@ -36,11 +36,13 @@ export const DashboardsAutoProvider: React.FC<Props> = ({ children }) => {
       username: username!,
     },
     {
-      enabled: isDashboardPath,
+      enabled: isDashboardPath && username !== undefined,
     }
   );
-  const invalidate = () =>
-    utils.ui.getDashboards.invalidate({ username: username! });
+  const invalidate = () => {
+    if (!username) return Promise.resolve();
+    return utils.ui.getDashboards.invalidate({ username: username! });
+  };
 
   return (
     <DashboardsAutoContext.Provider

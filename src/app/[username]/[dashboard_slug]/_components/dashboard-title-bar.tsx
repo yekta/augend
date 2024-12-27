@@ -5,6 +5,7 @@ import { useEditModeCards } from "@/app/[username]/[dashboard_slug]/_components/
 import CreateCardButton from "@/components/cards/_utils/create-card/create-card-button";
 import DeleteDashboardTrigger from "@/components/dashboard/delete-dashboard-trigger";
 import ErrorLine from "@/components/error-line";
+import { useDashboardsAuto } from "@/components/providers/dashboards-auto-provider";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -98,8 +99,9 @@ export function DashboardTitleBar({ dashboardSlug, isOwner }: Props) {
     isLoadingErrorDashboard,
     invalidateDashboard,
     cancelDashboardsQuery,
-    invalidateDashboards,
   } = useCurrentDashboard();
+  const { invalidate: invalidateDashboardsAuto } = useDashboardsAuto();
+
   const { isEnabled: isEnabledCardEdit, canEdit: canEditCards } =
     useEditModeCards();
 
@@ -117,7 +119,7 @@ export function DashboardTitleBar({ dashboardSlug, isOwner }: Props) {
     onSuccess: async (data) => {
       const path = `/${data.username}/${data.slug}`;
       await asyncPush(path);
-      await invalidateDashboard();
+      await Promise.all([invalidateDashboard(), invalidateDashboardsAuto()]);
       setIsDialogOpenRenameDashboard(false);
       renameDashboardForm.reset();
     },
@@ -255,7 +257,6 @@ export function DashboardTitleBar({ dashboardSlug, isOwner }: Props) {
               afterSuccess={async (data) => {
                 const path = `/${data.username}/${mainDashboardSlug}`;
                 await asyncPush(path);
-                await invalidateDashboards();
               }}
             >
               <Button

@@ -46,13 +46,13 @@ export const DashboardsProvider: React.FC<Props> = ({ children }) => {
     }
   );
 
-  const invalidate = () =>
-    userData
-      ? utils.ui.getDashboards.invalidate({
-          username: userData.username,
-          includeCardCounts,
-        })
-      : Promise.resolve();
+  const invalidate = () => {
+    if (!userData) return Promise.resolve();
+    return utils.ui.getDashboards.invalidate({
+      username: userData.username,
+      includeCardCounts,
+    });
+  };
 
   const cancelQuery = () =>
     userData

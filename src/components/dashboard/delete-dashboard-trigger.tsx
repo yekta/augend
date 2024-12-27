@@ -1,4 +1,6 @@
+import { useDashboards } from "@/app/[username]/_components/dashboards-provider";
 import ErrorLine from "@/components/error-line";
+import { useDashboardsAuto } from "@/components/providers/dashboards-auto-provider";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -41,6 +43,8 @@ export default function DeleteDashboardTrigger({
     captureDeleteDashboard({ slug: dashboardSlug });
   }
 
+  const { invalidate: invalidateDashboardsAuto } = useDashboardsAuto();
+
   const {
     mutate: deleteDashboard,
     isPending: isPendingDeleteDashboard,
@@ -50,7 +54,10 @@ export default function DeleteDashboardTrigger({
       onMutate?.();
     },
     onSuccess: async (data) => {
-      await afterSuccess?.(data);
+      await Promise.all([
+        await afterSuccess?.(data),
+        invalidateDashboardsAuto(),
+      ]);
       onOpenChange(false);
     },
   });

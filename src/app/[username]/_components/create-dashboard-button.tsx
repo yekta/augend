@@ -3,6 +3,7 @@
 import { dashboardCardSizeClassName } from "@/app/[username]/_components/dashboard-card";
 import { useDashboards } from "@/app/[username]/_components/dashboards-provider";
 import CreateDashboardTrigger from "@/components/dashboard/create-dashboard-trigger";
+import { useDashboardsAuto } from "@/components/providers/dashboards-auto-provider";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { PlusIcon } from "lucide-react";
@@ -30,11 +31,15 @@ export const CreateDashboardButton = ({
     setCurrentModalId(null);
   };
 
+  const afterSuccess = async () => {
+    return invalidate();
+  };
+
   return (
     <CreateDashboardTrigger
       open={open}
       onOpenChange={onOpenChange}
-      afterSuccess={() => invalidate()}
+      afterSuccess={afterSuccess}
     >
       {variant === "card" ? (
         <button className={cn(dashboardCardSizeClassName)}>

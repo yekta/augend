@@ -53,7 +53,6 @@ export default function DashboardCard({
   isPending,
 }: Props) {
   const ref = useRef<HTMLDivElement | null>(null);
-  const { invalidate } = useDashboards();
   const { isEnabled: isEditEnabled } = useEditModeDashboards();
   const [open, setOpen] = useState(false);
   const isMainDashboard = dashboardSlug === mainDashboardSlug;
@@ -61,6 +60,7 @@ export default function DashboardCard({
   const [preview, setPreview] = useState<HTMLElement | null>(null);
   const [cardSize, setCardSize] = useState<TSize>(defaultCardSize);
   const { instanceId } = useDndDashboards();
+  const { invalidate } = useDashboards();
 
   const wrapperClassName = `${dashboardCardSizeClassName}`;
 
@@ -208,7 +208,7 @@ export default function DashboardCard({
             open={open}
             onOpenChange={setOpen}
             dashboardTitle={title}
-            afterSuccess={() => invalidate()}
+            afterSuccess={invalidate}
           >
             <Button
               aria-label="Delete Dashboard"
