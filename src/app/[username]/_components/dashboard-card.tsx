@@ -61,6 +61,9 @@ export default function DashboardCard({
   const [cardSize, setCardSize] = useState<TSize>(defaultCardSize);
   const { instanceId } = useDndDashboards();
   const { invalidate } = useDashboards();
+  const afterSuccessDeleteDashboard = () => {
+    return invalidate();
+  };
 
   const wrapperClassName = `${dashboardCardSizeClassName}`;
 
@@ -208,7 +211,7 @@ export default function DashboardCard({
             open={open}
             onOpenChange={setOpen}
             dashboardTitle={title}
-            afterSuccess={invalidate}
+            afterSuccess={afterSuccessDeleteDashboard}
           >
             <Button
               aria-label="Delete Dashboard"
