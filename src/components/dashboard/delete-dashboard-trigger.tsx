@@ -54,10 +54,7 @@ export default function DeleteDashboardTrigger({
       onMutate?.();
     },
     onSuccess: async (data) => {
-      await Promise.all([
-        await afterSuccess?.(data),
-        invalidateDashboardsAuto(),
-      ]);
+      await Promise.all([afterSuccess?.(data), invalidateDashboardsAuto()]);
       onOpenChange(false);
     },
   });
