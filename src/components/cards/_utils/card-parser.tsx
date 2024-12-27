@@ -75,9 +75,11 @@ export function CardParser({
     )?.value;
     if (buyAmount === undefined) return null;
 
-    const cardTypeClassName = cardObject.card.variant
-      ? cardTypes.sm2.className
-      : cardTypes.sm.className;
+    const cardTypeClassName =
+      cardObject.card.variant === "mini"
+        ? cardTypes.sm2.className
+        : cardTypes.sm.className;
+
     return (
       <CardErrorBoundary className={cn(cardTypeClassName, className)}>
         <CryptoAssetCard
