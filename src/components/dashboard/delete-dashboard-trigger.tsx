@@ -1,4 +1,3 @@
-import { useDashboards } from "@/app/[username]/_components/dashboards-provider";
 import ErrorLine from "@/components/error-line";
 import { useDashboardsAuto } from "@/components/providers/dashboards-auto-provider";
 import { Button } from "@/components/ui/button";
@@ -35,6 +34,8 @@ export default function DeleteDashboardTrigger({
   dashboardTitle,
   dashboardSlug,
 }: Props) {
+  const { invalidate } = useDashboardsAuto();
+
   const [inputValue, setInputValue] = useState("");
 
   async function onSubmit(e: FormEvent) {
@@ -42,8 +43,6 @@ export default function DeleteDashboardTrigger({
     deleteDashboard({ slug: dashboardSlug });
     captureDeleteDashboard({ slug: dashboardSlug });
   }
-
-  const { invalidate: invalidateDashboardsAuto } = useDashboardsAuto();
 
   const {
     mutate: deleteDashboard,
@@ -54,7 +53,7 @@ export default function DeleteDashboardTrigger({
       onMutate?.();
     },
     onSuccess: async (data) => {
-      await Promise.all([afterSuccess?.(data), invalidateDashboardsAuto()]);
+      await Promise.all([afterSuccess?.(data), invalidate()]);
       onOpenChange(false);
     },
   });

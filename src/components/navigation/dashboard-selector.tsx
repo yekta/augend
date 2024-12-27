@@ -26,10 +26,10 @@ export default function DashboardSelector({}: Props) {
     data,
     isPending,
     isLoadingError,
-    invalidate,
     isDashboardPath,
     username,
     dashboardSlug,
+    isFetching,
   } = useDashboardsAuto();
 
   const pathname = usePathname();
@@ -38,10 +38,14 @@ export default function DashboardSelector({}: Props) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isCreateDashboardOpen, setIsCreateDashboardOpen] = useState(false);
 
-  const [selectedDashboard, setSelectedDashboard] = useState<{
-    title: string;
-    slug: string;
-  } | null>(null);
+  const [selectedDashboard, setSelectedDashboard] = useState<
+    | {
+        title: string;
+        slug: string;
+      }
+    | null
+    | undefined
+  >(undefined);
 
   const onDashboardCreated = async (dashboard: {
     slug: string;
@@ -53,170 +57,174 @@ export default function DashboardSelector({}: Props) {
       title: dashboard.title,
       slug: dashboard.slug,
     });
-    await invalidate();
   };
 
-  const [firstCheckAfterDataCompleted, setFirstCheckAfterDataCompleted] =
-    useState(false);
-
   useEffect(() => {
-    if (firstCheckAfterDataCompleted) {
-      setIsDropdownOpen(false);
+    if (!isDashboardPath || !username || !dashboardSlug) {
+      setSelectedDashboard(undefined);
+      return;
     }
-  }, [data]);
 
-  useEffect(() => {
-    if (!data) return;
+    if (!data) {
+      setSelectedDashboard(undefined);
+      return;
+    }
+
+    if (isFetching) return;
+
     const dashboard = data.dashboards.find(
       (d) => d.dashboard.slug === dashboardSlug
     );
-    setFirstCheckAfterDataCompleted(true);
-    if (!dashboard) return;
+    if (!dashboard) {
+      setSelectedDashboard(null);
+      return;
+    }
+
     setSelectedDashboard({
       title: dashboard.dashboard.title,
       slug: dashboard.dashboard.slug,
     });
-  }, [data, pathname]);
+  }, [
+    data,
+    isPending,
+    isFetching,
+    pathname,
+    isDashboardPath,
+    dashboardSlug,
+    username,
+  ]);
 
   const isHardError = !isPending && isLoadingError && !data;
-  const noCurrentDashboard =
-    firstCheckAfterDataCompleted && selectedDashboard === null;
   const noDashboards =
     data && (data.dashboards === null || data.dashboards.length === 0);
 
-  const isDashboardNamePending = isPending || !firstCheckAfterDataCompleted;
+  const isDashboardNamePending = isPending || selectedDashboard === undefined;
+
+  if (!isDashboardPath || !username || !dashboardSlug) return null;
 
   return (
-    isDashboardPath &&
-    username &&
-    dashboardSlug && (
-      <>
-        <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
-          <DropdownMenuTrigger asChild className="py-2.25">
-            <Button
-              size="sm"
-              variant="outline"
-              fadeOnDisabled={false}
-              forceMinSize={false}
-              className="font-semibold shrink max-w-[13rem] min-w-0 text-left justify-between items-center gap-1.25 group/trigger px-2.5"
-              data-pending={isDashboardNamePending ? true : undefined}
-              data-loading-error={isHardError ? true : undefined}
-              disabled={isDashboardNamePending || isHardError || noDashboards}
-            >
-              <p
-                className="truncate pointer-events-none select-none group-data-[pending]/trigger:text-transparent group-data-[pending]/trigger:bg-foreground 
-                group-data-[pending]/trigger:rounded group-data-[pending]/trigger:animate-skeleton group-data-[loading-error]/trigger:text-destructive leading-none"
-              >
-                {isHardError
-                  ? "Error"
-                  : data === null || (data && noCurrentDashboard)
-                  ? "Not found"
-                  : isDashboardNamePending
-                  ? "Loading"
-                  : selectedDashboard?.title || "Loading"}
-              </p>
-              {data !== null && !noDashboards && !isHardError && (
-                <ChevronDownIcon className="size-4 pointer-events-none select-none -my-1 -mr-1 shrink-0 text-muted-more-foreground group-data-[state=open]/trigger:rotate-180 transition-transform" />
-              )}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-60">
-            {data && (
+    <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
+      <DropdownMenuTrigger asChild className="py-2.25">
+        <Button
+          size="sm"
+          variant="outline"
+          fadeOnDisabled={false}
+          forceMinSize={false}
+          className="font-semibold shrink max-w-[13rem] min-w-0 text-left justify-between items-center gap-1.25 group/trigger px-2.5"
+          data-pending={isDashboardNamePending ? true : undefined}
+          data-loading-error={isHardError ? true : undefined}
+          disabled={isDashboardNamePending || isHardError || noDashboards}
+        >
+          <p
+            className="truncate pointer-events-none select-none group-data-[pending]/trigger:text-transparent group-data-[pending]/trigger:bg-foreground 
+            group-data-[pending]/trigger:rounded group-data-[pending]/trigger:animate-skeleton group-data-[loading-error]/trigger:text-destructive leading-none"
+          >
+            {isHardError
+              ? "Error"
+              : isDashboardNamePending
+              ? "Loading"
+              : selectedDashboard
+              ? selectedDashboard.title
+              : "Not found"}
+          </p>
+          {data !== null && !noDashboards && !isHardError && (
+            <ChevronDownIcon className="size-4 pointer-events-none select-none -my-1 -mr-1 shrink-0 text-muted-more-foreground group-data-[state=open]/trigger:rotate-180 transition-transform" />
+          )}
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start" className="w-60">
+        {data && (
+          <>
+            {data.isOwner && (
               <>
-                {data.isOwner && (
-                  <>
-                    {/* Create Dashboard Button */}
-                    <DropdownMenuGroup>
-                      <CreateDashboardTrigger
-                        onDashboardCreated={onDashboardCreated}
-                        open={isCreateDashboardOpen}
-                        onOpenChange={setIsCreateDashboardOpen}
-                        afterSuccess={async (d) => {
-                          const path = `/${d.username}/${d.slug}`;
-                          await asyncRouterPush(path);
-                        }}
-                      >
-                        <DropdownMenuItem
-                          onSelect={(e) => e.preventDefault()}
-                          className="p-0"
-                        >
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            className="w-full px-3 justify-start text-left items-center gap-2 py-2.25 text-base"
-                          >
-                            <div className="size-4 shrink-0 -my-1 -ml-0.5 flex items-center justify-center">
-                              <PlusIcon className="size-5" />
-                            </div>
-                            <p className="shrink min-w-0 leading-tight">
-                              Create
-                            </p>
-                          </Button>
-                        </DropdownMenuItem>
-                      </CreateDashboardTrigger>
-                    </DropdownMenuGroup>
-                    <DropdownMenuSeparator />
-                  </>
-                )}
-                <ScrollArea>
-                  <DropdownMenuGroup>
+                {/* Create Dashboard Button */}
+                <DropdownMenuGroup>
+                  <CreateDashboardTrigger
+                    onDashboardCreated={onDashboardCreated}
+                    open={isCreateDashboardOpen}
+                    onOpenChange={setIsCreateDashboardOpen}
+                    afterSuccess={async (d) => {
+                      const path = `/${d.username}/${d.slug}`;
+                      await asyncRouterPush(path);
+                    }}
+                  >
                     <DropdownMenuItem
-                      asChild
-                      className="cursor-pointer font-semibold group/item px-3"
+                      onSelect={(e) => e.preventDefault()}
+                      className="p-0"
                     >
-                      <Link
-                        href={`/${username}`}
-                        className="w-full flex items-center justify-start gap-2 break-wordsa"
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="w-full px-3 justify-start text-left items-center gap-2 py-2.25 text-base"
                       >
-                        <div className="size-4 -my-1 shrink-0 -ml-0.5 flex items-center justify-center">
-                          <FolderIcon className="size-full" />
+                        <div className="size-4 shrink-0 -my-1 -ml-0.5 flex items-center justify-center">
+                          <PlusIcon className="size-5" />
                         </div>
-                        <p className="min-w-0 shrink leading-tight">
-                          All Dashboards
-                        </p>
-                      </Link>
+                        <p className="shrink min-w-0 leading-tight">Create</p>
+                      </Button>
                     </DropdownMenuItem>
-                  </DropdownMenuGroup>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuGroup>
-                    {data.dashboards.map((d) => (
-                      <DropdownMenuItem
-                        key={d.dashboard.slug}
-                        asChild
-                        className="cursor-pointer font-semibold group/item"
-                        data-item-selected={
-                          d.dashboard.slug === selectedDashboard?.slug
-                            ? true
-                            : undefined
-                        }
-                      >
-                        <Link
-                          onClick={() =>
-                            setSelectedDashboard({
-                              title: d.dashboard.title,
-                              slug: d.dashboard.slug,
-                            })
-                          }
-                          href={`/${username}/${d.dashboard.slug}`}
-                          className="w-full flex items-center justify-between"
-                        >
-                          <p className="min-w-0 shrink leading-tight">
-                            {d.dashboard.title}
-                          </p>
-                          <CheckIcon
-                            className="size-5 -my-1 pointer-events-none select-none -mr-0.5 shrink-0 text-foreground opacity-0 scale-0
-                            group-data-[item-selected]/item:opacity-100 group-data-[item-selected]/item:scale-100 transition"
-                          />
-                        </Link>
-                      </DropdownMenuItem>
-                    ))}
-                  </DropdownMenuGroup>
-                </ScrollArea>
+                  </CreateDashboardTrigger>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
               </>
             )}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </>
-    )
+            <ScrollArea>
+              <DropdownMenuGroup>
+                <DropdownMenuItem
+                  asChild
+                  className="cursor-pointer font-semibold group/item px-3"
+                >
+                  <Link
+                    href={`/${username}`}
+                    className="w-full flex items-center justify-start gap-2 break-wordsa"
+                  >
+                    <div className="size-4 -my-1 shrink-0 -ml-0.5 flex items-center justify-center">
+                      <FolderIcon className="size-full" />
+                    </div>
+                    <p className="min-w-0 shrink leading-tight">
+                      All Dashboards
+                    </p>
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                {data.dashboards.map((d) => (
+                  <DropdownMenuItem
+                    key={d.dashboard.slug}
+                    asChild
+                    className="cursor-pointer font-semibold group/item"
+                    data-item-selected={
+                      d.dashboard.slug === selectedDashboard?.slug
+                        ? true
+                        : undefined
+                    }
+                  >
+                    <Link
+                      onClick={() =>
+                        setSelectedDashboard({
+                          title: d.dashboard.title,
+                          slug: d.dashboard.slug,
+                        })
+                      }
+                      href={`/${username}/${d.dashboard.slug}`}
+                      className="w-full flex items-center justify-between"
+                    >
+                      <p className="min-w-0 shrink leading-tight">
+                        {d.dashboard.title}
+                      </p>
+                      <CheckIcon
+                        className="size-5 -my-1 pointer-events-none select-none -mr-0.5 shrink-0 text-foreground opacity-0 scale-0
+                    group-data-[item-selected]/item:opacity-100 group-data-[item-selected]/item:scale-100 transition"
+                      />
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuGroup>
+            </ScrollArea>
+          </>
+        )}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

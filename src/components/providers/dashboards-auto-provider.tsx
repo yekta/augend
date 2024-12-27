@@ -8,8 +8,10 @@ import React, { createContext, ReactNode, useContext } from "react";
 type TDashboardsAutoContext = {
   data: AppRouterOutputs["ui"]["getDashboards"] | undefined;
   isPending: boolean;
+  isFetching: boolean;
   isLoadingError: boolean;
   invalidate: () => Promise<void>;
+  refetch: () => Promise<void>;
   isDashboardPath: boolean;
   username?: string;
   dashboardSlug?: string;
@@ -31,17 +33,23 @@ export const DashboardsAutoProvider: React.FC<Props> = ({ children }) => {
   const isDashboardPath = pathname.split("/").length >= 3;
 
   const utils = api.useUtils();
-  const { data, isPending, isLoadingError } = api.ui.getDashboards.useQuery(
-    {
-      username: username!,
-    },
-    {
-      enabled: isDashboardPath && username !== undefined,
-    }
-  );
+  const { data, isPending, isLoadingError, isFetching } =
+    api.ui.getDashboards.useQuery(
+      {
+        username: username!,
+      },
+      {
+        enabled: isDashboardPath && username !== undefined,
+      }
+    );
+
   const invalidate = () => {
     if (!username) return Promise.resolve();
     return utils.ui.getDashboards.invalidate({ username: username! });
+  };
+  const refetch = () => {
+    if (!username) return Promise.resolve();
+    return utils.ui.getDashboards.refetch({ username: username! });
   };
 
   return (
@@ -50,7 +58,9 @@ export const DashboardsAutoProvider: React.FC<Props> = ({ children }) => {
         data,
         isPending,
         isLoadingError,
+        isFetching,
         invalidate,
+        refetch,
         isDashboardPath,
         username,
         dashboardSlug,

@@ -51,6 +51,7 @@ export default function CreateDashboardTrigger({
   children,
 }: Props) {
   const { invalidate } = useDashboardsAuto();
+
   const form = useForm<z.infer<typeof CreateDashboardSchemaUI>>({
     resolver: zodResolver(CreateDashboardSchemaUI),
     defaultValues: {
