@@ -32,6 +32,7 @@ import { api } from "@/server/trpc/setup/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderIcon, PencilIcon } from "lucide-react";
 import { useQueryState } from "nuqs";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -42,7 +43,8 @@ const usernameModalId = "username";
 const currencyPreferenceModalId = "currencies";
 
 export default function AccountSections({}: Props) {
-  const { dataUser, isPendingUser, isLoadingErrorUser } = useUserFull();
+  const { dataUser, isPendingUser, isLoadingErrorUser, invalidateUser } =
+    useUserFull();
   const user = dataUser?.user;
   const [currentModal, setCurrentModal] = useQueryState("modal");
 
@@ -70,6 +72,7 @@ export default function AccountSections({}: Props) {
         <div className="max-w-full flex items-center justify-start gap-1.5">
           <UsernameButton
             dataUser={dataUser}
+            invalidateUser={invalidateUser}
             isPendingUser={isPendingUser}
             open={isUsernameDialogOpen}
             onOpenChange={setIsUsernameDialogOpen}
@@ -152,12 +155,12 @@ function UsernameButton({
   onOpenChange,
 }: {
   dataUser: AppRouterOutputs["ui"]["getUserFull"] | undefined;
+  invalidateUser: () => Promise<void>;
   isPendingUser: boolean;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
   const asyncRouterRefresh = useAsyncRouterRefresh();
-
   const user = dataUser?.user;
 
   const form = useForm<z.infer<typeof ChangeUsernameSchemaUI>>({
@@ -167,10 +170,16 @@ function UsernameButton({
     },
   });
 
-  const resetProcess = () => {
-    onOpenChange(false);
+  const resetProcess = ({ username }: { username: string }) => {
     resetChangeUsername();
-    form.reset();
+    form.reset({ newUsername: username });
+  };
+
+  const onOpenChangeWithReset = (open: boolean) => {
+    if (!open) {
+      resetProcess({ username: user?.username || "" });
+    }
+    onOpenChange(open);
   };
 
   const {
@@ -181,7 +190,8 @@ function UsernameButton({
   } = api.ui.changeUsername.useMutation({
     onSuccess: async (d) => {
       await asyncRouterRefresh();
-      resetProcess();
+      onOpenChange(false);
+      resetProcess({ username: d?.username || "" });
     },
   });
 
@@ -195,7 +205,7 @@ function UsernameButton({
     }
 
     if (values.newUsername === user.username) {
-      resetProcess();
+      resetProcess({ username: user?.username || "" });
       return;
     }
 
@@ -211,7 +221,7 @@ function UsernameButton({
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={onOpenChangeWithReset}>
       <DialogTrigger disabled={isPendingUser} asChild>
         <Button
           variant="ghost"
