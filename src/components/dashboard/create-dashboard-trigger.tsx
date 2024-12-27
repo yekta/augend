@@ -19,10 +19,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { captureCreateDashboard } from "@/lib/capture/client";
+import { newDashboardIdsAtom } from "@/lib/stores/main";
 import { CreateDashboardSchemaUI } from "@/server/trpc/api/ui/types";
 import { api } from "@/server/trpc/setup/react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useSetAtom } from "jotai";
 import { LoaderIcon } from "lucide-react";
+import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -59,6 +62,10 @@ export default function CreateDashboardTrigger({
     },
   });
 
+  const setNewDashboardIds = useSetAtom(newDashboardIdsAtom);
+  const setNewDashboardIdTimeout = useRef<NodeJS.Timeout | undefined>();
+  const newDashboardIdTimeout = useRef<NodeJS.Timeout | undefined>();
+
   const {
     mutate: createDashboard,
     isPending,
@@ -69,6 +76,26 @@ export default function CreateDashboardTrigger({
       onOpenChange(false);
       form.reset();
       await onDashboardCreated?.(d);
+
+      setTimeout(() => {
+        clearTimeout(setNewDashboardIdTimeout.current);
+        setNewDashboardIdTimeout.current = setTimeout(() => {
+          setNewDashboardIds((prev) => ({ ...prev, [d.dashboardId]: true }));
+          clearTimeout(newDashboardIdTimeout.current);
+          newDashboardIdTimeout.current = setTimeout(() => {
+            setNewDashboardIds((prev) => {
+              const { [d.dashboardId]: _, ...rest } = prev;
+              return rest;
+            });
+          }, 2500);
+          d;
+        }, 300);
+
+        const selector = `[data-card-id="${d.dashboardId}"]`;
+        const element = document.querySelector(selector);
+        if (!element) return;
+        element.scrollIntoView({ behavior: "smooth", block: "center" });
+      });
     },
   });
 

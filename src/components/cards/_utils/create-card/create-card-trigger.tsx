@@ -58,8 +58,6 @@ export default function CreateCardTrigger({
   const [selectedCardType, setSelectedCardType] =
     useState<TSelectedCardType | null>(null);
 
-  const setNewCardIds = useSetAtom(newCardIdsAtom);
-
   useHotkeys(
     "mod+k",
     (e) => {
@@ -83,6 +81,7 @@ export default function CreateCardTrigger({
 
   const { invalidateCards } = useCurrentDashboard();
 
+  const setNewCardIds = useSetAtom(newCardIdsAtom);
   const setNewCardIdTimeout = useRef<NodeJS.Timeout | undefined>();
   const newCardIdTimeout = useRef<NodeJS.Timeout | undefined>();
 

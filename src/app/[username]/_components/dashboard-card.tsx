@@ -8,6 +8,7 @@ import DeleteDashboardTrigger from "@/components/dashboard/delete-dashboard-trig
 import { CardsIcon } from "@/components/icons/cards-icon";
 import { Button } from "@/components/ui/button";
 import { mainDashboardSlug } from "@/lib/constants";
+import { newDashboardIdsAtom } from "@/lib/stores/main";
 import { cn } from "@/lib/utils";
 import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine";
 import {
@@ -15,6 +16,7 @@ import {
   dropTargetForElements,
 } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview";
+import { useAtomValue } from "jotai";
 import { EyeIcon, LockIcon, MinusIcon } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -60,6 +62,14 @@ export default function DashboardCard({
   const [preview, setPreview] = useState<HTMLElement | null>(null);
   const [cardSize, setCardSize] = useState<TSize>(defaultCardSize);
   const { instanceId } = useDndDashboards();
+
+  const newDashboardIds = useAtomValue(newDashboardIdsAtom);
+  const sharedProps = {
+    "data-card-id": dashboardId,
+    "data-card-new":
+      dashboardId && newDashboardIds[dashboardId] ? true : undefined,
+  };
+
   const { invalidate } = useDashboards();
   const afterSuccessDeleteDashboard = () => {
     return invalidate();
@@ -123,12 +133,13 @@ export default function DashboardCard({
         <div
           className="border rounded-xl flex gap-2 flex-1 flex-col items-start justify-between pl-5 pr-4.5 pt-4 pb-4.5 overflow-hidden
           not-touch:group-data-[has-href]/card:group-hover/card:bg-background-hover group-data-[has-href]/card:group-active/card:bg-background-hover
-          group-data-[dnd-active]/card:overflow-visible group-data-[dnd-over]/card:bg-background group-data-[dnd-over]/card:transition
+          group-data-[dnd-active]/card:overflow-visible group-data-[dnd-over]/card:bg-background
           group-data-[dnd-active]/card:not-touch:group-hover/card:bg-background-hover
           [&_*]:group-data-[dnd-active]/card:select-none group-data-[dnd-over]/card:translate-x-1
           group-focus-visible/card:ring-1 group-focus-visible/card:ring-foreground/50 
           group-focus-visible/card:ring-offset-2 group-focus-visible/card:ring-offset-background
-          group-data-[dnd-dragging]/card:bg-background-hover"
+          group-data-[dnd-dragging]/card:bg-background-hover
+          transition-shadow duration-500 group-data-[dnd-over]/card:transition group-data-[card-new]/card:ring-4 ring-border"
         >
           <div
             style={{
@@ -183,6 +194,7 @@ export default function DashboardCard({
           wrapperClassName,
           "data-[dnd-active]:data-[dnd-dragging]:opacity-50 relative data-[dnd-active]:cursor-grab data-[dnd-over]:z-20"
         )}
+        {...sharedProps}
       >
         <CardContent />
         {isEditEnabled && (
@@ -240,6 +252,7 @@ export default function DashboardCard({
         data-has-href={true}
         className={wrapperClassName}
         href={href}
+        {...sharedProps}
       >
         <CardContent />
       </Link>
@@ -249,6 +262,7 @@ export default function DashboardCard({
     <div
       data-pending={isPending ? true : undefined}
       className={wrapperClassName}
+      {...sharedProps}
     >
       <CardContent />
     </div>

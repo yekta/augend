@@ -1,7 +1,9 @@
 import { cn } from "@/lib/utils";
 import { ComponentProps } from "react";
 
-export function AddCardIcon({ className }: ComponentProps<"svg"> & {}) {
+export default function CreateCardIcon({
+  className,
+}: ComponentProps<"svg"> & {}) {
   return (
     <svg
       className={cn("shrink-0 size-6", className)}

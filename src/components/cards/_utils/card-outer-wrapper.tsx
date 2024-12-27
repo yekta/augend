@@ -91,8 +91,6 @@ export default function CardOuterWrapper({
   const [cardSize, setCardSize] = useState<TSize>(defaultCardSize);
   const { instanceId } = useDndCards();
 
-  const newCardIds = useAtomValue(newCardIdsAtom);
-
   const {
     mutate: deleteCard,
     isPending: isPendingDeleteCard,
@@ -125,6 +123,7 @@ export default function CardOuterWrapper({
     captureDeleteCards({ ids: [cardId] });
   };
 
+  const newCardIds = useAtomValue(newCardIdsAtom);
   const sharedProps = {
     "data-card-id": cardId,
     "data-card-new": cardId && newCardIds[cardId] ? true : undefined,
