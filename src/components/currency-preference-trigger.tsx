@@ -12,6 +12,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Form, FormField } from "@/components/ui/form";
+import { toastErrorProps } from "@/components/ui/sonner";
 import { captureChangeCurrencyPreference } from "@/lib/capture/client";
 import { useAsyncRouterRefresh } from "@/lib/hooks/use-async-router-refresh";
 import { cn } from "@/lib/utils";
@@ -119,6 +120,7 @@ export default function CurrencyPreferenceTrigger({
       console.log("There is no user.");
       toast.error("Can't find the user", {
         description: "Please refresh the page and sign in again.",
+        ...toastErrorProps,
       });
       return;
     }

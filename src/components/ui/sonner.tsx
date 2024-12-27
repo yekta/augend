@@ -5,6 +5,11 @@ import { Toaster as Sonner } from "sonner";
 
 type ToasterProps = React.ComponentProps<typeof Sonner>;
 
+export const toastErrorProps = {
+  duration: 5000,
+  closeButton: false,
+};
+
 const Toaster = ({ ...props }: ToasterProps) => {
   const { theme = "system" } = useTheme();
 

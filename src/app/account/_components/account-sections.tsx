@@ -23,6 +23,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { toastErrorProps } from "@/components/ui/sonner";
 import { captureChangeUsername } from "@/lib/capture/client";
 import { timeAgoIntl } from "@/lib/helpers";
 import { useAsyncRouterRefresh } from "@/lib/hooks/use-async-router-refresh";
@@ -200,6 +201,7 @@ function UsernameButton({
       console.log("There is no user.");
       toast.error("Can't find the user", {
         description: "Please refresh the page and sign in again.",
+        ...toastErrorProps,
       });
       return;
     }

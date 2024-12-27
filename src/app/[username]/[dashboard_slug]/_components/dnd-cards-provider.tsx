@@ -1,6 +1,7 @@
 "use client";
 
 import { useCurrentDashboard } from "@/app/[username]/[dashboard_slug]/_components/current-dashboard-provider";
+import { toastErrorProps } from "@/components/ui/sonner";
 import { AppRouterInputs } from "@/server/trpc/api/root";
 import { api } from "@/server/trpc/setup/react";
 import { autoScrollWindowForElements } from "@atlaskit/pragmatic-drag-and-drop-auto-scroll/element";
@@ -12,6 +13,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { toast } from "sonner";
 
 export const dndCardItemType = "dnd-card-item";
 
@@ -41,6 +43,12 @@ export default function DndCardsProvider({ initialIds, children }: Props) {
     },
     onSuccess: async () => {
       await invalidateCards();
+    },
+    onError: async () => {
+      toast.error("Couldn't reorder the cards", {
+        description: "Please try again.",
+        ...toastErrorProps,
+      });
     },
   });
 

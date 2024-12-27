@@ -2,6 +2,7 @@
 
 import { useDashboards } from "@/app/[username]/_components/dashboards-provider";
 import { useDashboardsAuto } from "@/components/providers/dashboards-auto-provider";
+import { toastErrorProps } from "@/components/ui/sonner";
 import { AppRouterInputs } from "@/server/trpc/api/root";
 import { api } from "@/server/trpc/setup/react";
 import { autoScrollWindowForElements } from "@atlaskit/pragmatic-drag-and-drop-auto-scroll/element";
@@ -14,6 +15,7 @@ import {
   useMemo,
   useState,
 } from "react";
+import { toast } from "sonner";
 
 export const dndDashboardItemType = "dnd-dashboard-item";
 
@@ -55,6 +57,12 @@ export default function DndDashboardsProvider({ children }: Props) {
     },
     onSuccess: async () => {
       await Promise.all([invalidateDashboards(), invalidateDashboardsAuto()]);
+    },
+    onError: async () => {
+      toast.error("Couldn't reorder the dashboards", {
+        description: "Please try again.",
+        ...toastErrorProps,
+      });
     },
   });
 

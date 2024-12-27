@@ -33,6 +33,7 @@ import { toast } from "sonner";
 import { captureDeleteCards } from "@/lib/capture/client";
 import { useAtomValue } from "jotai";
 import { newCardIdsAtom } from "@/lib/stores/main";
+import { toastErrorProps } from "@/components/ui/sonner";
 
 type TSharedProps = {
   cardId?: string;
@@ -108,10 +109,9 @@ export default function CardOuterWrapper({
       invalidateCards();
     },
     onError: (err, _, context) => {
-      toast.error("Card deletion failed", {
+      toast.error("Couldn't delete the cards", {
         description: "Please try again.",
-        duration: 5000,
-        closeButton: false,
+        ...toastErrorProps,
       });
       if (context?.dataCards) {
         setDataCards(context.dataCards);
