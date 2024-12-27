@@ -21,7 +21,7 @@ const placeholderData: AppRouterOutputs["ui"]["getDashboards"] = {
     user: {
       username: "username",
     },
-    cardCount: 1000,
+    cardCount: 100,
   })),
   isOwner: false,
 };

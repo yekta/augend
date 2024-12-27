@@ -58,32 +58,13 @@ const DialogContent = React.forwardRef<
       classNameInnerWrapper,
       variant,
       children,
-      onPointerDownOutside,
-      onPointerDown,
       onCloseAutoFocus,
+      onEscapeKeyDown,
       ...props
     },
     ref
   ) => {
-    const isCloseFromMouse = React.useRef<boolean>(false);
-
-    const handlePointerDownOutside = React.useCallback(
-      (e: unknown) => {
-        isCloseFromMouse.current = true;
-        // @ts-expect-error - they don't export the PointerDownOutsideEvent
-        onPointerDownOutside?.(e);
-      },
-      [onPointerDownOutside]
-    );
-
-    const handlePointerDown = React.useCallback(
-      (e: unknown) => {
-        isCloseFromMouse.current = true;
-        // @ts-expect-error - they don't export the PointerDownEvent
-        onPointerDown?.(e);
-      },
-      [onPointerDown]
-    );
+    const isCloseFromKey = React.useRef<boolean>(false);
 
     const handleCloseAutoFocus = React.useCallback(
       (e: Event) => {
@@ -91,23 +72,32 @@ const DialogContent = React.forwardRef<
           return onCloseAutoFocus(e);
         }
 
-        if (!isCloseFromMouse.current) {
+        if (isCloseFromKey.current) {
+          isCloseFromKey.current = false;
           return;
         }
 
         e.preventDefault();
-        isCloseFromMouse.current = false;
       },
       [onCloseAutoFocus]
+    );
+
+    const handleEscapeKeyDown = React.useCallback(
+      (e: KeyboardEvent) => {
+        isCloseFromKey.current = true;
+        if (onEscapeKeyDown) {
+          onEscapeKeyDown(e);
+        }
+      },
+      [onEscapeKeyDown]
     );
 
     return (
       <DialogPortal>
         <DialogOverlay>
           <DialogPrimitive.Content
-            onPointerDownOutside={handlePointerDownOutside}
-            onPointerDown={handlePointerDown}
             onCloseAutoFocus={handleCloseAutoFocus}
+            onEscapeKeyDown={handleEscapeKeyDown}
             ref={ref}
             className={cn(
               "my-auto outline-none focus:outline-none",

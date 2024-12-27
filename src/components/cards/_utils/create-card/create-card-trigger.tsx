@@ -107,7 +107,7 @@ export default function CreateCardTrigger({
               return rest;
             });
           }, 2500);
-        }, 300);
+        }, 200);
 
         const selector = `[data-card-id="${c.cardId}"]`;
         const element = document.querySelector(selector);

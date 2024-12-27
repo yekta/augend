@@ -89,7 +89,7 @@ export default function CreateDashboardTrigger({
             });
           }, 2500);
           d;
-        }, 300);
+        }, 200);
 
         const selector = `[data-card-id="${d.dashboardId}"]`;
         const element = document.querySelector(selector);
