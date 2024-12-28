@@ -9,11 +9,21 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { captureDeleteDashboard } from "@/lib/capture/client";
 import { api } from "@/server/trpc/setup/react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderIcon } from "lucide-react";
-import { FormEvent, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 type Props = {
   open: boolean;
@@ -24,6 +34,10 @@ type Props = {
   dashboardTitle: string;
   dashboardSlug: string;
 };
+
+const DeleteDashboardSchemaUI = z.object({
+  title: z.string(),
+});
 
 export default function DeleteDashboardTrigger({
   open,
@@ -36,18 +50,24 @@ export default function DeleteDashboardTrigger({
 }: Props) {
   const { invalidate } = useDashboardsAuto();
 
-  const [inputValue, setInputValue] = useState("");
+  const form = useForm<z.infer<typeof DeleteDashboardSchemaUI>>({
+    resolver: zodResolver(DeleteDashboardSchemaUI),
+    defaultValues: {
+      title: "",
+    },
+  });
 
-  async function onSubmit(e: FormEvent) {
-    e.preventDefault();
+  const inputValue = form.watch("title");
+
+  function onSubmit(values: z.infer<typeof DeleteDashboardSchemaUI>) {
     deleteDashboard({ slug: dashboardSlug });
     captureDeleteDashboard({ slug: dashboardSlug });
   }
 
   const {
     mutate: deleteDashboard,
-    isPending: isPendingDeleteDashboard,
-    error: errorDeleteDashboard,
+    isPending,
+    error,
   } = api.ui.deleteDashboard.useMutation({
     onMutate: () => {
       onMutate?.();
@@ -76,45 +96,61 @@ export default function DeleteDashboardTrigger({
             below to confirm.
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={onSubmit} className="flex flex-col gap-4">
-          <Input
-            autoComplete="off"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            className="w-full font-medium"
-            placeholder={dashboardTitle}
-          />
-          {errorDeleteDashboard && (
-            <ErrorLine message={errorDeleteDashboard.message} />
-          )}
-          <div className="flex justify-end flex-wrap gap-2">
-            <Button
-              type="button"
-              onClick={() => onOpenChange(false)}
-              variant="outline"
-              className="border-none text-muted-foreground"
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              state={isPendingDeleteDashboard ? "loading" : "default"}
-              data-pending={isPendingDeleteDashboard ? true : undefined}
-              variant="destructive"
-              className="group/button"
-              disabled={inputValue !== dashboardTitle}
-            >
-              {isPendingDeleteDashboard && (
-                <div className="size-6 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-                  <LoaderIcon className="size-full animate-spin" />
-                </div>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex flex-col gap-4"
+          >
+            <FormField
+              control={form.control}
+              name="title"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="w-full sr-only">
+                    Dashboard Name
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      autoComplete="off"
+                      className="w-full"
+                      placeholder={dashboardTitle}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
               )}
-              <span className="group-data-[pending]/button:text-transparent">
-                Delete
-              </span>
-            </Button>
-          </div>
-        </form>
+            />
+            <div className="flex justify-end flex-wrap gap-2">
+              <Button
+                type="button"
+                onClick={() => onOpenChange(false)}
+                variant="outline"
+                className="border-none text-muted-foreground"
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                state={isPending ? "loading" : "default"}
+                data-pending={isPending ? true : undefined}
+                variant="destructive"
+                className="group/button"
+                disabled={inputValue !== dashboardTitle}
+              >
+                {isPending && (
+                  <div className="size-6 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+                    <LoaderIcon className="size-full animate-spin" />
+                  </div>
+                )}
+                <span className="group-data-[pending]/button:text-transparent">
+                  Delete
+                </span>
+              </Button>
+            </div>
+          </form>
+        </Form>
+        {error && <ErrorLine message={error.message} />}
       </DialogContent>
     </Dialog>
   );
