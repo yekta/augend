@@ -4,31 +4,11 @@ import EditButtonCards from "@/app/[username]/[dashboard_slug]/_components/edit-
 import { useEditModeCards } from "@/app/[username]/[dashboard_slug]/_components/edit-mode-cards-provider";
 import CreateCardButton from "@/components/cards/_utils/create-card/create-card-button";
 import DeleteDashboardTrigger from "@/components/dashboard/delete-dashboard-trigger";
-import ErrorLine from "@/components/error-line";
-import { useDashboardsAuto } from "@/components/providers/dashboards-auto-provider";
+import RenameDashboardTrigger from "@/components/dashboard/rename-dashboard-trigger";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { mainDashboardSlug } from "@/lib/constants";
 import { useAsyncRouterPush } from "@/lib/hooks/use-async-router-push";
-import { RenameDashboardSchemaUI } from "@/server/trpc/api/ui/types";
 import { api } from "@/server/trpc/setup/react";
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
   LoaderIcon,
   PencilIcon,
@@ -37,8 +17,6 @@ import {
 } from "lucide-react";
 import { useQueryState } from "nuqs";
 import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 
 type Props = {
   isOwner: boolean;
@@ -83,13 +61,6 @@ export function DashboardTitleBar({ dashboardSlug, isOwner }: Props) {
     setCurrentModalId(null);
   };
 
-  const renameDashboardForm = useForm<z.infer<typeof RenameDashboardSchemaUI>>({
-    resolver: zodResolver(RenameDashboardSchemaUI),
-    defaultValues: {
-      title: "",
-    },
-  });
-
   const asyncPush = useAsyncRouterPush();
   const { isPendingReorderCards, isErrorReorderCards } = useDndCards();
 
@@ -100,45 +71,11 @@ export function DashboardTitleBar({ dashboardSlug, isOwner }: Props) {
     invalidateDashboard,
     cancelDashboardsQuery,
   } = useCurrentDashboard();
-  const { invalidate: invalidateDashboardsAuto } = useDashboardsAuto();
 
   const { isEnabled: isEnabledCardEdit, canEdit: canEditCards } =
     useEditModeCards();
 
   const isPendingDeleteCards = utils.ui.deleteCards.isMutating() === 1;
-
-  const {
-    mutate: renameDashboard,
-    isPending: isPendingRenameDashboard,
-    error: errorRenameDashboard,
-    reset: resetRenameDashboard,
-  } = api.ui.renameDashboard.useMutation({
-    onMutate: () => {
-      cancelDashboardsQuery();
-    },
-    onSuccess: async (data) => {
-      const path = `/${data.username}/${data.slug}`;
-      await asyncPush(path);
-      await Promise.all([invalidateDashboard(), invalidateDashboardsAuto()]);
-      setIsDialogOpenRenameDashboard(false);
-      renameDashboardForm.reset();
-    },
-  });
-
-  async function onRenameDashboardFormSubmit(
-    values: z.infer<typeof RenameDashboardSchemaUI>
-  ) {
-    if (dashboardTitle === values.title) {
-      setIsDialogOpenRenameDashboard(false);
-      resetRenameDashboard();
-      renameDashboardForm.reset();
-      return;
-    }
-    renameDashboard({
-      title: values.title,
-      slug: dashboardSlug,
-    });
-  }
 
   return (
     <div
@@ -146,7 +83,7 @@ export function DashboardTitleBar({ dashboardSlug, isOwner }: Props) {
       data-loading-error={isLoadingErrorDashboard ? true : undefined}
       className="col-span-12 items-center justify-between flex gap-1.5 px-1 pb-1 md:pb-2 group/titlebar"
     >
-      {!isEnabledCardEdit || !canEditCards ? (
+      {!isEnabledCardEdit || !canEditCards || !dashboardTitle ? (
         <h1
           className="border border-transparent px-2 py-1.75 md:py-0.5 rounded-lg font-bold text-xl md:text-2xl leading-none md:leading-none truncate shrink
           group-data-[pending]/titlebar:text-transparent group-data-[pending]/titlebar:rounded-md group-data-[pending]/titlebar:bg-foreground group-data-[pending]/titlebar:animate-skeleton"
@@ -160,92 +97,32 @@ export function DashboardTitleBar({ dashboardSlug, isOwner }: Props) {
       ) : (
         <div className="flex justify-start items-center shrink min-w-0 gap-1.5">
           {/* Rename Dashboard */}
-          <Dialog
+          <RenameDashboardTrigger
             open={isDialogOpenRenameDashboard}
             onOpenChange={setIsDialogOpenRenameDashboard}
+            dashboardSlug={dashboardSlug}
+            dashboardTitle={dashboardTitle}
+            onMutate={cancelDashboardsQuery}
+            afterSuccess={invalidateDashboard}
           >
-            <DialogTrigger
-              className="focus:outline-none focus-visible:outline-none focus-visible:ring-foreground/50 focus-visible:ring-offset-2 
-              focus-visible:ring-offset-background focus-visible:ring-1 rounded-lg shrink min-w-0 flex"
-            >
-              <div
-                className="flex shrink min-w-0 rounded-lg items-center justify-start gap-2 
+            <div
+              className="flex shrink min-w-0 rounded-lg items-center justify-start gap-2 
                 border not-touch:hover:bg-border active:bg-border px-2 py-1.75 md:py-1.25 overflow-hidden"
-              >
-                <h1
-                  className="font-bold text-xl md:text-2xl leading-none md:leading-none truncate shrink min-w-0
+            >
+              <h1
+                className="font-bold text-xl md:text-2xl leading-none md:leading-none truncate shrink min-w-0
                   group-data-[pending]/titlebar:text-transparent group-data-[pending]/titlebar:rounded-md group-data-[pending]/titlebar:bg-foreground group-data-[pending]/titlebar:animate-skeleton
                   py-1 -my-1"
-                >
-                  {isPendingDashboard
-                    ? "Loading"
-                    : isLoadingErrorDashboard
-                    ? "Error"
-                    : dashboardTitle}
-                </h1>
-                <PencilIcon className="size-4 md:size-4.5 -my-1 shrink-0" />
-              </div>
-            </DialogTrigger>
-            <DialogContent
-              classNameInnerWrapper="gap-4"
-              className="w-full max-w-sm"
-            >
-              <DialogHeader>
-                <DialogTitle>Rename Dashboard</DialogTitle>
-                <DialogDescription>
-                  Give a new name to your dashboard.
-                </DialogDescription>
-              </DialogHeader>
-              <Form {...renameDashboardForm}>
-                <form
-                  onSubmit={renameDashboardForm.handleSubmit(
-                    onRenameDashboardFormSubmit
-                  )}
-                  className="w-full flex flex-col gap-3"
-                >
-                  <FormField
-                    control={renameDashboardForm.control}
-                    name="title"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="w-full sr-only">
-                          Dashboard Name
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            autoComplete="off"
-                            className="w-full"
-                            placeholder={dashboardTitle || "New Name"}
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <Button
-                    state={isPendingRenameDashboard ? "loading" : "default"}
-                    type="submit"
-                  >
-                    {isPendingRenameDashboard && (
-                      <>
-                        <p className="text-transparent select-none shrink min-w-0 truncate">
-                          Rename
-                        </p>
-                        <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                          <LoaderIcon className="size-full animate-spin" />
-                        </div>
-                      </>
-                    )}
-                    {!isPendingRenameDashboard && "Rename"}
-                  </Button>
-                </form>
-              </Form>
-              {errorRenameDashboard && (
-                <ErrorLine message={errorRenameDashboard.message} />
-              )}
-            </DialogContent>
-          </Dialog>
+              >
+                {isPendingDashboard
+                  ? "Loading"
+                  : isLoadingErrorDashboard
+                  ? "Error"
+                  : dashboardTitle}
+              </h1>
+              <PencilIcon className="size-4 md:size-4.5 -my-1 shrink-0" />
+            </div>
+          </RenameDashboardTrigger>
           {/* Delete Dashboard */}
           {dashboardSlug !== mainDashboardSlug && dashboardTitle && (
             <DeleteDashboardTrigger
