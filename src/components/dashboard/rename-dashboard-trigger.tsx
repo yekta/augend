@@ -1,3 +1,4 @@
+import { useCurrentDashboard } from "@/app/[username]/[dashboard_slug]/_components/current-dashboard-provider";
 import ErrorLine from "@/components/error-line";
 import { useDashboardsAuto } from "@/components/providers/dashboards-auto-provider";
 import { Button } from "@/components/ui/button";
@@ -33,7 +34,6 @@ type Props = {
   dashboardSlug: string;
   onMutate?: () => void;
   children: React.ReactNode;
-  afterSuccess?: () => Promise<void>;
 };
 
 export default function RenameDashboardTrigger({
@@ -41,11 +41,12 @@ export default function RenameDashboardTrigger({
   dashboardTitle,
   open,
   onOpenChange,
-  afterSuccess,
   onMutate,
   children,
 }: Props) {
-  const { invalidate } = useDashboardsAuto();
+  const { invalidate: invalidateDashboardsAuto } = useDashboardsAuto();
+  const { invalidateDashboard: invalidateCurrentDashboard } =
+    useCurrentDashboard();
 
   const form = useForm<z.infer<typeof RenameDashboardSchemaUI>>({
     resolver: zodResolver(RenameDashboardSchemaUI),
@@ -68,7 +69,10 @@ export default function RenameDashboardTrigger({
     onSuccess: async (data) => {
       const path = `/${data.username}/${data.slug}`;
       await asyncPush(path);
-      await Promise.all([afterSuccess?.(), invalidate()]);
+      await Promise.all([
+        invalidateCurrentDashboard(),
+        invalidateDashboardsAuto(),
+      ]);
       onOpenChange(false);
       form.reset();
     },
@@ -92,8 +96,10 @@ export default function RenameDashboardTrigger({
       <DialogTrigger>{children}</DialogTrigger>
       <DialogContent classNameInnerWrapper="gap-4" className="w-full max-w-sm">
         <DialogHeader>
-          <DialogTitle>Create Dashboard</DialogTitle>
-          <DialogDescription>Give a name to your dashboard.</DialogDescription>
+          <DialogTitle>Rename Dashboard</DialogTitle>
+          <DialogDescription>
+            Give a new name to your dashboard.
+          </DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form
@@ -106,13 +112,13 @@ export default function RenameDashboardTrigger({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="w-full sr-only">
-                    Dashboard Name
+                    Rename Dashboard
                   </FormLabel>
                   <FormControl>
                     <Input
                       autoComplete="off"
                       className="w-full"
-                      placeholder="New Dashboard"
+                      placeholder={dashboardTitle}
                       {...field}
                     />
                   </FormControl>

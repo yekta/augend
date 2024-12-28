@@ -68,7 +68,6 @@ export function DashboardTitleBar({ dashboardSlug, isOwner }: Props) {
     dashboardTitle,
     isPendingDashboard,
     isLoadingErrorDashboard,
-    invalidateDashboard,
     cancelDashboardsQuery,
   } = useCurrentDashboard();
 
@@ -103,7 +102,6 @@ export function DashboardTitleBar({ dashboardSlug, isOwner }: Props) {
             dashboardSlug={dashboardSlug}
             dashboardTitle={dashboardTitle}
             onMutate={cancelDashboardsQuery}
-            afterSuccess={invalidateDashboard}
           >
             <div
               className="flex shrink min-w-0 rounded-lg items-center justify-start gap-2 
