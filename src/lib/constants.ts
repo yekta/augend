@@ -99,7 +99,7 @@ export const sc: Record<
 
 export const previewImages = {
   path: "previews",
-  version: "v1",
+  version: "v2",
 };
 
 export const getPreviewUrl = (slug: string) =>

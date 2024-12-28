@@ -1,6 +1,6 @@
 import UserFullProvider from "@/app/[username]/[dashboard_slug]/_components/user-full-provider";
 import { SignInButton } from "@/components/auth/sign-in-card";
-import LogoMarkIcon from "@/components/icons/logo-mark-icon";
+import Logo from "@/components/navigation/logo";
 import DashboardSelector from "@/components/navigation/dashboard-selector";
 import NavbarWrapper from "@/components/navigation/navbar-wrapper";
 import UserAvatar from "@/components/navigation/user-avatar";
@@ -48,7 +48,7 @@ export default async function Navbar({ className }: Props) {
                   variant="outline"
                   className="border-none p-2"
                 >
-                  <LogoMarkIcon className="size-5" />
+                  <Logo />
                 </LinkButton>
               </NavigationMenuItem>
               <DashboardSelector />
