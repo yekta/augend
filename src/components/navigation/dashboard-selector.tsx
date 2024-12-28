@@ -60,6 +60,8 @@ export default function DashboardSelector({}: Props) {
   };
 
   useEffect(() => {
+    if (isFetching) return;
+
     if (!isDashboardPath || !username || !dashboardSlug) {
       setSelectedDashboard(undefined);
       return;
@@ -69,8 +71,6 @@ export default function DashboardSelector({}: Props) {
       setSelectedDashboard(undefined);
       return;
     }
-
-    if (isFetching) return;
 
     const dashboard = data.dashboards.find(
       (d) => d.dashboard.slug === dashboardSlug

@@ -51,7 +51,7 @@ export default function RenameDashboardTrigger({
   const form = useForm<z.infer<typeof RenameDashboardSchemaUI>>({
     resolver: zodResolver(RenameDashboardSchemaUI),
     defaultValues: {
-      title: "",
+      title: dashboardTitle,
     },
   });
 
