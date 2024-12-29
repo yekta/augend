@@ -2,6 +2,7 @@ import CurrentDashboardProvider from "@/app/[username]/[dashboard_slug]/_compone
 import DndCardsProvider from "@/app/[username]/[dashboard_slug]/_components/dnd-cards-provider";
 import { SignInButton } from "@/components/auth/sign-in-card";
 import { cardTypes } from "@/components/cards/_utils/helpers";
+import CryptoAssetCard from "@/components/cards/crypto-asset/card";
 import CryptoPriceChartCard, {
   TOhlcvChartConfig,
 } from "@/components/cards/crypto-price-chart/card";
@@ -32,7 +33,20 @@ export default async function Home() {
     redirect(`/${session.user.username}/${mainDashboardSlug}`);
   }
 
-  const cryptoIds = [1, 1027];
+  const cryptoIds = [1];
+  const assets: {
+    coinId: number;
+    buyAmount: number;
+    buyAtTimestamp: number;
+    buyPriceUsd: number;
+  }[] = [
+    {
+      coinId: 1027,
+      buyAmount: 5.5,
+      buyAtTimestamp: 1620000000,
+      buyPriceUsd: 2000,
+    },
+  ];
   const miniCryptoIds = [5426, 1839, 7278, 11841];
   const gasTrackerNetwork: TEthereumNetwork = "Ethereum";
   const priceChartConfigs: TOhlcvChartConfig[] = [
@@ -109,15 +123,25 @@ export default async function Home() {
                   noHref
                   key={`${id}-${index}`}
                   coinId={id}
-                  className={cn(
-                    cardTypes.sm.className,
-                    index === 1 ? "hidden lg:flex" : ""
-                  )}
+                  className={cn(cardTypes.sm.className)}
                 />
               ))}
-              <FearGreedIndexCard noHref className={cardTypes.sm.className} />
-              <CurrencyCard
+              {assets.map((asset, index) => (
+                <CryptoAssetCard
+                  key={`${asset.coinId}-${index}`}
+                  buyAmount={asset.buyAmount}
+                  boughtAtTimestamp={asset.buyAtTimestamp}
+                  buyPriceUsd={asset.buyPriceUsd}
+                  coinId={asset.coinId}
+                  className={cn(cardTypes.sm.className)}
+                />
+              ))}
+              <FearGreedIndexCard
+                noHref
                 className={cn(cardTypes.sm.className, "hidden md:flex")}
+              />
+              <CurrencyCard
+                className={cn(cardTypes.sm.className, "hidden lg:flex")}
                 baseCurrency={{
                   id: "d11e7514-5c8e-423d-bc94-efa24bf0f423",
                   ticker: "EUR",
