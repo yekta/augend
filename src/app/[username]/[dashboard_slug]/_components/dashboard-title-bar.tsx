@@ -74,7 +74,10 @@ export function DashboardTitleBar({ dashboardSlug, isOwner }: Props) {
   const { isEnabled: isEnabledCardEdit, canEdit: canEditCards } =
     useEditModeCards();
 
-  const isPendingDeleteCards = utils.ui.deleteCards.isMutating() === 1;
+  const { isPending: isPendingDeleteCards } = api.ui.deleteCards.useMutation();
+
+  const isPendingAny = isPendingDeleteCards || isPendingReorderCards;
+  const isHardErrorAny = !isPendingReorderCards && isErrorReorderCards;
 
   return (
     <div
@@ -151,13 +154,10 @@ export function DashboardTitleBar({ dashboardSlug, isOwner }: Props) {
       {isOwner ? (
         <div className="flex items-center justify-start shrink-0 gap-1.5">
           <div className="size-7 flex items-center justify-center">
-            {isPendingDeleteCards && (
+            {isPendingAny && (
               <LoaderIcon className="size-5 text-muted-more-foreground animate-spin" />
             )}
-            {isPendingReorderCards && (
-              <LoaderIcon className="size-5 text-muted-more-foreground animate-spin" />
-            )}
-            {!isPendingReorderCards && isErrorReorderCards && (
+            {isHardErrorAny && (
               <TriangleAlertIcon className="size-5 text-destructive" />
             )}
           </div>
