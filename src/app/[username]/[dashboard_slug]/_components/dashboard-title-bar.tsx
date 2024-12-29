@@ -62,6 +62,14 @@ export function DashboardTitleBar({ dashboardSlug, isOwner }: Props) {
   };
 
   const asyncPush = useAsyncRouterPush();
+  const onSuccessDeleteDashboard = async (data: {
+    username: string;
+    slug: string;
+  }) => {
+    const path = `/${data.username}/${mainDashboardSlug}`;
+    await asyncPush(path);
+  };
+
   const { isPendingReorderCards, isErrorReorderCards } = useDndCards();
 
   const {
@@ -132,10 +140,7 @@ export function DashboardTitleBar({ dashboardSlug, isOwner }: Props) {
               open={isDialogOpenDeleteDashboard}
               onOpenChange={setIsDialogOpenDeleteDashboard}
               onMutate={() => cancelDashboardsQuery()}
-              afterSuccess={async (data) => {
-                const path = `/${data.username}/${mainDashboardSlug}`;
-                await asyncPush(path);
-              }}
+              onSuccess={onSuccessDeleteDashboard}
             >
               <Button
                 size="icon"

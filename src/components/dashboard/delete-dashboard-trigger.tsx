@@ -29,7 +29,7 @@ type Props = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   children: React.ReactNode;
-  afterSuccess?: (props: { username: string; slug: string }) => Promise<void>;
+  onSuccess?: (props: { username: string; slug: string }) => Promise<void>;
   onMutate?: () => void;
   dashboardTitle: string;
   dashboardSlug: string;
@@ -42,7 +42,7 @@ const DeleteDashboardSchemaUI = z.object({
 export default function DeleteDashboardTrigger({
   open,
   onOpenChange,
-  afterSuccess,
+  onSuccess,
   onMutate,
   children,
   dashboardTitle,
@@ -73,7 +73,8 @@ export default function DeleteDashboardTrigger({
       onMutate?.();
     },
     onSuccess: async (data) => {
-      await Promise.all([afterSuccess?.(data), invalidate()]);
+      await onSuccess?.(data);
+      await invalidate();
       onOpenChange(false);
     },
   });

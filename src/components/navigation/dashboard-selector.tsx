@@ -35,6 +35,14 @@ export default function DashboardSelector({}: Props) {
   const pathname = usePathname();
   const asyncRouterPush = useAsyncRouterPush();
 
+  const onSuccessCreateDashboard = async (data: {
+    username: string;
+    slug: string;
+  }) => {
+    const path = `/${data.username}/${data.slug}`;
+    await asyncRouterPush(path);
+  };
+
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isCreateDashboardOpen, setIsCreateDashboardOpen] = useState(false);
 
@@ -143,10 +151,7 @@ export default function DashboardSelector({}: Props) {
                     onDashboardCreated={onDashboardCreated}
                     open={isCreateDashboardOpen}
                     onOpenChange={setIsCreateDashboardOpen}
-                    afterSuccess={async (d) => {
-                      const path = `/${d.username}/${d.slug}`;
-                      await asyncRouterPush(path);
-                    }}
+                    onSuccess={onSuccessCreateDashboard}
                   >
                     <DropdownMenuItem
                       onSelect={(e) => e.preventDefault()}

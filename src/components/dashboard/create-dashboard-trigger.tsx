@@ -37,7 +37,7 @@ type Props = {
     title: string;
     dashboardId: string;
   }) => Promise<void>;
-  afterSuccess?: (props: {
+  onSuccess?: (props: {
     dashboardId: string;
     slug: string;
     title: string;
@@ -50,7 +50,7 @@ export default function CreateDashboardTrigger({
   open,
   onOpenChange,
   onDashboardCreated,
-  afterSuccess,
+  onSuccess,
   children,
 }: Props) {
   const { invalidate } = useDashboardsAuto();
@@ -72,7 +72,8 @@ export default function CreateDashboardTrigger({
     error,
   } = api.ui.createDashboard.useMutation({
     onSuccess: async (d) => {
-      await Promise.all([afterSuccess?.(d), invalidate()]);
+      await onSuccess?.(d);
+      await invalidate();
       onOpenChange(false);
       form.reset();
       await onDashboardCreated?.(d);
