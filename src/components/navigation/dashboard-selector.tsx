@@ -35,14 +35,6 @@ export default function DashboardSelector({}: Props) {
   const pathname = usePathname();
   const asyncRouterPush = useAsyncRouterPush();
 
-  const onSuccessCreateDashboard = async (data: {
-    username: string;
-    slug: string;
-  }) => {
-    const path = `/${data.username}/${data.slug}`;
-    await asyncRouterPush(path);
-  };
-
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isCreateDashboardOpen, setIsCreateDashboardOpen] = useState(false);
 
@@ -55,7 +47,15 @@ export default function DashboardSelector({}: Props) {
     | undefined
   >(undefined);
 
-  const onDashboardCreated = async (dashboard: {
+  const onSuccessCreateDashboard = async (data: {
+    username: string;
+    slug: string;
+  }) => {
+    const path = `/${data.username}/${data.slug}`;
+    await asyncRouterPush(path);
+  };
+
+  const onSuccessEndCreateDashboard = async (dashboard: {
     slug: string;
     title: string;
     dashboardId: string;
@@ -148,10 +148,10 @@ export default function DashboardSelector({}: Props) {
                 {/* Create Dashboard Button */}
                 <DropdownMenuGroup>
                   <CreateDashboardTrigger
-                    onDashboardCreated={onDashboardCreated}
                     open={isCreateDashboardOpen}
                     onOpenChange={setIsCreateDashboardOpen}
                     onSuccess={onSuccessCreateDashboard}
+                    onSuccessEnd={onSuccessEndCreateDashboard}
                   >
                     <DropdownMenuItem
                       onSelect={(e) => e.preventDefault()}
@@ -220,7 +220,7 @@ export default function DashboardSelector({}: Props) {
                       </p>
                       <CheckIcon
                         className="size-5 -my-1 pointer-events-none select-none -mr-0.5 shrink-0 text-foreground opacity-0 scale-0
-                    group-data-[item-selected]/item:opacity-100 group-data-[item-selected]/item:scale-100 transition"
+                        group-data-[item-selected]/item:opacity-100 group-data-[item-selected]/item:scale-100 transition"
                       />
                     </Link>
                   </DropdownMenuItem>

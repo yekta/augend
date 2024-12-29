@@ -31,7 +31,7 @@ export const CreateDashboardButton = ({
     setCurrentModalId(null);
   };
 
-  const afterSuccess = async () => {
+  const onSuccess = async () => {
     return invalidate();
   };
 
@@ -39,7 +39,7 @@ export const CreateDashboardButton = ({
     <CreateDashboardTrigger
       open={open}
       onOpenChange={onOpenChange}
-      afterSuccess={afterSuccess}
+      onSuccess={onSuccess}
     >
       {variant === "card" ? (
         <button className={cn(dashboardCardSizeClassName)}>

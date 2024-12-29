@@ -32,7 +32,7 @@ import { z } from "zod";
 type Props = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onDashboardCreated?: (dashboard: {
+  onSuccessEnd?: (dashboard: {
     slug: string;
     title: string;
     dashboardId: string;
@@ -49,7 +49,7 @@ type Props = {
 export default function CreateDashboardTrigger({
   open,
   onOpenChange,
-  onDashboardCreated,
+  onSuccessEnd,
   onSuccess,
   children,
 }: Props) {
@@ -76,7 +76,7 @@ export default function CreateDashboardTrigger({
       await invalidate();
       onOpenChange(false);
       form.reset();
-      await onDashboardCreated?.(d);
+      await onSuccessEnd?.(d);
 
       setTimeout(() => {
         clearTimeout(setNewDashboardIdTimeout.current);

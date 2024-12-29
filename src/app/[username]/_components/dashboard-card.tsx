@@ -71,7 +71,7 @@ export default function DashboardCard({
   };
 
   const { invalidate } = useDashboards();
-  const afterSuccessDeleteDashboard = () => {
+  const onSuccessDeleteDashboard = () => {
     return invalidate();
   };
 
@@ -223,7 +223,7 @@ export default function DashboardCard({
             open={open}
             onOpenChange={setOpen}
             dashboardTitle={title}
-            afterSuccess={afterSuccessDeleteDashboard}
+            onSuccess={onSuccessDeleteDashboard}
           >
             <Button
               aria-label="Delete Dashboard"
