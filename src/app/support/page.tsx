@@ -1,4 +1,5 @@
 import ScIcon from "@/components/icons/sc-icon";
+import Logo from "@/components/navigation/logo";
 import { LinkButton } from "@/components/ui/button";
 import { sc, siteTitle, TScOption } from "@/lib/constants";
 import { Metadata } from "next";
@@ -14,12 +15,15 @@ export default function Page({}: Props) {
   const platforms = (Object.keys(sc) as TScOption[]).map((s) => sc[s]);
   return (
     <div className="w-full px-4 flex-1 flex flex-col items-center justify-center pt-6 pb-[calc(6vh+2rem)]">
-      <div className="flex flex-col rounded-xl max-w-[24rem] border p-5 pt-4.5 gap-6">
+      <div className="flex flex-col rounded-xl max-w-[22rem] border p-5 pt-4.5 gap-5">
         <div className="w-full flex flex-col gap-1 text-center">
+          <div className="w-full flex items-center justify-center pb-2">
+            <Logo className="size-6" />
+          </div>
           <h1 className="text-2xl font-bold leading-tight">Support</h1>
-          <p className="text-muted-foreground leading-snug text-base">
-            Reach out using the platforms below and we will get back to you as
-            soon as possible.
+          <p className="text-muted-foreground leading-snug text-base text-balance">
+            Reach out using the platforms below. We'll get back as soon as
+            possible.
           </p>
         </div>
         <div className="w-full flex flex-col items-center gap-2">

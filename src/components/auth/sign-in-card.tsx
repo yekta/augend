@@ -1,5 +1,6 @@
 import SignInWithEthereumButton from "@/components/auth/sign-in-with-ethereum-button";
 import SignInWithOAuthButton from "@/components/auth/sign-in-with-oauth-button";
+import Logo from "@/components/navigation/logo";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Dialog,
@@ -20,7 +21,7 @@ type SignInCardProps = ComponentProps<"div"> & {
 };
 
 const title = "Get Started";
-const description = "Track financial assets.";
+const description = "Start tracking financial assets.";
 
 export default function SignInCard({
   className,
@@ -37,10 +38,11 @@ export default function SignInCard({
       {...rest}
     >
       <div className="w-full flex flex-col items-center justify-center text-center gap-1">
-        <h2 className="text-2xl font-bold leading-tight tracking-tight">
-          {title}
-        </h2>
-        <p className="text-base text-muted-foreground leading-snug">
+        <div className="w-full flex items-center justify-center pb-2">
+          <Logo className="size-6" />
+        </div>
+        <h2 className="text-2xl font-bold leading-tight">{title}</h2>
+        <p className="text-base text-muted-foreground leading-snug text-balance">
           {description}
         </p>
       </div>
@@ -68,10 +70,18 @@ export function SignInButton({
           Get Started
         </Button>
       </DialogTrigger>
-      <DialogContent className="w-full max-w-[22rem]">
+      <DialogContent
+        className="w-full max-w-[22rem]"
+        classNameInnerWrapper="gap-5"
+      >
         <DialogHeader>
-          <DialogTitle className="text-center px-6">{title}</DialogTitle>
-          <DialogDescription className="text-center">
+          <div className="w-full flex items-center justify-center pb-2">
+            <Logo className="size-6" />
+          </div>
+          <DialogTitle className="text-center px-6 text-2xl leading-tight">
+            {title}
+          </DialogTitle>
+          <DialogDescription className="text-center text-base leading-snug text-balance">
             {description}
           </DialogDescription>
         </DialogHeader>

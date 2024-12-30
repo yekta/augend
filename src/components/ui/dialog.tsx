@@ -35,7 +35,7 @@ const dialogContentVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-background border rounded-xl p-5 pt-4 shadow-dialog shadow-shadow/[var(--opacity-shadow)]",
+          "bg-background border rounded-xl p-5 pt-4.5 shadow-dialog shadow-shadow/[var(--opacity-shadow)]",
         styleless: "",
       },
     },
