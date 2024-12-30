@@ -82,9 +82,9 @@ export function DashboardTitleBar({ dashboardSlug, isOwner }: Props) {
   const { isEnabled: isEnabledCardEdit, canEdit: canEditCards } =
     useEditModeCards();
 
-  const { isPending: isPendingDeleteCards } = api.ui.deleteCards.useMutation();
+  const isPendingDeleteCards = utils.ui.deleteCards.isMutating();
 
-  const isPendingAny = isPendingDeleteCards || isPendingReorderCards;
+  const isPendingAny = isPendingDeleteCards > 0 || isPendingReorderCards;
   const isHardErrorAny = !isPendingReorderCards && isErrorReorderCards;
 
   return (

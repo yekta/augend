@@ -47,7 +47,7 @@ export default function OrderBookCard({
         pair: config.pair,
         limit: lines,
       },
-      defaultQueryOptions.normal
+      defaultQueryOptions.fast
     );
 
   const priceFormatter = formatNumberTBMK;
@@ -171,16 +171,19 @@ export default function OrderBookCard({
               <div className="shrink overflow-hidden flex items-center justify-center gap-1">
                 <ChartNoAxesCombinedIcon className="size-3.5 shrink-0" />
                 <p className="shrink min-w-0 truncate leading-none">
-                  {amountFormatter(data.metadata.volumeBase24h)}{" "}
-                  {data.metadata.ticker.split("/")[0]}
+                  {data.metadata.volumeQuote24h
+                    ? `${amountFormatter(data.metadata.volumeBase24h)} ${
+                        data.metadata.ticker.split("/")[0]
+                      }`
+                    : "No volume data"}
                 </p>
               </div>
-              {data.metadata.volumeQuote24h !== null && (
-                <p className="px-[1ch] shrink-0 text-muted-foreground leading-none">
+              {data.metadata.volumeQuote24h && data.metadata.volumeQuote24h && (
+                <p className="px-[0.6ch] shrink-0 text-muted-foreground leading-none">
                   •
                 </p>
               )}
-              {data.metadata.volumeQuote24h !== null && (
+              {data.metadata.volumeQuote24h && data.metadata.volumeQuote24h && (
                 <div className="shrink overflow-hidden flex items-center justify-center gap-1">
                   <ChartNoAxesCombinedIcon className="size-3.5 shrink-0" />
                   <p className="shrink min-w-0 truncate leading-none">

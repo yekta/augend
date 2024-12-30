@@ -18,7 +18,6 @@ import {
   SelectGroup,
   SelectItem,
   SelectTrigger,
-  SelectValue,
 } from "@/components/ui/select";
 import { defaultQueryOptions } from "@/lib/constants";
 import { months } from "@/lib/months";
