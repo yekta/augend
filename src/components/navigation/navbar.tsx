@@ -46,7 +46,7 @@ export default async function Navbar({ className }: Props) {
                       : "/"
                   }
                   variant="outline"
-                  className="border-none p-2"
+                  className="border-none p-1.75"
                 >
                   <Logo />
                 </LinkButton>
