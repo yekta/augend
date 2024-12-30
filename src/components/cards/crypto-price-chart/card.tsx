@@ -177,7 +177,7 @@ export default function CryptoPriceChartCard({
       data-placeholder-data={isPlaceholderData ? true : undefined}
       {...rest}
     >
-      <CardInnerWrapper className="px-5 pt-4.5 pb-3 gap-6 flex flex-col items-start">
+      <CardInnerWrapper className="px-5 pt-4.5 pb-3 gap-8 flex flex-col items-start">
         <Header
           config={config}
           priceInfo={priceInfo}
@@ -376,7 +376,7 @@ function Header({
     >
       <div
         className="max-w-full text-sm leading-none truncate font-semibold flex items-end justify-left 
-          group-data-[pending]/header:text-transparent group-data-[pending]/header:bg-foreground group-data-[pending]/header:animate-skeleton group-data-[pending]/header:rounded"
+        group-data-[pending]/header:text-transparent group-data-[pending]/header:bg-foreground group-data-[pending]/header:animate-skeleton group-data-[pending]/header:rounded"
       >
         {isPending ? (
           "Loading data"
@@ -424,7 +424,7 @@ function Header({
           )}
         </div>
         {priceInfo.dateStr && (
-          <p className="max-w-full text-muted-foreground absolute left-0 -bottom-6 text-sm whitespace-nowrap leading-none shrink min-w-0 truncate font-medium">
+          <p className="max-w-full text-muted-foreground absolute left-0 -bottom-5.5 text-sm whitespace-nowrap leading-none shrink min-w-0 truncate font-medium">
             {priceInfo.dateStr}
           </p>
         )}
