@@ -74,6 +74,12 @@ export default function OrderBookCard({
         href,
       }
     : restAsDiv;
+
+  const isNotValue = (value: number | undefined | null) =>
+    value === null || value === undefined || isNaN(value) || value === 0;
+
+  const isValue = (value: number | undefined | null) => !isNotValue(value);
+
   return (
     <CardOuterWrapper
       className={className}
@@ -168,30 +174,40 @@ export default function OrderBookCard({
         <div className="font-semibold leading-none max-w-full text-foreground truncate group-data-[pending]/card:bg-foreground group-data-[loading-error]/card:text-destructive group-data-[pending]/card:text-transparent group-data-[pending]/card:rounded-sm group-data-[pending]/card:animate-skeleton">
           {data ? (
             <div className="max-w-full flex items-center justify-center">
-              <div className="shrink overflow-hidden flex items-center justify-center gap-1">
-                <ChartNoAxesCombinedIcon className="size-3.5 shrink-0" />
-                <p className="shrink min-w-0 truncate leading-none">
-                  {data.metadata.volumeQuote24h
-                    ? `${amountFormatter(data.metadata.volumeBase24h)} ${
-                        data.metadata.ticker.split("/")[0]
-                      }`
-                    : "No volume data"}
-                </p>
-              </div>
-              {data.metadata.volumeQuote24h && data.metadata.volumeQuote24h && (
-                <p className="px-[0.6ch] shrink-0 text-muted-foreground leading-none">
-                  •
-                </p>
-              )}
-              {data.metadata.volumeQuote24h && data.metadata.volumeQuote24h && (
+              {isNotValue(data.metadata.volumeBase24h) &&
+                isNotValue(data.metadata.volumeQuote24h) && (
+                  <div className="shrink overflow-hidden flex items-center justify-center gap-1">
+                    <ChartNoAxesCombinedIcon className="size-3.5 shrink-0" />
+                    <p className="shrink min-w-0 truncate leading-none">
+                      No volume data
+                    </p>
+                  </div>
+                )}
+              {isValue(data.metadata.volumeBase24h) && (
                 <div className="shrink overflow-hidden flex items-center justify-center gap-1">
                   <ChartNoAxesCombinedIcon className="size-3.5 shrink-0" />
                   <p className="shrink min-w-0 truncate leading-none">
-                    {amountFormatter(data.metadata.volumeQuote24h)}{" "}
-                    {data.metadata.ticker.split("/")[1]}
+                    {amountFormatter(data.metadata.volumeBase24h)}{" "}
+                    {data.metadata.ticker.split("/")[0]}
                   </p>
                 </div>
               )}
+              {data.metadata.volumeQuote24h &&
+                isValue(data.metadata.volumeQuote24h) && (
+                  <p className="px-[0.6ch] shrink-0 text-muted-foreground leading-none">
+                    •
+                  </p>
+                )}
+              {data.metadata.volumeQuote24h &&
+                isValue(data.metadata.volumeQuote24h) && (
+                  <div className="shrink overflow-hidden flex items-center justify-center gap-1">
+                    <ChartNoAxesCombinedIcon className="size-3.5 shrink-0" />
+                    <p className="shrink min-w-0 truncate leading-none">
+                      {amountFormatter(data.metadata.volumeQuote24h)}{" "}
+                      {data.metadata.ticker.split("/")[1]}
+                    </p>
+                  </div>
+                )}
             </div>
           ) : isPending ? (
             <p className="max-w-full truncate">Loading data</p>
