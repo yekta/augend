@@ -3,7 +3,6 @@
 import CardInnerWrapper from "@/components/cards/_utils/card-inner-wrapper";
 import CardOuterWrapper, {
   TCardOuterWrapperDivProps,
-  TCardOuterWrapperLinkProps,
   TCardOuterWrapperProps,
 } from "@/components/cards/_utils/card-outer-wrapper";
 import ThreeLineCard from "@/components/cards/_utils/three-line-card";
@@ -12,7 +11,6 @@ import { useCmcCryptoInfos } from "@/components/providers/cmc/cmc-crypto-infos-p
 import { useCurrencyPreference } from "@/components/providers/currency-preference-provider";
 import { useForexRates } from "@/components/providers/forex-rates-provider";
 import Indicator from "@/components/ui/indicator";
-import { getCmcUrl } from "@/lib/get-cmc-url";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { ArrowDownIcon, ArrowRightIcon, ArrowUpIcon } from "lucide-react";
 import { useMemo } from "react";
@@ -87,7 +85,6 @@ export default function CryptoAssetCard({
   const valueSymbol = convertCurrency.symbol;
 
   const ticker = dataCrypto?.symbol;
-  const slug = dataCrypto?.slug;
 
   const isChangePositive =
     pnlInCurrency !== undefined ? pnlInCurrency > 0 : undefined;
@@ -101,14 +98,7 @@ export default function CryptoAssetCard({
       ? ArrowUpIcon
       : ArrowRightIcon;
 
-  const restAsDiv = rest as TCardOuterWrapperDivProps;
-  const restAsLink = rest as TCardOuterWrapperLinkProps;
-  const restTyped = slug
-    ? {
-        ...restAsLink,
-        href: restAsLink.href || getCmcUrl(slug),
-      }
-    : restAsDiv;
+  const restTyped = rest as TCardOuterWrapperDivProps;
 
   const Top = useMemo(() => {
     if (buyAmount === undefined || ticker === undefined) return undefined;
