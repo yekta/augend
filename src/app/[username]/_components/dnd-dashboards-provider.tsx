@@ -149,7 +149,7 @@ export const useDndDashboards = () => {
   const context = useContext(DndDashboardsContext);
   if (!context) {
     throw new Error(
-      "DndDashboardsProvider is required for useDndDashboards to work"
+      "DndDashboardsProvider needs to be a parent of the component that uses useDndDashboards for it to work."
     );
   }
   return context;

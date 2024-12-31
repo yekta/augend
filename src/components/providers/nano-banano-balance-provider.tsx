@@ -35,7 +35,7 @@ export const useNanoBananoBalances = () => {
   const context = useContext(NanoBananoBalancesContext);
   if (!context) {
     throw new Error(
-      "NanoBananoBalancesProvider is required for useNanoBananoBalances to work"
+      "NanoBananoBalancesProvider needs to be a parent of the component that uses useNanoBananoBalances for it to work."
     );
   }
   return context;

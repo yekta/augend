@@ -144,7 +144,7 @@ export const useCurrentDashboard = () => {
   const context = useContext(CurrentDashboardContext);
   if (!context) {
     throw new Error(
-      "CurrentDashboardProvider is required for useCurrentDashboard to work"
+      "CurrentDashboardProvider needs to be a parent of the component that uses useCurrentDashboard for it to work."
     );
   }
   return context;

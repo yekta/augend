@@ -50,7 +50,9 @@ export const OtherUserProvider: React.FC<Props> = ({ username, children }) => {
 export const useOtherUser = () => {
   const context = useContext(OtherUserContext);
   if (!context) {
-    throw new Error("OtherUserProvider is required for useOtherUser to work");
+    throw new Error(
+      "OtherUserProvider needs to be a parent of the component that uses useOtherUser for it to work."
+    );
   }
   return context;
 };

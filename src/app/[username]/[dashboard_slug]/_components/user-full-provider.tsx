@@ -62,7 +62,9 @@ export const UserFullProvider: FC<Props> = ({ children }) => {
 export const useUserFull = () => {
   const context = useContext(UserFullContext);
   if (!context) {
-    throw new Error("UserFullProvider is required for useUserFull to work");
+    throw new Error(
+      "UserFullProvider needs to be a parent of the component that uses useUserFull for it to work."
+    );
   }
   return context;
 };

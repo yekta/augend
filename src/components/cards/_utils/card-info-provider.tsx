@@ -30,7 +30,9 @@ export default function CardInfoProvider({
 export const useCardInfo = () => {
   const context = useContext(CardInfoContext);
   if (!context) {
-    throw new Error("CardInfoProvider is required for useCardInfo to work");
+    throw new Error(
+      "CardInfoProvider needs to be a parent of the component that uses useCardInfo for it to work."
+    );
   }
   return context;
 };

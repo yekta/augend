@@ -132,7 +132,9 @@ export default function DndCardsProvider({ initialIds, children }: Props) {
 export const useDndCards = () => {
   const context = useContext(DndCardsContext);
   if (!context) {
-    throw new Error("DndCardsProvider is required for useDndCards to work");
+    throw new Error(
+      "DndCardsProvider needs to be a parent of the component that uses useDndCards for it to work."
+    );
   }
   return context;
 };

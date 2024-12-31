@@ -40,7 +40,9 @@ export const useMainStore = <T,>(selector: (store: MainStore) => T): T => {
   const counterStoreContext = useContext(MainStoreContext);
 
   if (!counterStoreContext) {
-    throw new Error(`useMainStore must be used within MainStoreProvider`);
+    throw new Error(
+      `MainStoreProvider needs to be a parent of the component that uses useMainStore for it to work.`
+    );
   }
 
   return useStore(counterStoreContext, selector);

@@ -56,7 +56,7 @@ export const useEditModeDashboards = () => {
   const context = useContext(EditModeDashboardsContext);
   if (!context) {
     throw new Error(
-      "EditModeDashboardsProvider is required for useEditModeDashboards to work"
+      "EditModeDashboardsProvider needs to be a parent of the component that uses useEditModeDashboards for it to work."
     );
   }
   return context;

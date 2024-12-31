@@ -29,7 +29,9 @@ export const ForexRatesProvider: React.FC<{
 export const useForexRates = () => {
   const context = useContext(ForexRatesContext);
   if (!context) {
-    throw new Error("ForexRatesProvider is required for useForexRates to work");
+    throw new Error(
+      "ForexRatesProvider needs to be a parent of the component that uses useForexRates for it to work."
+    );
   }
   return context;
 };
