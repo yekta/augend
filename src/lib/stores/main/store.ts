@@ -16,10 +16,10 @@ type NewDashboardIdsSlice = {
 };
 
 export type MainStore = NewCardIdsSlice & NewDashboardIdsSlice;
-export type MainStoreInitState = {
-  newCardIds: NewCardIds;
-  newDashboardIds: NewDashboardIds;
-};
+export type MainStoreInitState = Pick<
+  MainStore,
+  "newCardIds" | "newDashboardIds"
+>;
 
 const createNewCardIdsSlice = (
   set: (fn: (state: MainStore) => Partial<MainStore>) => void

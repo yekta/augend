@@ -3,7 +3,11 @@
 import { type ReactNode, createContext, useRef, useContext } from "react";
 import { useStore } from "zustand";
 
-import { type MainStore, createMainStore } from "@/lib/stores/main/store";
+import {
+  type MainStore,
+  MainStoreInitState,
+  createMainStore,
+} from "@/lib/stores/main/store";
 
 export type MainStoreApi = ReturnType<typeof createMainStore>;
 
@@ -13,12 +17,16 @@ export const MainStoreContext = createContext<MainStoreApi | undefined>(
 
 export interface MainStoreProviderProps {
   children: ReactNode;
+  initState?: MainStoreInitState;
 }
 
-export const MainStoreProvider = ({ children }: MainStoreProviderProps) => {
+export const MainStoreProvider = ({
+  children,
+  initState,
+}: MainStoreProviderProps) => {
   const storeRef = useRef<MainStoreApi>();
   if (!storeRef.current) {
-    storeRef.current = createMainStore();
+    storeRef.current = createMainStore(initState);
   }
 
   return (
