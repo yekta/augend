@@ -14,7 +14,7 @@ const databaseUrl = databaseUrlRaw;
 
 const pool = new Pool({
   connectionString: databaseUrl,
-  idleTimeoutMillis: 30_000,
+  idleTimeoutMillis: 5 * 60 * 1000,
 });
 export const db = drizzle({ client: pool });
 
