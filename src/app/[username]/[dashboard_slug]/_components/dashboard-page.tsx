@@ -215,7 +215,7 @@ export default function DashboardPage({}: {}) {
             dashboardSlug={dashboardSlug}
           />
           <CreateCardButton
-            modalId="create_card_from_grid"
+            modalId="create_card_via_grid"
             variant="card"
             dashboardSlug={dashboardSlug}
           />
@@ -258,7 +258,7 @@ export default function DashboardPage({}: {}) {
           <Cards cards={cards} currencies={currencies} />
           {dashboard.isOwner && (
             <CreateCardButton
-              modalId="create_card_from_grid"
+              modalId="create_card_via_grid"
               variant="card"
               dashboardSlug={dashboardSlug}
             />

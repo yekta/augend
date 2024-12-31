@@ -12,7 +12,13 @@ import localFont from "next/font/local";
 import NextTopLoader from "nextjs-toploader";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
-import { TriangleAlertIcon, XIcon } from "lucide-react";
+import {
+  AlertCircleIcon,
+  CheckCircleIcon,
+  InfoIcon,
+  TriangleAlertIcon,
+  XIcon,
+} from "lucide-react";
 
 const sans = localFont({
   src: "./fonts/DMSansVF.woff2",
@@ -86,8 +92,12 @@ export default async function RootLayout({
             icons={{
               error: <TriangleAlertIcon className="size-full" />,
               close: <XIcon strokeWidth={2.5} className="size-full" />,
+              success: <CheckCircleIcon className="size-full" />,
+              warning: <AlertCircleIcon className="size-full" />,
+              info: <InfoIcon className="size-full" />,
             }}
             closeButton={true}
+            duration={60000}
           />
         </Providers>
       </body>

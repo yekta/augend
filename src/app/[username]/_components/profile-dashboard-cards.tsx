@@ -90,7 +90,7 @@ export default function ProfileDashboardCards({}: Props) {
           ))}
           {data?.isOwner && (
             <CreateDashboardButton
-              modalId="create_dashboard_from_grid"
+              modalId="create_dashboard_via_grid"
               variant="card"
             />
           )}

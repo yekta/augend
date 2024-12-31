@@ -17,7 +17,7 @@ export default function Page({}: Props) {
     <div className="w-full px-4 flex-1 flex flex-col items-center justify-center pt-6 pb-[calc(6vh+2rem)]">
       <div className="flex flex-col rounded-xl max-w-[22rem] border p-5 pt-4.5 gap-5">
         <div className="w-full flex flex-col gap-1 text-center">
-          <div className="w-full flex items-center justify-center pb-2">
+          <div className="w-full flex items-center justify-center pb-1.75">
             <Logo className="size-6" />
           </div>
           <h1 className="text-2xl font-bold leading-tight">Support</h1>

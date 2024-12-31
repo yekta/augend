@@ -38,7 +38,7 @@ export default function SignInCard({
       {...rest}
     >
       <div className="w-full flex flex-col items-center justify-center text-center gap-1">
-        <div className="w-full flex items-center justify-center pb-2">
+        <div className="w-full flex items-center justify-center pb-1.75">
           <Logo className="size-6" />
         </div>
         <h2 className="text-2xl font-bold leading-tight">{title}</h2>
@@ -75,7 +75,7 @@ export function SignInButton({
         classNameInnerWrapper="gap-5"
       >
         <DialogHeader>
-          <div className="w-full flex items-center justify-center pb-2">
+          <div className="w-full flex items-center justify-center pb-1.75">
             <Logo className="size-6" />
           </div>
           <DialogTitle className="text-center px-6 text-2xl leading-tight">

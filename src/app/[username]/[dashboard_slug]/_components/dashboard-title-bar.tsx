@@ -167,7 +167,7 @@ export function DashboardTitleBar({ dashboardSlug, isOwner }: Props) {
             )}
           </div>
           <CreateCardButton
-            modalId="create_card_from_title_bar"
+            modalId="create_card_via_title"
             variant="icon"
             dashboardSlug={dashboardSlug}
             xOrderPreference="first"

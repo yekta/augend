@@ -35,7 +35,7 @@ const dialogContentVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-background border rounded-xl p-5 pt-4.5 shadow-dialog shadow-shadow/[var(--opacity-shadow)]",
+          "bg-background border rounded-xl p-5 pt-4 shadow-dialog shadow-shadow/[var(--opacity-shadow)]",
         styleless: "",
       },
     },
@@ -159,7 +159,7 @@ const DialogTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Title
     ref={ref}
-    className={cn("text-xl font-bold leading-snug pr-6", className)}
+    className={cn("text-xl font-bold leading-tight pr-6", className)}
     {...props}
   />
 ));
