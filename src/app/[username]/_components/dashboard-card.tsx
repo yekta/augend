@@ -8,7 +8,7 @@ import DeleteDashboardTrigger from "@/components/dashboard/delete-dashboard-trig
 import { CardsIcon } from "@/components/icons/cards-icon";
 import { Button } from "@/components/ui/button";
 import { mainDashboardSlug } from "@/lib/constants";
-import { newDashboardIdsAtom } from "@/lib/stores/main";
+import { useMainStore } from "@/lib/stores/main/provider";
 import { cn } from "@/lib/utils";
 import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine";
 import {
@@ -16,7 +16,6 @@ import {
   dropTargetForElements,
 } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview";
-import { useAtomValue } from "jotai";
 import { EyeIcon, LockIcon, MinusIcon } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -63,7 +62,7 @@ export default function DashboardCard({
   const [cardSize, setCardSize] = useState<TSize>(defaultCardSize);
   const { instanceId } = useDndDashboards();
 
-  const newDashboardIds = useAtomValue(newDashboardIdsAtom);
+  const newDashboardIds = useMainStore((s) => s.newDashboardIds);
   const sharedProps = {
     "data-card-id": dashboardId,
     "data-card-new":

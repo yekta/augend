@@ -19,11 +19,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { captureCreateDashboard } from "@/lib/capture/client";
-import { newDashboardIdsAtom } from "@/lib/stores/main";
+import { useMainStore } from "@/lib/stores/main/provider";
 import { CreateDashboardSchemaUI } from "@/server/trpc/api/ui/types";
 import { api } from "@/server/trpc/setup/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSetAtom } from "jotai";
 import { LoaderIcon } from "lucide-react";
 import { useRef } from "react";
 import { useForm } from "react-hook-form";
@@ -62,9 +61,10 @@ export default function CreateDashboardTrigger({
     },
   });
 
-  const setNewDashboardIds = useSetAtom(newDashboardIdsAtom);
+  const addNewDashboardId = useMainStore((s) => s.addNewDashboardId);
+  const removeNewDashboardId = useMainStore((s) => s.removeNewDashboardId);
+
   const setNewDashboardIdTimeout = useRef<NodeJS.Timeout | undefined>();
-  const newDashboardIdTimeout = useRef<NodeJS.Timeout | undefined>();
 
   const {
     mutate: createDashboard,
@@ -81,15 +81,8 @@ export default function CreateDashboardTrigger({
       setTimeout(() => {
         clearTimeout(setNewDashboardIdTimeout.current);
         setNewDashboardIdTimeout.current = setTimeout(() => {
-          setNewDashboardIds((prev) => ({ ...prev, [d.dashboardId]: true }));
-          clearTimeout(newDashboardIdTimeout.current);
-          newDashboardIdTimeout.current = setTimeout(() => {
-            setNewDashboardIds((prev) => {
-              const { [d.dashboardId]: _, ...rest } = prev;
-              return rest;
-            });
-          }, 2500);
-          d;
+          addNewDashboardId({ id: d.dashboardId });
+          removeNewDashboardId({ id: d.dashboardId, delay: 2500 });
         }, 200);
 
         const selector = `[data-card-id="${d.dashboardId}"]`;

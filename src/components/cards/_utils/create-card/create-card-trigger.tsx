@@ -21,12 +21,11 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { captureCreateCard } from "@/lib/capture/client";
 import { formatNumberTBMK } from "@/lib/number-formatters";
-import { newCardIdsAtom } from "@/lib/stores/main";
+import { useMainStore } from "@/lib/stores/main/provider";
 import { cn } from "@/lib/utils";
 import { AppRouterOutputs, AppRouterQueryResult } from "@/server/trpc/api/root";
 import { TCardTypeId } from "@/server/trpc/api/ui/types";
 import { api } from "@/server/trpc/setup/react";
-import { useSetAtom } from "jotai";
 import { ArrowDownCircleIcon, ArrowLeftIcon } from "lucide-react";
 import { useQueryState } from "nuqs";
 import { Dispatch, SetStateAction, useRef, useState } from "react";
@@ -81,9 +80,10 @@ export default function CreateCardTrigger({
 
   const { invalidateCards } = useCurrentDashboard();
 
-  const setNewCardIds = useSetAtom(newCardIdsAtom);
+  const addNewCardId = useMainStore((s) => s.addNewCardId);
+  const removeNewCardId = useMainStore((s) => s.removeNewCardId);
+
   const setNewCardIdTimeout = useRef<NodeJS.Timeout | undefined>();
-  const newCardIdTimeout = useRef<NodeJS.Timeout | undefined>();
 
   const {
     mutate: createCardMutation,
@@ -99,14 +99,8 @@ export default function CreateCardTrigger({
       setTimeout(() => {
         clearTimeout(setNewCardIdTimeout.current);
         setNewCardIdTimeout.current = setTimeout(() => {
-          setNewCardIds((prev) => ({ ...prev, [c.cardId]: true }));
-          clearTimeout(newCardIdTimeout.current);
-          newCardIdTimeout.current = setTimeout(() => {
-            setNewCardIds((prev) => {
-              const { [c.cardId]: _, ...rest } = prev;
-              return rest;
-            });
-          }, 2500);
+          addNewCardId({ id: c.cardId });
+          removeNewCardId({ id: c.cardId, delay: 2500 });
         }, 200);
 
         const selector = `[data-card-id="${c.cardId}"]`;

@@ -17,6 +17,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { toastErrorProps } from "@/components/ui/sonner";
+import { captureDeleteCards } from "@/lib/capture/client";
+import { useMainStore } from "@/lib/stores/main/provider";
 import { cn } from "@/lib/utils";
 import { api } from "@/server/trpc/setup/react";
 import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine";
@@ -30,10 +33,6 @@ import Link from "next/link";
 import { ComponentProps, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { toast } from "sonner";
-import { captureDeleteCards } from "@/lib/capture/client";
-import { useAtomValue } from "jotai";
-import { newCardIdsAtom } from "@/lib/stores/main";
-import { toastErrorProps } from "@/components/ui/sonner";
 
 type TSharedProps = {
   cardId?: string;
@@ -123,7 +122,7 @@ export default function CardOuterWrapper({
     captureDeleteCards({ ids: [cardId] });
   };
 
-  const newCardIds = useAtomValue(newCardIdsAtom);
+  const newCardIds = useMainStore((s) => s.newCardIds);
   const sharedProps = {
     "data-card-id": cardId,
     "data-card-new": cardId && newCardIds[cardId] ? true : undefined,
