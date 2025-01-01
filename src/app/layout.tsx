@@ -84,7 +84,7 @@ export default async function RootLayout({
           <div className="w-full flex flex-col min-h-[100svh]">
             <Navbar className="fixed left-0 top-0 z-50" />
             <div className="pointer-events-none h-14 w-full" />
-            {children}
+            <div className="w-full flex flex-col flex-1">{children}</div>
             <Footer />
           </div>
           <Toaster
