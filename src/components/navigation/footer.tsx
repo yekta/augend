@@ -27,7 +27,7 @@ export default function Footer({ className }: { className?: string }) {
             <p className="w-full md:w-auto px-1 shrink min-w-0 text-sm text-left">
               {siteTitle} © {new Date().getFullYear()}
             </p>
-            <span className="px-1 hidden md:block text-muted-more-foreground">
+            <span className="px-0.5 md:px-0.75 hidden md:block text-muted-more-foreground">
               •
             </span>
             <div className="w-full md:w-auto shrink min-w-0 flex flex-row flex-wrap items-center justify-start">
@@ -40,7 +40,9 @@ export default function Footer({ className }: { className?: string }) {
               >
                 <p className="max-w-full">Terms</p>
               </Link>
-              <span className="px-1 text-muted-more-foreground">•</span>
+              <span className="px-0.5 md:px-0.75 text-muted-more-foreground">
+                •
+              </span>
               <Link
                 href="/privacy"
                 target="_blank"
