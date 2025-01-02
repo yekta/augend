@@ -22,7 +22,7 @@ type Props = {
 
 export default async function Navbar({ type, className }: Props) {
   let session: Session | null = null;
-  if (type === "app") {
+  if (type !== "doc") {
     session = await auth();
   }
 
@@ -83,7 +83,9 @@ export default async function Navbar({ type, className }: Props) {
             ) : (
               <UserFullProvider>
                 <div className="pr-0.25">
-                  <UserAvatar session={session} />
+                  <NavigationMenuItem asChild>
+                    <UserAvatar session={session} />
+                  </NavigationMenuItem>
                 </div>
               </UserFullProvider>
             )}
