@@ -372,7 +372,7 @@ function Header({
       data-loading-error={(isLoadingError && true) || undefined}
       data-placeholder-data={isPlaceholderData ? true : undefined}
       data-hard-error={!isPending && priceInfo.isFallback ? true : undefined}
-      className="w-full flex flex-col items-start justify-start gap-2.5 pr-14 group/header"
+      className="w-full flex flex-col items-start justify-start gap-2 pr-14 group/header"
     >
       <div
         className="max-w-full text-sm leading-none truncate font-semibold flex items-end justify-left 
@@ -392,7 +392,7 @@ function Header({
         )}
       </div>
       <div className="w-full relative flex justify-start items-start">
-        <div className="max-w-full gap-2 justify-start text-2xl leading-none font-extrabold font-mono truncate group-data-[pending]/header:text-transparent group-data-[pending]/header:bg-foreground group-data-[pending]/header:animate-skeleton group-data-[pending]/header:rounded-md group-data-[hard-error]/header:text-destructive flex items-end justify-left">
+        <div className="max-w-full gap-1.5 justify-start text-2xl leading-none font-extrabold font-mono truncate group-data-[pending]/header:text-transparent group-data-[pending]/header:bg-foreground group-data-[pending]/header:animate-skeleton group-data-[pending]/header:rounded-md group-data-[hard-error]/header:text-destructive flex items-end justify-left">
           {isPending ? (
             "Loading data"
           ) : !priceInfo.isFallback ? (
