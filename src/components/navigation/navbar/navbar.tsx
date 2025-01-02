@@ -1,9 +1,9 @@
 import UserFullProvider from "@/app/[username]/[dashboard_slug]/_components/user-full-provider";
 import { SignInButton } from "@/components/auth/sign-in-card";
-import DashboardSelector from "@/components/navigation/dashboard-selector";
+import DashboardSelector from "@/components/navigation/navbar/dashboard-selector";
 import Logo from "@/components/navigation/logo";
-import NavbarWrapper from "@/components/navigation/navbar-wrapper";
-import UserAvatar from "@/components/navigation/user-avatar";
+import NavbarWrapper from "@/components/navigation/navbar/navbar-wrapper";
+import UserAvatar from "@/components/navigation/navbar/user-avatar";
 import { LinkButton } from "@/components/ui/button";
 import {
   NavigationMenu,

@@ -1,5 +1,5 @@
 import Footer from "@/components/navigation/footer";
-import Navbar from "@/components/navigation/navbar";
+import Navbar from "@/components/navigation/navbar/navbar";
 import Providers from "@/components/providers/providers";
 import {
   getPreviewUrl,
