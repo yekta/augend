@@ -3,7 +3,7 @@
 import { AppRouterOutputs } from "@/server/trpc/api/root";
 import { api } from "@/server/trpc/setup/react";
 import { usePathname } from "next/navigation";
-import React, { createContext, ReactNode, useContext } from "react";
+import React, { createContext, FC, ReactNode, useContext } from "react";
 
 type TDashboardsAutoContext = {
   data: AppRouterOutputs["ui"]["getDashboards"] | undefined;
@@ -25,7 +25,7 @@ type Props = {
   children: ReactNode;
 };
 
-export const DashboardsAutoProvider: React.FC<Props> = ({ children }) => {
+export const DashboardsAutoProvider: FC<Props> = ({ children }) => {
   const pathname = usePathname();
   const arr = pathname.split("/");
   const username = arr.length > 1 ? pathname.split("/")[1] : undefined;
