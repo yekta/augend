@@ -1,12 +1,12 @@
 "use client";
 
-import { useEditModeCards } from "@/app/[username]/[dashboard_slug]/_components/edit-mode-cards-provider";
+import { useEditModeCards } from "@/app/(app)/[username]/[dashboard_slug]/_components/edit-mode-cards-provider";
 
-import { useCurrentDashboard } from "@/app/[username]/[dashboard_slug]/_components/current-dashboard-provider";
+import { useCurrentDashboard } from "@/app/(app)/[username]/[dashboard_slug]/_components/current-dashboard-provider";
 import {
   dndCardItemType,
   useDndCards,
-} from "@/app/[username]/[dashboard_slug]/_components/dnd-cards-provider";
+} from "@/app/(app)/[username]/[dashboard_slug]/_components/dnd-cards-provider";
 import ErrorLine from "@/components/error-line";
 import { Button } from "@/components/ui/button";
 import {

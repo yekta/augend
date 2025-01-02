@@ -1,6 +1,6 @@
 "use client";
 
-import { useUserFull } from "@/app/[username]/[dashboard_slug]/_components/user-full-provider";
+import { useUserFull } from "@/app/(app)/[username]/[dashboard_slug]/_components/user-full-provider";
 import { signOutAction } from "@/components/auth/actions";
 import Blockies from "@/components/blockies/blockies";
 import CurrencyPreferenceTrigger from "@/components/currency-preference-trigger";

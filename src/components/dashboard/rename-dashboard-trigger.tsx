@@ -1,4 +1,4 @@
-import { useCurrentDashboard } from "@/app/[username]/[dashboard_slug]/_components/current-dashboard-provider";
+import { useCurrentDashboard } from "@/app/(app)/[username]/[dashboard_slug]/_components/current-dashboard-provider";
 import ErrorLine from "@/components/error-line";
 import { useDashboardsAuto } from "@/components/providers/dashboards-auto-provider";
 import { Button } from "@/components/ui/button";

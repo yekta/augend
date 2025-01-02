@@ -1,17 +1,11 @@
-import Footer from "@/components/navigation/footer";
-import Navbar from "@/components/navigation/navbar/navbar";
 import Providers from "@/components/providers/providers";
+import { Toaster } from "@/components/ui/sonner";
 import {
   getPreviewUrl,
   siteDescription,
   siteTagline,
   siteTitle,
 } from "@/lib/constants";
-import type { Metadata } from "next";
-import localFont from "next/font/local";
-import NextTopLoader from "nextjs-toploader";
-import "./globals.css";
-import { Toaster } from "@/components/ui/sonner";
 import {
   AlertCircleIcon,
   CheckCircleIcon,
@@ -19,6 +13,10 @@ import {
   TriangleAlertIcon,
   XIcon,
 } from "lucide-react";
+import type { Metadata } from "next";
+import localFont from "next/font/local";
+import NextTopLoader from "nextjs-toploader";
+import "./globals.css";
 
 const sans = localFont({
   src: "./fonts/DMSansVF.woff2",
@@ -81,12 +79,7 @@ export default async function RootLayout({
             shadow={false}
             height={2}
           />
-          <div className="w-full flex flex-col min-h-[100svh]">
-            <Navbar className="fixed left-0 top-0 z-50" />
-            <div className="pointer-events-none h-14 w-full" />
-            <div className="w-full flex flex-col flex-1">{children}</div>
-            <Footer />
-          </div>
+          <div className="w-full flex flex-col min-h-[100svh]">{children}</div>
           <Toaster
             position="top-right"
             icons={{

@@ -1,10 +1,10 @@
-import UserFullProvider from "@/app/[username]/[dashboard_slug]/_components/user-full-provider";
+import UserFullProvider from "@/app/(app)/[username]/[dashboard_slug]/_components/user-full-provider";
 import { SignInButton } from "@/components/auth/sign-in-card";
 import DashboardSelector from "@/components/navigation/navbar/dashboard-selector";
 import Logo from "@/components/navigation/logo";
 import NavbarWrapper from "@/components/navigation/navbar/navbar-wrapper";
 import UserAvatar from "@/components/navigation/navbar/user-avatar";
-import { LinkButton } from "@/components/ui/button";
+import { Button, LinkButton } from "@/components/ui/button";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -13,13 +13,18 @@ import { mainDashboardSlug } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { auth } from "@/server/auth/auth";
 import { HydrateClient } from "@/server/trpc/setup/server";
+import { Session } from "next-auth";
 
 type Props = {
   className?: string;
+  type: "app" | "doc";
 };
 
-export default async function Navbar({ className }: Props) {
-  const session = await auth();
+export default async function Navbar({ type, className }: Props) {
+  let session: Session | null = null;
+  if (type === "app") {
+    session = await auth();
+  }
 
   return (
     <HydrateClient>
@@ -33,22 +38,43 @@ export default async function Navbar({ className }: Props) {
           <div className="w-full flex items-center justify-between p-1.5 md:p-2 gap-2.5">
             <div className="flex flex-1 min-w-0 items-center justify-start gap-1.25 md:gap-1.5">
               <NavigationMenuItem asChild>
-                <LinkButton
-                  aria-label="Home"
-                  href={
-                    session
-                      ? `/${session.user.username}/${mainDashboardSlug}`
-                      : "/"
-                  }
-                  variant="outline"
-                  className="border-none p-1.75"
-                >
-                  <Logo />
-                </LinkButton>
+                {type === "doc" ? (
+                  <Button
+                    className="border-none p-1.75"
+                    variant="outline"
+                    aria-label="Home"
+                    asChild
+                  >
+                    <a href="/">
+                      <Logo />
+                    </a>
+                  </Button>
+                ) : (
+                  <LinkButton
+                    className="border-none p-1.75"
+                    variant="outline"
+                    aria-label="Home"
+                    href={
+                      session
+                        ? `/${session.user.username}/${mainDashboardSlug}`
+                        : "/"
+                    }
+                  >
+                    <Logo />
+                  </LinkButton>
+                )}
               </NavigationMenuItem>
-              <DashboardSelector />
+              {type !== "doc" && <DashboardSelector />}
             </div>
-            {!session ? (
+            {type === "doc" ? (
+              <div className="pr-0.5">
+                <NavigationMenuItem asChild>
+                  <Button asChild size="sm">
+                    <a href="/">Go Home</a>
+                  </Button>
+                </NavigationMenuItem>
+              </div>
+            ) : !session ? (
               <div className="pr-0.5">
                 <NavigationMenuItem asChild>
                   <SignInButton size="sm" modalId="sign_in_via_navbar" />

@@ -1,4 +1,4 @@
-import { useUserFull } from "@/app/[username]/[dashboard_slug]/_components/user-full-provider";
+import { useUserFull } from "@/app/(app)/[username]/[dashboard_slug]/_components/user-full-provider";
 import CardValueFormItemCombobox from "@/components/cards/_utils/values-form/form-item-combobox";
 import { CurrencySymbol } from "@/components/currency-symbol";
 import ErrorLine from "@/components/error-line";
