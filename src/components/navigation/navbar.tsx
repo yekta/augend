@@ -1,7 +1,7 @@
 import UserFullProvider from "@/app/[username]/[dashboard_slug]/_components/user-full-provider";
 import { SignInButton } from "@/components/auth/sign-in-card";
-import Logo from "@/components/navigation/logo";
 import DashboardSelector from "@/components/navigation/dashboard-selector";
+import Logo from "@/components/navigation/logo";
 import NavbarWrapper from "@/components/navigation/navbar-wrapper";
 import UserAvatar from "@/components/navigation/user-avatar";
 import { LinkButton } from "@/components/ui/button";
@@ -10,7 +10,6 @@ import {
   NavigationMenuItem,
 } from "@/components/ui/navigation-menu";
 import { mainDashboardSlug } from "@/lib/constants";
-import { prefetchFullUserAndCurrenciesCached } from "@/lib/user";
 import { cn } from "@/lib/utils";
 import { auth } from "@/server/auth/auth";
 import { HydrateClient } from "@/server/trpc/setup/server";
@@ -21,10 +20,6 @@ type Props = {
 
 export default async function Navbar({ className }: Props) {
   const session = await auth();
-
-  if (session) {
-    await prefetchFullUserAndCurrenciesCached();
-  }
 
   return (
     <HydrateClient>
