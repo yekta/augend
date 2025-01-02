@@ -12,6 +12,7 @@ import {
 import { mainDashboardSlug } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { auth } from "@/server/auth/auth";
+import { HomeIcon } from "lucide-react";
 import { Session } from "next-auth";
 
 type Props = {
@@ -67,8 +68,15 @@ export default async function Navbar({ type, className }: Props) {
           {type === "doc" ? (
             <div className="pr-0.5">
               <NavigationMenuItem asChild>
-                <Button asChild size="sm">
-                  <a href="/">Go Home</a>
+                <Button
+                  asChild
+                  size="sm"
+                  className="items-center justify-center gap-1.25"
+                >
+                  <a href="/">
+                    <HomeIcon className="size-4 -my-1 -ml-0.75" />
+                    <p>Home</p>
+                  </a>
                 </Button>
               </NavigationMenuItem>
             </div>
