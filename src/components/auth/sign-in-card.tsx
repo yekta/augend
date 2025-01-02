@@ -1,17 +1,8 @@
-import SignInWithEthereumButton from "@/components/auth/sign-in-with-ethereum-button";
-import SignInWithOAuthButton from "@/components/auth/sign-in-with-oauth-button";
+import SignInContent from "@/components/auth/sign-in-content";
+import { SignInTrigger } from "@/components/auth/sign-in-trigger";
 import Logo from "@/components/navigation/logo";
 import { Button, buttonVariants } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
-import { authProviderMap } from "@/server/auth/auth";
 import { VariantProps } from "class-variance-authority";
 import { ComponentProps } from "react";
 
@@ -55,6 +46,7 @@ type SignInButtonProps = {
   error?: string;
   callbackUrl?: string;
   className?: string;
+  modalId: string;
 } & VariantProps<typeof buttonVariants>;
 
 export function SignInButton({
@@ -62,74 +54,18 @@ export function SignInButton({
   error,
   className,
   size,
+  modalId,
 }: SignInButtonProps) {
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button size={size} className={cn(className)}>
-          Get Started
-        </Button>
-      </DialogTrigger>
-      <DialogContent
-        className="w-full max-w-[22rem]"
-        classNameInnerWrapper="gap-5"
-      >
-        <DialogHeader>
-          <div className="w-full flex items-center justify-center pb-1.75">
-            <Logo className="size-6" />
-          </div>
-          <DialogTitle className="text-center px-6 text-2xl leading-tight">
-            {title}
-          </DialogTitle>
-          <DialogDescription className="text-center text-base leading-snug text-balance">
-            {description}
-          </DialogDescription>
-        </DialogHeader>
-        <SignInContent callbackUrl={callbackUrl} error={error} />
-      </DialogContent>
-    </Dialog>
+    <SignInTrigger
+      title={title}
+      description={description}
+      modalId={modalId}
+      content={<SignInContent callbackUrl={callbackUrl} error={error} />}
+    >
+      <Button size={size} className={cn(className)}>
+        Get Started
+      </Button>
+    </SignInTrigger>
   );
-}
-
-type SignInContentProps = ComponentProps<"div"> & {
-  error?: string;
-  callbackUrl?: string;
-};
-
-function SignInContent({
-  callbackUrl,
-  error,
-  className,
-  ...rest
-}: SignInContentProps) {
-  return (
-    <div className={cn("w-full flex flex-col gap-2", className)} {...rest}>
-      {error && (
-        <div className="w-full px-3 text-sm py-2 rounded-lg bg-destructive/10 border border-destructive/15 text-destructive">
-          {getErrorText(error)}
-        </div>
-      )}
-      {Object.values(authProviderMap).map((provider) => (
-        <SignInWithOAuthButton
-          key={provider.id}
-          providerId={provider.id}
-          providerName={provider.name}
-          callbackUrl={callbackUrl}
-        />
-      ))}
-      <SignInWithEthereumButton />
-    </div>
-  );
-}
-
-function getErrorText(error: string) {
-  if (error == "OAuthAccountNotLinked") {
-    return (
-      <>
-        This email is already in use. Please sign in with the platform you
-        originally used.
-      </>
-    );
-  }
-  return <>Something went wrong: {error}</>;
 }

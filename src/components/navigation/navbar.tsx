@@ -51,7 +51,7 @@ export default async function Navbar({ className }: Props) {
             {!session ? (
               <div className="pr-0.5">
                 <NavigationMenuItem asChild>
-                  <SignInButton size="sm" />
+                  <SignInButton size="sm" modalId="sign_in_via_navbar" />
                 </NavigationMenuItem>
               </div>
             ) : (

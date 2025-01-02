@@ -109,7 +109,7 @@ export default async function Home() {
               Track crypto, NFTs, Uniswap positions, stocks, financial trends,
               and more with highly customizable dashboards.
             </p>
-            <SignInButton className="mt-5" />
+            <SignInButton className="mt-5" modalId="sign_in_via_hero" />
           </div>
           <div className="w-full grid grid-cols-12 mt-6 px-1 md:px-5">
             <Providers
