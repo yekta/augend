@@ -63,8 +63,7 @@ export async function POST(request: Request) {
         zone_id: env.CLOUDFLARE_ZONE_ID,
         files: chunk,
       });
-      console.log("Purged cache for:", chunk);
-      console.log("Purge response:", response);
+      console.log("Cache purge batch:", response, chunk);
     }
   } catch (error) {
     console.error("Failed to get static routes:", error);
