@@ -32,8 +32,14 @@ export async function POST(request: Request) {
 
   const body: TRailwayDeployBody = await request.json();
 
-  if (body.type !== "DEPLOY" || body.status !== "REMOVING") {
-    return new Response("Skipping executing for this webhook", { status: 200 });
+  if (
+    !body.project?.id ||
+    !process.env.RAILWAY_PROJECT_ID ||
+    body.project?.id !== process.env.RAILWAY_PROJECT_ID ||
+    body.type !== "DEPLOY" ||
+    body.status !== "REMOVING"
+  ) {
+    return new Response("Skipping execution for this webhook", { status: 200 });
   }
 
   try {
