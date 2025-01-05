@@ -9,10 +9,6 @@ type TUserFullContext = {
   isPendingUser: boolean;
   isLoadingErrorUser: boolean;
   invalidateUser: () => Promise<void>;
-  dataCurrencies?: AppRouterOutputs["ui"]["getCurrencies"];
-  isPendingCurrencies: boolean;
-  isLoadingErrorCurrencies: boolean;
-  invalidateCurrencies: () => Promise<void>;
 };
 
 const UserFullContext = createContext<TUserFullContext | null>(null);
@@ -32,15 +28,6 @@ export const UserFullProvider: FC<Props> = ({ children }) => {
 
   const invalidateUser = () => utils.ui.getUserFull.invalidate();
 
-  const {
-    data: dataCurrencies,
-    isPending: isPendingCurrencies,
-    isLoadingError: isLoadingErrorCurrencies,
-  } = api.ui.getCurrencies.useQuery({ category: "all" });
-
-  const invalidateCurrencies = () =>
-    utils.ui.getCurrencies.invalidate({ category: "all" });
-
   return (
     <UserFullContext.Provider
       value={{
@@ -48,10 +35,6 @@ export const UserFullProvider: FC<Props> = ({ children }) => {
         isPendingUser,
         isLoadingErrorUser,
         invalidateUser,
-        dataCurrencies,
-        isPendingCurrencies,
-        isLoadingErrorCurrencies,
-        invalidateCurrencies,
       }}
     >
       {children}

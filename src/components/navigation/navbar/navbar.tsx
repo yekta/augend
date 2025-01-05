@@ -1,4 +1,3 @@
-import UserFullProvider from "@/app/(app)/[username]/[dashboard_slug]/_components/user-full-provider";
 import { SignInButton } from "@/components/auth/sign-in-card";
 import Logo from "@/components/navigation/logo";
 import DashboardSelector from "@/components/navigation/navbar/dashboard-selector";
@@ -87,13 +86,11 @@ export default async function Navbar({ type, className }: Props) {
               </NavigationMenuItem>
             </div>
           ) : (
-            <UserFullProvider>
-              <div className="pr-0.25">
-                <NavigationMenuItem asChild>
-                  <UserAvatar session={session} />
-                </NavigationMenuItem>
-              </div>
-            </UserFullProvider>
+            <div className="pr-0.25">
+              <NavigationMenuItem asChild>
+                <UserAvatar session={session} />
+              </NavigationMenuItem>
+            </div>
           )}
         </div>
       </NavbarWrapper>

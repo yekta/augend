@@ -35,6 +35,7 @@ export type TValueComboboxProps = {
   inputPlaceholder: string;
   noValueFoundLabel: string;
   isPending?: boolean;
+  showIconWhenPending?: boolean;
   isLoadingError?: boolean;
   isLoadingErrorMessage?: string | null;
   className?: string;
@@ -64,6 +65,7 @@ export default function CardValueFormItemCombobox<T>({
   inputPlaceholder,
   noValueFoundLabel,
   isPending,
+  showIconWhenPending,
   isLoadingError,
   isLoadingErrorMessage,
   value,
@@ -115,12 +117,15 @@ export default function CardValueFormItemCombobox<T>({
             >
               <div className="shrink min-w-0">
                 <div className="shrink min-w-0 flex items-center gap-2 group-data-[has-icon]/button:-ml-1">
-                  {!isPending && !isLoadingError && Icon && value && (
-                    <Icon
-                      value={iconValue ?? value}
-                      className="shrink-0 size-5 -my-1 flex items-center justify-center"
-                    />
-                  )}
+                  {(!isPending || showIconWhenPending) &&
+                    !isLoadingError &&
+                    Icon &&
+                    value && (
+                      <Icon
+                        value={iconValue ?? value}
+                        className="shrink-0 size-5 -my-1 flex items-center justify-center"
+                      />
+                    )}
                   <p className="min-w-0 group-data-[showing-placeholder]/button:text-muted-foreground truncate shrink whitespace-nowrap">
                     <WithHighlightedParentheses
                       text={value ? value : placeholder}

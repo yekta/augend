@@ -20,7 +20,7 @@ import { ChangeCurrencyPreferenceSchemaUI } from "@/server/trpc/api/ui/types";
 import { api } from "@/server/trpc/setup/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderIcon } from "lucide-react";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -44,14 +44,15 @@ export default function CurrencyPreferenceTrigger({
 }) {
   const asyncRouterRefresh = useAsyncRouterRefresh();
 
+  const { dataUser, isPendingUser, invalidateUser } = useUserFull();
+
   const {
-    dataUser,
-    dataCurrencies,
-    isPendingUser,
-    isPendingCurrencies,
-    isLoadingErrorCurrencies,
-    invalidateUser,
-  } = useUserFull();
+    data: dataCurrencies,
+    isPending: isPendingCurrencies,
+    isLoadingError: isLoadingErrorCurrencies,
+  } = api.ui.getCurrencies.useQuery({
+    category: "all",
+  });
 
   const getValue = (c: { name: string; ticker: string }) =>
     `${c.name} (${c.ticker})`;
@@ -68,6 +69,26 @@ export default function CurrencyPreferenceTrigger({
         : "",
     },
   });
+
+  useEffect(() => {
+    if (!dataUser) return;
+    if (!form.getValues("primaryCurrencyValue")) {
+      form.setValue("primaryCurrencyValue", getValue(dataUser.primaryCurrency));
+    }
+    if (!form.getValues("secondaryCurrencyValue")) {
+      form.setValue(
+        "secondaryCurrencyValue",
+        getValue(dataUser.secondaryCurrency)
+      );
+    }
+    if (!form.getValues("tertiaryCurrencyValue")) {
+      form.setValue(
+        "tertiaryCurrencyValue",
+        getValue(dataUser.tertiaryCurrency)
+      );
+    }
+  }, [dataUser]);
+
   const primaryCurrencyValue = form.watch("primaryCurrencyValue");
   const secondaryCurrencyValue = form.watch("secondaryCurrencyValue");
 
@@ -201,13 +222,23 @@ export default function CurrencyPreferenceTrigger({
     });
   };
 
+  const currencies = dataCurrencies
+    ? dataCurrencies
+    : dataUser
+    ? [
+        dataUser.primaryCurrency,
+        dataUser.secondaryCurrency,
+        dataUser.tertiaryCurrency,
+      ]
+    : null;
+
   const Icon = useMemo(
     () =>
       ({ value, className }: { value: string | null; className?: string }) => {
-        if (!dataCurrencies) return null;
-        const idx = dataCurrencies.findIndex((c) => c.ticker === value);
+        if (!currencies) return null;
+        const idx = currencies.findIndex((c) => c.ticker === value);
         if (idx === -1) return null;
-        const currency = dataCurrencies[idx];
+        const currency = currencies[idx];
         return (
           <div className={cn(className, "block text-center h-auto")}>
             <CurrencySymbol
@@ -217,7 +248,7 @@ export default function CurrencyPreferenceTrigger({
           </div>
         );
       },
-    [dataCurrencies]
+    [currencies]
   );
 
   return (
@@ -244,8 +275,7 @@ export default function CurrencyPreferenceTrigger({
                 <CardValueFormItemCombobox
                   inputTitle="Primary"
                   iconValue={
-                    dataCurrencies?.find((c) => getValue(c) === field.value)
-                      ?.ticker
+                    currencies?.find((c) => getValue(c) === field.value)?.ticker
                   }
                   Icon={Icon}
                   value={field.value}
@@ -254,6 +284,7 @@ export default function CurrencyPreferenceTrigger({
                   }}
                   disabled={isPendingChangeCurrencyPreference}
                   isPending={isPendingCurrencies}
+                  showIconWhenPending
                   isLoadingError={isLoadingErrorCurrencies}
                   isLoadingErrorMessage="Failed to load currencies :("
                   items={primaryCurrencyItems}
@@ -270,10 +301,7 @@ export default function CurrencyPreferenceTrigger({
                 <CardValueFormItemCombobox
                   inputTitle="Secondary"
                   iconValue={
-                    dataCurrencies
-                      ? dataCurrencies.find((c) => getValue(c) === field.value)
-                          ?.ticker
-                      : undefined
+                    currencies?.find((c) => getValue(c) === field.value)?.ticker
                   }
                   Icon={Icon}
                   value={field.value}
@@ -282,6 +310,7 @@ export default function CurrencyPreferenceTrigger({
                   }
                   disabled={isPendingChangeCurrencyPreference}
                   isPending={isPendingCurrencies}
+                  showIconWhenPending
                   isLoadingError={isLoadingErrorCurrencies}
                   isLoadingErrorMessage="Failed to load currencies :("
                   items={secondaryCurrencyItems}
@@ -298,8 +327,7 @@ export default function CurrencyPreferenceTrigger({
                 <CardValueFormItemCombobox
                   inputTitle="Tertiary"
                   iconValue={
-                    dataCurrencies?.find((c) => getValue(c) === field.value)
-                      ?.ticker
+                    currencies?.find((c) => getValue(c) === field.value)?.ticker
                   }
                   Icon={Icon}
                   value={field.value}
@@ -308,6 +336,7 @@ export default function CurrencyPreferenceTrigger({
                   }
                   disabled={isPendingChangeCurrencyPreference}
                   isPending={isPendingCurrencies}
+                  showIconWhenPending
                   isLoadingError={isLoadingErrorCurrencies}
                   isLoadingErrorMessage="Failed to load currencies :("
                   items={tertiaryCurrencyItems}
