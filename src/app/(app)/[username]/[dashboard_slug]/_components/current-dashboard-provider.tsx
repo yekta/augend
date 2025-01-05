@@ -3,7 +3,7 @@
 import { useDashboardsAuto } from "@/components/providers/dashboards-auto-provider";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
 import { api } from "@/server/trpc/setup/react";
-import { createContext, FC, ReactNode, useContext, useEffect } from "react";
+import { createContext, FC, ReactNode, useContext } from "react";
 
 type TCurrentDashboardContext = {
   username: string;
