@@ -125,7 +125,7 @@ input[type="number"]::-webkit-outer-spin-button {
     --warning-foreground: 250 25% 4%;
     --success: 130 55% 60%;
     --success-foreground: 250 25% 4%;
-    --shadow: 250 25% 4%;
+    --shadow: 0 0% 0%;
     --border: 250 25% 14%;
     --input: 250 25% 14%;
     --ring: 250 50% 92%;
@@ -156,7 +156,7 @@ input[type="number"]::-webkit-outer-spin-button {
 
     --barrier: 250 25% 4%;
     --opacity-barrier: 0.75;
-    --opacity-shadow: 0.85;
+    --opacity-shadow: 0.75;
   }
 }
 
