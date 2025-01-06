@@ -32,6 +32,7 @@ export default function Footer({ className }: { className?: string }) {
             </span>
             <div className="w-full md:w-auto shrink min-w-0 flex flex-row flex-wrap items-center justify-start">
               <Link
+                prefetch={false}
                 href="/terms"
                 target="_blank"
                 className="px-1 max-w-full flex items-center text-left min-w-0 not-touch:hover:text-foreground not-touch:hover:underline active:underline active:text-foreground rounded relative
@@ -44,6 +45,7 @@ export default function Footer({ className }: { className?: string }) {
                 •
               </span>
               <Link
+                prefetch={false}
                 href="/privacy"
                 target="_blank"
                 className="px-1 shrink text-left min-w-0 not-touch:hover:text-foreground not-touch:hover:underline active:underline active:text-foreground rounded relative
