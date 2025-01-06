@@ -156,7 +156,7 @@ input[type="number"]::-webkit-outer-spin-button {
 
     --barrier: 250 25% 4%;
     --opacity-barrier: 0.75;
-    --opacity-shadow: 1;
+    --opacity-shadow: 0.85;
   }
 }
 
