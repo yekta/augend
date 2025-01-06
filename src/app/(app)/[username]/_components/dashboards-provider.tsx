@@ -23,10 +23,14 @@ type TDashboardsContext = {
 const DashboardsContext = createContext<TDashboardsContext | null>(null);
 
 type Props = {
+  initialData?: AppRouterOutputs["ui"]["getDashboards"];
   children: ReactNode;
 };
 
-export const DashboardsProvider: React.FC<Props> = ({ children }) => {
+export const DashboardsProvider: React.FC<Props> = ({
+  initialData,
+  children,
+}) => {
   const utils = api.useUtils();
   const includeCardCounts = true;
   const {
@@ -43,6 +47,7 @@ export const DashboardsProvider: React.FC<Props> = ({ children }) => {
     },
     {
       enabled: userData !== undefined && userData !== null,
+      initialData,
     }
   );
 

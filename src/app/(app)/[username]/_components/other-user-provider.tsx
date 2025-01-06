@@ -20,14 +20,22 @@ const OtherUserContext = createContext<TOtherUserContext | null>(null);
 type Props = {
   username: string;
   ethereumAddress?: string | null;
+  initialData?: AppRouterOutputs["ui"]["getOtherUser"];
   children: ReactNode;
 };
 
-export const OtherUserProvider: React.FC<Props> = ({ username, children }) => {
+export const OtherUserProvider: React.FC<Props> = ({
+  username,
+  initialData,
+  children,
+}) => {
   const utils = api.useUtils();
-  const { data, isPending, isLoadingError } = api.ui.getOtherUser.useQuery({
-    username,
-  });
+  const { data, isPending, isLoadingError } = api.ui.getOtherUser.useQuery(
+    {
+      username,
+    },
+    { initialData }
+  );
   const invalidate = () => utils.ui.getOtherUser.invalidate({ username });
   const cancelQuery = () => utils.ui.getOtherUser.cancel({ username });
 

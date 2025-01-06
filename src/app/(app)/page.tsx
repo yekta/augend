@@ -97,110 +97,108 @@ export default async function Home() {
     await cachedFetch();
 
   return (
-    <HydrateClient>
-      <div className="w-full flex-1 flex flex-col items-center">
-        <div className="w-full max-w-7xl flex-1 flex flex-col justify-center items-center pt-4 pb-[calc(6vh+2rem)]">
-          <div className="flex flex-col items-center max-w-full px-5 md:px-8">
-            <h1 className="text-4xl md:text-5xl font-bold text-center leading-none">
-              Track financial assets
-            </h1>
-            <p className="text-base md:text-lg text-center mt-3 max-w-lg text-muted-foreground">
-              Track crypto, NFTs, Uniswap positions, stocks, financial trends,
-              and more with highly customizable dashboards.
-            </p>
-            <SignInButton className="mt-5" modalId="sign_in_via_hero" />
-          </div>
-          <div className="w-full grid grid-cols-12 mt-6 px-1 md:px-5">
-            <Providers
-              cryptos={finalCryptos}
-              globalMetricsInitialData={globalMetrics}
-              cryptoInfosInitialData={cryptoInfos}
-              forexRatesInitialData={forexRates}
-            >
-              {cryptoIds.map((id, index) => (
-                <CryptoPriceCard
-                  noHref
-                  key={`${id}-${index}`}
-                  coinId={id}
-                  className={cn(cardTypes.sm.className)}
-                />
-              ))}
-              {assets.map((asset, index) => (
-                <CryptoAssetCard
-                  key={`${asset.coinId}-${index}`}
-                  buyAmount={asset.buyAmount}
-                  boughtAtTimestamp={asset.buyAtTimestamp}
-                  buyPriceUsd={asset.buyPriceUsd}
-                  coinId={asset.coinId}
-                  className={cn(cardTypes.sm.className)}
-                />
-              ))}
-              <FearGreedIndexCard
+    <div className="w-full flex-1 flex flex-col items-center">
+      <div className="w-full max-w-7xl flex-1 flex flex-col justify-center items-center pt-4 pb-[calc(6vh+2rem)]">
+        <div className="flex flex-col items-center max-w-full px-5 md:px-8">
+          <h1 className="text-4xl md:text-5xl font-bold text-center leading-none">
+            Track financial assets
+          </h1>
+          <p className="text-base md:text-lg text-center mt-3 max-w-lg text-muted-foreground">
+            Track crypto, NFTs, Uniswap positions, stocks, financial trends, and
+            more with highly customizable dashboards.
+          </p>
+          <SignInButton className="mt-5" modalId="sign_in_via_hero" />
+        </div>
+        <div className="w-full grid grid-cols-12 mt-6 px-1 md:px-5">
+          <Providers
+            cryptos={finalCryptos}
+            globalMetricsInitialData={globalMetrics}
+            cryptoInfosInitialData={cryptoInfos}
+            forexRatesInitialData={forexRates}
+          >
+            {cryptoIds.map((id, index) => (
+              <CryptoPriceCard
                 noHref
-                className={cn(cardTypes.sm.className, "hidden md:flex")}
+                key={`${id}-${index}`}
+                coinId={id}
+                className={cn(cardTypes.sm.className)}
               />
-              <CurrencyCard
-                className={cn(cardTypes.sm.className, "hidden lg:flex")}
-                baseCurrency={{
-                  id: "d11e7514-5c8e-423d-bc94-efa24bf0f423",
-                  ticker: "EUR",
-                  symbol: "€",
-                  symbolCustomFont: null,
-                  name: "Euro",
-                  coinId: null,
-                  isCrypto: false,
-                  maxDecimalsPreferred: 2,
-                }}
-                quoteCurrency={{
-                  id: "81260265-7335-4d20-9064-0357e75690d6",
-                  ticker: "USD",
-                  symbol: "$",
-                  symbolCustomFont: null,
-                  name: "US Dollar",
-                  coinId: null,
-                  isCrypto: false,
-                  maxDecimalsPreferred: 2,
-                }}
+            ))}
+            {assets.map((asset, index) => (
+              <CryptoAssetCard
+                key={`${asset.coinId}-${index}`}
+                buyAmount={asset.buyAmount}
+                boughtAtTimestamp={asset.buyAtTimestamp}
+                buyPriceUsd={asset.buyPriceUsd}
+                coinId={asset.coinId}
+                className={cn(cardTypes.sm.className)}
               />
-              {miniCryptoIds.map((id, index) => (
-                <CryptoPriceCard
-                  variant="mini"
-                  noHref
-                  key={id}
-                  coinId={id}
-                  className={cn(
-                    cardTypes.sm.className,
-                    index >= 3
-                      ? "hidden lg:flex"
-                      : index >= 2
-                      ? "hidden md:flex"
-                      : ""
-                  )}
-                />
-              ))}
-              <GasTrackerCard
+            ))}
+            <FearGreedIndexCard
+              noHref
+              className={cn(cardTypes.sm.className, "hidden md:flex")}
+            />
+            <CurrencyCard
+              className={cn(cardTypes.sm.className, "hidden lg:flex")}
+              baseCurrency={{
+                id: "d11e7514-5c8e-423d-bc94-efa24bf0f423",
+                ticker: "EUR",
+                symbol: "€",
+                symbolCustomFont: null,
+                name: "Euro",
+                coinId: null,
+                isCrypto: false,
+                maxDecimalsPreferred: 2,
+              }}
+              quoteCurrency={{
+                id: "81260265-7335-4d20-9064-0357e75690d6",
+                ticker: "USD",
+                symbol: "$",
+                symbolCustomFont: null,
+                name: "US Dollar",
+                coinId: null,
+                isCrypto: false,
+                maxDecimalsPreferred: 2,
+              }}
+            />
+            {miniCryptoIds.map((id, index) => (
+              <CryptoPriceCard
+                variant="mini"
                 noHref
-                network={gasTrackerNetwork}
-                className={cardTypes.xl.className}
-                initialData={gasInfo}
+                key={id}
+                coinId={id}
+                className={cn(
+                  cardTypes.sm.className,
+                  index >= 3
+                    ? "hidden lg:flex"
+                    : index >= 2
+                    ? "hidden md:flex"
+                    : ""
+                )}
               />
-              {priceChartConfigs.map((config, index) => (
-                <CryptoPriceChartCard
-                  key={config.exchange + config.pair}
-                  config={config}
-                  className={cn(
-                    cardTypes.lg.className,
-                    index === 1 && "hidden lg:flex"
-                  )}
-                  initialIntervalOption={cryptoPriceChartIntervalDefault}
-                  initialData={priceCharts[index]}
-                />
-              ))}
-            </Providers>
-          </div>
+            ))}
+            <GasTrackerCard
+              noHref
+              network={gasTrackerNetwork}
+              className={cardTypes.xl.className}
+              initialData={gasInfo}
+            />
+            {priceChartConfigs.map((config, index) => (
+              <CryptoPriceChartCard
+                key={config.exchange + config.pair}
+                config={config}
+                className={cn(
+                  cardTypes.lg.className,
+                  index === 1 && "hidden lg:flex"
+                )}
+                initialIntervalOption={cryptoPriceChartIntervalDefault}
+                initialData={priceCharts[index]}
+              />
+            ))}
+          </Providers>
         </div>
       </div>
-    </HydrateClient>
+    </div>
   );
 }
 

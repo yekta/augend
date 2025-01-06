@@ -5,7 +5,7 @@ import OtherUserProvider from "@/app/(app)/[username]/_components/other-user-pro
 import ProfileDashboardCards from "@/app/(app)/[username]/_components/profile-dashboard-cards";
 import { ProfileTitleBar } from "@/app/(app)/[username]/_components/profile-title-bar";
 import { siteTitle } from "@/lib/constants";
-import { apiServer, HydrateClient } from "@/server/trpc/setup/server";
+import { apiServer } from "@/server/trpc/setup/server";
 import { Metadata } from "next";
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -26,9 +26,9 @@ export default async function Page({ params }: Props) {
   const includeCardCounts = true;
 
   const start = performance.now();
-  await Promise.all([
-    apiServer.ui.getOtherUser.prefetch({ username }),
-    apiServer.ui.getDashboards.prefetch({
+  const [otherUserData, dashboardsData] = await Promise.all([
+    apiServer.ui.getOtherUser({ username }),
+    apiServer.ui.getDashboards({
       username,
       includeCardCounts,
     }),
@@ -39,17 +39,15 @@ export default async function Page({ params }: Props) {
   );
 
   return (
-    <HydrateClient>
-      <OtherUserProvider username={username}>
-        <DashboardsProvider>
-          <EditModeDashboardsProvider>
-            <DashboardsGrid>
-              <ProfileTitleBar />
-              <ProfileDashboardCards />
-            </DashboardsGrid>
-          </EditModeDashboardsProvider>
-        </DashboardsProvider>
-      </OtherUserProvider>
-    </HydrateClient>
+    <OtherUserProvider username={username} initialData={otherUserData}>
+      <DashboardsProvider initialData={dashboardsData}>
+        <EditModeDashboardsProvider>
+          <DashboardsGrid>
+            <ProfileTitleBar />
+            <ProfileDashboardCards />
+          </DashboardsGrid>
+        </EditModeDashboardsProvider>
+      </DashboardsProvider>
+    </OtherUserProvider>
   );
 }

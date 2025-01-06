@@ -34,6 +34,7 @@ const CurrentDashboardContext = createContext<TCurrentDashboardContext | null>(
 type Props = {
   username: string;
   dashboardSlug: string;
+  initialData?: AppRouterOutputs["ui"]["getCards"];
   children: ReactNode;
   enabled?: boolean;
 };
@@ -41,6 +42,7 @@ type Props = {
 export const CurrentDashboardProvider: FC<Props> = ({
   username,
   dashboardSlug,
+  initialData,
   children,
   enabled = true,
 }) => {
@@ -58,6 +60,7 @@ export const CurrentDashboardProvider: FC<Props> = ({
     },
     {
       enabled,
+      initialData,
     }
   );
 

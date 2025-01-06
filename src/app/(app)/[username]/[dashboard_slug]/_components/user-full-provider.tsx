@@ -14,17 +14,20 @@ type TUserFullContext = {
 const UserFullContext = createContext<TUserFullContext | null>(null);
 
 type Props = {
+  initialData?: AppRouterOutputs["ui"]["getUserFull"];
   children: ReactNode;
 };
 
-export const UserFullProvider: FC<Props> = ({ children }) => {
+export const UserFullProvider: FC<Props> = ({ initialData, children }) => {
   const utils = api.useUtils();
 
   const {
     data: dataUser,
     isPending: isPendingUser,
     isLoadingError: isLoadingErrorUser,
-  } = api.ui.getUserFull.useQuery();
+  } = api.ui.getUserFull.useQuery(undefined, {
+    initialData,
+  });
 
   const invalidateUser = () => utils.ui.getUserFull.invalidate();
 

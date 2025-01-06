@@ -1,7 +1,7 @@
 import CurrentDashboardProvider from "@/app/(app)/[username]/[dashboard_slug]/_components/current-dashboard-provider";
 import DashboardPage from "@/app/(app)/[username]/[dashboard_slug]/_components/dashboard-page";
 import { siteTitle } from "@/lib/constants";
-import { apiServer, HydrateClient } from "@/server/trpc/setup/server";
+import { apiServer } from "@/server/trpc/setup/server";
 import { Metadata } from "next";
 
 type Props = {
@@ -33,7 +33,7 @@ export default async function Page({ params }: Props) {
   const { dashboard_slug, username } = await params;
 
   const start = performance.now();
-  await apiServer.ui.getCards.prefetch({
+  const dataCards = await apiServer.ui.getCards({
     username,
     dashboardSlug: dashboard_slug,
   });
@@ -43,13 +43,12 @@ export default async function Page({ params }: Props) {
   );
 
   return (
-    <HydrateClient>
-      <CurrentDashboardProvider
-        username={username}
-        dashboardSlug={dashboard_slug}
-      >
-        <DashboardPage />
-      </CurrentDashboardProvider>
-    </HydrateClient>
+    <CurrentDashboardProvider
+      username={username}
+      dashboardSlug={dashboard_slug}
+      initialData={dataCards}
+    >
+      <DashboardPage />
+    </CurrentDashboardProvider>
   );
 }
