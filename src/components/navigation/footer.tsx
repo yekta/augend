@@ -25,7 +25,7 @@ export default function Footer({ className }: { className?: string }) {
             text-sm text-muted-foreground"
           >
             <p className="w-full md:w-auto px-1 shrink min-w-0 text-sm text-left">
-              {siteTitle} © {new Date().getFullYear()}
+              © {new Date().getFullYear()} {siteTitle}
             </p>
             <span className="px-0.5 md:px-0.75 hidden md:block text-muted-more-foreground">
               •
