@@ -23,18 +23,18 @@ export default async function AppLayout({
 
   return (
     <SessionProvider session={session}>
-      <PhProvider>
-        <WagmiProvider>
-          <UserFullProvider initialData={userFullData}>
+      <UserFullProvider initialData={userFullData}>
+        <PhProvider>
+          <WagmiProvider>
             <DashboardsAutoProvider>
               <Navbar type="app" className="fixed left-0 top-0 z-50" />
               <div className="pointer-events-none h-14 w-full" />
               <div className="w-full flex flex-col flex-1">{children}</div>
               <Footer />
             </DashboardsAutoProvider>
-          </UserFullProvider>
-        </WagmiProvider>
-      </PhProvider>
+          </WagmiProvider>
+        </PhProvider>
+      </UserFullProvider>
     </SessionProvider>
   );
 }
