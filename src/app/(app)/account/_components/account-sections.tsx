@@ -106,7 +106,7 @@ export default function AccountSections({}: Props) {
       )}
       <div className="w-full flex flex-col px-1 gap-0.5">
         <p className="max-w-full font-medium px-1 text-sm text-muted-foreground leading-tight">
-          Currency Preferences
+          Currency Preference
         </p>
         <div className="max-w-full flex items-center justify-start gap-1.5">
           <CurrenciesButton
@@ -339,28 +339,23 @@ function CurrenciesButton({
             group-data-[pending]/account:bg-foreground group-data-[pending]/account:text-transparent group-data-[pending]/account:animate-skeleton
             group-data-[pending]/account:rounded shrink min-w-0"
         >
-          <CurrencySpan
-            currency={dataUser?.primaryCurrency}
-            isPending={isPendingUser}
-          />
-          {dataUser && (
-            <span className="text-muted-more-foreground font-normal">
-              {" • "}
-            </span>
+          {isPendingUser ? (
+            "Loading Currencies"
+          ) : dataUser ? (
+            <>
+              <CurrencySpan currency={dataUser.primaryCurrency} />
+              <span className="text-muted-more-foreground font-normal">
+                {" • "}
+              </span>
+              <CurrencySpan currency={dataUser.secondaryCurrency} />
+              <span className="text-muted-more-foreground font-normal">
+                {" • "}
+              </span>
+              <CurrencySpan currency={dataUser.tertiaryCurrency} />
+            </>
+          ) : (
+            "Error"
           )}
-          <CurrencySpan
-            currency={dataUser?.secondaryCurrency}
-            isPending={isPendingUser}
-          />
-          {dataUser && (
-            <span className="text-muted-more-foreground font-normal">
-              {" • "}
-            </span>
-          )}
-          <CurrencySpan
-            currency={dataUser?.tertiaryCurrency}
-            isPending={isPendingUser}
-          />
         </p>
         {dataUser && <PencilIcon className="size-3.5 -my-1 shrink-0" />}
       </Button>
@@ -370,24 +365,9 @@ function CurrenciesButton({
 
 function CurrencySpan({
   currency,
-  isPending,
 }: {
   currency:
-    | NonNullable<AppRouterOutputs["ui"]["getUserFull"]>["primaryCurrency"]
-    | undefined;
-  isPending: boolean;
+    | NonNullable<AppRouterOutputs["ui"]["getUserFull"]>["primaryCurrency"];
 }) {
-  return currency ? (
-    <span className="font-bold">
-      <CurrencySymbol
-        symbol={currency.symbol}
-        symbolCustomFont={currency.symbolCustomFont}
-      />{" "}
-      {currency.ticker}
-    </span>
-  ) : isPending ? (
-    <span>Loading</span>
-  ) : (
-    <span>Error</span>
-  );
+  return <span className="font-bold">{currency.ticker}</span>;
 }

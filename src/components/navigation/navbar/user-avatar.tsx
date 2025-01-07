@@ -4,6 +4,7 @@ import { useUserFull } from "@/app/(app)/[username]/[dashboard_slug]/_components
 import { signOutAction } from "@/components/auth/actions";
 import Blockies from "@/components/blockies/blockies";
 import CurrencyPreferenceTrigger from "@/components/currency-preference-trigger";
+import { CurrencySymbol } from "@/components/currency-symbol";
 import CoinIcon from "@/components/icons/coin-icon";
 import ScIcon from "@/components/icons/sc-icon";
 import ThemeButton from "@/components/theme-button";
@@ -151,18 +152,24 @@ export default function UserAvatar({ session }: Props) {
                       group-data-[loading-error]/currency:text-destructive"
                     >
                       {isPendingUser ? (
-                        "Loading"
+                        "Loading Currencies"
                       ) : dataUser ? (
                         <>
-                          <span>{dataUser.primaryCurrency.ticker}</span>
+                          <CurrencySpan
+                            ticker={dataUser.primaryCurrency.ticker}
+                          />
                           <span className="text-muted-more-foreground font-normal">
                             {" • "}
                           </span>
-                          <span>{dataUser.secondaryCurrency.ticker}</span>
+                          <CurrencySpan
+                            ticker={dataUser.secondaryCurrency.ticker}
+                          />
                           <span className="text-muted-more-foreground font-normal">
                             {" • "}
                           </span>
-                          <span>{dataUser.tertiaryCurrency.ticker}</span>
+                          <CurrencySpan
+                            ticker={dataUser.primaryCurrency.ticker}
+                          />
                         </>
                       ) : (
                         "Error"
@@ -260,4 +267,8 @@ export default function UserAvatar({ session }: Props) {
       </DropdownMenu>
     </div>
   );
+}
+
+function CurrencySpan({ ticker }: { ticker: string }) {
+  return <span>{ticker}</span>;
 }
