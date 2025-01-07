@@ -7,7 +7,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <h1
         {...rest}
         className={cn(
-          "text-4xl text-center font-bold mt-12 first-of-type:mt-0 leading-snug",
+          "text-4xl text-center font-bold mt-12 first-of-type:mt-0 leading-tight",
           className
         )}
       >
