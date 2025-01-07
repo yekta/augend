@@ -7,7 +7,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <h1
         {...rest}
         className={cn(
-          "text-4xl text-center font-bold mt-12 first-of-type:mt-0",
+          "text-4xl text-center font-bold mt-12 first-of-type:mt-0 leading-snug",
           className
         )}
       >
@@ -17,7 +17,10 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     h2: ({ children, className, ...rest }) => (
       <h2
         {...rest}
-        className={cn("text-2xl font-bold mt-10 [h1+&]:mt-3", className)}
+        className={cn(
+          "text-2xl font-bold mt-10 [h1+&]:mt-3 leading-snug",
+          className
+        )}
       >
         {children}
       </h2>
@@ -26,7 +29,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <h3
         {...rest}
         className={cn(
-          "text-xl font-bold mt-8 [h1+&]:mt-3 [h2+&]:mt-3",
+          "text-xl font-bold mt-8 [h1+&]:mt-3 [h2+&]:mt-3 leading-snug",
           className
         )}
       >
@@ -37,7 +40,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <h4
         {...rest}
         className={cn(
-          "text-lg font-bold mt-6 [h1+&]:mt-3 [h2+&]:mt-3 [h3+&]:mt-3",
+          "text-lg font-bold mt-6 [h1+&]:mt-3 [h2+&]:mt-3 [h3+&]:mt-3 leading-snug",
           className
         )}
       >
@@ -56,7 +59,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <ol
         {...rest}
         className={cn(
-          "mt-4 pl-6 list-decimal [h1+&]:mt-2 [h2+&]:mt-2 [h3+&]:mt-2 [h4+&]:mt-2",
+          "mt-4 pl-6 list-decimal [p+&]:mt-2 [h1+&]:mt-2 [h2+&]:mt-2 [h3+&]:mt-2 [h4+&]:mt-2",
           className
         )}
       >
@@ -67,7 +70,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <ul
         {...rest}
         className={cn(
-          "mt-4 pl-8 list-disc [h1+&]:mt-2 [h2+&]:mt-2 [h3+&]:mt-2 [h4+&]:mt-2",
+          "mt-4 pl-8 list-disc [p+&]:mt-2 [h1+&]:mt-2 [h2+&]:mt-2 [h3+&]:mt-2 [h4+&]:mt-2",
           className
         )}
       >
