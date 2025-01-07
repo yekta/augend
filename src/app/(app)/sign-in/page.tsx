@@ -13,7 +13,7 @@ type Props = {
   searchParams: Promise<{ callbackUrl?: string; error?: string }>;
 };
 
-export default async function SignInPage({ searchParams }: Props) {
+export default async function Page({ searchParams }: Props) {
   const { callbackUrl, error } = await searchParams;
   let cleanedCallbackUrl: string | undefined = undefined;
 
