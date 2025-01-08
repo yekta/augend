@@ -3,10 +3,7 @@
 import * as React from "react";
 import { DayPicker, useNavigation } from "react-day-picker";
 
-import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
-import { format, setMonth } from "date-fns";
 import {
   Select,
   SelectContent,
@@ -14,7 +11,9 @@ import {
   SelectItem,
   SelectTrigger,
 } from "@/components/ui/select";
-import { undefined } from "zod";
+import { cn } from "@/lib/utils";
+import { format, setMonth } from "date-fns";
+import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>;
 
@@ -31,9 +30,8 @@ function Calendar({
       showOutsideDays={showOutsideDays}
       className={cn("w-full p-2.5 text-sm font-mono", className)}
       classNames={{
-        months:
-          "w-full flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
-        month: "w-full flex flex-col space-y-4",
+        months: "w-full flex flex-col sm:flex-row",
+        month: "w-full flex flex-col gap-1",
         caption:
           "w-full flex justify-center px-10 min-w-0 shrink relative items-center",
         caption_label:
@@ -42,14 +40,14 @@ function Calendar({
         nav: "w-full h-full absolute pointer-events-none gap-2 flex items-center justify-between",
         nav_button: cn(
           buttonVariants({ variant: "outline" }),
-          "w-8 h-full bg-transparent p-0 rounded-md pointer-events-auto"
+          "w-8 h-8.5 bg-transparent p-0 rounded-md pointer-events-auto"
         ),
         nav_button_previous: "absolute left-0",
         nav_button_next: "absolute right-0",
-        table: "w-full border-collapse space-y-1",
-        head_row: "w-full flex items-center justify-center",
+        table: "w-full border-collapse",
+        head_row: "w-full h-8 flex items-center justify-center",
         head_cell: "text-muted-foreground rounded-md w-8 font-normal text-xs",
-        row: "flex w-full mt-2 flex items-center justify-center",
+        row: "flex w-full flex items-center justify-center",
         cell: cn(
           "relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-accent [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected].day-range-end)]:rounded-r-md",
           props.mode === "range"
@@ -97,7 +95,7 @@ function Calendar({
                   goToMonth(newDate);
                 }}
               >
-                <SelectTrigger className="flex-1 px-2.5">
+                <SelectTrigger className="flex-1 px-2.5 h-8.5">
                   {format(currentDate, "MMM")}
                 </SelectTrigger>
                 <SelectContent className="font-mono max-h-72">
@@ -143,7 +141,7 @@ function Calendar({
                   goToMonth(newDate);
                 }}
               >
-                <SelectTrigger className="flex-1 px-2.5">
+                <SelectTrigger className="flex-1 px-2.5 h-8.5">
                   {currentDate.getFullYear()}
                 </SelectTrigger>
                 <SelectContent className="font-mono max-h-72">
