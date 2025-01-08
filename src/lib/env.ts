@@ -27,6 +27,10 @@ export const env = createEnv({
     BINANCE_API_KEY: z.string().optional(),
     BINANCE_API_SECRET: z.string().optional(),
     BANANO_API_KEY: z.string().optional(),
+    CLOUDFLARE_ZONE_ID: z.string().optional(),
+    CLOUDFLARE_EMAIL: z.string().optional(),
+    CLOUDFLARE_API_KEY: z.string().optional(),
+    DEPLOY_WEBHOOK_SECRET: z.string().optional(),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
@@ -78,6 +82,10 @@ export const env = createEnv({
     BINANCE_API_KEY: process.env.BINANCE_API_KEY,
     BINANCE_API_SECRET: process.env.BINANCE_API_SECRET,
     BANANO_API_KEY: process.env.BANANO_API_KEY,
+    CLOUDFLARE_ZONE_ID: process.env.CLOUDFLARE_ZONE_ID,
+    CLOUDFLARE_EMAIL: process.env.CLOUDFLARE_EMAIL,
+    CLOUDFLARE_API_KEY: process.env.CLOUDFLARE_API_KEY,
+    DEPLOY_WEBHOOK_SECRET: process.env.DEPLOY_WEBHOOK_SECRET,
     NODE_ENV: process.env.NODE_ENV,
   },
   /**
