@@ -3,8 +3,6 @@ import Navbar from "@/components/navigation/navbar/navbar";
 import { PhProvider } from "@/components/providers/ph-provider";
 import { SessionProvider } from "next-auth/react";
 
-export const revalidate = 31536000;
-
 export default async function DocLayout({
   children,
 }: Readonly<{
