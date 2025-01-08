@@ -31,7 +31,6 @@ export default function ProfileDashboardCards({}: Props) {
     data,
     isPending,
     isLoadingError,
-    notActive,
     username,
     isPendingUser,
     isLoadingErrorUser,
@@ -44,57 +43,64 @@ export default function ProfileDashboardCards({}: Props) {
         .filter((c) => c !== undefined) as NonNullable<typeof data.dashboards>)
     : placeholderData.dashboards;
 
+  if (!isPendingUser && !isLoadingErrorUser && !username) {
+    return (
+      <DashboardEmpty>
+        <h2 className="w-full text-center shrink min-w-0 font-medium text-base text-muted-foreground leading-tight">
+          User doesn't exist.
+        </h2>
+      </DashboardEmpty>
+    );
+  }
+
+  if (
+    !isPending &&
+    !isLoadingError &&
+    data &&
+    data.dashboards &&
+    data.dashboards.length === 0
+  ) {
+    return (
+      <DashboardEmpty>
+        <h2 className="w-full text-center shrink min-w-0 font-medium text-base text-muted-foreground leading-tight">
+          {data.isOwner
+            ? "You don't have any dashboards yet."
+            : "No public dashboards yet."}
+        </h2>
+      </DashboardEmpty>
+    );
+  }
+
+  if (!isPending && isLoadingError) {
+    return (
+      <DashboardEmpty>
+        <h2 className="w-full text-center shrink min-w-0 font-medium text-base text-destructive leading-tight">
+          Error loading dashboards.
+        </h2>
+      </DashboardEmpty>
+    );
+  }
+
   return (
     <>
-      {!isPendingUser && !isLoadingErrorUser && !username && (
-        <DashboardEmpty>
-          <h2 className="w-full text-center shrink min-w-0 font-medium text-base text-muted-foreground leading-tight">
-            User doesn't exist.
-          </h2>
-        </DashboardEmpty>
-      )}
-      {!isPending && isLoadingError && (
-        <DashboardEmpty>
-          <h2 className="w-full text-center shrink min-w-0 font-medium text-base text-destructive leading-tight">
-            Error loading dashboards.
-          </h2>
-        </DashboardEmpty>
-      )}
-      {!isPending &&
-        !isLoadingError &&
-        data &&
-        data.dashboards &&
-        data.dashboards.length === 0 && (
-          <DashboardEmpty>
-            <h2 className="w-full text-center shrink min-w-0 font-medium text-base text-muted-foreground leading-tight">
-              {data.isOwner
-                ? "You don't have any dashboards yet."
-                : "No public dashboards yet."}
-            </h2>
-          </DashboardEmpty>
-        )}
-      {!notActive && (
-        <>
-          {orderedDashboards.map((dashboardObject, index) => (
-            <DashboardCard
-              key={dashboardObject.dashboard.id}
-              title={dashboardObject.dashboard.title}
-              cardCount={dashboardObject.cardCount}
-              isPublic={dashboardObject.dashboard.isPublic}
-              isOwner={data ? data.isOwner : false}
-              href={`/${username}/${dashboardObject.dashboard.slug}`}
-              isPending={isPending || isPendingUser}
-              dashboardSlug={dashboardObject.dashboard.slug}
-              dashboardId={dashboardObject.dashboard.id}
-            />
-          ))}
-          {data?.isOwner && (
-            <CreateDashboardButton
-              modalId="create_dashboard_via_grid"
-              variant="card"
-            />
-          )}
-        </>
+      {orderedDashboards.map((dashboardObject, index) => (
+        <DashboardCard
+          key={dashboardObject.dashboard.id}
+          title={dashboardObject.dashboard.title}
+          cardCount={dashboardObject.cardCount}
+          isPublic={dashboardObject.dashboard.isPublic}
+          isOwner={data ? data.isOwner : false}
+          href={`/${username}/${dashboardObject.dashboard.slug}`}
+          isPending={isPending || isPendingUser}
+          dashboardSlug={dashboardObject.dashboard.slug}
+          dashboardId={dashboardObject.dashboard.id}
+        />
+      ))}
+      {data?.isOwner && (
+        <CreateDashboardButton
+          modalId="create_dashboard_via_grid"
+          variant="card"
+        />
       )}
     </>
   );
