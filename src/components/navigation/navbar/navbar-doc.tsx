@@ -1,11 +1,7 @@
 import Logo from "@/components/navigation/logo";
 import NavbarWrapper from "@/components/navigation/navbar/navbar-wrapper";
 import { Button } from "@/components/ui/button";
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-} from "@/components/ui/navigation-menu";
-import { cn } from "@/lib/utils";
+import { NavigationMenuItem } from "@/components/ui/navigation-menu";
 import { HomeIcon } from "lucide-react";
 
 type Props = {
@@ -14,44 +10,35 @@ type Props = {
 
 export default async function NavbarDoc({ className }: Props) {
   return (
-    <NavigationMenu
-      className={cn(
-        "w-full flex items-center justify-center bg-background relative",
-        className
-      )}
-    >
-      <NavbarWrapper>
-        <div className="w-full flex items-center justify-between p-1.5 md:p-2 gap-2.5">
-          <div className="flex flex-1 min-w-0 items-center justify-start gap-1.25 md:gap-1.5">
-            <NavigationMenuItem asChild>
-              <Button
-                className="border-none p-1.75"
-                variant="outline"
-                aria-label="Home"
-                asChild
-              >
-                <a href="/">
-                  <Logo />
-                </a>
-              </Button>
-            </NavigationMenuItem>
-          </div>
-          <div className="pr-0.5">
-            <NavigationMenuItem asChild>
-              <Button
-                asChild
-                size="sm"
-                className="items-center justify-center gap-1.25"
-              >
-                <a href="/">
-                  <HomeIcon className="size-4 -my-1 -ml-0.75" />
-                  <p>Home</p>
-                </a>
-              </Button>
-            </NavigationMenuItem>
-          </div>
-        </div>
-      </NavbarWrapper>
-    </NavigationMenu>
+    <NavbarWrapper className={className}>
+      <div className="flex flex-1 min-w-0 items-center justify-start gap-1.25 md:gap-1.5">
+        <NavigationMenuItem asChild>
+          <Button
+            className="border-none p-1.75"
+            variant="outline"
+            aria-label="Home"
+            asChild
+          >
+            <a href="/">
+              <Logo />
+            </a>
+          </Button>
+        </NavigationMenuItem>
+      </div>
+      <div className="pr-0.5">
+        <NavigationMenuItem asChild>
+          <Button
+            asChild
+            size="sm"
+            className="items-center justify-center gap-1.25"
+          >
+            <a href="/">
+              <HomeIcon className="size-4 -my-1 -ml-0.75" />
+              <p>Home</p>
+            </a>
+          </Button>
+        </NavigationMenuItem>
+      </div>
+    </NavbarWrapper>
   );
 }
