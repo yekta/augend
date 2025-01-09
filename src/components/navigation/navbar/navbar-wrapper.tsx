@@ -14,7 +14,7 @@ export default function NavbarWrapper({ className, children }: Props) {
     <div
       data-not-at-top={y ? (y > 5 ? true : undefined) : undefined}
       className={cn(
-        "w-full border-b transition border-b-transparent data-[not-at-top]:border-b-border shadow-navbar shadow-shadow/0 data-[not-at-top]:shadow-shadow/[var(--opacity-shadow)]",
+        "w-full border-b transition border-b-border/0 data-[not-at-top]:border-b-border shadow-navbar shadow-shadow/0 data-[not-at-top]:shadow-shadow/[var(--opacity-shadow)]",
         className
       )}
     >
