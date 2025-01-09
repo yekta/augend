@@ -26,12 +26,13 @@ const nextConfig = {
     return config;
   },
   async headers() {
-    return [
+    return [];
+    /* return [
       ...staticRoutes.map((route) => ({
         source: route,
         headers: [staticCacheHeader],
       })),
-    ];
+    ]; */
   },
   async rewrites() {
     if (
