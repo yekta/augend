@@ -93,7 +93,7 @@ export const useDashboards = () => {
   const context = useContext(DashboardsContext);
   if (!context) {
     throw new Error(
-      "DashboardsProvider needs to be a parent of the component that uses useDashboards for it to work."
+      "DashboardsProvider needs to wrap useDashboards for it to work."
     );
   }
   return context;

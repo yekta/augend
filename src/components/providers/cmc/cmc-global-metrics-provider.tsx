@@ -36,7 +36,7 @@ export const useCmcGlobalMetrics = () => {
   const context = useContext(CmcGlobalMetricsContext);
   if (!context) {
     throw new Error(
-      "CmcGlobalMetricsProvider needs to be a parent of the component that uses useCmcGlobalMetrics for it to work."
+      "CmcGlobalMetricsProvider needs to wrap useCmcGlobalMetrics for it to work."
     );
   }
   return context;

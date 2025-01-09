@@ -75,7 +75,7 @@ export const useDashboardsAuto = () => {
   const context = useContext(DashboardsAutoContext);
   if (!context) {
     throw new Error(
-      "DashboardsAutoProvider needs to be a parent of the component that uses useDashboardsAuto for it to work."
+      "DashboardsAutoProvider needs to wrap useDashboardsAuto for it to work."
     );
   }
   return context;

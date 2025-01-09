@@ -27,7 +27,7 @@ export const useCurrencyPreference = () => {
   const context = useContext(CurrencyPreferenceContext);
   if (!context) {
     throw new Error(
-      "CurrencyPreferenceProvider needs to be a parent of the component that uses useCurrencyPreferences for it to work."
+      "CurrencyPreferenceProvider needs to wrap useCurrencyPreferences for it to work."
     );
   }
   return context;

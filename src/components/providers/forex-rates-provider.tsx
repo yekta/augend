@@ -30,7 +30,7 @@ export const useForexRates = () => {
   const context = useContext(ForexRatesContext);
   if (!context) {
     throw new Error(
-      "ForexRatesProvider needs to be a parent of the component that uses useForexRates for it to work."
+      "ForexRatesProvider needs to wrap useForexRates for it to work."
     );
   }
   return context;

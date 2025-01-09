@@ -57,7 +57,7 @@ export const useCmcCryptoInfos = () => {
   const context = useContext(CmcCryptoInfosContext);
   if (!context) {
     throw new Error(
-      "CmcCryptoInfosProvider needs to be a parent of the component that uses useCmcCryptoInfos for it to work."
+      "CmcCryptoInfosProvider needs to wrap useCmcCryptoInfos for it to work."
     );
   }
   return context;

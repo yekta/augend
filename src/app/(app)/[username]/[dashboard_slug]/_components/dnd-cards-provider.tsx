@@ -133,7 +133,7 @@ export const useDndCards = () => {
   const context = useContext(DndCardsContext);
   if (!context) {
     throw new Error(
-      "DndCardsProvider needs to be a parent of the component that uses useDndCards for it to work."
+      "DndCardsProvider needs to wrap useDndCards for it to work."
     );
   }
   return context;

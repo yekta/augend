@@ -52,7 +52,7 @@ export const useEditModeCards = () => {
   const context = useContext(EditModeCardsContext);
   if (!context) {
     throw new Error(
-      "EditModeCardsProvider needs to be a parent of the component that uses useEditModeCards for it to work."
+      "EditModeCardsProvider needs to wrap useEditModeCards for it to work."
     );
   }
   return context;

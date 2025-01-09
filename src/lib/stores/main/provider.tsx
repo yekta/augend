@@ -41,7 +41,7 @@ export const useMainStore = <T,>(selector: (store: MainStore) => T): T => {
 
   if (!counterStoreContext) {
     throw new Error(
-      `MainStoreProvider needs to be a parent of the component that uses useMainStore for it to work.`
+      `MainStoreProvider needs to wrap useMainStore for it to work.`
     );
   }
 
