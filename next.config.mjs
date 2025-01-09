@@ -32,10 +32,10 @@ const nextConfig = {
   },
   async headers() {
     return [
-      ...dynamicRoutes.map((route) => ({
+      /* ...dynamicRoutes.map((route) => ({
         source: route,
         headers: [dynamicCacheHeader],
-      })),
+      })), */
       ...staticRoutes.map((route) => ({
         source: route,
         headers: [staticCacheHeader],
