@@ -2,14 +2,9 @@ import createMDX from "@next/mdx";
 
 const staticCacheHeader = {
   key: "Cache-Control",
-  value: "public, s-maxage=31536000, cdn-cache-control=max-age=31536000",
-};
-const dynamicCacheHeader = {
-  key: "Cache-Control",
-  value: "private, no-cache, no-store, max-age=0, must-revalidate",
+  value: "public, s-maxage=31536000",
 };
 
-const dynamicRoutes = ["/api/:path*"];
 const staticRoutes = [
   "/blog/:path*",
   "/terms",
@@ -32,10 +27,6 @@ const nextConfig = {
   },
   async headers() {
     return [
-      /* ...dynamicRoutes.map((route) => ({
-        source: route,
-        headers: [dynamicCacheHeader],
-      })), */
       ...staticRoutes.map((route) => ({
         source: route,
         headers: [staticCacheHeader],
