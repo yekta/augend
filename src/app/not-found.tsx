@@ -1,7 +1,7 @@
 import Footer from "@/components/navigation/footer";
 import Navbar from "@/components/navigation/navbar/navbar";
 import { PhProvider } from "@/components/providers/ph-provider";
-import { LinkButton } from "@/components/ui/button";
+import { Button, LinkButton } from "@/components/ui/button";
 import { SessionProvider } from "next-auth/react";
 
 export default function NotFound() {
@@ -17,9 +17,9 @@ export default function NotFound() {
               <p className="text-muted-foreground text-lg max-w-full">
                 Not found.
               </p>
-              <LinkButton href="/" className="mt-5 max-w-full">
-                Return Home
-              </LinkButton>
+              <Button asChild className="mt-5 max-w-full">
+                <a href="/">Return Home</a>
+              </Button>
             </div>
           </div>
         </div>
