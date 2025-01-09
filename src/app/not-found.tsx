@@ -1,7 +1,7 @@
 import Footer from "@/components/navigation/footer";
 import Navbar from "@/components/navigation/navbar/navbar";
 import { PhProvider } from "@/components/providers/ph-provider";
-import { Button, LinkButton } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { SessionProvider } from "next-auth/react";
 
 export default function NotFound() {
