@@ -1,11 +1,35 @@
 import createMDX from "@next/mdx";
 
+const publicStaticCacheHeader = {
+  key: "Cache-Control",
+  value: "public, s-maxage=31536000",
+};
+
+const publicStaticRoutes = [
+  "/blog/:path*",
+  "/terms",
+  "/privacy",
+  "/support",
+  "/x",
+  "/twitter",
+  "/discord",
+  "/github",
+];
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   pageExtensions: ["tsx", "ts", "jsx", "js", "mdx", "md"],
   webpack: (config) => {
     config.externals.push("pino-pretty", "lokijs", "encoding");
     return config;
+  },
+  async headers() {
+    return [
+      ...publicStaticRoutes.map((route) => ({
+        source: route,
+        headers: [publicStaticCacheHeader],
+      })),
+    ];
   },
   async rewrites() {
     if (
