@@ -1,5 +1,28 @@
 import createMDX from "@next/mdx";
 
+const staticCacheHeader = {
+  key: "Cache-Control",
+  value: "public, max-age=31536000, s-maxage=31536000",
+};
+const dynamicCacheHeader = {
+  key: "Cache-Control",
+  value: "private, no-cache, no-store, max-age=0, must-revalidate",
+};
+
+const dynamicRoutes = ["/api/:path*"];
+const staticRoutes = [
+  "/blog/:path*",
+  "/terms",
+  "/privacy",
+  "/support",
+  "/x",
+  "/twitter",
+  "/discord",
+  "/github",
+  "/sitemap.xml",
+  "/robots.txt",
+];
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   pageExtensions: ["tsx", "ts", "jsx", "js", "mdx", "md"],
@@ -9,15 +32,14 @@ const nextConfig = {
   },
   async headers() {
     return [
-      {
-        source: "/api/:path*",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "private, no-cache, no-store, max-age=0, must-revalidate",
-          },
-        ],
-      },
+      ...dynamicRoutes.map((route) => ({
+        source: route,
+        headers: [dynamicCacheHeader],
+      })),
+      ...staticRoutes.map((route) => ({
+        source: route,
+        headers: [staticCacheHeader],
+      })),
     ];
   },
   async rewrites() {
