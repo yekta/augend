@@ -2,7 +2,8 @@ import createMDX from "@next/mdx";
 
 const staticCacheHeader = {
   key: "Cache-Control",
-  value: "public, max-age=31536000, s-maxage=31536000",
+  value:
+    "public, no-store, s-maxage=31536000, cdn-cache-control=max-age=31536000",
 };
 const dynamicCacheHeader = {
   key: "Cache-Control",
