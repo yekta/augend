@@ -3,7 +3,7 @@ import Logo from "@/components/navigation/logo";
 import DashboardSelector from "@/components/navigation/navbar/dashboard-selector";
 import NavbarWrapper from "@/components/navigation/navbar/navbar-wrapper";
 import UserAvatar from "@/components/navigation/navbar/user-avatar";
-import { Button, LinkButton } from "@/components/ui/button";
+import { LinkButton } from "@/components/ui/button";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -11,19 +11,13 @@ import {
 import { mainDashboardSlug } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { auth } from "@/server/auth/auth";
-import { HomeIcon } from "lucide-react";
-import { Session } from "next-auth";
 
 type Props = {
   className?: string;
-  type: "app" | "doc";
 };
 
-export default async function Navbar({ type, className }: Props) {
-  let session: Session | null = null;
-  if (type !== "doc") {
-    session = await auth();
-  }
+export default async function Navbar({ className }: Props) {
+  const session = await auth();
 
   return (
     <NavigationMenu
@@ -36,50 +30,22 @@ export default async function Navbar({ type, className }: Props) {
         <div className="w-full flex items-center justify-between p-1.5 md:p-2 gap-2.5">
           <div className="flex flex-1 min-w-0 items-center justify-start gap-1.25 md:gap-1.5">
             <NavigationMenuItem asChild>
-              {type === "doc" ? (
-                <Button
-                  className="border-none p-1.75"
-                  variant="outline"
-                  aria-label="Home"
-                  asChild
-                >
-                  <a href="/">
-                    <Logo />
-                  </a>
-                </Button>
-              ) : (
-                <LinkButton
-                  className="border-none p-1.75"
-                  variant="outline"
-                  aria-label="Home"
-                  href={
-                    session
-                      ? `/${session.user.username}/${mainDashboardSlug}`
-                      : "/"
-                  }
-                >
-                  <Logo />
-                </LinkButton>
-              )}
+              <LinkButton
+                className="border-none p-1.75"
+                variant="outline"
+                aria-label="Home"
+                href={
+                  session
+                    ? `/${session.user.username}/${mainDashboardSlug}`
+                    : "/"
+                }
+              >
+                <Logo />
+              </LinkButton>
             </NavigationMenuItem>
-            {type !== "doc" && <DashboardSelector />}
+            <DashboardSelector />
           </div>
-          {type === "doc" ? (
-            <div className="pr-0.5">
-              <NavigationMenuItem asChild>
-                <Button
-                  asChild
-                  size="sm"
-                  className="items-center justify-center gap-1.25"
-                >
-                  <a href="/">
-                    <HomeIcon className="size-4 -my-1 -ml-0.75" />
-                    <p>Home</p>
-                  </a>
-                </Button>
-              </NavigationMenuItem>
-            </div>
-          ) : !session ? (
+          {!session ? (
             <div className="pr-0.5">
               <NavigationMenuItem asChild>
                 <SignInButton size="sm" modalId="sign_in_via_navbar" />
