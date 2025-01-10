@@ -27,7 +27,7 @@ export default async function Page({ params }: Props) {
   return (
     <div className="w-full flex flex-col items-center flex-1 text-foreground/90">
       <div className="w-full flex flex-col justify-center max-w-3xl px-5 md:px-12 pt-4 pb-20">
-        <h1 className="font-bold text-4xl text-foreground text-center text-balance">
+        <h1 className="font-bold text-4xl text-foreground text-center text-balance px-3">
           {post.title}
         </h1>
         <div className="w-full flex flex-wrap mt-2">
@@ -49,10 +49,39 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const post = await ghostApi.posts.read({ slug });
   const excerpt = getExcerpt(post.excerpt);
+  const title = `${post.title || "Not found"} | Blog`;
+  const description = excerpt || `Check out this blog post on Augend.`;
 
   return {
-    title: `${post.title || "Not found"} | Blog`,
-    description: excerpt || `Check out this blog post on Augend.`,
+    title,
+    description,
+    openGraph: post.feature_image
+      ? {
+          images: [
+            {
+              url: post.feature_image,
+              width: 1200,
+              height: 630,
+              alt: post.title,
+            },
+          ],
+        }
+      : undefined,
+    twitter: post.feature_image
+      ? {
+          title: title,
+          description,
+          card: "summary_large_image",
+          images: [
+            {
+              url: post.feature_image,
+              width: 1200,
+              height: 630,
+              alt: post.title,
+            },
+          ],
+        }
+      : undefined,
   };
 }
 

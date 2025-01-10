@@ -34,8 +34,10 @@ const currency = localFont({
   weight: "400",
 });
 
+const title = `${siteTitle} | ${siteTagline}`;
+
 export const metadata: Metadata = {
-  title: `${siteTitle} | ${siteTagline}`,
+  title,
   description: siteDescription,
   openGraph: {
     images: [
@@ -48,7 +50,8 @@ export const metadata: Metadata = {
     ],
   },
   twitter: {
-    title: `${siteTitle} | ${siteTagline}`,
+    title,
+    description: siteDescription,
     card: "summary_large_image",
     images: [
       {
