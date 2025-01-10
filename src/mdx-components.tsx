@@ -7,7 +7,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <h1
         {...rest}
         className={cn(
-          "text-4xl text-center font-bold mt-12 first-of-type:mt-0 leading-tight",
+          "text-4xl text-balance text-center font-bold mt-12 first-of-type:mt-0 leading-tight",
           className
         )}
       >
@@ -18,7 +18,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <h2
         {...rest}
         className={cn(
-          "text-2xl font-bold mt-10 [h1+&]:mt-3 leading-snug",
+          "text-2xl text-balance font-bold mt-10 [h1+&]:mt-3 leading-snug",
           className
         )}
       >
@@ -29,7 +29,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <h3
         {...rest}
         className={cn(
-          "text-xl font-bold mt-8 [h1+&]:mt-3 [h2+&]:mt-3 leading-snug",
+          "text-xl text-balance font-bold mt-8 [h1+&]:mt-3 [h2+&]:mt-3 leading-snug",
           className
         )}
       >
@@ -40,7 +40,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <h4
         {...rest}
         className={cn(
-          "text-lg font-bold mt-6 [h1+&]:mt-3 [h2+&]:mt-3 [h3+&]:mt-3 leading-snug",
+          "text-lg text-balance font-bold mt-6 [h1+&]:mt-3 [h2+&]:mt-3 [h3+&]:mt-3 leading-snug",
           className
         )}
       >
