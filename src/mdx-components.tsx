@@ -7,7 +7,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <h1
         {...rest}
         className={cn(
-          "text-4xl text-balance text-center font-bold mt-12 first-of-type:mt-0 leading-tight",
+          "text-4xl text-foreground text-balance text-center font-bold mt-12 first-of-type:mt-0 leading-tight",
           className
         )}
       >
@@ -18,7 +18,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <h2
         {...rest}
         className={cn(
-          "text-2xl text-balance font-bold mt-10 [h1+&]:mt-3 leading-snug",
+          "text-2xl text-foreground text-balance font-bold mt-10 [h1+&]:mt-3 leading-snug",
           className
         )}
       >
@@ -29,7 +29,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <h3
         {...rest}
         className={cn(
-          "text-xl text-balance font-bold mt-8 [h1+&]:mt-3 [h2+&]:mt-3 leading-snug",
+          "text-xl text-foreground text-balance font-bold mt-8 [h1+&]:mt-3 [h2+&]:mt-3 leading-snug",
           className
         )}
       >
@@ -40,7 +40,29 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <h4
         {...rest}
         className={cn(
-          "text-lg text-balance font-bold mt-6 [h1+&]:mt-3 [h2+&]:mt-3 [h3+&]:mt-3 leading-snug",
+          "text-lg text-foreground text-balance font-bold mt-6 [h1+&]:mt-3 [h2+&]:mt-3 [h3+&]:mt-3 leading-snug",
+          className
+        )}
+      >
+        {children}
+      </h4>
+    ),
+    h5: ({ children, className, ...rest }) => (
+      <h4
+        {...rest}
+        className={cn(
+          "text-base text-foreground text-balance font-bold mt-6 [h1+&]:mt-3 [h2+&]:mt-3 [h3+&]:mt-3 [h4+&]:mt-3 leading-snug",
+          className
+        )}
+      >
+        {children}
+      </h4>
+    ),
+    h6: ({ children, className, ...rest }) => (
+      <h4
+        {...rest}
+        className={cn(
+          "text-base text-foreground text-balance font-bold mt-6 [h1+&]:mt-3 [h2+&]:mt-3 [h3+&]:mt-3 [h4+&]:mt-3 [h5+&]:mt-3 leading-snug",
           className
         )}
       >
