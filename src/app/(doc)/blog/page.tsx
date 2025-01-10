@@ -76,7 +76,9 @@ function PostCard({ post }: { post: PostsOrPages[number] }) {
         )}
       </div>
       <div className="px-2 md:px-3 pt-3 pb-1 md:pt-4 md:pb-2 flex flex-col">
-        <h2 className="text-lg font-bold leading-snug">{post.title}</h2>
+        <h2 className="text-lg font-bold leading-snug text-balance">
+          {post.title}
+        </h2>
         {excerpt && <p className="text-muted-foreground mt-1">{excerpt}</p>}
       </div>
     </Link>
