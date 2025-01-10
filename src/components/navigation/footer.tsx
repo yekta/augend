@@ -5,7 +5,7 @@ import { sc, siteTitle } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 
-export default function Footer({ className }: { className?: string }) {
+export default async function Footer({ className }: { className?: string }) {
   return (
     <div
       className={cn(
