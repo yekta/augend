@@ -116,6 +116,14 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
         {children}
       </a>
     ),
+    img: ({ children, className, ...rest }) => (
+      <img {...rest} className={cn("w-full h-auto", className)} />
+    ),
+    figure: ({ children, className, ...rest }) => (
+      <figure {...rest} className={cn("mt-4", className)}>
+        {children}
+      </figure>
+    ),
     ...components,
   };
 }
