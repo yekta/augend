@@ -26,7 +26,7 @@ export default async function Page({ params }: Props) {
 
   return (
     <div className="w-full flex flex-col items-center flex-1 text-foreground/90">
-      <div className="w-full flex flex-col justify-center max-w-3xl px-5 md:px-12 pt-4 md:pt-6 pb-20">
+      <div className="w-full flex flex-col justify-center max-w-3xl px-5 md:px-12 pt-4 pb-20">
         <h1 className="font-bold text-4xl text-foreground text-center text-balance">
           {post.title}
         </h1>
