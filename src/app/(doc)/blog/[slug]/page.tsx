@@ -11,23 +11,6 @@ type Props = {
   params: Promise<{ slug: string }>;
 };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
-  if (!ghostApi) {
-    return {
-      title: `Not Found | Blog`,
-      description: `This blog post doesn't exist.`,
-    };
-  }
-  const post = await ghostApi.posts.read({ slug });
-  const excerpt = getExcerpt(post.excerpt);
-
-  return {
-    title: `${post.title || "Not found"} | Blog`,
-    description: excerpt || `Check out this blog post on Augend.`,
-  };
-}
-
 export default async function Page({ params }: Props) {
   if (!ghostApi || !ghostUrl) {
     return notFound();
@@ -53,6 +36,35 @@ export default async function Page({ params }: Props) {
       </div>
     </div>
   );
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  if (!ghostApi) {
+    return {
+      title: `Not Found | Blog`,
+      description: `This blog post doesn't exist.`,
+    };
+  }
+
+  const { slug } = await params;
+  const post = await ghostApi.posts.read({ slug });
+  const excerpt = getExcerpt(post.excerpt);
+
+  return {
+    title: `${post.title || "Not found"} | Blog`,
+    description: excerpt || `Check out this blog post on Augend.`,
+  };
+}
+
+export async function generateStaticParams() {
+  if (!ghostApi) return [];
+
+  const posts = await ghostApi.posts.browse({
+    limit: 100,
+  });
+  return posts.map((post) => ({
+    slug: post.slug,
+  }));
 }
 
 const ATTR_MAP: Record<string, string> = {
