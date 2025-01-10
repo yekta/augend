@@ -1,7 +1,7 @@
 import { ghostApi } from "@/app/(doc)/blog/constants";
 import { getExcerpt } from "@/app/(doc)/blog/helpers";
 import { PostsOrPages } from "@tryghost/content-api";
-import { ImageIcon, PenLineIcon, PenToolIcon } from "lucide-react";
+import { ImageIcon, PenToolIcon } from "lucide-react";
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
