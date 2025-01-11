@@ -1,6 +1,7 @@
 import { ghostApi } from "@/app/(doc)/blog/constants";
 import { getExcerpt } from "@/app/(doc)/blog/helpers";
 import { PostsOrPages } from "@tryghost/content-api";
+import { format } from "date-fns";
 import { ImageIcon, PenToolIcon } from "lucide-react";
 import { Metadata } from "next";
 import Link from "next/link";
@@ -21,6 +22,7 @@ export default async function Page({}: Props) {
   }
   const posts = await ghostApi.posts.browse({
     limit: 100,
+    include: ["authors"],
   });
   return (
     <div className="w-full flex flex-col items-center flex-1">
@@ -54,15 +56,16 @@ export default async function Page({}: Props) {
 
 function PostCard({ post }: { post: PostsOrPages[number] }) {
   const excerpt = getExcerpt(post.excerpt);
+  const authors = post.authors;
 
   return (
     <Link
       href={`/blog/${post.slug}`}
       prefetch={false}
-      className="w-full self-stretch flex flex-col border rounded-xl p-2 not-touch:hover:bg-background-hover active:bg-background-hover 
-      focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+      className="w-full self-stretch flex flex-col border rounded-xl not-touch:hover:bg-background-hover active:bg-background-hover 
+      focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background overflow-hidden"
     >
-      <div className="aspect-[120/63] flex items-center justify-center bg-border border rounded-md overflow-hidden">
+      <div className="aspect-[120/63] flex items-center justify-center bg-border border-b overflow-hidden">
         {post.feature_image && (
           <img
             className="object-cover"
@@ -75,11 +78,26 @@ function PostCard({ post }: { post: PostsOrPages[number] }) {
           <ImageIcon className="size-10 text-muted-foreground" />
         )}
       </div>
-      <div className="px-2 md:px-3 pt-3 pb-1 md:pt-4 md:pb-2 flex flex-col">
-        <h2 className="text-lg font-bold leading-snug text-balance">
+      <div className="px-4 md:px-5 pt-3 pb-4 md:pt-3.5 md:pb-4.5 flex flex-col">
+        <h2 className="w-full text-lg font-bold leading-snug text-balance">
           {post.title}
         </h2>
         {excerpt && <p className="text-muted-foreground mt-1">{excerpt}</p>}
+        {post.published_at && (
+          <div className="w-full flex mt-3 items-center">
+            <p className="text-muted-foreground bg-foreground/8 px-1.75 py-0.5 text-sm rounded-sm font-medium">
+              {post.published_at && (
+                <span>
+                  {format(new Date(post.published_at), "MMMM dd, yyyy")}
+                </span>
+              )}
+              {post.published_at && post.reading_time && (
+                <span className="text-muted-more-foreground">{" • "}</span>
+              )}
+              {post.reading_time && <span>{post.reading_time} min read</span>}
+            </p>
+          </div>
+        )}
       </div>
     </Link>
   );

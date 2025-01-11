@@ -12,7 +12,7 @@ import { useState } from "react";
 
 type Props = React.ImgHTMLAttributes<HTMLImageElement> & {};
 
-const padding = 12;
+const padding = 4;
 
 export default function ImageWithZoom({
   className,
@@ -43,7 +43,7 @@ export default function ImageWithZoom({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger className="bg-primary">
+      <DialogTrigger>
         <img
           width={width}
           height={height}
@@ -65,7 +65,7 @@ export default function ImageWithZoom({
             height: finalHeight,
           }}
           className={cn(
-            "w-full ring-1 shadow-2xl shadow-shadow/[var(--opacity-shadow)] ring-border m-auto h-auto cursor-zoom-out",
+            "ring-1 shadow-2xl shadow-shadow/[var(--opacity-shadow)] ring-border cursor-zoom-out",
             className
           )}
         />

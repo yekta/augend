@@ -46,17 +46,19 @@ export default async function Page({ params }: Props) {
             <h1 className="font-bold text-4xl text-foreground text-center text-balance px-3">
               {post.title}
             </h1>
-            <p className="mt-4 text-muted-foreground">
-              {post.published_at && (
-                <span>
-                  {format(new Date(post.published_at), "MMMM dd, yyyy")}
-                </span>
-              )}
-              {post.published_at && post.reading_time && (
-                <span className="text-muted-more-foreground">{" • "}</span>
-              )}
-              {post.reading_time && <span>{post.reading_time} min read</span>}
-            </p>
+            {post.published_at && (
+              <p className="mt-4 text-muted-foreground">
+                {post.published_at && (
+                  <span>
+                    {format(new Date(post.published_at), "MMMM dd, yyyy")}
+                  </span>
+                )}
+                {post.published_at && post.reading_time && (
+                  <span className="text-muted-more-foreground">{" • "}</span>
+                )}
+                {post.reading_time && <span>{post.reading_time} min read</span>}
+              </p>
+            )}
             {authors && (
               <p className="mt-1 text-muted-foreground font-semibold">
                 {authors.map((author, index) => (
