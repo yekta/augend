@@ -74,7 +74,8 @@ export async function POST(request: Request) {
           environmentId
           projectId
         }
-    }`;
+      }
+    `;
     const res2 = await fetch(railwayGraphqlApi, {
       method: "POST",
       headers: {
@@ -91,7 +92,7 @@ export async function POST(request: Request) {
       console.error("Failed to redeploy:", data2.errors);
       return new Response("Failed to redeploy", { status: 500 });
     }
-    console.log("Redeployed:", data2?.data?.deploymentRedeploy);
+    console.log("Redeploy request succeeded:", data2?.data?.deploymentRedeploy);
     return new Response("ok");
   } catch (error) {
     console.error("Failed to redeploy:", error);

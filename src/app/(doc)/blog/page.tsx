@@ -84,7 +84,7 @@ function PostCard({ post }: { post: PostsOrPages[number] }) {
         </h2>
         {excerpt && <p className="text-muted-foreground mt-1">{excerpt}</p>}
         {post.published_at && (
-          <div className="w-full flex mt-3 items-center">
+          <div className="w-full flex mt-2.5 md:mt-3 items-center">
             <p className="text-muted-foreground bg-foreground/8 px-1.75 py-0.5 text-sm rounded-sm font-medium">
               {post.published_at && (
                 <span>
