@@ -188,7 +188,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       </figcaption>
     ),
     figure: ({ children, className, ...rest }) => (
-      <figure {...rest} className={cn("mt-4", className)}>
+      <figure {...rest} className={cn("w-full mt-4", className)}>
         {children}
       </figure>
     ),
