@@ -35,14 +35,12 @@ export default async function Page({ params }: Props) {
   if (!html) {
     return notFound();
   }
-  const siteUrl = new URL(env.NEXT_PUBLIC_SITE_URL);
-
   const authors = post.authors;
 
   return (
     <div className="w-full flex flex-col items-center flex-1 text-foreground/90">
       <div className="w-full pt-0 md:pt-4 lg:pt-8 pb-16 px-5 md:px-12 flex flex-col items-center lg:items-start lg:flex-row justify-center">
-        <TOC className="lg:pr-4" />
+        <TOC className="lg:pr-6" />
         <div className="w-full mt-3 lg:mt-0 flex flex-col justify-center max-w-2xl">
           <div className="w-full flex flex-col items-center">
             <h1 className="font-bold text-4xl text-foreground text-center text-balance px-3">
@@ -122,7 +120,7 @@ export default async function Page({ params }: Props) {
             </LinkButton>
           </div>
         </div>
-        <TOC disabled={true} className="lg:pl-4 hidden lg:block" />
+        <TOC disabled={true} className="lg:pl-6 hidden lg:block" />
       </div>
     </div>
   );
@@ -149,7 +147,7 @@ function TOC({
         variant="ghost"
         className="text-muted-foreground gap-1.5"
       >
-        <ArrowLeftIcon className="size-4 -my-1 -ml-1" />
+        <ArrowLeftIcon className="size-4 -my-1 -ml-1.25" />
         Blog
       </LinkButton>
     </div>

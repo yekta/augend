@@ -98,7 +98,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <p
         {...rest}
         className={cn(
-          "mt-4 w-full [figure+&]:mt-8 [pre+&]:mt-8 [h2+&]:mt-2 [h3+&]:mt-2 [h4+&]:mt-2 [blockquote>&]:mt-0 [blockquote>&]:italic",
+          "mt-4 w-full [figure+&]:mt-8 [pre+&]:mt-8 [h1+&]:mt-2 [h2+&]:mt-2 [h3+&]:mt-2 [h4+&]:mt-2 [h5+&]:mt-2 [h6+&]:mt-2 [blockquote>&]:mt-0 [blockquote>&]:italic",
           className
         )}
       >
