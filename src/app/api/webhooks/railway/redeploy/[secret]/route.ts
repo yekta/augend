@@ -68,14 +68,11 @@ export async function POST(request: Request) {
     const redeployMutation = `
       mutation deploymentRedeploy($id: String!, $usePreviousImageTag: Boolean) {
         deploymentRedeploy(id: $id, usePreviousImageTag: $usePreviousImageTag) {
-          createdAt
-          environmentId
           id
-          projectId
+          createdAt
           serviceId
-          snapshotId
-          staticUrl
-          url
+          environmentId
+          projectId
         }
     }`;
     const res2 = await fetch(railwayGraphqlApi, {
