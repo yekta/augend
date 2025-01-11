@@ -7,8 +7,8 @@ const batchSize = 30;
 const client = new Cloudflare();
 
 export async function POST(request: Request) {
-  if (!env.DEPLOY_WEBHOOK_SECRET) {
-    return new Response("Set DEPLOY_WEBHOOK_SECRET for this webhook to work", {
+  if (!env.RAILWAY_WEBHOOK_SECRET) {
+    return new Response("Set RAILWAY_WEBHOOK_SECRET for this webhook to work", {
       status: 400,
     });
   }
@@ -26,7 +26,7 @@ export async function POST(request: Request) {
   }
 
   const secret = request.url.split("/").pop();
-  if (secret !== env.DEPLOY_WEBHOOK_SECRET) {
+  if (secret !== env.RAILWAY_WEBHOOK_SECRET) {
     return new Response("Invalid secret", { status: 403 });
   }
 
