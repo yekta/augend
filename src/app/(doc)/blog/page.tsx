@@ -24,7 +24,7 @@ export default async function Page({}: Props) {
   });
   return (
     <div className="w-full flex flex-col items-center flex-1">
-      <div className="w-full flex flex-col justify-center max-w-7xl px-1 md:px-5 pt-4">
+      <div className="w-full flex flex-col justify-center max-w-7xl px-1 md:px-5 md:pt-4">
         <h1 className="font-bold text-4xl text-center text-balance px-7">
           Blog
         </h1>

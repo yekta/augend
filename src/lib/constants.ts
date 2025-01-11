@@ -100,7 +100,7 @@ export const sc: Record<
   github: {
     name: "GitHub",
     siteHref: "/github",
-    href: "https://github.com/augendapp",
+    href: "https://github.com/yekta/augend",
     slug: "github",
     joinable: true,
     xOrder: 3,

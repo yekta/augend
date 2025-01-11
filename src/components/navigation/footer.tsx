@@ -29,7 +29,7 @@ export default async function Footer({ className }: { className?: string }) {
               © {new Date().getFullYear()} {siteTitle}
             </p>
             <span className="px-0.5 md:px-0.75 hidden md:block text-muted-more-foreground">
-              •
+              {" • "}
             </span>
             <div className="w-full md:w-auto shrink min-w-0 flex flex-row flex-wrap items-center justify-start">
               <NavbarLink href="/terms">Terms</NavbarLink>

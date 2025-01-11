@@ -36,13 +36,12 @@ export default async function Page({ params }: Props) {
     return notFound();
   }
   const siteUrl = new URL(env.NEXT_PUBLIC_SITE_URL);
-  html = html.replace(ghostUrl.hostname, siteUrl.hostname);
 
   const authors = post.authors;
 
   return (
     <div className="w-full flex flex-col items-center flex-1 text-foreground/90">
-      <div className="w-full pt-0 md:pt-4 pb-16 px-5 md:px-12 flex flex-col items-center lg:items-start lg:flex-row justify-center">
+      <div className="w-full pt-0 md:pt-4 lg:pt-8 pb-16 px-5 md:px-12 flex flex-col items-center lg:items-start lg:flex-row justify-center">
         <TOC className="lg:pr-4" />
         <div className="w-full mt-3 lg:mt-0 flex flex-col justify-center max-w-2xl">
           <div className="w-full flex flex-col items-center">
@@ -91,9 +90,9 @@ export default async function Page({ params }: Props) {
             <HTMLRenderer html={html} />
           </div>
           {/* Join us section */}
-          <div className="w-full flex flex-col items-center border rounded-lg px-4 pt-3.5 pb-5 bg-background mt-12">
+          <div className="w-full flex flex-col items-center border rounded-lg px-4 pt-3.5 pb-5 bg-background mt-8">
             <p className="text-2xl font-bold leading-snug">Join Us</p>
-            <div className="w-full flex items-center gap-2 justify-center mt-2">
+            <div className="w-full flex flex-wrap items-center gap-2 justify-center mt-3">
               {Object.values(sc)
                 .filter((i) => i.joinable)
                 .sort((a, b) => a.xOrder - b.xOrder)
@@ -112,13 +111,13 @@ export default async function Page({ params }: Props) {
             </div>
           </div>
           {/* Back to blog */}
-          <div className="w-full flex items-center justify-center mt-6">
+          <div className="w-full flex items-center justify-center mt-4">
             <LinkButton
               href="/blog"
               variant="ghost"
-              className="text-muted-foreground"
+              className="text-muted-foreground gap-1.5"
             >
-              <ArrowLeftIcon className="size-4 -my-1 -ml-1" />
+              <ArrowLeftIcon className="size-5 -my-1 -ml-1.5" />
               Back to Blog
             </LinkButton>
           </div>
@@ -148,7 +147,7 @@ function TOC({
         href="/blog"
         size="sm"
         variant="ghost"
-        className="text-muted-foreground"
+        className="text-muted-foreground gap-1.5"
       >
         <ArrowLeftIcon className="size-4 -my-1 -ml-1" />
         Blog

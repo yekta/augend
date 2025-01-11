@@ -1,3 +1,4 @@
+import ImageWithZoom from "@/components/doc/image-with-zoom";
 import { cn } from "@/lib/utils";
 import type { MDXComponents } from "mdx/types";
 import { createCssVariablesTheme, createHighlighter } from "shiki";
@@ -145,9 +146,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
         {children}
       </a>
     ),
-    img: ({ children, className, ...rest }) => (
-      <img {...rest} className={cn("w-full h-auto", className)} />
-    ),
+    img: (props) => <ImageWithZoom {...props} />,
     pre: async ({ children, className, ...rest }) => {
       const content = children?.toString() || "";
       const codeMatch = content.match(
@@ -190,7 +189,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <figure
         {...rest}
         className={cn(
-          "w-full rounded-md border overflow-hidden mt-4",
+          "w-full transition flex flex-col rounded-md border overflow-hidden mt-4 focus-within:ring-1 focus-within:ring-primary/50",
           className
         )}
       >
@@ -201,7 +200,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <figcaption
         {...rest}
         className={cn(
-          "px-4 border-t py-3 text-sm text-center text-balance text-muted-foreground w-full",
+          "px-4 border-t py-2.5 text-sm text-center text-balance text-muted-foreground w-full",
           className
         )}
       >

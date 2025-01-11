@@ -5,6 +5,13 @@ pre .shiki {
   border-color: hsl(var(--border));
   border-width: 1px;
 }
+
+@media (min-width: 768px) {
+  pre .shiki {
+    padding: 0.75rem 1.1rem;
+  }
+}
+
 pre:focus-visible {
   outline: 2px solid transparent;
   outline-offset: 2px;

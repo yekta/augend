@@ -16,12 +16,17 @@ const DialogClose = DialogPrimitive.Close;
 
 const DialogOverlay = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Overlay>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
->(({ className, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay> & {
+    noXPadding?: boolean;
+    noYPadding?: boolean;
+  }
+>(({ className, noXPadding, noYPadding, ...props }, ref) => (
   <DialogPrimitive.Overlay
     ref={ref}
+    data-no-x-padding={noXPadding}
+    data-no-y-padding={noYPadding}
     className={cn(
-      "fixed flex w-full justify-center px-2 pt-12 pb-[calc((100vh-3rem)*0.08+2rem)] md:pb-[calc((100vh-3rem)*0.1+3rem)] overflow-auto inset-0 z-50 duration-200 data-[state=open]:duration-200 data-[state=closed]:duration-200 bg-barrier/[var(--opacity-barrier)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+      "fixed flex w-full justify-center px-2 pt-12 data-[no-x-padding]:px-0 data-[no-y-padding]:py-0 pb-[calc((100vh-3rem)*0.08+2rem)] md:pb-[calc((100vh-3rem)*0.1+3rem)] overflow-auto inset-0 z-50 duration-200 data-[state=open]:duration-200 data-[state=closed]:duration-200 bg-barrier/[var(--opacity-barrier)] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
       className
     )}
     {...props}
@@ -50,6 +55,8 @@ const DialogContent = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> &
     VariantProps<typeof dialogContentVariants> & {
       classNameInnerWrapper?: string;
+      noXPadding?: boolean;
+      noYPadding?: boolean;
     }
 >(
   (
@@ -60,6 +67,8 @@ const DialogContent = React.forwardRef<
       children,
       onCloseAutoFocus,
       onEscapeKeyDown,
+      noXPadding,
+      noYPadding,
       ...props
     },
     ref
@@ -94,7 +103,7 @@ const DialogContent = React.forwardRef<
 
     return (
       <DialogPortal>
-        <DialogOverlay>
+        <DialogOverlay noYPadding={noYPadding} noXPadding={noXPadding}>
           <DialogPrimitive.Content
             onCloseAutoFocus={handleCloseAutoFocus}
             onEscapeKeyDown={handleEscapeKeyDown}
