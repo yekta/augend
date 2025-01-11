@@ -1,5 +1,29 @@
 import { cn } from "@/lib/utils";
 import type { MDXComponents } from "mdx/types";
+import { createCssVariablesTheme, createHighlighter } from "shiki";
+
+const augendTheme = createCssVariablesTheme({
+  name: "css-variables",
+  variablePrefix: "--shiki-",
+  variableDefaults: {},
+  fontStyle: true,
+});
+
+const highlighter = await createHighlighter({
+  langs: [
+    "javascript",
+    "typescript",
+    "html",
+    "css",
+    "json",
+    "bash",
+    "shell",
+    "markdown",
+    "tsx",
+    "jsx",
+  ],
+  themes: [augendTheme],
+});
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
@@ -72,7 +96,10 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     p: ({ children, className, ...rest }) => (
       <p
         {...rest}
-        className={cn("mt-4 [h2+&]:mt-2 [h3+&]:mt-2 [h4+&]:mt-2", className)}
+        className={cn(
+          "mt-4 [h2+&]:mt-2 [h3+&]:mt-2 [h4+&]:mt-2 [blockquote>&]:mt-0",
+          className
+        )}
       >
         {children}
       </p>
@@ -119,10 +146,72 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     img: ({ children, className, ...rest }) => (
       <img {...rest} className={cn("w-full h-auto", className)} />
     ),
+    pre: async ({ children, className, ...rest }) => {
+      const content = children?.toString() || "";
+      const codeMatch = content.match(
+        /<code(?:\s+class="language-([^"]+)")?>([^]*?)<\/code>/
+      );
+
+      if (codeMatch) {
+        const language = codeMatch[1] || "plaintext"; // Use the captured language or default
+        const code = codeMatch[2];
+
+        const highlighted = highlighter.codeToHtml(code, {
+          lang: language,
+          theme: "css-variables",
+        });
+
+        return (
+          <pre
+            {...rest}
+            className={cn("mt-4 w-full text-sm", className)}
+            dangerouslySetInnerHTML={{ __html: highlighted }}
+          />
+        );
+      }
+
+      return (
+        <pre {...rest} className={cn("mt-4 w-full", className)}>
+          {children}
+        </pre>
+      );
+    },
+    figcaption: ({ children, className, ...rest }) => (
+      <figcaption
+        {...rest}
+        className={cn(
+          "mt-2 text-sm text-center px-4 text-balance text-muted-foreground w-full",
+          className
+        )}
+      >
+        {children}
+      </figcaption>
+    ),
     figure: ({ children, className, ...rest }) => (
       <figure {...rest} className={cn("mt-4", className)}>
         {children}
       </figure>
+    ),
+    em: ({ children, className, ...rest }) => (
+      <em {...rest} className={cn("italic", className)}>
+        {children}
+      </em>
+    ),
+    blockquote: ({ children, className, ...rest }) => (
+      <blockquote
+        {...rest}
+        className={cn(
+          "mt-4 bg-background-hover px-3 py-2 w-full rounded-md border-l-4",
+          className
+        )}
+      >
+        {children}
+      </blockquote>
+    ),
+    span: ({ children, className, ...rest }) => (
+      <span {...rest} className={cn("", className)}>
+        {children}
+      </span>
     ),
     ...components,
   };

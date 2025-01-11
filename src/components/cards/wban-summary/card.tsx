@@ -74,6 +74,7 @@ export default function WBanSummaryCard({
   const conditionalValue = useConditionalValue({
     isPending,
     data: banBalanceData,
+    formatter: (v) => formatNumberTBMK(v),
   });
 
   return (
@@ -132,9 +133,7 @@ export default function WBanSummaryCard({
                       "leading-none md:leading-none"
                     )}
                   >
-                    {conditionalValue(
-                      formatNumberTBMK(coldWallet?.balance || 0)
-                    )}
+                    {conditionalValue(coldWallet?.balance)}
                   </p>
                   <p
                     className={cn(
@@ -142,9 +141,7 @@ export default function WBanSummaryCard({
                       "leading-none md:leading-none"
                     )}
                   >
-                    {conditionalValue(
-                      formatNumberTBMK(coldWallet?.receivable || 0)
-                    )}
+                    {conditionalValue(coldWallet?.receivable)}
                   </p>
                 </div>
               </Link>
@@ -167,9 +164,7 @@ export default function WBanSummaryCard({
                       "leading-none md:leading-none"
                     )}
                   >
-                    {conditionalValue(
-                      formatNumberTBMK(hotWallet?.balance || 0)
-                    )}
+                    {conditionalValue(hotWallet?.balance)}
                   </p>
                   <p
                     className={cn(
@@ -177,9 +172,7 @@ export default function WBanSummaryCard({
                       "leading-none md:leading-none"
                     )}
                   >
-                    {conditionalValue(
-                      formatNumberTBMK(hotWallet?.receivable || 0)
-                    )}
+                    {conditionalValue(hotWallet?.receivable)}
                   </p>
                 </div>
               </Link>
@@ -213,9 +206,7 @@ export default function WBanSummaryCard({
                       "leading-none md:leading-none"
                     )}
                   >
-                    {conditionalValue(
-                      formatNumberTBMK(pendingWithdrawalAmount || 0)
-                    )}
+                    {conditionalValue(pendingWithdrawalAmount)}
                   </p>
                 </div>
               </div>

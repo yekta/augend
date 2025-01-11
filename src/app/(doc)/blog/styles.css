@@ -1,0 +1,21 @@
+.shiki {
+  border-radius: 0.4rem; /* or any size you prefer */
+  overflow: auto;
+  padding: 0.5rem 0.75rem;
+  border-color: hsl(var(--border));
+  border-width: 1px;
+}
+
+:root {
+  --shiki-foreground: hsl(var(--foreground));
+  --shiki-background: hsl(var(--background-hover));
+  --shiki-token-constant: hsl(var(--foreground));
+  --shiki-token-string: hsl(var(--success));
+  --shiki-token-comment: hsl(var(--success));
+  --shiki-token-keyword: hsl(var(--chart-5));
+  --shiki-token-parameter: hsl(var(--foreground));
+  --shiki-token-function: hsl(var(--chart-4));
+  --shiki-token-string-expression: hsl(var(--success));
+  --shiki-token-punctuation: hsl(var(--foreground));
+  --shiki-token-link: hsl(var(--success));
+}

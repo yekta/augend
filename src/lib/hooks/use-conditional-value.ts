@@ -5,6 +5,7 @@ export function useConditionalValue({
   loadingTextShort = "Load",
   errorText = "Error",
   errorTextShort = "Err",
+  formatter,
 }: {
   isPending: boolean;
   data: any | undefined;
@@ -12,6 +13,7 @@ export function useConditionalValue({
   loadingTextShort?: string;
   errorText?: string;
   errorTextShort?: string;
+  formatter?: (value: any) => string;
 }) {
   return <T>(value: T, short = false) => {
     let val: T | string = short ? errorTextShort : errorText;
@@ -19,6 +21,7 @@ export function useConditionalValue({
       val = short ? loadingTextShort : loadingText;
     } else if (value !== undefined && data !== undefined) {
       val = value;
+      if (formatter) val = formatter(val);
     }
     return val;
   };
