@@ -84,7 +84,7 @@ export async function POST(request: Request) {
       },
       body: JSON.stringify({
         query: redeployMutation,
-        variables: { id: lastDeploymentId, usePreviousImageTag: true },
+        variables: { id: lastDeploymentId, usePreviousImageTag: false },
       }),
     });
     const data2 = await res2.json();
