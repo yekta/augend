@@ -1,17 +1,16 @@
 import { ghostApi, ghostUrl } from "@/app/(doc)/blog/constants";
-import { env } from "@/lib/env";
+import { getExcerpt } from "@/app/(doc)/blog/helpers";
+import ScIcon from "@/components/icons/sc-icon";
+import { LinkButton } from "@/components/ui/button";
+import { sc } from "@/lib/constants";
+import { cn } from "@/lib/utils";
 import { useMDXComponents } from "@/mdx-components";
+import { format } from "date-fns";
+import { ArrowLeftIcon } from "lucide-react";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { createElement, CSSProperties } from "react";
 import { parse } from "node-html-parser";
-import { getExcerpt } from "@/app/(doc)/blog/helpers";
-import { format } from "date-fns";
-import { sc } from "@/lib/constants";
-import { LinkButton } from "@/components/ui/button";
-import { ArrowLeftIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
-import ScIcon from "@/components/icons/sc-icon";
+import { createElement, CSSProperties } from "react";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -205,7 +204,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export async function generateStaticParams() {
   if (!ghostApi) return [];
-
   const posts = await ghostApi.posts.browse({
     limit: 100,
   });
