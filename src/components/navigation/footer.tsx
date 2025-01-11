@@ -4,6 +4,7 @@ import { LinkButton } from "@/components/ui/button";
 import { sc, siteTitle } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { ReactNode } from "react";
 
 export default async function Footer({ className }: { className?: string }) {
   return (
@@ -31,29 +32,15 @@ export default async function Footer({ className }: { className?: string }) {
               •
             </span>
             <div className="w-full md:w-auto shrink min-w-0 flex flex-row flex-wrap items-center justify-start">
-              <Link
-                prefetch={false}
-                href="/terms"
-                target="_blank"
-                className="px-1 max-w-full flex items-center text-left min-w-0 not-touch:hover:text-foreground not-touch:hover:underline active:underline active:text-foreground rounded relative
-                focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:ring-foreground/50
-                before:w-full before:h-full before:-translate-y-1/2 before:top-1/2 before:-translate-x-1/2 before:left-1/2 before:min-w-[48px] before:min-h-[48px] before:z-[-1] z-0 before:bg-transparent before:absolute"
-              >
-                <p className="max-w-full">Terms</p>
-              </Link>
+              <NavbarLink href="/terms">Terms</NavbarLink>
               <span className="px-0.5 md:px-0.75 text-muted-more-foreground">
                 •
               </span>
-              <Link
-                prefetch={false}
-                href="/privacy"
-                target="_blank"
-                className="px-1 shrink text-left min-w-0 not-touch:hover:text-foreground not-touch:hover:underline active:underline active:text-foreground rounded relative
-                focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:ring-foreground/50
-                before:w-full before:h-full before:-translate-y-1/2 before:top-1/2 before:-translate-x-1/2 before:left-1/2 before:min-w-[48px] before:min-h-[48px] before:z-[-1] z-0 before:bg-transparent before:absolute"
-              >
-                <p className="max-w-full">Privacy</p>
-              </Link>
+              <NavbarLink href="/privacy">Privacy</NavbarLink>
+              <span className="px-0.5 md:px-0.75 text-muted-more-foreground">
+                •
+              </span>
+              <NavbarLink href="/blog">Blog</NavbarLink>
             </div>
           </div>
           <div className="flex items-center justify-end gap-1.75">
@@ -80,5 +67,20 @@ export default async function Footer({ className }: { className?: string }) {
         </div>
       </div>
     </div>
+  );
+}
+
+function NavbarLink({ children, href }: { children: ReactNode; href: string }) {
+  return (
+    <Link
+      prefetch={false}
+      href={href}
+      target="_blank"
+      className="px-1 max-w-full flex items-center text-left min-w-0 not-touch:hover:text-foreground not-touch:hover:underline active:underline active:text-foreground rounded relative
+      focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:ring-foreground/50
+      before:w-full before:h-full before:-translate-y-1/2 before:top-1/2 before:-translate-x-1/2 before:left-1/2 before:min-w-[48px] before:min-h-[48px] before:z-[-1] z-0 before:bg-transparent before:absolute"
+    >
+      <p className="max-w-full">{children}</p>
+    </Link>
   );
 }

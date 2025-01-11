@@ -42,7 +42,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <h2
         {...rest}
         className={cn(
-          "text-2xl text-foreground text-balance font-bold mt-10 [h1+&]:mt-3 leading-snug",
+          "text-3xl text-foreground text-balance font-bold mt-10 [h1+&]:mt-3 leading-tight",
           className
         )}
       >
@@ -53,7 +53,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <h3
         {...rest}
         className={cn(
-          "text-xl text-foreground text-balance font-bold mt-8 [h1+&]:mt-3 [h2+&]:mt-3 leading-snug",
+          "text-2xl text-foreground text-balance font-bold mt-8 [h1+&]:mt-3 [h2+&]:mt-3 leading-snug",
           className
         )}
       >
@@ -64,7 +64,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <h4
         {...rest}
         className={cn(
-          "text-lg text-foreground text-balance font-bold mt-6 [h1+&]:mt-3 [h2+&]:mt-3 [h3+&]:mt-3 leading-snug",
+          "text-xl text-foreground text-balance font-bold mt-6 [h1+&]:mt-3 [h2+&]:mt-3 [h3+&]:mt-3 leading-snug",
           className
         )}
       >
@@ -75,7 +75,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <h4
         {...rest}
         className={cn(
-          "text-base text-foreground text-balance font-bold mt-6 [h1+&]:mt-3 [h2+&]:mt-3 [h3+&]:mt-3 [h4+&]:mt-3 leading-snug",
+          "text-lg text-foreground text-balance font-bold mt-6 [h1+&]:mt-3 [h2+&]:mt-3 [h3+&]:mt-3 [h4+&]:mt-3 leading-snug",
           className
         )}
       >
@@ -97,7 +97,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <p
         {...rest}
         className={cn(
-          "mt-4 [h2+&]:mt-2 [h3+&]:mt-2 [h4+&]:mt-2 [blockquote>&]:mt-0",
+          "mt-4 w-full [figure+&]:mt-8 [pre+&]:mt-8 [h2+&]:mt-2 [h3+&]:mt-2 [h4+&]:mt-2 [blockquote>&]:mt-0 [blockquote>&]:italic",
           className
         )}
       >
@@ -138,7 +138,9 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
         target={
           href?.startsWith("/") || href?.startsWith("#") ? undefined : "_blank"
         }
-        className={cn("underline not-touch:hover:opacity-80 active:opacity-80")}
+        className={cn(
+          "underline not-touch:hover:opacity-80 active:opacity-80 focus-visible:ring-1 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:rounded-sm"
+        )}
       >
         {children}
       </a>
@@ -164,7 +166,10 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
         return (
           <pre
             {...rest}
-            className={cn("mt-4 w-full text-sm", className)}
+            className={cn(
+              "mt-4 w-full text-sm focus-visible:outline-none",
+              className
+            )}
             dangerouslySetInnerHTML={{ __html: highlighted }}
           />
         );
@@ -176,21 +181,32 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
         </pre>
       );
     },
+    strong: ({ children, className, ...rest }) => (
+      <span {...rest} className={cn("font-bold", className)}>
+        {children}
+      </span>
+    ),
+    figure: ({ children, className, ...rest }) => (
+      <figure
+        {...rest}
+        className={cn(
+          "w-full rounded-md border overflow-hidden mt-4",
+          className
+        )}
+      >
+        {children}
+      </figure>
+    ),
     figcaption: ({ children, className, ...rest }) => (
       <figcaption
         {...rest}
         className={cn(
-          "mt-2 text-sm text-center px-4 text-balance text-muted-foreground w-full",
+          "px-4 border-t py-3 text-sm text-center text-balance text-muted-foreground w-full",
           className
         )}
       >
         {children}
       </figcaption>
-    ),
-    figure: ({ children, className, ...rest }) => (
-      <figure {...rest} className={cn("w-full mt-4", className)}>
-        {children}
-      </figure>
     ),
     em: ({ children, className, ...rest }) => (
       <em {...rest} className={cn("italic", className)}>

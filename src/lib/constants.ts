@@ -69,6 +69,8 @@ export const sc: Record<
     href: string;
     siteHref: string;
     slug: TScOption;
+    joinable: boolean;
+    xOrder: number;
   }
 > = {
   discord: {
@@ -76,24 +78,32 @@ export const sc: Record<
     siteHref: "/discord",
     href: "https://discord.gg/vD45Ef2eWU",
     slug: "discord",
+    joinable: true,
+    xOrder: 0,
   },
   x: {
     name: "X (Twitter)",
     siteHref: "/x",
     href: "https://x.com/augendapp",
     slug: "x",
+    joinable: true,
+    xOrder: 1,
   },
   email: {
     name: "Email",
     siteHref: "mailto:augendapp@gmail.com",
     href: "mailto:augendapp@gmail.com",
     slug: "email",
+    joinable: false,
+    xOrder: 2,
   },
   github: {
     name: "GitHub",
     siteHref: "/github",
     href: "https://github.com/augendapp",
     slug: "github",
+    joinable: true,
+    xOrder: 3,
   },
 };
 

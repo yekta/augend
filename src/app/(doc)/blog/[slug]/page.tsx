@@ -8,6 +8,10 @@ import { parse } from "node-html-parser";
 import { getExcerpt } from "@/app/(doc)/blog/helpers";
 import { format } from "date-fns";
 import { sc } from "@/lib/constants";
+import { LinkButton } from "@/components/ui/button";
+import { ArrowLeftIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
+import ScIcon from "@/components/icons/sc-icon";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -38,49 +42,117 @@ export default async function Page({ params }: Props) {
 
   return (
     <div className="w-full flex flex-col items-center flex-1 text-foreground/90">
-      <div className="w-full flex flex-col justify-center max-w-3xl px-5 md:px-12 pt-4 pb-20">
-        <div className="w-full flex flex-col items-center">
-          <h1 className="font-bold text-4xl text-foreground text-center text-balance px-3">
-            {post.title}
-          </h1>
-          <p className="mt-4 text-muted-foreground">
-            {post.published_at && (
-              <span>
-                {format(new Date(post.published_at), "MMMM dd, yyyy")}
-              </span>
-            )}
-            {post.published_at && post.reading_time && (
-              <span className="text-muted-more-foreground">{" • "}</span>
-            )}
-            {post.reading_time && <span>{post.reading_time} min read</span>}
-          </p>
-          {authors && (
-            <p className="mt-1 text-muted-foreground font-semibold">
-              {authors.map((author, index) => (
-                <span key={author.id}>
-                  <a
-                    target="_blank"
-                    href={
-                      author.twitter
-                        ? `https://x.com/${author.twitter.slice(1)}`
-                        : sc.x.href
-                    }
-                    className="hover:underline"
-                  >
-                    {author.name}
-                  </a>
-                  {index < authors.length - 1 && (
-                    <span className="text-muted-more-foreground">{" • "}</span>
-                  )}
+      <div className="w-full pt-0 md:pt-4 pb-16 px-5 md:px-12 flex flex-col items-center lg:items-start lg:flex-row justify-center">
+        <TOC className="lg:pr-4" />
+        <div className="w-full mt-3 lg:mt-0 flex flex-col justify-center max-w-2xl">
+          <div className="w-full flex flex-col items-center">
+            <h1 className="font-bold text-4xl text-foreground text-center text-balance px-3">
+              {post.title}
+            </h1>
+            <p className="mt-4 text-muted-foreground">
+              {post.published_at && (
+                <span>
+                  {format(new Date(post.published_at), "MMMM dd, yyyy")}
                 </span>
-              ))}
+              )}
+              {post.published_at && post.reading_time && (
+                <span className="text-muted-more-foreground">{" • "}</span>
+              )}
+              {post.reading_time && <span>{post.reading_time} min read</span>}
             </p>
-          )}
+            {authors && (
+              <p className="mt-1 text-muted-foreground font-semibold">
+                {authors.map((author, index) => (
+                  <span key={author.id}>
+                    <a
+                      target="_blank"
+                      href={
+                        author.twitter
+                          ? `https://x.com/${author.twitter.slice(1)}`
+                          : sc.x.href
+                      }
+                      className="px-1 not-touch:hover:underline active:underline not-touch:hover:text-foreground active:text-foreground
+                      focus-visible:ring-1 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:rounded-sm"
+                    >
+                      {author.name}
+                    </a>
+                    {index < authors.length - 1 && (
+                      <span className="text-muted-more-foreground">
+                        {" • "}
+                      </span>
+                    )}
+                  </span>
+                ))}
+              </p>
+            )}
+          </div>
+          {/* Blog post content */}
+          <div className="w-full flex flex-wrap mt-2">
+            <HTMLRenderer html={html} />
+          </div>
+          {/* Join us section */}
+          <div className="w-full flex flex-col items-center border rounded-lg px-4 pt-3.5 pb-5 bg-background mt-12">
+            <p className="text-2xl font-bold leading-snug">Join Us</p>
+            <div className="w-full flex items-center gap-2 justify-center mt-2">
+              {Object.values(sc)
+                .filter((i) => i.joinable)
+                .sort((a, b) => a.xOrder - b.xOrder)
+                .map((i) => (
+                  <LinkButton
+                    key={i.slug}
+                    aria-label={i.name}
+                    href={i.siteHref}
+                    className="p-1.5 rounded-lg"
+                    variant="outline"
+                    target="_blank"
+                  >
+                    <ScIcon slug={i.slug} className="size-6 shrink-0" />
+                  </LinkButton>
+                ))}
+            </div>
+          </div>
+          {/* Back to blog */}
+          <div className="w-full flex items-center justify-center mt-6">
+            <LinkButton
+              href="/blog"
+              variant="ghost"
+              className="text-muted-foreground"
+            >
+              <ArrowLeftIcon className="size-4 -my-1 -ml-1" />
+              Back to Blog
+            </LinkButton>
+          </div>
         </div>
-        <div className="w-full flex flex-wrap mt-2">
-          <HTMLRenderer html={html} />
-        </div>
+        <TOC disabled={true} className="lg:pl-4 hidden lg:block" />
       </div>
+    </div>
+  );
+}
+
+function TOC({
+  className,
+  disabled,
+}: {
+  className?: string;
+  disabled?: boolean;
+}) {
+  return (
+    <div
+      data-disabled={disabled ? true : undefined}
+      className={cn(
+        "flex shrink-0 flex-col group/toc data-[disabled]/toc:opacity-0 group-data-[disabled]/toc:pointer-events-none",
+        className
+      )}
+    >
+      <LinkButton
+        href="/blog"
+        size="sm"
+        variant="ghost"
+        className="text-muted-foreground"
+      >
+        <ArrowLeftIcon className="size-4 -my-1 -ml-1" />
+        Blog
+      </LinkButton>
     </div>
   );
 }

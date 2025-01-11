@@ -1,9 +1,14 @@
-.shiki {
+pre .shiki {
   border-radius: 0.4rem; /* or any size you prefer */
   overflow: auto;
   padding: 0.5rem 0.75rem;
   border-color: hsl(var(--border));
   border-width: 1px;
+}
+pre:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  border: 1px solid hsl(var(--foreground) / 0.5);
 }
 
 :root {
