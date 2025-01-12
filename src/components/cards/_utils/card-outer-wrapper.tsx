@@ -235,7 +235,7 @@ export default function CardOuterWrapper({
                 </div>
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-sm">
+            <DialogContent className="w-96">
               <DialogHeader>
                 <DialogTitle className="text-destructive">
                   Delete card

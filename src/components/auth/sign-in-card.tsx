@@ -23,7 +23,7 @@ export default function SignInCard({
   return (
     <div
       className={cn(
-        "w-full max-w-[22rem] flex flex-col items-center gap-5 p-5 pt-4.5 justify-center border rounded-xl",
+        "w-88 max-w-full flex flex-col items-center gap-5 p-5 pt-4.5 justify-center border rounded-xl",
         className
       )}
       {...rest}

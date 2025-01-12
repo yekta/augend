@@ -36,10 +36,7 @@ export function SignInTrigger({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent
-        className="w-full max-w-[22rem]"
-        classNameInnerWrapper="gap-5"
-      >
+      <DialogContent className="w-88" classNameInnerWrapper="gap-5">
         <DialogHeader>
           <div className="w-full flex items-center justify-center pb-1.75">
             <Logo className="size-6" />

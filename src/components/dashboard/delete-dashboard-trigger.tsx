@@ -82,7 +82,7 @@ export default function DeleteDashboardTrigger({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="max-w-sm">
+      <DialogContent className="w-96">
         <DialogHeader>
           <DialogTitle className="text-destructive">
             Delete dashboard

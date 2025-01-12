@@ -94,7 +94,7 @@ export default function RenameDashboardTrigger({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger>{children}</DialogTrigger>
-      <DialogContent classNameInnerWrapper="gap-4" className="w-full max-w-sm">
+      <DialogContent classNameInnerWrapper="gap-4" className="w-96">
         <DialogHeader>
           <DialogTitle>Rename Dashboard</DialogTitle>
           <DialogDescription>
