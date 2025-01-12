@@ -1,30 +1,7 @@
+import { getHighlighter } from "@/app/(doc)/blog/shiki";
 import ImageWithFullscreen from "@/components/doc/image-with-fullscreen";
 import { cn } from "@/lib/utils";
 import type { MDXComponents } from "mdx/types";
-import { createCssVariablesTheme, createHighlighter } from "shiki";
-
-const augendTheme = createCssVariablesTheme({
-  name: "css-variables",
-  variablePrefix: "--shiki-",
-  variableDefaults: {},
-  fontStyle: true,
-});
-
-const highlighter = await createHighlighter({
-  langs: [
-    "javascript",
-    "typescript",
-    "html",
-    "css",
-    "json",
-    "bash",
-    "shell",
-    "markdown",
-    "tsx",
-    "jsx",
-  ],
-  themes: [augendTheme],
-});
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
@@ -148,6 +125,8 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     ),
     img: (props) => <ImageWithFullscreen {...props} />,
     pre: async ({ children, className, ...rest }) => {
+      const highlighter = await getHighlighter();
+
       const content = children?.toString() || "";
       const codeMatch = content.match(
         /<code(?:\s+class="language-([^"]+)")?>([^]*?)<\/code>/
