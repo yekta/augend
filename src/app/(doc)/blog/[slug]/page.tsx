@@ -59,7 +59,7 @@ export default async function Page({ params }: Props) {
               </p>
             )}
             {authors && (
-              <p className="mt-1 text-muted-foreground font-semibold">
+              <p className="mt-0.5 text-muted-foreground font-semibold">
                 {authors.map((author, index) => (
                   <span key={author.id}>
                     <a
@@ -110,7 +110,7 @@ export default async function Page({ params }: Props) {
             </div>
           </div>
           {/* Back to blog */}
-          <div className="w-full flex items-center justify-center mt-5">
+          <div className="w-full flex items-center justify-center mt-3">
             <LinkButton
               href="/blog"
               variant="ghost"

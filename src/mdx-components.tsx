@@ -188,7 +188,10 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     figure: ({ children, className, ...rest }) => (
       <figure
         {...rest}
-        className={cn("w-full transition flex flex-col mt-8", className)}
+        className={cn(
+          "w-[calc(100+1.25rem)] sm:w-full -mx-5 sm:mx-0 transition flex flex-col mt-8",
+          className
+        )}
       >
         {children}
       </figure>
@@ -197,7 +200,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <figcaption
         {...rest}
         className={cn(
-          "px-4 py-2.5 text-sm text-center text-balance text-muted-foreground w-full leading-snug",
+          "px-5 py-2.5 text-sm text-center text-balance text-muted-foreground w-full leading-snug",
           className
         )}
       >

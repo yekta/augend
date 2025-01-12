@@ -14,7 +14,7 @@ type Props = React.ImgHTMLAttributes<HTMLImageElement> & {
   classNameFullScreenImage?: string;
 };
 
-const padding = 2;
+const padding = 0;
 
 export default function ImageWithFullscreen({
   className,
