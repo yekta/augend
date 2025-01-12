@@ -1,4 +1,4 @@
-import ImageWithZoom from "@/components/doc/image-with-zoom";
+import ImageWithFullscreen from "@/components/doc/image-with-fullscreen";
 import { cn } from "@/lib/utils";
 import type { MDXComponents } from "mdx/types";
 import { createCssVariablesTheme, createHighlighter } from "shiki";
@@ -146,7 +146,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
         {children}
       </a>
     ),
-    img: (props) => <ImageWithZoom {...props} />,
+    img: (props) => <ImageWithFullscreen {...props} />,
     pre: async ({ children, className, ...rest }) => {
       const content = children?.toString() || "";
       const codeMatch = content.match(

@@ -116,7 +116,7 @@ export default async function Page({ params }: Props) {
               variant="ghost"
               className="text-muted-foreground gap-1.5"
             >
-              <ArrowLeftIcon className="size-5 -my-1 -ml-1.5" />
+              <ArrowLeftIcon className="size-5 -my-1 -ml-1.25" />
               Back to Blog
             </LinkButton>
           </div>
@@ -148,7 +148,7 @@ function TOC({
         variant="ghost"
         className="text-muted-foreground gap-1.5"
       >
-        <ArrowLeftIcon className="size-4 -my-1 -ml-1.25" />
+        <ArrowLeftIcon className="size-4 -my-1 -ml-1" />
         Blog
       </LinkButton>
     </div>

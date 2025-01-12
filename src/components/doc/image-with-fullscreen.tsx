@@ -10,12 +10,15 @@ import { cn } from "@/lib/utils";
 import { useWindowSize } from "@uidotdev/usehooks";
 import { useState } from "react";
 
-type Props = React.ImgHTMLAttributes<HTMLImageElement> & {};
+type Props = React.ImgHTMLAttributes<HTMLImageElement> & {
+  classNameFullScreenImage?: string;
+};
 
-const padding = 0;
+const padding = 2;
 
-export default function ImageWithZoom({
+export default function ImageWithFullscreen({
   className,
+  classNameFullScreenImage,
   children,
   width,
   height,
@@ -66,7 +69,7 @@ export default function ImageWithZoom({
           }}
           className={cn(
             "shadow-2xl shadow-shadow/[var(--opacity-shadow)] cursor-zoom-out",
-            className
+            classNameFullScreenImage
           )}
         />
       </DialogContent>

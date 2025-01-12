@@ -56,7 +56,6 @@ export default async function Page({}: Props) {
 
 function PostCard({ post }: { post: PostsOrPages[number] }) {
   const excerpt = getExcerpt(post.excerpt);
-  const authors = post.authors;
 
   return (
     <Link
