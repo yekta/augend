@@ -89,7 +89,7 @@ export default async function Page({ params }: Props) {
             <HTMLRenderer html={html} />
           </div>
           {/* Join us section */}
-          <div className="w-full flex flex-col items-center border rounded-lg px-4 pt-3.5 pb-5 bg-background mt-8">
+          <div className="w-full flex flex-col items-center border rounded-lg px-4 pt-3.5 pb-5 bg-background mt-10">
             <p className="text-2xl font-bold leading-snug">Join Us</p>
             <div className="w-full flex flex-wrap items-center gap-2 justify-center mt-3">
               {Object.values(sc)
@@ -110,7 +110,7 @@ export default async function Page({ params }: Props) {
             </div>
           </div>
           {/* Back to blog */}
-          <div className="w-full flex items-center justify-center mt-4">
+          <div className="w-full flex items-center justify-center mt-5">
             <LinkButton
               href="/blog"
               variant="ghost"

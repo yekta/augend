@@ -32,7 +32,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <h1
         {...rest}
         className={cn(
-          "text-4xl text-foreground text-balance text-center font-bold mt-12 first-of-type:mt-0 leading-tight",
+          "text-4xl text-foreground text-balance text-center font-bold mt-14 first-of-type:mt-0 leading-tight",
           className
         )}
       >
@@ -43,7 +43,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <h2
         {...rest}
         className={cn(
-          "text-3xl text-foreground text-balance font-bold mt-10 [h1+&]:mt-3 leading-tight",
+          "text-3xl text-foreground text-balance font-bold mt-12 [h1+&]:mt-3 leading-tight",
           className
         )}
       >
@@ -54,7 +54,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <h3
         {...rest}
         className={cn(
-          "text-2xl text-foreground text-balance font-bold mt-8 [h1+&]:mt-3 [h2+&]:mt-3 leading-snug",
+          "text-2xl text-foreground text-balance font-bold mt-10 [h1+&]:mt-3 [h2+&]:mt-3 leading-snug",
           className
         )}
       >
@@ -65,7 +65,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <h4
         {...rest}
         className={cn(
-          "text-xl text-foreground text-balance font-bold mt-6 [h1+&]:mt-3 [h2+&]:mt-3 [h3+&]:mt-3 leading-snug",
+          "text-xl text-foreground text-balance font-bold mt-8 [h1+&]:mt-3 [h2+&]:mt-3 [h3+&]:mt-3 leading-snug",
           className
         )}
       >
@@ -76,7 +76,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <h4
         {...rest}
         className={cn(
-          "text-lg text-foreground text-balance font-bold mt-6 [h1+&]:mt-3 [h2+&]:mt-3 [h3+&]:mt-3 [h4+&]:mt-3 leading-snug",
+          "text-lg text-foreground text-balance font-bold mt-8 [h1+&]:mt-3 [h2+&]:mt-3 [h3+&]:mt-3 [h4+&]:mt-3 leading-snug",
           className
         )}
       >
@@ -87,7 +87,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <h4
         {...rest}
         className={cn(
-          "text-base text-foreground text-balance font-bold mt-6 [h1+&]:mt-3 [h2+&]:mt-3 [h3+&]:mt-3 [h4+&]:mt-3 [h5+&]:mt-3 leading-snug",
+          "text-base text-foreground text-balance font-bold mt-8 [h1+&]:mt-3 [h2+&]:mt-3 [h3+&]:mt-3 [h4+&]:mt-3 [h5+&]:mt-3 leading-snug",
           className
         )}
       >
@@ -98,7 +98,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <p
         {...rest}
         className={cn(
-          "mt-4 w-full [figure+&]:mt-8 [pre+&]:mt-8 [h1+&]:mt-2 [h2+&]:mt-2 [h3+&]:mt-2 [h4+&]:mt-2 [h5+&]:mt-2 [h6+&]:mt-2 [blockquote>&]:mt-0 [blockquote>&]:italic",
+          "mt-4 w-full leading-relaxed [blockquote+&]:mt-6 [figure+&]:mt-8 [pre+&]:mt-6 [h1+&]:mt-2 [h2+&]:mt-2 [h3+&]:mt-2 [h4+&]:mt-2 [h5+&]:mt-2 [h6+&]:mt-2 [blockquote>&]:mt-0 [blockquote>&]:italic",
           className
         )}
       >
@@ -166,7 +166,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
           <pre
             {...rest}
             className={cn(
-              "mt-4 w-full text-sm focus-visible:outline-none",
+              "mt-6 w-full text-sm focus-visible:outline-none",
               className
             )}
             dangerouslySetInnerHTML={{ __html: highlighted }}
@@ -175,7 +175,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       }
 
       return (
-        <pre {...rest} className={cn("mt-4 w-full", className)}>
+        <pre {...rest} className={cn("mt-6 w-full", className)}>
           {children}
         </pre>
       );
@@ -188,10 +188,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     figure: ({ children, className, ...rest }) => (
       <figure
         {...rest}
-        className={cn(
-          "w-full transition flex flex-col rounded-md border overflow-hidden mt-4 focus-within:ring-1 focus-within:ring-primary/50",
-          className
-        )}
+        className={cn("w-full transition flex flex-col mt-8", className)}
       >
         {children}
       </figure>
@@ -200,7 +197,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <figcaption
         {...rest}
         className={cn(
-          "px-4 border-t py-2.5 text-sm text-center text-balance text-muted-foreground w-full",
+          "px-4 py-2.5 text-sm text-center text-balance text-muted-foreground w-full leading-snug",
           className
         )}
       >
@@ -216,7 +213,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <blockquote
         {...rest}
         className={cn(
-          "mt-4 bg-background-hover px-3 py-2 w-full rounded-md border-l-4",
+          "mt-6 bg-background-hover px-3 py-2 w-full rounded-md border-l-4",
           className
         )}
       >
