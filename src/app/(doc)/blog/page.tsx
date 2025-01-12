@@ -62,7 +62,7 @@ function PostCard({ post }: { post: PostsOrPages[number] }) {
       href={`/blog/${post.slug}`}
       prefetch={false}
       className="w-full self-stretch flex flex-col border rounded-xl not-touch:hover:bg-background-hover active:bg-background-hover 
-      focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background overflow-hidden"
+      focus-visible:ring-1 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background overflow-hidden"
     >
       <div className="aspect-[120/63] flex items-center justify-center bg-border border-b overflow-hidden">
         {post.feature_image && (

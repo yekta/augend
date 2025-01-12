@@ -46,7 +46,7 @@ export const CreateDashboardButton = ({
           <div
             className="w-full border flex-1 rounded-xl flex items-center justify-center text-muted-foreground px-8 font-medium py-3 gap-1 
             not-touch:group-hover/card:bg-background-hover group-active/card:bg-background-hover 
-            group-focus-visible/card:ring-1 group-focus-visible/card:ring-foreground/50 
+            group-focus-visible/card:ring-1 group-focus-visible/card:ring-primary/50 
             group-focus-visible/card:ring-offset-2 group-focus-visible/card:ring-offset-background"
           >
             <PlusIcon className="size-5 shrink-0 -ml-1" />

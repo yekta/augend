@@ -979,7 +979,7 @@ function NFTImageLink({
       >
         <div
           className="h-full flex flex-col rounded-xl overflow-hidden 
-          group-focus-visible/link:ring-1 group-focus-visible/link:ring-foreground/50 
+          group-focus-visible/link:ring-1 group-focus-visible/link:ring-primary/50 
           group-focus-visible/link:ring-offset-2 group-focus-visible/link:ring-offset-background"
         >
           <div

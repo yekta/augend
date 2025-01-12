@@ -66,7 +66,7 @@ export default function PlanCardsSection({}: Props) {
                 }
                 className="flex-1 w-36 text-center min-w-0 truncate px-3 py-1.75 rounded-md font-semibold
                 peer-data-[state=checked]:bg-foreground peer-data-[state=checked]:text-background 
-                cursor-pointer peer-focus-visible:ring-1 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-border peer-focus-visible:ring-foreground/50
+                cursor-pointer peer-focus-visible:ring-1 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-border peer-focus-visible:ring-primary/50
                 not-touch:hover:bg-foreground/10 active:bg-foreground/8 
                 not-touch:peer-data-[state=checked]:bg-foreground
                 active:peer-data-[state=checked]:bg-foreground"
