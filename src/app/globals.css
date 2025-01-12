@@ -99,7 +99,7 @@ input[type="number"]::-webkit-outer-spin-button {
     --x-foreground: 0 0% 100%;
 
     --barrier: 0 0% 0%;
-    --opacity-barrier: 0.6;
+    --opacity-barrier: 0.7;
     --opacity-shadow: 0.08;
   }
   .dark {
@@ -155,8 +155,8 @@ input[type="number"]::-webkit-outer-spin-button {
     --x-foreground: 250 25% 4%;
 
     --barrier: 250 25% 4%;
-    --opacity-barrier: 0.75;
-    --opacity-shadow: 0.75;
+    --opacity-barrier: 0.8;
+    --opacity-shadow: 0.8;
   }
 }
 

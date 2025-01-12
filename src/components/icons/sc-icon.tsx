@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import { BanIcon, MailIcon } from "lucide-react";
 import { ComponentProps } from "react";
 
-export default async function ScIcon({
+export default function ScIcon({
   slug,
   className,
 }: ComponentProps<"svg"> & { slug: TScOption }) {
