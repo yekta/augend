@@ -5,18 +5,19 @@ const railwayGraphqlApi = "https://backboard.railway.app/graphql/v2";
 export async function POST(request: Request) {
   console.log("Redeploying Railway service");
 
-  if (!env.RAILWAY_WEBHOOK_SECRET) {
-    console.error("Set RAILWAY_WEBHOOK_SECRET for this webhook to work");
-    return new Response("Set RAILWAY_WEBHOOK_SECRET for this webhook to work", {
-      status: 400,
-    });
-  }
-
-  if (!env.RAILWAY_SERVICE_ID) {
-    console.error("Set RAILWAY_SERVICE_ID for this webhook to work");
-    return new Response("Set RAILWAY_SERVICE_ID for this webhook to work", {
-      status: 400,
-    });
+  if (
+    !env.RAILWAY_WEBHOOK_SECRET ||
+    !env.RAILWAY_API_KEY ||
+    !env.RAILWAY_ENVIRONMENT_ID ||
+    !env.RAILWAY_SERVICE_ID
+  ) {
+    console.error(
+      "Set RAILWAY_WEBHOOK_SECRET, RAILWAY_API_KEY, RAILWAY_ENVIRONMENT_ID, and RAILWAY_SERVICE_ID for this webhook to work."
+    );
+    return new Response(
+      "Set RAILWAY_WEBHOOK_SECRET, RAILWAY_API_KEY, RAILWAY_ENVIRONMENT_ID, and RAILWAY_SERVICE_ID for this webhook to work.",
+      { status: 500 }
+    );
   }
 
   const secret = request.url.split("/").pop();
@@ -26,21 +27,9 @@ export async function POST(request: Request) {
   }
 
   try {
-    const serviceQuery = `
-      query service($id: String!) {
-        service(id: $id) {
-          id
-          name
-          projectId
-          updatedAt
-          deployments {
-              edges {
-                  node {
-                      id
-                  }
-              }
-          }
-        }
+    const mutation = `
+      mutation serviceInstanceRedeploy($environmentId: String!, $serviceId: String!) {
+        serviceInstanceRedeploy(environmentId: $environmentId, serviceId: $serviceId)
       }
     `;
     const res = await fetch(railwayGraphqlApi, {
@@ -50,49 +39,19 @@ export async function POST(request: Request) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        query: serviceQuery,
-        variables: { id: env.RAILWAY_SERVICE_ID },
+        query: mutation,
+        variables: {
+          environmentId: env.RAILWAY_ENVIRONMENT_ID,
+          serviceId: env.RAILWAY_SERVICE_ID,
+        },
       }),
     });
     const data = await res.json();
     if (data.errors) {
-      console.error("Failed to fetch service:", data.errors);
-      return new Response("Failed to fetch service", { status: 500 });
+      console.error("Failed to redeploy:", data.errors);
+      return new Response("Failed to redeploy:", { status: 500 });
     }
-    const lastDeploymentId = data?.data?.service?.deployments?.edges?.[0].node
-      .id as string;
-    if (!lastDeploymentId) {
-      return new Response("No deployment found", { status: 404 });
-    }
-
-    const redeployMutation = `
-      mutation deploymentRedeploy($id: String!, $usePreviousImageTag: Boolean) {
-        deploymentRedeploy(id: $id, usePreviousImageTag: $usePreviousImageTag) {
-          id
-          createdAt
-          serviceId
-          environmentId
-          projectId
-        }
-      }
-    `;
-    const res2 = await fetch(railwayGraphqlApi, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${env.RAILWAY_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        query: redeployMutation,
-        variables: { id: lastDeploymentId, usePreviousImageTag: false },
-      }),
-    });
-    const data2 = await res2.json();
-    if (data2.errors) {
-      console.error("Failed to redeploy:", data2.errors);
-      return new Response("Failed to redeploy", { status: 500 });
-    }
-    console.log("Redeploy request succeeded:", data2?.data?.deploymentRedeploy);
+    console.log("Redeploy request succeeded:", data);
     return new Response("ok");
   } catch (error) {
     console.error("Failed to redeploy:", error);

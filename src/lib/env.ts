@@ -34,6 +34,7 @@ export const env = createEnv({
     CLOUDFLARE_EMAIL: z.string().optional(),
     CLOUDFLARE_API_KEY: z.string().optional(),
     RAILWAY_WEBHOOK_SECRET: z.string().optional(),
+    RAILWAY_ENVIRONMENT_ID: z.string().optional(),
     RAILWAY_SERVICE_ID: z.string().optional(),
     NODE_ENV: z
       .enum(["development", "test", "production"])
@@ -86,6 +87,7 @@ export const env = createEnv({
     GHOST_API_URL: process.env.GHOST_API_URL,
     GHOST_CONTENT_API_KEY: process.env.GHOST_CONTENT_API_KEY,
     RAILWAY_API_KEY: process.env.RAILWAY_API_KEY,
+    RAILWAY_ENVIRONMENT_ID: process.env.RAILWAY_ENVIRONMENT_ID,
     RAILWAY_SERVICE_ID: process.env.RAILWAY_SERVICE_ID,
     BINANCE_API_KEY: process.env.BINANCE_API_KEY,
     BINANCE_API_SECRET: process.env.BINANCE_API_SECRET,
