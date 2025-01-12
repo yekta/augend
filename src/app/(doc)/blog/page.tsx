@@ -77,7 +77,7 @@ function PostCard({ post }: { post: PostsOrPages[number] }) {
           <ImageIcon className="size-10 text-muted-foreground" />
         )}
       </div>
-      <div className="px-4 md:px-5 pt-3 pb-4 md:pt-3.5 md:pb-4.5 flex flex-col">
+      <div className="px-5 pt-3.5 pb-4.5 flex flex-col">
         <h2 className="w-full text-lg font-bold leading-snug text-balance">
           {post.title}
         </h2>
