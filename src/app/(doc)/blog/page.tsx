@@ -30,12 +30,12 @@ export default async function Page({}: Props) {
         <h1 className="font-bold text-4xl text-center text-balance px-7">
           Blog
         </h1>
-        <div className="w-full flex flex-wrap mt-6">
+        <div className="w-full flex flex-wrap justify-center md:justify-start mt-6">
           {posts.length > 0 ? (
             posts.map((post) => (
               <div
                 key={post.id}
-                className="w-full md:w-1/2 lg:w-1/3 p-1 self-stretch flex"
+                className="w-full max-w-lg md:max-w-full md:w-1/2 lg:w-1/3 p-1 self-stretch flex"
               >
                 <PostCard post={post} />
               </div>
@@ -77,7 +77,7 @@ function PostCard({ post }: { post: PostsOrPages[number] }) {
           <ImageIcon className="size-10 text-muted-foreground" />
         )}
       </div>
-      <div className="px-5 pt-3.5 pb-4.5 flex flex-col">
+      <div className="px-5 pt-3.5 pb-5 flex flex-col">
         <h2 className="w-full text-lg font-bold leading-snug text-balance">
           {post.title}
         </h2>
