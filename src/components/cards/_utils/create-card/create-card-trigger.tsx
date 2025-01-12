@@ -134,7 +134,7 @@ export default function CreateCardTrigger({
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent
         variant="styleless"
-        className="max-w-md"
+        className="max-w-md w-full"
         onEscapeKeyDown={
           selectedCardType !== null ? (e) => e.preventDefault() : undefined
         }
