@@ -2,6 +2,7 @@ import { getHighlighter } from "@/app/(doc)/blog/shiki";
 import ImageWithFullscreen from "@/components/doc/image-with-fullscreen";
 import { cn } from "@/lib/utils";
 import type { MDXComponents } from "mdx/types";
+import { ComponentProps } from "react";
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
@@ -151,10 +152,10 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
           theme: "css-variables",
         });
 
+        type TRestAsDiv = Omit<ComponentProps<"div">, "className" | "children">;
         return (
-          // @ts-ignore
           <div
-            {...rest}
+            {...(rest as TRestAsDiv)}
             className={cn(
               "mt-6 w-full text-sm focus-visible:outline-none shiki-div",
               className
