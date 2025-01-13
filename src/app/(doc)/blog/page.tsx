@@ -94,7 +94,10 @@ function PostCard({
         </div>
         {(post.published_at || post.reading_time) && (
           <div className="w-full flex mt-3.5 items-center">
-            <p className="max-w-full leading-tight py-0.75 px-1.75 text-muted-foreground bg-foreground/8 text-sm rounded-sm font-medium">
+            <p
+              suppressHydrationWarning
+              className="max-w-full leading-tight py-0.75 px-1.75 text-muted-foreground bg-foreground/8 text-sm rounded-sm font-medium"
+            >
               {post.reading_time && <span>{post.reading_time} min read</span>}
               {post.published_at && post.reading_time && (
                 <span className="text-muted-more-foreground">{" • "}</span>

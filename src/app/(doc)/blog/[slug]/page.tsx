@@ -49,7 +49,10 @@ export default async function Page({ params }: Props) {
               {post.title}
             </h1>
             {(post.published_at || post.reading_time) && (
-              <p className="w-full text-center mt-4 text-muted-foreground">
+              <p
+                suppressHydrationWarning
+                className="w-full text-center mt-4 text-muted-foreground"
+              >
                 {post.reading_time && <span>{post.reading_time} min read</span>}
                 {post.published_at && post.reading_time && (
                   <span className="text-muted-more-foreground">{" • "}</span>
@@ -120,7 +123,7 @@ export default async function Page({ params }: Props) {
               className="text-muted-foreground gap-1.5 text-base leading-tight"
             >
               <ArrowLeftIcon className="size-5 shrink-0 -my-1 -ml-1.25" />
-              Back to Blog
+              <p className="shrink min-w-0">Back to Blog</p>
             </LinkButton>
           </div>
         </div>
