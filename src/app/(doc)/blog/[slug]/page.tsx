@@ -1,7 +1,7 @@
 import { ghostApi, ghostUrl } from "@/app/(doc)/blog/constants";
 import { getExcerpt } from "@/app/(doc)/blog/helpers";
 import ScIcon from "@/components/icons/sc-icon";
-import { LinkButton } from "@/components/ui/button";
+import { Button, LinkButton } from "@/components/ui/button";
 import { sc } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { useMDXComponents } from "@/mdx-components";
@@ -40,10 +40,10 @@ export default async function Page({ params }: Props) {
   const authors = post.authors;
 
   return (
-    <div className="w-full flex flex-col items-center flex-1 text-foreground/90">
-      <div className="w-full pt-0 md:pt-4 lg:pt-8 pb-16 px-5 md:px-12 flex flex-col items-center lg:items-start lg:flex-row justify-center">
-        <TOC className="lg:pr-6" />
-        <div className="w-full mt-3 lg:mt-0 flex flex-col justify-center max-w-2xl">
+    <div className="w-full flex flex-col items-center flex-1 text-foreground/90 text-base sm:text-lg">
+      <div className="w-full pt-0 md:pt-2 lg:pt-8 pb-16 px-5 flex flex-col items-center lg:items-start lg:flex-row justify-center">
+        <Sidebar className="lg:pr-6" />
+        <div className="w-full shrink-0 mt-2 lg:mt-0 flex flex-col justify-center max-w-2xl">
           <div className="w-full flex flex-col items-center">
             <h1 className="w-full leading-[1.15] font-bold text-4xl text-foreground text-center text-balance px-3 md:px-8">
               {post.title}
@@ -124,13 +124,13 @@ export default async function Page({ params }: Props) {
             </LinkButton>
           </div>
         </div>
-        <TOC disabled={true} className="lg:pl-6 hidden lg:block" />
+        <Sidebar disabled={true} className="lg:pl-6 hidden lg:block" />
       </div>
     </div>
   );
 }
 
-function TOC({
+function Sidebar({
   className,
   disabled,
 }: {
@@ -141,18 +141,20 @@ function TOC({
     <div
       data-disabled={disabled ? true : undefined}
       className={cn(
-        "flex shrink-0 flex-col group/toc data-[disabled]/toc:opacity-0 group-data-[disabled]/toc:pointer-events-none",
+        "flex shrink min-w-0 flex-col group/sidebar data-[disabled]/sidebar:opacity-0 group-data-[disabled]/sidebar:pointer-events-none",
         className
       )}
     >
-      <LinkButton
-        href="/blog"
+      <Button
         variant="ghost"
+        asChild
         className="text-muted-foreground gap-1.5 text-base leading-tight lg:-mt-1.5"
       >
-        <ArrowLeftIcon className="size-5 -my-1 -ml-1.25" />
-        Blog
-      </LinkButton>
+        <a href="/blog" className="shrink min-w-0">
+          <ArrowLeftIcon className="size-5 shrink-0 -my-1 -ml-1.25" />
+          <p className="shrink min-w-0">Blog</p>
+        </a>
+      </Button>
     </div>
   );
 }
