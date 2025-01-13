@@ -15,7 +15,11 @@ export default async function Footer({ className }: { className?: string }) {
       )}
     >
       <div className="w-full max-w-7xl px-2 md:px-6">
-        <div className="w-full flex items-center justify-between overflow-hidden p-3 md:p-2 gap-6 ring-1 ring-border rounded-t-xl">
+        <div
+          className="w-full flex items-center justify-between overflow-hidden p-3 md:p-2
+          pb-[calc(env(safe-area-inset-bottom)+0.75rem)] md:pb-[calc(env(safe-area-inset-bottom)+0.5rem)] 
+          gap-6 ring-1 ring-border rounded-t-xl"
+        >
           <div className="items-center justify-end gap-1.75 hidden md:flex">
             <div className="size-8.5 shrink-0" />
             <div className="size-8.5 shrink-0" />
