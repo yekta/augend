@@ -76,7 +76,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <p
         {...rest}
         className={cn(
-          "mt-4 w-full leading-relaxed [blockquote+&]:mt-6 [figure+&]:mt-8 [pre+&]:mt-6 [.shiki-div+&]:mt-6 [h1+&]:mt-2 [h2+&]:mt-2 [h3+&]:mt-2 [h4+&]:mt-2 [h5+&]:mt-2 [h6+&]:mt-2 [blockquote>&]:mt-0 [blockquote>&]:italic",
+          "mt-4 w-full leading-relaxed [blockquote+&]:mt-6 [figure+&]:mt-6 [pre+&]:mt-6 [.shiki-div+&]:mt-6 [h1+&]:mt-2 [h2+&]:mt-2 [h3+&]:mt-2 [h4+&]:mt-2 [h5+&]:mt-2 [h6+&]:mt-2 [blockquote>&]:mt-0 [blockquote>&]:italic",
           className
         )}
       >
@@ -180,7 +180,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <figure
         {...rest}
         className={cn(
-          "w-[calc(100+1.25rem)] sm:w-full -mx-5 sm:mx-0 transition flex flex-col mt-8",
+          "w-[calc(100+1.25rem)] sm:w-full -mx-5 sm:mx-0 transition flex flex-col mt-6",
           className
         )}
       >
