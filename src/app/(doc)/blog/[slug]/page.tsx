@@ -45,11 +45,11 @@ export default async function Page({ params }: Props) {
         <TOC className="lg:pr-6" />
         <div className="w-full mt-3 lg:mt-0 flex flex-col justify-center max-w-2xl">
           <div className="w-full flex flex-col items-center">
-            <h1 className="font-bold text-4xl text-foreground text-center text-balance px-3">
+            <h1 className="w-full leading-[1.15] font-bold text-4xl text-foreground text-center text-balance px-3 md:px-8">
               {post.title}
             </h1>
             {(post.published_at || post.reading_time) && (
-              <p className="mt-4 text-muted-foreground">
+              <p className="w-full text-center mt-4 text-muted-foreground">
                 {post.reading_time && <span>{post.reading_time} min read</span>}
                 {post.published_at && post.reading_time && (
                   <span className="text-muted-more-foreground">{" • "}</span>
@@ -62,7 +62,7 @@ export default async function Page({ params }: Props) {
               </p>
             )}
             {authors && (
-              <p className="mt-0.5 text-muted-foreground font-semibold">
+              <p className="w-full text-center mt-0.5 text-muted-foreground font-semibold">
                 {authors.map((author, index) => (
                   <span key={author.id}>
                     <a

@@ -10,7 +10,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <h1
         {...rest}
         className={cn(
-          "text-4xl text-foreground text-balance text-center font-bold mt-14 first-of-type:mt-0 leading-tight",
+          "max-w-full leading-[1.15] text-4xl px-3 md:px-8 text-foreground text-balance text-center font-bold mt-14 first-of-type:mt-0",
           className
         )}
       >
@@ -21,7 +21,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <h2
         {...rest}
         className={cn(
-          "text-3xl text-foreground text-balance font-bold mt-12 [h1+&]:mt-3 leading-tight",
+          "max-w-full leading-tight text-3xl text-foreground text-balance font-bold mt-12 [h1+&]:mt-3",
           className
         )}
       >
@@ -32,7 +32,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <h3
         {...rest}
         className={cn(
-          "text-2xl text-foreground text-balance font-bold mt-10 [h1+&]:mt-3 [h2+&]:mt-3 leading-snug",
+          "max-w-full leading-snug text-2xl text-foreground text-balance font-bold mt-10 [h1+&]:mt-3 [h2+&]:mt-3",
           className
         )}
       >
@@ -43,7 +43,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <h4
         {...rest}
         className={cn(
-          "text-xl text-foreground text-balance font-bold mt-8 [h1+&]:mt-3 [h2+&]:mt-3 [h3+&]:mt-3 leading-snug",
+          "max-w-full leading-snug text-xl text-foreground text-balance font-bold mt-8 [h1+&]:mt-3 [h2+&]:mt-3 [h3+&]:mt-3",
           className
         )}
       >
@@ -54,7 +54,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <h4
         {...rest}
         className={cn(
-          "text-lg text-foreground text-balance font-bold mt-8 [h1+&]:mt-3 [h2+&]:mt-3 [h3+&]:mt-3 [h4+&]:mt-3 leading-snug",
+          "max-w-full leading-snug text-lg text-foreground text-balance font-bold mt-8 [h1+&]:mt-3 [h2+&]:mt-3 [h3+&]:mt-3 [h4+&]:mt-3",
           className
         )}
       >
@@ -65,7 +65,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <h4
         {...rest}
         className={cn(
-          "text-base text-foreground text-balance font-bold mt-8 [h1+&]:mt-3 [h2+&]:mt-3 [h3+&]:mt-3 [h4+&]:mt-3 [h5+&]:mt-3 leading-snug",
+          "max-w-full leading-snug text-base text-foreground text-balance font-bold mt-8 [h1+&]:mt-3 [h2+&]:mt-3 [h3+&]:mt-3 [h4+&]:mt-3 [h5+&]:mt-3",
           className
         )}
       >
@@ -76,7 +76,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <p
         {...rest}
         className={cn(
-          "mt-4 w-full leading-relaxed [blockquote+&]:mt-6 [figure+&]:mt-6 [pre+&]:mt-6 [.shiki-div+&]:mt-6 [h1+&]:mt-2 [h2+&]:mt-2 [h3+&]:mt-2 [h4+&]:mt-2 [h5+&]:mt-2 [h6+&]:mt-2 [blockquote>&]:mt-0 [blockquote>&]:italic",
+          "w-full leading-relaxed mt-4 [blockquote+&]:mt-6 [figure+&]:mt-6 [pre+&]:mt-6 [.shiki-div+&]:mt-6 [h1+&]:mt-2 [h2+&]:mt-2 [h3+&]:mt-2 [h4+&]:mt-2 [h5+&]:mt-2 [h6+&]:mt-2 [blockquote>&]:mt-0 [blockquote>&]:italic",
           className
         )}
       >
