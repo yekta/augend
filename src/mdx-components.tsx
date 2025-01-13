@@ -75,7 +75,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <p
         {...rest}
         className={cn(
-          "mt-4 w-full leading-relaxed [blockquote+&]:mt-6 [figure+&]:mt-8 [pre+&]:mt-6 [h1+&]:mt-2 [h2+&]:mt-2 [h3+&]:mt-2 [h4+&]:mt-2 [h5+&]:mt-2 [h6+&]:mt-2 [blockquote>&]:mt-0 [blockquote>&]:italic",
+          "mt-4 w-full leading-relaxed [blockquote+&]:mt-6 [figure+&]:mt-8 [pre+&]:mt-6 [.shiki-div+&]:mt-6 [h1+&]:mt-2 [h2+&]:mt-2 [h3+&]:mt-2 [h4+&]:mt-2 [h5+&]:mt-2 [h6+&]:mt-2 [blockquote>&]:mt-0 [blockquote>&]:italic",
           className
         )}
       >
@@ -117,11 +117,21 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
           href?.startsWith("/") || href?.startsWith("#") ? undefined : "_blank"
         }
         className={cn(
-          "underline not-touch:hover:opacity-80 active:opacity-80 focus-visible:ring-1 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:rounded-sm"
+          `underline not-touch:hover:opacity-80 active:opacity-80 focus-visible:ring-1 focus-visible:ring-primary/50 
+          focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:rounded-sm 
+          [.kg-button-card>&]:bg-primary [.kg-button-card>&]:max-w-full [.kg-button-card>&]:text-background [.kg-button-card>&]:font-bold
+          [.kg-button-card>&]:no-underline [.kg-button-card>&]:px-4 [.kg-button-card>&]:py-2.75 [.kg-button-card>&]:rounded-lg
+          active:[.kg-button-card>&]:opacity-100 not-touch:[.kg-button-card>&]:hover:opacity-100 active:[.kg-button-card>&]:bg-primary/85 
+          not-touch:[.kg-button-card>&]:hover:bg-primary/85 [.kg-button-card>&]:text-center [.kg-button-card>&]:leading-tight`
         )}
       >
         {children}
       </a>
+    ),
+    div: ({ children, className, ...rest }) => (
+      <div {...rest} className={cn("w-full mt-4 flex", className)}>
+        {children}
+      </div>
     ),
     img: (props) => <ImageWithFullscreen {...props} />,
     pre: async ({ children, className, ...rest }) => {
@@ -142,10 +152,11 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
         });
 
         return (
-          <pre
+          // @ts-ignore
+          <div
             {...rest}
             className={cn(
-              "mt-6 w-full text-sm focus-visible:outline-none",
+              "mt-6 w-full text-sm focus-visible:outline-none shiki-div",
               className
             )}
             dangerouslySetInnerHTML={{ __html: highlighted }}

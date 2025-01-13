@@ -1,4 +1,4 @@
-pre .shiki {
+div .shiki {
   border-radius: 0.4rem; /* or any size you prefer */
   overflow: auto;
   padding: 0.5rem 0.75rem;
@@ -7,7 +7,7 @@ pre .shiki {
 }
 
 @media (min-width: 768px) {
-  pre .shiki {
+  div .shiki {
     padding: 0.75rem 1.1rem;
   }
 }
