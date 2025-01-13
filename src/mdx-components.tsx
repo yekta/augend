@@ -191,7 +191,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <figcaption
         {...rest}
         className={cn(
-          "px-5 py-2.5 text-sm text-center text-balance text-muted-foreground w-full leading-snug",
+          "px-8 sm:px-5 py-2.5 text-sm text-center text-balance text-muted-foreground w-full leading-snug",
           className
         )}
       >

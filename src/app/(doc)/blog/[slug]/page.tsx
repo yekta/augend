@@ -30,6 +30,9 @@ export default async function Page({ params }: Props) {
   }
   const { slug } = await params;
   const post = await getPost(slug);
+  if (!post) {
+    return notFound();
+  }
   let html = post.html;
   if (!html) {
     return notFound();
@@ -85,7 +88,7 @@ export default async function Page({ params }: Props) {
             )}
           </div>
           {/* Blog post content */}
-          <div className="w-full flex flex-wrap mt-2">
+          <div className="w-full flex flex-col mt-2">
             <HTMLRenderer html={html} />
           </div>
           {/* Join us section */}
@@ -156,15 +159,19 @@ function TOC({
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const notFoundMetadata = {
+    title: `Not Found | Blog`,
+    description: `This blog post doesn't exist.`,
+  };
   if (!ghostApi) {
-    return {
-      title: `Not Found | Blog`,
-      description: `This blog post doesn't exist.`,
-    };
+    return notFoundMetadata;
   }
 
   const { slug } = await params;
   const post = await getPost(slug);
+  if (!post) {
+    return notFoundMetadata;
+  }
   const excerpt = getExcerpt(post.excerpt);
   const title = `${post.title || "Not found"} | Blog`;
   const description = excerpt || `Check out this blog post on Augend.`;
