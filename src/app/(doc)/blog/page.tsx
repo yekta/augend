@@ -32,12 +32,12 @@ export default async function Page({}: Props) {
         </h1>
         <div className="w-full flex flex-wrap justify-center md:justify-start mt-6">
           {posts.length > 0 ? (
-            posts.map((post) => (
+            posts.map((post, index) => (
               <div
-                key={post.id}
+                key={`${post.id}-${index}`}
                 className="w-full max-w-lg md:max-w-full md:w-1/2 lg:w-1/3 p-1 self-stretch flex"
               >
-                <PostCard post={post} />
+                <PostCard post={post} index={index} />
               </div>
             ))
           ) : (
@@ -54,7 +54,13 @@ export default async function Page({}: Props) {
   );
 }
 
-function PostCard({ post }: { post: PostsOrPages[number] }) {
+function PostCard({
+  post,
+  index,
+}: {
+  post: PostsOrPages[number];
+  index: number;
+}) {
   const excerpt = getExcerpt(post.excerpt);
 
   return (
@@ -77,13 +83,17 @@ function PostCard({ post }: { post: PostsOrPages[number] }) {
           <ImageIcon className="size-10 text-muted-foreground" />
         )}
       </div>
-      <div className="px-5 pt-3.5 pb-5 flex flex-col">
-        <h2 className="w-full text-lg font-bold leading-snug text-balance">
-          {post.title}
-        </h2>
-        {excerpt && <p className="text-muted-foreground mt-1">{excerpt}</p>}
+      <div className="px-5 pt-3.5 pb-5 flex flex-col flex-1">
+        <div className="w-full flex flex-col flex-1">
+          <h2 className="w-full text-lg font-bold leading-snug text-balance">
+            {post.title}
+          </h2>
+          {excerpt && (
+            <p className="text-muted-foreground text-base mt-1">{excerpt}</p>
+          )}
+        </div>
         {(post.published_at || post.reading_time) && (
-          <div className="w-full flex mt-3 items-center">
+          <div className="w-full flex mt-3.5 items-center">
             <p className="max-w-full leading-tight py-0.75 px-1.75 text-muted-foreground bg-foreground/8 text-sm rounded-sm font-medium">
               {post.reading_time && <span>{post.reading_time} min read</span>}
               {post.published_at && post.reading_time && (

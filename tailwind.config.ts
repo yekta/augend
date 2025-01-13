@@ -117,6 +117,7 @@ const config: Config = {
       },
       fontSize: {
         xxs: ["0.625rem", "1rem"],
+        "base-doc": ["1.125rem", "1.5"],
       },
       borderWidth: {
         "1.5": "1.5px",

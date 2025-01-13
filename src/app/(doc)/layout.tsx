@@ -13,7 +13,9 @@ export default async function DocLayout({
       <PhProvider>
         <NavbarDoc />
         <div className="pointer-events-none h-14 w-full" />
-        <div className="w-full flex flex-col flex-1">{children}</div>
+        <div className="w-full flex flex-col flex-1 text-base sm:text-lg">
+          {children}
+        </div>
         <Footer />
       </PhProvider>
     </SessionProvider>

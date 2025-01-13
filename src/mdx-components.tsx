@@ -51,7 +51,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       </h4>
     ),
     h5: ({ children, className, ...rest }) => (
-      <h4
+      <h5
         {...rest}
         className={cn(
           "max-w-full leading-snug text-lg text-foreground text-balance font-bold mt-8 [h1+&]:mt-3 [h2+&]:mt-3 [h3+&]:mt-3 [h4+&]:mt-3",
@@ -59,18 +59,18 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
         )}
       >
         {children}
-      </h4>
+      </h5>
     ),
     h6: ({ children, className, ...rest }) => (
-      <h4
+      <h6
         {...rest}
         className={cn(
-          "max-w-full leading-snug text-base text-foreground text-balance font-bold mt-8 [h1+&]:mt-3 [h2+&]:mt-3 [h3+&]:mt-3 [h4+&]:mt-3 [h5+&]:mt-3",
+          "max-w-full leading-snug text-foreground text-balance font-bold mt-8 [h1+&]:mt-3 [h2+&]:mt-3 [h3+&]:mt-3 [h4+&]:mt-3 [h5+&]:mt-3",
           className
         )}
       >
         {children}
-      </h4>
+      </h6>
     ),
     p: ({ children, className, ...rest }) => (
       <p
@@ -121,7 +121,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
           `underline not-touch:hover:opacity-80 active:opacity-80 focus-visible:ring-1 focus-visible:ring-primary/50 
           focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:rounded-sm 
           [.kg-button-card>&]:bg-primary [.kg-button-card>&]:max-w-full [.kg-button-card>&]:text-background [.kg-button-card>&]:font-bold
-          [.kg-button-card>&]:no-underline [.kg-button-card>&]:px-4 [.kg-button-card>&]:py-2.75 [.kg-button-card>&]:rounded-lg
+          [.kg-button-card>&]:no-underline [.kg-button-card>&]:px-4 [.kg-button-card>&]:text-base [.kg-button-card>&]:py-2.75 [.kg-button-card>&]:rounded-lg
           active:[.kg-button-card>&]:opacity-100 not-touch:[.kg-button-card>&]:hover:opacity-100 active:[.kg-button-card>&]:bg-primary/85 
           not-touch:[.kg-button-card>&]:hover:bg-primary/85 [.kg-button-card>&]:text-center [.kg-button-card>&]:leading-tight`
         )}
