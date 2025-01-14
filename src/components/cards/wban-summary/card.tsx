@@ -61,29 +61,28 @@ export default function WBanSummaryCard({
   const isPending = isPendingBanBalance || isPendingWbanPendingWithdrawals;
   const isRefetching =
     isRefetchingBanBalance || isRefetchingWbanPendingWithdrawals;
-  const isLoadingError =
-    isLoadingErrorBanBalance || isLoadingErrorWbanPendingWithdrawals;
   const hasData =
     banBalanceData !== undefined && wbanPendingWithdrawalsData !== undefined;
 
   const skeletonParagraphClasses =
-    "group-data-[pending]/card:text-transparent group-data-[pending]/card:bg-foreground group-data-[pending]/card:rounded-sm md:group-data-[pending]/card:rounded-sm group-data-[pending]/card:animate-skeleton";
+    "group-data-[pending]/section:text-transparent group-data-[pending]/section:bg-foreground group-data-[pending]/section:rounded-sm md:group-data-[pending]/section:rounded-sm group-data-[pending]/section:animate-skeleton";
   const skeletonSmallParagraphClasses =
-    "group-data-[pending]/card:text-transparent group-data-[pending]/card:bg-muted-foreground group-data-[pending]/card:rounded-sm group-data-[pending]/card:animate-skeleton";
+    "group-data-[pending]/section:text-transparent group-data-[pending]/section:bg-muted-foreground group-data-[pending]/section:rounded-sm group-data-[pending]/section:animate-skeleton";
 
-  const conditionalValue = useConditionalValue({
-    isPending,
+  const conditionalValueBalance = useConditionalValue({
+    isPending: isPendingBanBalance,
     data: banBalanceData,
     formatter: (v) => formatNumberTBMK(v),
   });
 
+  const conditionalValuePendingWithdrawals = useConditionalValue({
+    isPending: isPendingWbanPendingWithdrawals,
+    data: wbanPendingWithdrawalsData,
+    formatter: (v) => formatNumberTBMK(v),
+  });
+
   return (
-    <CardOuterWrapper
-      data-loading-error={isLoadingError ? true : undefined}
-      data-pending={(isPending && true) || undefined}
-      className={className}
-      {...rest}
-    >
+    <CardOuterWrapper className={className} {...rest}>
       <CardInnerWrapper className="flex flex-col items-center transition">
         {wbanNetworkObjects.map((network) => {
           const coldWallet = banBalanceData?.find(
@@ -99,11 +98,15 @@ export default function WBanSummaryCard({
               key={network.chain}
               className="w-full overflow-hidden min-w-0 flex items-center justify-start first-of-type:border-t-0 border-t"
             >
-              <div className="md:flex-1 border border-transparent flex items-center justify-start gap-2 pl-4 pr-1 md:px-5 py-5">
+              <div
+                data-loading-error={isLoadingErrorBanBalance ? true : undefined}
+                data-pending={(isPendingBanBalance && true) || undefined}
+                className="group/section md:flex-1 border border-transparent flex items-center justify-start gap-2 pl-4 pr-1 md:px-5 py-5"
+              >
                 <IconWithPlaceholder
                   Icon={network.Icon}
                   className="size-5 md:size-6 shrink-0"
-                  isPending={isPending}
+                  isPending={isPendingBanBalance}
                 />
                 <p
                   className={cn(
@@ -115,68 +118,79 @@ export default function WBanSummaryCard({
                 </p>
               </div>
               <Link
+                data-loading-error={isLoadingErrorBanBalance ? true : undefined}
+                data-pending={(isPendingBanBalance && true) || undefined}
                 target="_blank"
                 href={getExplorerUrl(network.coldWallet)}
-                className="flex-1 flex items-center justify-start gap-1.5 md:gap-2 px-2 md:px-5 not-touch:hover:bg-background-hover active:bg-background-hover
+                className="group/section flex-1 flex items-center justify-start gap-1.5 md:gap-2 px-2 md:px-5 not-touch:hover:bg-background-hover active:bg-background-hover
                 not-touch:hover:border-x-border active:border-x-border 
                 border border-transparent focus-visible:border-foreground/50 py-4 min-w-0"
               >
                 <IconWithPlaceholder
                   Icon={SnowflakeIcon}
-                  isPending={isPending}
+                  isPending={isPendingBanBalance}
                   className="shrink-0 size-4 md:size-5 text-nano rounded-sm md:rounded-md"
                 />
                 <div className="flex flex-col shrink min-w-0 gap-1.5 overflow-hidden">
                   <p
                     className={cn(
-                      `text-sm md:text-base w-full truncate font-semibold group-data-[loading-error]/card:text-destructive ${skeletonParagraphClasses}`,
+                      `text-sm md:text-base w-full truncate font-semibold group-data-[loading-error]/section:text-destructive ${skeletonParagraphClasses}`,
                       "leading-none md:leading-none"
                     )}
                   >
-                    {conditionalValue(coldWallet?.balance)}
+                    {conditionalValueBalance(coldWallet?.balance)}
                   </p>
                   <p
                     className={cn(
-                      `w-full truncate text-xs text-muted-foreground group-data-[loading-error]/card:text-destructive ${skeletonSmallParagraphClasses}`,
+                      `w-full truncate text-xs text-muted-foreground group-data-[loading-error]/section:text-destructive ${skeletonSmallParagraphClasses}`,
                       "leading-none md:leading-none"
                     )}
                   >
-                    {conditionalValue(coldWallet?.receivable)}
+                    {conditionalValueBalance(coldWallet?.receivable)}
                   </p>
                 </div>
               </Link>
               <Link
+                data-loading-error={isLoadingErrorBanBalance ? true : undefined}
+                data-pending={(isPendingBanBalance && true) || undefined}
                 target="_blank"
                 href={getExplorerUrl(network.hotWallet)}
-                className="flex-1 flex items-center justify-start gap-1.5 md:gap-2 px-2 md:px-5 not-touch:hover:bg-background-hover active:bg-background-hover
+                className="group/section flex-1 flex items-center justify-start gap-1.5 md:gap-2 px-2 md:px-5 not-touch:hover:bg-background-hover active:bg-background-hover
                 not-touch:hover:border-x-border active:border-x-border py-4 min-w-0
                 border border-transparent focus-visible:border-foreground/50"
               >
                 <IconWithPlaceholder
                   Icon={FlameIcon}
-                  isPending={isPending}
+                  isPending={isPendingBanBalance}
                   className="shrink-0 size-4 md:size-5 text-destructive rounded md:rounded-md"
                 />
                 <div className="flex flex-col shrink min-w-0 gap-1.5 overflow-hidden">
                   <p
                     className={cn(
-                      `text-sm md:text-base w-full truncate font-semibold group-data-[loading-error]/card:text-destructive ${skeletonParagraphClasses}`,
+                      `text-sm md:text-base w-full truncate font-semibold group-data-[loading-error]/section:text-destructive ${skeletonParagraphClasses}`,
                       "leading-none md:leading-none"
                     )}
                   >
-                    {conditionalValue(hotWallet?.balance)}
+                    {conditionalValueBalance(hotWallet?.balance)}
                   </p>
                   <p
                     className={cn(
-                      `w-full truncate text-xs text-muted-foreground group-data-[loading-error]/card:text-destructive ${skeletonSmallParagraphClasses}`,
+                      `w-full truncate text-xs text-muted-foreground group-data-[loading-error]/section:text-destructive ${skeletonSmallParagraphClasses}`,
                       "leading-none md:leading-none"
                     )}
                   >
-                    {conditionalValue(hotWallet?.receivable)}
+                    {conditionalValueBalance(hotWallet?.receivable)}
                   </p>
                 </div>
               </Link>
+              {/* Pending amounts */}
               <div
+                data-loading-error={
+                  isLoadingErrorWbanPendingWithdrawals ? true : undefined
+                }
+                data-pending={
+                  (isPendingWbanPendingWithdrawals && true) || undefined
+                }
                 data-warning={
                   pendingWithdrawalAmount !== undefined &&
                   hotWallet?.balance !== undefined &&
@@ -184,17 +198,17 @@ export default function WBanSummaryCard({
                     ? true
                     : undefined
                 }
-                className="flex-1 border border-transparent flex items-center justify-start gap-1.5 md:gap-2 px-2 md:px-5 rounded-lg py-4 group/pending min-w-0 overflow-hidden"
+                className="flex-1 border border-transparent flex items-center justify-start gap-1.5 md:gap-2 px-2 md:px-5 rounded-lg py-4 group/section min-w-0 overflow-hidden"
               >
                 <IconWithPlaceholder
                   Icon={HourglassIcon}
-                  isPending={isPending}
-                  className="shrink-0 size-4 md:size-5 text-banano group-data-[warning]/pending:text-destructive rounded md:rounded-md"
+                  isPending={isPendingWbanPendingWithdrawals}
+                  className="shrink-0 size-4 md:size-5 text-banano group-data-[warning]/section:text-destructive rounded md:rounded-md"
                 />
                 <div className="flex flex-col shrink min-w-0 gap-1.5 overflow-hidden">
                   <p
                     className={cn(
-                      `w-full truncate text-xs text-muted-foreground group-data-[warning]/pending:text-destructive ${skeletonSmallParagraphClasses}`,
+                      `w-full truncate text-xs text-muted-foreground group-data-[warning]/section:text-destructive ${skeletonSmallParagraphClasses}`,
                       "leading-none md:leading-none"
                     )}
                   >
@@ -202,11 +216,13 @@ export default function WBanSummaryCard({
                   </p>
                   <p
                     className={cn(
-                      `text-sm md:text-base w-full truncate font-semibold group-data-[warning]/pending:text-destructive group-data-[loading-error]/card:text-destructive ${skeletonParagraphClasses}`,
+                      `text-sm md:text-base w-full truncate font-semibold group-data-[warning]/section:text-destructive group-data-[loading-error]/section:text-destructive ${skeletonParagraphClasses}`,
                       "leading-none md:leading-none"
                     )}
                   >
-                    {conditionalValue(pendingWithdrawalAmount)}
+                    {conditionalValuePendingWithdrawals(
+                      pendingWithdrawalAmount
+                    )}
                   </p>
                 </div>
               </div>
@@ -236,7 +252,7 @@ function IconWithPlaceholder({
   variant?: "mono" | "branded";
 }) {
   const classes = cn(
-    "rounded-md group-data-[pending]/card:bg-foreground group-data-[pending]/card:animate-skeleton",
+    "rounded-md group-data-[pending]/section:bg-foreground group-data-[pending]/section:animate-skeleton",
     className
   );
   const Component = isPending ? "div" : Icon;
