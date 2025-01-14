@@ -36,15 +36,15 @@ export default async function Footer({ className }: { className?: string }) {
               {" • "}
             </span>
             <div className="w-full md:w-auto shrink min-w-0 flex flex-row flex-wrap items-center justify-start">
-              <NavbarLink href="/terms">Terms</NavbarLink>
+              <FooterLink href="/terms">Terms</FooterLink>
               <span className="px-0.5 md:px-0.75 text-muted-more-foreground">
                 •
               </span>
-              <NavbarLink href="/privacy">Privacy</NavbarLink>
+              <FooterLink href="/privacy">Privacy</FooterLink>
               <span className="px-0.5 md:px-0.75 text-muted-more-foreground">
                 •
               </span>
-              <NavbarLink href="/blog">Blog</NavbarLink>
+              <FooterLink href="/blog">Blog</FooterLink>
             </div>
           </div>
           <div className="flex items-center justify-end gap-1.75">
@@ -74,7 +74,7 @@ export default async function Footer({ className }: { className?: string }) {
   );
 }
 
-function NavbarLink({ children, href }: { children: ReactNode; href: string }) {
+function FooterLink({ children, href }: { children: ReactNode; href: string }) {
   return (
     <Link
       prefetch={false}
