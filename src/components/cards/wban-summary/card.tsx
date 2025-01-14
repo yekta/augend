@@ -100,7 +100,7 @@ export default function WBanSummaryCard({
             >
               <div
                 data-loading-error={isLoadingErrorBanBalance ? true : undefined}
-                data-pending={(isPendingBanBalance && true) || undefined}
+                data-pending={isPendingBanBalance ? true : undefined}
                 className="group/section md:flex-1 border border-transparent flex items-center justify-start gap-2 pl-4 pr-1 md:px-5 py-5"
               >
                 <IconWithPlaceholder
@@ -119,7 +119,7 @@ export default function WBanSummaryCard({
               </div>
               <Link
                 data-loading-error={isLoadingErrorBanBalance ? true : undefined}
-                data-pending={(isPendingBanBalance && true) || undefined}
+                data-pending={isPendingBanBalance ? true : undefined}
                 target="_blank"
                 href={getExplorerUrl(network.coldWallet)}
                 className="group/section flex-1 flex items-center justify-start gap-1.5 md:gap-2 px-2 md:px-5 not-touch:hover:bg-background-hover active:bg-background-hover
@@ -152,7 +152,7 @@ export default function WBanSummaryCard({
               </Link>
               <Link
                 data-loading-error={isLoadingErrorBanBalance ? true : undefined}
-                data-pending={(isPendingBanBalance && true) || undefined}
+                data-pending={isPendingBanBalance ? true : undefined}
                 target="_blank"
                 href={getExplorerUrl(network.hotWallet)}
                 className="group/section flex-1 flex items-center justify-start gap-1.5 md:gap-2 px-2 md:px-5 not-touch:hover:bg-background-hover active:bg-background-hover
@@ -189,7 +189,7 @@ export default function WBanSummaryCard({
                   isLoadingErrorWbanPendingWithdrawals ? true : undefined
                 }
                 data-pending={
-                  (isPendingWbanPendingWithdrawals && true) || undefined
+                  isPendingWbanPendingWithdrawals ? true : undefined
                 }
                 data-warning={
                   pendingWithdrawalAmount !== undefined &&
