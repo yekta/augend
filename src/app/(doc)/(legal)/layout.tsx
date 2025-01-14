@@ -13,6 +13,18 @@ export default async function Layout({
       <Sidebar className="lg:pr-6" />
       <div className="w-full shrink-0 mt-2 lg:mt-0 flex flex-col justify-center max-w-2xl">
         {children}
+        <div className="w-full flex items-center justify-center mt-12">
+          <Button
+            variant="ghost"
+            asChild
+            className="text-muted-foreground gap-1.5 text-base leading-tight"
+          >
+            <a href="/" className="shrink min-w-0">
+              <ArrowLeftIcon className="size-5 shrink-0 -my-1 -ml-1.25" />
+              <p className="shrink min-w-0">Back to Home</p>
+            </a>
+          </Button>
+        </div>
       </div>
       <Sidebar disabled={true} className="lg:pl-6 hidden lg:block" />
     </div>

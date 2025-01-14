@@ -24,6 +24,9 @@ export async function insertCmcCryptoInfosAndQuotes({
   for (const key in cmcData) {
     const cryptoInfo = cmcData[key];
     const infoId = crypto.randomUUID();
+    if (cryptoInfo.cmc_rank === undefined || cryptoInfo.cmc_rank === null) {
+      continue;
+    }
     infos.push({
       id: infoId,
       coinId: cryptoInfo.id,

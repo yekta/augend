@@ -116,7 +116,7 @@ export default async function Page({ params }: Props) {
             </div>
           </div>
           {/* Back to blog */}
-          <div className="w-full flex items-center justify-center mt-3">
+          <div className="w-full flex items-center justify-center mt-4">
             <LinkButton
               href="/blog"
               variant="ghost"
@@ -148,16 +148,14 @@ function Sidebar({
         className
       )}
     >
-      <Button
+      <LinkButton
+        href="/blog"
         variant="ghost"
-        asChild
         className="text-muted-foreground gap-1.5 text-base leading-tight lg:-mt-1.5"
       >
-        <a href="/blog" className="shrink min-w-0">
-          <ArrowLeftIcon className="size-5 shrink-0 -my-1 -ml-1.25" />
-          <p className="shrink min-w-0">Blog</p>
-        </a>
-      </Button>
+        <ArrowLeftIcon className="size-5 shrink-0 -my-1 -ml-1.25" />
+        <p className="shrink min-w-0">Blog</p>
+      </LinkButton>
     </div>
   );
 }

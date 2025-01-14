@@ -12,7 +12,7 @@ export type TCmcGetCryptosResultRaw = {
       circulating_supply: number;
       total_supply: number;
       platform: string | null;
-      cmc_rank: number;
+      cmc_rank?: number;
       last_updated: string;
       quote: {
         [key: string]: {
