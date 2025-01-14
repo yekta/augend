@@ -44,7 +44,7 @@ export type TCmcGetCryptosResult = {
     max_supply: number | null;
     circulating_supply: number;
     total_supply: number;
-    cmc_rank: number;
+    cmc_rank?: number;
     last_updated: string;
     quote: {
       [key: string]: {
