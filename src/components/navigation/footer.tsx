@@ -8,7 +8,7 @@ import { ReactNode } from "react";
 
 export default async function Footer({ className }: { className?: string }) {
   return (
-    <div
+    <footer
       className={cn(
         "w-full flex items-center justify-center text-center",
         className
@@ -70,7 +70,7 @@ export default async function Footer({ className }: { className?: string }) {
           </div>
         </div>
       </div>
-    </div>
+    </footer>
   );
 }
 
