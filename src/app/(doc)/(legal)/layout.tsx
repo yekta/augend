@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/ui/utils";
 import { ArrowLeftIcon } from "lucide-react";
 import "./styles.css";
 

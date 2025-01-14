@@ -9,7 +9,7 @@ import { CardsIcon } from "@/components/icons/cards-icon";
 import { Button } from "@/components/ui/button";
 import { mainDashboardSlug } from "@/lib/constants";
 import { useMainStore } from "@/lib/stores/main/provider";
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/ui/utils";
 import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine";
 import {
   draggable,

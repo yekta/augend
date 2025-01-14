@@ -2,7 +2,7 @@ import ScIcon from "@/components/icons/sc-icon";
 import ThemeButton from "@/components/theme-button";
 import { LinkButton } from "@/components/ui/button";
 import { sc, siteTitle } from "@/lib/constants";
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/ui/utils";
 import Link from "next/link";
 import { ReactNode } from "react";
 

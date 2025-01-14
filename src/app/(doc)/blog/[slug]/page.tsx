@@ -3,7 +3,7 @@ import { getExcerpt } from "@/app/(doc)/blog/helpers";
 import ScIcon from "@/components/icons/sc-icon";
 import { Button, LinkButton } from "@/components/ui/button";
 import { sc } from "@/lib/constants";
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/ui/utils";
 import { useMDXComponents } from "@/mdx-components";
 import { format } from "date-fns";
 import { ArrowLeftIcon } from "lucide-react";

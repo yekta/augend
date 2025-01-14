@@ -4,7 +4,7 @@ import CardValuesFormWrapper from "@/components/cards/_utils/values-form/form-wr
 import { TInferValueFormProps } from "@/components/cards/_utils/values-form/types";
 import CryptoIcon from "@/components/icons/crypto-icon";
 import { Form, FormField } from "@/components/ui/form";
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/ui/utils";
 import {
   ethereumNetworks,
   EthereumNetworkSchema,

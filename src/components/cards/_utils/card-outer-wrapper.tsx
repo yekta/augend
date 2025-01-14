@@ -20,7 +20,7 @@ import {
 import { toastErrorProps } from "@/components/ui/sonner";
 import { captureDeleteCards } from "@/lib/capture/client";
 import { useMainStore } from "@/lib/stores/main/provider";
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/ui/utils";
 import { api } from "@/server/trpc/setup/react";
 import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine";
 import {

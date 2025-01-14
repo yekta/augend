@@ -2,7 +2,7 @@
 
 import { useEditModeCards } from "@/app/(app)/[username]/[dashboard_slug]/_components/edit-mode-cards-provider";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/ui/utils";
 import { PencilIcon, XIcon } from "lucide-react";
 
 type Props = {

@@ -14,7 +14,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { formatNumberTBMK } from "@/lib/number-formatters";
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/ui/utils";
 import {
   CellContext,
   Column,

@@ -2,7 +2,7 @@ import SignInContent from "@/components/auth/sign-in-content";
 import { SignInTrigger } from "@/components/auth/sign-in-trigger";
 import Logo from "@/components/navigation/logo";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/ui/utils";
 import { VariantProps } from "class-variance-authority";
 import { ComponentProps } from "react";
 

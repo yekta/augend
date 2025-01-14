@@ -1,6 +1,6 @@
 import SignInWithEthereumButton from "@/components/auth/sign-in-with-ethereum-button";
 import SignInWithOAuthButton from "@/components/auth/sign-in-with-oauth-button";
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/ui/utils";
 import { authProviderMap } from "@/server/auth/auth";
 import { ComponentProps } from "react";
 

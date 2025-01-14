@@ -19,7 +19,7 @@ import NanoBananoCard from "@/components/cards/nano-banano/card";
 import UniswapPoolsTableCard from "@/components/cards/uniswap-pools-table/card";
 import UniswapPositionCard from "@/components/cards/uniswap-position/card";
 import WBanSummaryCard from "@/components/cards/wban-summary/card";
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/ui/utils";
 import { TCurrencyWithSelectedFields } from "@/server/db/repo/types";
 import { TEthereumNetwork } from "@/server/trpc/api/crypto/ethereum/constants";
 import { TExchange } from "@/server/trpc/api/crypto/exchange/types";

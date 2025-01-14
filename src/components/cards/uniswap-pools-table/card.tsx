@@ -11,7 +11,7 @@ import AsyncDataTable, {
 } from "@/components/ui/async-data-table";
 import { defaultQueryOptions } from "@/lib/constants";
 import { formatNumberTBMK } from "@/lib/number-formatters";
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/ui/utils";
 import { TEthereumNetwork } from "@/server/trpc/api/crypto/ethereum/constants";
 import { TUniswapPoolsResult } from "@/server/trpc/api/crypto/ethereum/uniswap/types";
 import { api } from "@/server/trpc/setup/react";

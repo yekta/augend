@@ -3,7 +3,7 @@ import CardOuterWrapper, {
   TCardOuterWrapperProps,
 } from "@/components/cards/_utils/card-outer-wrapper";
 import Indicator from "@/components/ui/indicator";
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/ui/utils";
 import React, { ReactNode } from "react";
 
 export default function ThreeLineCard({

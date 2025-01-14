@@ -4,7 +4,7 @@ import CardValuesFormSubmitButton from "@/components/cards/_utils/values-form/su
 import { TInferValueFormProps } from "@/components/cards/_utils/values-form/types";
 import { CurrencySymbol } from "@/components/currency-symbol";
 import { Form, FormField } from "@/components/ui/form";
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/ui/utils";
 import { api } from "@/server/trpc/setup/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMemo } from "react";

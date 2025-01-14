@@ -8,7 +8,7 @@ import Indicator from "@/components/ui/indicator";
 import { defaultQueryOptions } from "@/lib/constants";
 import { useConditionalValue } from "@/lib/hooks/use-conditional-value";
 import { formatNumberTBMK } from "@/lib/number-formatters";
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/ui/utils";
 import { getExplorerUrl } from "@/server/trpc/api/crypto/nano-banano/helpers";
 import {
   TWbanIcon,

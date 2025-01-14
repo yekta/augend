@@ -1,5 +1,5 @@
 import { env } from "@/lib/env";
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/ui/utils";
 import { BanIcon } from "lucide-react";
 import { ComponentProps, useMemo, useState } from "react";
 

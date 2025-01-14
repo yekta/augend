@@ -1,7 +1,7 @@
 import CardInnerWrapper from "@/components/cards/_utils/card-inner-wrapper";
 import CardOuterWrapper from "@/components/cards/_utils/card-outer-wrapper";
 import CopyErrorButton from "@/components/cards/_utils/copy-error-button";
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/ui/utils";
 import { TriangleAlertIcon } from "lucide-react";
 import { Component, ErrorInfo, isValidElement, ReactNode } from "react";
 

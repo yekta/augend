@@ -3,7 +3,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import Link from "next/link";
 import * as React from "react";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/ui/utils";
 
 const buttonVariants = cva(
   "relative text-center leading-tight max-w-full inline-flex items-center select-none z-0 touch-manipulation justify-center gap-2 rounded-lg font-bold focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary/50 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",

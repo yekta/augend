@@ -13,7 +13,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { TimePicker } from "@/components/ui/time-picker";
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/ui/utils";
 import { format } from "date-fns";
 import { CalendarIcon, ChevronsUpDownIcon } from "lucide-react";
 

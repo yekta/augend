@@ -6,7 +6,7 @@ import { CurrencySymbol } from "@/components/currency-symbol";
 import ErrorLine from "@/components/error-line";
 import { Button } from "@/components/ui/button";
 import { Form, FormField } from "@/components/ui/form";
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/ui/utils";
 import { cleanArray } from "@/server/redis/cache-utils";
 import { api } from "@/server/trpc/setup/react";
 import { zodResolver } from "@hookform/resolvers/zod";

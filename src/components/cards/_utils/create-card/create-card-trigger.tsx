@@ -22,7 +22,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { captureCreateCard } from "@/lib/capture/client";
 import { formatNumberTBMK } from "@/lib/number-formatters";
 import { useMainStore } from "@/lib/stores/main/provider";
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/ui/utils";
 import { AppRouterOutputs, AppRouterQueryResult } from "@/server/trpc/api/root";
 import { TCardTypeId } from "@/server/trpc/api/ui/types";
 import { api } from "@/server/trpc/setup/react";

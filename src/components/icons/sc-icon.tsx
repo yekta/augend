@@ -1,5 +1,5 @@
 import { TScOption } from "@/lib/constants";
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/ui/utils";
 import { BanIcon, MailIcon } from "lucide-react";
 import { ComponentProps } from "react";
 

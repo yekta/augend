@@ -11,7 +11,7 @@ import AsyncDataTable, {
 } from "@/components/ui/async-data-table";
 import { defaultQueryOptions } from "@/lib/constants";
 import { formatNumberTBMK } from "@/lib/number-formatters";
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/ui/utils";
 import { api } from "@/server/trpc/setup/react";
 import { SortingState } from "@tanstack/react-table";
 import { ExternalLinkIcon } from "lucide-react";

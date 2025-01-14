@@ -22,7 +22,7 @@ import {
 import { defaultQueryOptions } from "@/lib/constants";
 import { months } from "@/lib/months";
 import { formatNumberTBMK } from "@/lib/number-formatters";
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/ui/utils";
 import {
   ExchangeSchema,
   TOHLCVResult,

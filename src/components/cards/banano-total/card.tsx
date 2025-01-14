@@ -6,7 +6,7 @@ import { useCmcCryptoInfos } from "@/components/providers/cmc/cmc-crypto-infos-p
 import { useCurrencyPreference } from "@/components/providers/currency-preference-provider";
 import { useNanoBananoBalances } from "@/components/providers/nano-banano-balance-provider";
 import { formatNumberTBMK } from "@/lib/number-formatters";
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/ui/utils";
 import { isNano } from "@/server/trpc/api/crypto/nano-banano/helpers";
 import { CurrencySymbol } from "@/components/currency-symbol";
 

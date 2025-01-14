@@ -8,7 +8,7 @@ import {
 } from "@/components/cards/_utils/card-outer-wrapper";
 import { useNanoBananoBalances } from "@/components/providers/nano-banano-balance-provider";
 import { formatNumberTBMK } from "@/lib/number-formatters";
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/ui/utils";
 import {
   getAvatarUrl,
   getExplorerUrl,

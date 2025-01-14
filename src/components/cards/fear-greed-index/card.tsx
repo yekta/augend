@@ -12,7 +12,7 @@ import { useCurrencyPreference } from "@/components/providers/currency-preferenc
 import Indicator from "@/components/ui/indicator";
 import { linearInterpolation } from "@/lib/helpers";
 import { formatNumberTBMK } from "@/lib/number-formatters";
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/ui/utils";
 import { ArrowDownIcon, ArrowRightIcon, ArrowUpIcon } from "lucide-react";
 
 export default function FearGreedIndexCard({

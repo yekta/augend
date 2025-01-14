@@ -3,7 +3,7 @@ import CardOuterWrapper from "@/components/cards/_utils/card-outer-wrapper";
 import CreateCardTrigger from "@/components/cards/_utils/create-card/create-card-trigger";
 import { cardTypes } from "@/components/cards/_utils/helpers";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/ui/utils";
 import { PlusIcon } from "lucide-react";
 
 type Props = {

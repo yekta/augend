@@ -4,7 +4,7 @@ import ProviderIcon from "@/components/icons/provider-icon";
 import { Button } from "@/components/ui/button";
 import { mainDashboardSlug, siteTitle } from "@/lib/constants";
 import { env } from "@/lib/env";
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/ui/utils";
 import { api } from "@/server/trpc/setup/react";
 import { LoaderIcon } from "lucide-react";
 import { getCsrfToken, signIn } from "next-auth/react";

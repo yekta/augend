@@ -3,7 +3,7 @@
 import { oAuthSignInAction } from "@/components/auth/actions";
 import ProviderIcon from "@/components/icons/provider-icon";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/ui/utils";
 import { LoaderIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useActionState } from "react";

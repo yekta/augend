@@ -6,7 +6,7 @@ import {
   DialogContent,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/ui/utils";
 import { useWindowSize } from "@uidotdev/usehooks";
 import { useState } from "react";
 

@@ -15,7 +15,7 @@ import { defaultQueryOptions } from "@/lib/constants";
 import { timeAgo } from "@/lib/helpers";
 import { useConditionalValue } from "@/lib/hooks/use-conditional-value";
 import { formatNumberTBMK } from "@/lib/number-formatters";
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/ui/utils";
 import { ethereumNetworks } from "@/server/trpc/api/crypto/ethereum/constants";
 import { TEthereumNetwork } from "@/server/trpc/api/crypto/ethereum/constants";
 import { TUniswapPoolSwapsResult } from "@/server/trpc/api/crypto/ethereum/uniswap/types";

@@ -16,7 +16,7 @@ import CmcGlobalMetricsProvider from "@/components/providers/cmc/cmc-global-metr
 import CurrencyPreferenceProvider from "@/components/providers/currency-preference-provider";
 import ForexRatesProvider from "@/components/providers/forex-rates-provider";
 import { defaultCurrencyPreference, mainDashboardSlug } from "@/lib/constants";
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/ui/utils";
 import { auth } from "@/server/auth/auth";
 import { cleanAndSortArray } from "@/server/redis/cache-utils";
 import { TEthereumNetwork } from "@/server/trpc/api/crypto/ethereum/constants";

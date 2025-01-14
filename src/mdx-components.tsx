@@ -1,6 +1,6 @@
 import { getHighlighter } from "@/app/(doc)/blog/shiki";
 import ImageWithFullscreen from "@/components/doc/image-with-fullscreen";
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/ui/utils";
 import type { MDXComponents } from "mdx/types";
 import { ComponentProps } from "react";
 

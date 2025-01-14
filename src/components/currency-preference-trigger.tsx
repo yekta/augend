@@ -15,7 +15,7 @@ import { Form, FormField } from "@/components/ui/form";
 import { toastErrorProps } from "@/components/ui/sonner";
 import { captureChangeCurrencyPreference } from "@/lib/capture/client";
 import { useAsyncRouterRefresh } from "@/lib/hooks/use-async-router-refresh";
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/ui/utils";
 import { ChangeCurrencyPreferenceSchemaUI } from "@/server/trpc/api/ui/types";
 import { api } from "@/server/trpc/setup/react";
 import { zodResolver } from "@hookform/resolvers/zod";

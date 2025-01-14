@@ -1,7 +1,7 @@
 "use client";
 
 import { NavigationMenu } from "@/components/ui/navigation-menu";
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/ui/utils";
 import { useWindowScroll } from "@uidotdev/usehooks";
 
 type Props = {

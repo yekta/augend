@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/ui/utils";
 import { ComponentProps } from "react";
 
 export default function Logo({ className }: ComponentProps<"svg"> & {}) {

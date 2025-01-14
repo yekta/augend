@@ -5,7 +5,7 @@ import { useDashboards } from "@/app/(app)/[username]/_components/dashboards-pro
 import CreateDashboardTrigger from "@/components/dashboard/create-dashboard-trigger";
 import { useDashboardsAuto } from "@/components/providers/dashboards-auto-provider";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/ui/utils";
 import { PlusIcon } from "lucide-react";
 import { useQueryState } from "nuqs";
 
