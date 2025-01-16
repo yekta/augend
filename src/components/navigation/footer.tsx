@@ -35,7 +35,7 @@ export default async function Footer({ className }: { className?: string }) {
             <span className="px-0.5 md:px-0.75 hidden md:block text-muted-more-foreground">
               {" • "}
             </span>
-            <div className="w-full md:w-auto shrink min-w-0 flex flex-row flex-wrap items-center justify-start">
+            <div className="w-full mt-0.5 md:mt-0 md:w-auto shrink min-w-0 flex flex-row flex-wrap items-center justify-start">
               <FooterLink href="/terms">Terms</FooterLink>
               <span className="px-0.5 md:px-0.75 text-muted-more-foreground">
                 •
