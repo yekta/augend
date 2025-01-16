@@ -29,7 +29,7 @@ export default async function Footer({ className }: { className?: string }) {
             className="flex-1 min-w-0 font-medium justify-center items-start flex flex-col md:flex-row md:items-center md:justify-center 
             text-sm text-muted-foreground"
           >
-            <p className="w-full md:w-auto px-1 shrink min-w-0 text-sm text-left">
+            <p className="w-full md:w-auto px-1 shrink min-w-0 text-sm text-left leading-tight">
               © {new Date().getFullYear()} {siteTitle}
             </p>
             <span className="px-0.5 md:px-0.75 hidden md:block text-muted-more-foreground">
