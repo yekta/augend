@@ -1,7 +1,12 @@
 "use client";
 
-import { ReactNode, useEffect, useState } from "react";
-import React, { createContext, useContext } from "react";
+import React, {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 function detectTouchDevice() {
   return (
@@ -10,7 +15,11 @@ function detectTouchDevice() {
   );
 }
 
-export function useIsTouchDevice() {
+const IsTouchscreenContext = createContext(false);
+
+export const IsTouchscreenProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const [isTouchDevice, setIsTouchDevice] = useState(false); // Default to false
 
   useEffect(() => {
@@ -45,15 +54,6 @@ export function useIsTouchDevice() {
     };
   }, []);
 
-  return isTouchDevice;
-}
-
-const IsTouchscreenContext = createContext(false);
-
-export const IsTouchscreenProvider: React.FC<{ children: ReactNode }> = ({
-  children,
-}) => {
-  const isTouchDevice = useIsTouchDevice();
   return (
     <IsTouchscreenContext.Provider value={isTouchDevice}>
       {children}
