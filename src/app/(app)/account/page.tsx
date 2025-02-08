@@ -2,7 +2,6 @@ import AccountSections from "@/app/(app)/account/_components/account-sections";
 import AccountTitle from "@/app/(app)/account/_components/account-title";
 import { siteTitle } from "@/lib/constants";
 import { auth } from "@/server/auth/auth";
-import { apiServer, HydrateClient } from "@/server/trpc/setup/server";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 

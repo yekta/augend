@@ -15,13 +15,13 @@ import CmcCryptoInfosProvider from "@/components/providers/cmc/cmc-crypto-infos-
 import CmcGlobalMetricsProvider from "@/components/providers/cmc/cmc-global-metrics-provider";
 import CurrencyPreferenceProvider from "@/components/providers/currency-preference-provider";
 import ForexRatesProvider from "@/components/providers/forex-rates-provider";
-import { defaultCurrencyPreference, mainDashboardSlug } from "@/lib/constants";
 import { cn } from "@/components/ui/utils";
+import { defaultCurrencyPreference, mainDashboardSlug } from "@/lib/constants";
 import { auth } from "@/server/auth/auth";
 import { cleanAndSortArray } from "@/server/redis/cache-utils";
 import { TEthereumNetwork } from "@/server/trpc/api/crypto/ethereum/constants";
 import { AppRouterOutputs } from "@/server/trpc/api/root";
-import { apiServerStatic, HydrateClient } from "@/server/trpc/setup/server";
+import { apiServerStatic } from "@/server/trpc/setup/server";
 import { unstable_cache as unstableCache } from "next/cache";
 import { redirect } from "next/navigation";
 import { ReactNode } from "react";
