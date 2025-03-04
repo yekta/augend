@@ -28,6 +28,7 @@ import { ReactNode } from "react";
 
 export default async function Home() {
   const session = await auth();
+  console.log(session);
   if (session) {
     redirect(`/${session.user.username}/${mainDashboardSlug}`);
   }
