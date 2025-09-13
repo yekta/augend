@@ -64,7 +64,9 @@ export default function CreateDashboardTrigger({
   const addNewDashboardId = useMainStore((s) => s.addNewDashboardId);
   const removeNewDashboardId = useMainStore((s) => s.removeNewDashboardId);
 
-  const setNewDashboardIdTimeout = useRef<NodeJS.Timeout | undefined>();
+  const setNewDashboardIdTimeout = useRef<NodeJS.Timeout | undefined>(
+    undefined
+  );
 
   const {
     mutate: createDashboard,

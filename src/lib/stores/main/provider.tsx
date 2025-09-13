@@ -24,7 +24,7 @@ export const MainStoreProvider = ({
   children,
   initState,
 }: MainStoreProviderProps) => {
-  const storeRef = useRef<MainStoreApi>();
+  const storeRef = useRef<MainStoreApi | undefined>(undefined);
   if (!storeRef.current) {
     storeRef.current = createMainStore(initState);
   }

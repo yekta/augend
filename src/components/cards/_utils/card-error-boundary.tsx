@@ -45,7 +45,10 @@ class CardErrorBoundary extends Component<Props, State> {
     if (!isValidElement(children)) {
       return {};
     }
-    const childProps = children.props;
+    const childProps = children.props as {
+      cardId?: string;
+      isRemovable?: boolean;
+    };
     return {
       cardId: childProps.cardId as string | undefined,
       isRemovable: childProps.isRemovable as boolean | undefined,

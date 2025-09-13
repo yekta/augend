@@ -83,7 +83,7 @@ export default function CreateCardTrigger({
   const addNewCardId = useMainStore((s) => s.addNewCardId);
   const removeNewCardId = useMainStore((s) => s.removeNewCardId);
 
-  const setNewCardIdTimeout = useRef<NodeJS.Timeout | undefined>();
+  const setNewCardIdTimeout = useRef<NodeJS.Timeout>(undefined);
 
   const {
     mutate: createCardMutation,
@@ -185,7 +185,7 @@ export function CreateCardCommandPanel({
 }: CreateCardCommandPanelProps) {
   const listRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const scrollId = useRef<NodeJS.Timeout | undefined>();
+  const scrollId = useRef<NodeJS.Timeout>(undefined);
   const { data, isPending, isLoadingError } = getCardTypesQuery;
 
   const onBackButtonClick = () => {
@@ -279,6 +279,7 @@ export function CreateCardCommandPanel({
             </p>
           )}
           {!isLoadingError && (
+            // @ts-ignore: This is fine
             <ScrollArea viewportRef={listRef}>
               <CommandList>
                 {!isLoadingError && (
