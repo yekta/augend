@@ -75,8 +75,8 @@ export default function CardValueFormItemCombobox<T>({
   disabled,
   Icon,
 }: TValueComboboxProps) {
-  const listRef = useRef<HTMLDivElement>(null);
-  const scrollId = useRef<NodeJS.Timeout | undefined>();
+  const listRef = useRef<HTMLDivElement>(undefined);
+  const scrollId = useRef<NodeJS.Timeout>(undefined);
 
   const [open, setOpen] = useState(false);
 
@@ -157,6 +157,7 @@ export default function CardValueFormItemCombobox<T>({
               placeholder={inputPlaceholder}
             />
 
+            {/* @ts-ignore: This is fine */}
             <ScrollArea viewportRef={listRef}>
               <CommandList>
                 {!isLoadingError && (
