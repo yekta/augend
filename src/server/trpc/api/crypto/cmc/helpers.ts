@@ -9,6 +9,11 @@ import {
 } from "@/server/trpc/api/crypto/cmc/types";
 import { TRPCError } from "@trpc/server";
 
+// A stale cache can be observed by many requests at once. Keep only one
+// refresh in flight so those requests do not each retain a 5,000-coin API
+// response and database write until their background work completes.
+let cryptoDefinitionsCacheRefresh: Promise<void> | undefined;
+
 export function shapeCryptoInfosRawResult(
   data: NonNullable<TCmcGetCryptosResultRaw["data"]>,
   selectIds: number[]
@@ -57,7 +62,12 @@ export async function updateCryptoDefinitionsCache() {
   const limit = 5000;
   const sortBy = "cmc_rank";
   const url = `${cmcApiUrl}/v1/cryptocurrency/map?sort=${sortBy}&limit=${limit}`;
-  const res = await fetch(url, cmcFetchOptions);
+  const res = await fetch(url, {
+    ...cmcFetchOptions,
+    // Do not let a stuck upstream response hold the single-flight refresh
+    // promise (and its response buffers) indefinitely.
+    signal: AbortSignal.timeout(30_000),
+  });
 
   if (!res.ok) {
     throw new TRPCError({
@@ -94,4 +104,16 @@ export async function updateCryptoDefinitionsCache() {
   const result = Array.from(map.values());
 
   await upsertCmcCryptoDefinitions({ values: result });
+}
+
+export function refreshCryptoDefinitionsCache(): Promise<void> {
+  if (!cryptoDefinitionsCacheRefresh) {
+    cryptoDefinitionsCacheRefresh = updateCryptoDefinitionsCache().finally(
+      () => {
+        cryptoDefinitionsCacheRefresh = undefined;
+      }
+    );
+  }
+
+  return cryptoDefinitionsCacheRefresh;
 }

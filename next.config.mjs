@@ -18,6 +18,10 @@ const publicStaticRoutes = [
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Railway runs the server in a fixed-size container. Keep Next's optional
+  // in-process incremental cache bounded; application data is already cached
+  // in Redis/Postgres.
+  cacheMaxMemorySize: 16 * 1024 * 1024,
   pageExtensions: ["tsx", "ts", "jsx", "js", "mdx", "md"],
   webpack: (config) => {
     config.externals.push("pino-pretty", "lokijs", "encoding");

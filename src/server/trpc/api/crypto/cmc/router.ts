@@ -10,7 +10,7 @@ import { cacheTimesMs, cleanAndSortArray } from "@/server/redis/cache-utils";
 import { cmcApiUrl } from "@/server/trpc/api/crypto/cmc/constants";
 import {
   shapeCryptoInfosRawResult,
-  updateCryptoDefinitionsCache,
+  refreshCryptoDefinitionsCache,
 } from "@/server/trpc/api/crypto/cmc/helpers";
 import { cmcFetchOptions } from "@/server/trpc/api/crypto/cmc/secrets";
 import {
@@ -214,7 +214,7 @@ export const cmcRouter = createTRPCRouter({
       console.log(`[POSTGRES_CACHE][MISS]: ${logKey} | ${duration}ms`);
       console.log(new Date().toISOString());
       after(async () => {
-        updateCryptoDefinitionsCache();
+        await refreshCryptoDefinitionsCache();
       });
       return cryptoDefinitionsResult;
     }),
